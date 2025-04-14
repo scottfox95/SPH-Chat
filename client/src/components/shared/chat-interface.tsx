@@ -2,11 +2,21 @@ import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Paperclip, Send, Zap } from "lucide-react";
-import { sendChatMessage, getChatMessages } from "@/lib/auth";
+import { AlertTriangle, Paperclip, Send, Trash2, Zap } from "lucide-react";
+import { sendChatMessage, getChatMessages, clearChatMessages } from "@/lib/auth";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/use-auth";
 import { cn } from "@/lib/utils";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface ChatInterfaceProps {
   chatbotId: number;
@@ -24,6 +34,8 @@ export default function ChatInterface({
   const [messages, setMessages] = useState<any[]>(initialMessages);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [clearDialogOpen, setClearDialogOpen] = useState(false);
+  const [isClearingHistory, setIsClearingHistory] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const { user } = useAuth();
@@ -85,8 +97,85 @@ export default function ChatInterface({
     }
   };
   
+  // Clear chat history
+  const handleClearChat = async () => {
+    try {
+      setIsClearingHistory(true);
+      
+      const result = await clearChatMessages(chatbotId, token);
+      
+      if (result.success) {
+        setMessages([]);
+        toast({
+          title: "Chat history cleared",
+          description: "All previous messages have been deleted",
+        });
+      }
+    } catch (error) {
+      console.error("Failed to clear chat history", error);
+      toast({
+        title: "Failed to clear chat history",
+        description: "Please try again later",
+        variant: "destructive",
+      });
+    } finally {
+      setIsClearingHistory(false);
+      setClearDialogOpen(false);
+    }
+  };
+  
   return (
     <div className="flex-1 overflow-hidden flex flex-col bg-gray-50">
+      {/* Confirmation Dialog */}
+      <AlertDialog open={clearDialogOpen} onOpenChange={setClearDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Clear Chat History</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete all messages between you and this chatbot.
+              This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isClearingHistory}>Cancel</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={handleClearChat}
+              disabled={isClearingHistory}
+              className="bg-red-500 hover:bg-red-600 text-white"
+            >
+              {isClearingHistory ? (
+                <span className="flex items-center">
+                  <AlertTriangle className="h-4 w-4 mr-2 animate-pulse" />
+                  Clearing...
+                </span>
+              ) : (
+                <span className="flex items-center">
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  Clear History
+                </span>
+              )}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+      
+      {/* Chat header */}
+      <div className="flex justify-between items-center p-3 bg-white border-b border-gray-200">
+        <h3 className="text-lg font-semibold text-gray-800">{chatbotName}</h3>
+        {messages.length > 0 && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setClearDialogOpen(true)}
+            disabled={isClearingHistory}
+            className="text-gray-600 hover:text-red-600 border-gray-300"
+          >
+            <Trash2 className="h-4 w-4 mr-2" /> 
+            Clear History
+          </Button>
+        )}
+      </div>
+      
       {/* Chat Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4" style={{ scrollBehavior: "smooth" }}>
         {/* Welcome Message if no messages */}
