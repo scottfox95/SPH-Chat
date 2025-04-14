@@ -76,8 +76,11 @@ export async function getChatbotResponse(
 // Function to generate weekly summary
 export async function generateWeeklySummary(slackMessages: string[], projectName: string) {
   try {
+    // Get the model from settings
+    const model = await getCurrentModel();
+    
     const response = await openai.chat.completions.create({
-      model: "gpt-4o", // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
+      model, // Use model from settings
       messages: [
         {
           role: "system",

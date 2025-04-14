@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,6 +13,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { 
   Shield, 
@@ -25,9 +32,13 @@ import {
   KeyIcon,
   CheckCircle,
   XCircle,
-  Loader2
+  Loader2,
+  Database,
+  MessageCircle
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { queryClient, apiRequest } from "@/lib/queryClient";
 
 export default function Settings() {
   const { user } = useAuth();
@@ -57,6 +68,46 @@ export default function Settings() {
     model?: string;
     error?: string;
   }>(null);
+
+  // Fetch app settings
+  const { 
+    data: settings, 
+    isLoading: isLoadingSettings 
+  } = useQuery({
+    queryKey: ['/api/settings'],
+    queryFn: () => fetch('/api/settings').then(res => res.json())
+  });
+
+  // Fetch Slack channels
+  const { 
+    data: slackChannels, 
+    isLoading: isLoadingChannels 
+  } = useQuery({
+    queryKey: ['/api/system/slack-channels'],
+    queryFn: () => fetch('/api/system/slack-channels').then(res => res.json())
+  });
+
+  // Update settings mutation
+  const updateSettingsMutation = useMutation({
+    mutationFn: async (data: { openaiModel: string }) => {
+      const response = await apiRequest('PUT', '/api/settings', data);
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/settings'] });
+      toast({
+        title: "Settings updated",
+        description: "OpenAI model preference has been saved.",
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Failed to update settings",
+        description: error.message || "An error occurred",
+        variant: "destructive",
+      });
+    }
+  });
 
   const handleSaveApiSettings = () => {
     // In a real app, this would save to the server
@@ -423,6 +474,115 @@ export default function Settings() {
                 Save Email Settings
               </Button>
             </CardFooter>
+          </Card>
+
+          {/* AI Model Settings */}
+          <Card className="lg:col-span-2">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <MessageCircle className="h-5 w-5 text-[#D2B48C]" />
+                AI Model Settings
+              </CardTitle>
+              <CardDescription>
+                Configure AI model for all SPH ChatBots
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {isLoadingSettings ? (
+                <div className="flex items-center justify-center py-4">
+                  <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
+                </div>
+              ) : (
+                <>
+                  <div className="space-y-2">
+                    <Label htmlFor="openai-model">Default OpenAI Model</Label>
+                    <Select 
+                      defaultValue={settings?.openaiModel || "gpt-4o"}
+                      onValueChange={(value) => {
+                        updateSettingsMutation.mutate({ openaiModel: value });
+                      }}
+                      disabled={updateSettingsMutation.isPending}
+                    >
+                      <SelectTrigger 
+                        id="openai-model" 
+                        className="focus-visible:ring-[#D2B48C]"
+                      >
+                        <SelectValue placeholder="Select a model" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {settings?.availableModels?.map((model: string) => (
+                          <SelectItem key={model} value={model}>
+                            {model}
+                          </SelectItem>
+                        )) || (
+                          <SelectItem value="gpt-4o">gpt-4o</SelectItem>
+                        )}
+                      </SelectContent>
+                    </Select>
+                    <p className="text-xs text-gray-500">
+                      This model will be used for all AI responses and summary generation across all chatbots
+                    </p>
+                    {updateSettingsMutation.isPending && (
+                      <p className="text-xs text-amber-600 flex items-center">
+                        <Loader2 className="h-3 w-3 mr-1 animate-spin" />
+                        Updating model preference...
+                      </p>
+                    )}
+                  </div>
+                </>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Slack Channels */}
+          <Card className="lg:col-span-2">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <MessageSquare className="h-5 w-5 text-[#D2B48C]" />
+                Available Slack Channels
+              </CardTitle>
+              <CardDescription>
+                Channels your SPH ChatBot can access
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {isLoadingChannels ? (
+                <div className="flex items-center justify-center py-4">
+                  <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
+                </div>
+              ) : slackChannels && slackChannels.length > 0 ? (
+                <div className="border rounded-md overflow-hidden">
+                  <table className="w-full">
+                    <thead className="bg-gray-50 border-b">
+                      <tr>
+                        <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Channel Name</th>
+                        <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Channel ID</th>
+                        <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Member Count</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200">
+                      {slackChannels.map((channel: any) => (
+                        <tr key={channel.id} className="hover:bg-gray-50">
+                          <td className="py-2 px-4 text-sm"># {channel.name}</td>
+                          <td className="py-2 px-4 text-sm font-mono text-gray-500">{channel.id}</td>
+                          <td className="py-2 px-4 text-sm text-gray-500">{channel.numMembers || "-"}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ) : slackChannels && slackChannels.length === 0 ? (
+                <div className="text-center py-6 text-gray-500">
+                  <AlertCircle className="h-10 w-10 mx-auto mb-2 text-gray-400" />
+                  <p>No channels available. Make sure your Slack bot is added to channels.</p>
+                </div>
+              ) : (
+                <div className="text-center py-6 text-gray-500">
+                  <AlertCircle className="h-10 w-10 mx-auto mb-2 text-gray-400" />
+                  <p>Failed to load Slack channels. Check your connection.</p>
+                </div>
+              )}
+            </CardContent>
           </Card>
 
           {/* System Info */}
