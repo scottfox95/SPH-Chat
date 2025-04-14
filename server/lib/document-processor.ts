@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import { PDFLoader } from "@langchain/community/document_loaders/fs/pdf";
 import * as ExcelJS from "exceljs";
+import { promisify } from "util";
 
 /**
  * Extracts text from a PDF file
@@ -68,6 +69,44 @@ export async function extractDataFromExcel(filePath: string): Promise<string[]> 
 }
 
 /**
+ * Extracts text from a plain text file
+ * @param filePath Path to the text file
+ * @returns Extracted text with line numbers for longer files
+ */
+export async function extractTextFromTXT(filePath: string): Promise<string[]> {
+  try {
+    const readFile = promisify(fs.readFile);
+    const content = await readFile(filePath, 'utf8');
+    
+    // Split the content by lines
+    const lines = content.split(/\r?\n/);
+    
+    // For small text files, just return the whole content as one chunk
+    if (lines.length <= 10) {
+      return [`[Text File] ${content}`];
+    }
+    
+    // For larger text files, add line numbers and break into sections
+    const result: string[] = [];
+    const sectionSize = 50; // Number of lines per section
+    
+    for (let i = 0; i < lines.length; i += sectionSize) {
+      const section = lines.slice(i, i + sectionSize);
+      const sectionText = section.map((line, idx) => 
+        `Line ${i + idx + 1}: ${line}`
+      ).join('\n');
+      
+      result.push(`[Text File Section ${Math.floor(i / sectionSize) + 1}]\n${sectionText}`);
+    }
+    
+    return result;
+  } catch (error) {
+    console.error("Error extracting text from TXT file:", error);
+    return [`Error processing text file: ${path.basename(filePath)}`];
+  }
+}
+
+/**
  * Processes uploaded documents based on file type
  * @param filePath Path to the document
  * @param fileType Type of the document (pdf, excel)
@@ -88,6 +127,11 @@ export async function processDocument(filePath: string, fileType: string): Promi
       fileType === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     ) {
       return extractDataFromExcel(filePath);
+    } else if (
+      fileType === "text/plain" ||
+      filePath.toLowerCase().endsWith('.txt')
+    ) {
+      return extractTextFromTXT(filePath);
     } else {
       throw new Error(`Unsupported file type: ${fileType}`);
     }
