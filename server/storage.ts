@@ -19,6 +19,12 @@ import {
   type Message,
   type InsertMessage
 } from "@shared/schema";
+import { db } from "./db";
+import { eq, desc, and, isNull, sql } from "drizzle-orm";
+import session from "express-session";
+import connectPg from "connect-pg-simple";
+import { pool } from "./db";
+import createMemoryStore from "memorystore";
 
 // Interface for storage methods
 export interface IStorage {
@@ -52,6 +58,9 @@ export interface IStorage {
   // Message methods
   getMessages(chatbotId: number, limit?: number): Promise<Message[]>;
   createMessage(message: InsertMessage): Promise<Message>;
+  
+  // Session store for authentication
+  sessionStore: session.Store;
 }
 
 // In-memory storage implementation

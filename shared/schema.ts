@@ -17,7 +17,7 @@ export const chatbots = pgTable("chatbots", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
   slackChannelId: text("slack_channel_id").notNull(),
-  createdById: integer("created_by_id").notNull(),
+  createdById: integer("created_by_id").notNull().references(() => users.id),
   publicToken: text("public_token").notNull().unique(),
   isActive: boolean("is_active").notNull().default(true),
   requireAuth: boolean("require_auth").notNull().default(false),
@@ -27,18 +27,18 @@ export const chatbots = pgTable("chatbots", {
 // Document uploads related to chatbots
 export const documents = pgTable("documents", {
   id: serial("id").primaryKey(),
-  chatbotId: integer("chatbot_id").notNull(),
+  chatbotId: integer("chatbot_id").notNull().references(() => chatbots.id, { onDelete: 'cascade' }),
   filename: text("filename").notNull(),
   originalName: text("original_name").notNull(),
   fileType: text("file_type").notNull(),
-  uploadedById: integer("uploaded_by_id").notNull(),
+  uploadedById: integer("uploaded_by_id").notNull().references(() => users.id),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
 // Weekly summary reports
 export const summaries = pgTable("summaries", {
   id: serial("id").primaryKey(),
-  chatbotId: integer("chatbot_id").notNull(),
+  chatbotId: integer("chatbot_id").notNull().references(() => chatbots.id, { onDelete: 'cascade' }),
   content: text("content").notNull(),
   week: text("week").notNull(),
   sentAt: timestamp("sent_at").notNull().defaultNow(),
@@ -47,15 +47,15 @@ export const summaries = pgTable("summaries", {
 // Emails for summary distribution
 export const emailRecipients = pgTable("email_recipients", {
   id: serial("id").primaryKey(),
-  chatbotId: integer("chatbot_id").notNull(),
+  chatbotId: integer("chatbot_id").notNull().references(() => chatbots.id, { onDelete: 'cascade' }),
   email: text("email").notNull(),
 });
 
 // Chat message history
 export const messages = pgTable("messages", {
   id: serial("id").primaryKey(),
-  chatbotId: integer("chatbot_id").notNull(),
-  userId: integer("user_id"),
+  chatbotId: integer("chatbot_id").notNull().references(() => chatbots.id, { onDelete: 'cascade' }),
+  userId: integer("user_id").references(() => users.id),
   content: text("content").notNull(),
   isUserMessage: boolean("is_user_message").notNull(),
   citation: text("citation"),
