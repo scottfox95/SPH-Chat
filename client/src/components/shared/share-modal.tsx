@@ -74,9 +74,9 @@ export default function ShareModal({ isOpen, onClose, chatbot }: ShareModalProps
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Share this HomeBuildBot</DialogTitle>
+          <DialogTitle>Share this SPH ChatBot</DialogTitle>
           <DialogDescription>
-            Anyone with this link can access this HomeBuildBot for {chatbot.name} project.
+            Anyone with this link can access this SPH ChatBot for {chatbot.name} project.
           </DialogDescription>
         </DialogHeader>
         

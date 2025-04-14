@@ -13,7 +13,7 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
             <div className="w-10 h-10 rounded-xl bg-[#D2B48C] flex items-center justify-center">
               <span className="text-white font-semibold text-lg">SPH</span>
             </div>
-            <span className="ml-3 text-xl font-semibold text-gray-900">HomeBuildBot</span>
+            <span className="ml-3 text-xl font-semibold text-gray-900">SPH ChatBot</span>
           </div>
         </div>
         

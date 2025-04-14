@@ -30,7 +30,7 @@ export default function Dashboard() {
         <div className="flex justify-between items-center">
           <div>
             <h1 className="text-xl font-semibold">Dashboard</h1>
-            <p className="text-sm text-gray-500">Manage your HomeBuildBot assistants</p>
+            <p className="text-sm text-gray-500">Manage your SPH ChatBot assistants</p>
           </div>
           <Button 
             onClick={() => setCreateModalOpen(true)}
@@ -117,7 +117,7 @@ export default function Dashboard() {
                   <MessageSquare className="h-10 w-10 text-gray-400 mb-3" />
                   <h3 className="text-lg font-medium">No active projects</h3>
                   <p className="text-sm text-gray-500 mt-1">
-                    Start by creating a new HomeBuildBot for your project.
+                    Start by creating a new SPH ChatBot for your project.
                   </p>
                   <Button 
                     onClick={() => setCreateModalOpen(true)}
@@ -148,7 +148,7 @@ export default function Dashboard() {
                   <MessageSquare className="h-10 w-10 text-gray-400 mb-3" />
                   <h3 className="text-lg font-medium">No projects found</h3>
                   <p className="text-sm text-gray-500 mt-1">
-                    Create your first HomeBuildBot to get started.
+                    Create your first SPH ChatBot to get started.
                   </p>
                   <Button 
                     onClick={() => setCreateModalOpen(true)}
@@ -168,7 +168,7 @@ export default function Dashboard() {
       <Dialog open={createModalOpen} onOpenChange={setCreateModalOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Create New HomeBuildBot</DialogTitle>
+            <DialogTitle>Create New SPH ChatBot</DialogTitle>
           </DialogHeader>
           <CreateChatbotForm />
         </DialogContent>

@@ -98,7 +98,7 @@ export default function ChatInterface({
             <div className="flex-1">
               <div className="bg-white rounded-xl rounded-tl-sm p-4 shadow-sm max-w-3xl">
                 <p className="text-sm">
-                  Hello! I'm HomeBuildBot for {chatbotName}. I can answer questions about this project based on documents and Slack messages. How can I help you today?
+                  Hello! I'm SPH ChatBot for {chatbotName}. I can answer questions about this project based on documents and Slack messages. How can I help you today?
                 </p>
               </div>
             </div>

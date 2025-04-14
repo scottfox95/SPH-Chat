@@ -42,7 +42,7 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
             <div className="w-8 h-8 rounded-xl bg-[#D2B48C] flex items-center justify-center">
               <span className="text-white font-semibold">SPH</span>
             </div>
-            <span className="ml-2 font-semibold text-gray-900">HomeBuildBot</span>
+            <span className="ml-2 font-semibold text-gray-900">SPH ChatBot</span>
           </div>
         </div>
         
