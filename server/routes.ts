@@ -5,7 +5,13 @@ import { storage } from "./storage";
 import { requireAuth, requireAdmin } from "./middleware/auth";
 import { upload } from "./middleware/multer";
 import { z } from "zod";
-import { loginSchema, chatMessageSchema, addEmailRecipientSchema } from "@shared/schema";
+import { 
+  loginSchema, 
+  chatMessageSchema, 
+  addEmailRecipientSchema, 
+  updateSettingsSchema,
+  OPENAI_MODELS
+} from "@shared/schema";
 import { getChatbotResponse, generateWeeklySummary, testOpenAIConnection } from "./lib/openai";
 import { 
   getFormattedSlackMessages, 
@@ -560,6 +566,42 @@ You should **never make up information**. You may summarize or synthesize detail
         error: "Failed to list Slack channels",
         details: error.message || "Unknown error"
       });
+    }
+  });
+  
+  // Settings routes
+  apiRouter.get("/settings", async (req, res) => {
+    try {
+      const settings = await storage.getSettings();
+      
+      // Return settings object with available models
+      res.json({
+        ...settings,
+        availableModels: OPENAI_MODELS
+      });
+    } catch (error) {
+      console.error("Error fetching settings:", error);
+      res.status(500).json({ message: "Failed to fetch settings" });
+    }
+  });
+  
+  apiRouter.put("/settings", async (req, res) => {
+    try {
+      const data = updateSettingsSchema.parse(req.body);
+      
+      const settings = await storage.updateSettings(data);
+      
+      // Return settings object with available models
+      res.json({
+        ...settings,
+        availableModels: OPENAI_MODELS
+      });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: error.errors[0].message });
+      }
+      console.error("Error updating settings:", error);
+      res.status(500).json({ message: "Failed to update settings" });
     }
   });
   

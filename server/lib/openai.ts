@@ -1,9 +1,21 @@
 import OpenAI from "openai";
+import { storage } from "../storage";
 
 // Initialize OpenAI client
 const openai = new OpenAI({ 
   apiKey: process.env.OPENAI_API_KEY || "sk-placeholder"
 });
+
+// Helper to get the current model from settings
+async function getCurrentModel(): Promise<string> {
+  try {
+    const settings = await storage.getSettings();
+    return settings?.openaiModel || "gpt-4o";
+  } catch (error) {
+    console.error("Error getting OpenAI model from settings:", error);
+    return "gpt-4o"; // Default to gpt-4o if settings retrieval fails
+  }
+}
 
 // Function to get chatbot response
 export async function getChatbotResponse(
@@ -19,8 +31,11 @@ export async function getChatbotResponse(
       ...slackMessages.map((msg) => `SLACK MESSAGE: ${msg}`),
     ].join("\n\n");
 
+    // Get the model from settings
+    const model = await getCurrentModel();
+    
     const response = await openai.chat.completions.create({
-      model: "gpt-4o", // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
+      model, // Use model from settings
       messages: [
         {
           role: "system",

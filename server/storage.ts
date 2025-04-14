@@ -484,6 +484,46 @@ export class DatabaseStorage implements IStorage {
     
     return newMessage;
   }
+  
+  // Settings methods
+  async getSettings(): Promise<Settings | undefined> {
+    const [setting] = await db.select().from(settings).limit(1);
+    
+    if (!setting) {
+      // Initialize with default settings
+      return this.updateSettings({ openaiModel: "gpt-4o" });
+    }
+    
+    return setting;
+  }
+  
+  async updateSettings(data: UpdateSettings): Promise<Settings> {
+    const now = new Date();
+    const [existingSetting] = await db.select().from(settings).limit(1);
+    
+    if (!existingSetting) {
+      // Create settings if they don't exist
+      const [newSettings] = await db.insert(settings)
+        .values({
+          openaiModel: data.openaiModel || "gpt-4o",
+          updatedAt: now
+        })
+        .returning();
+        
+      return newSettings;
+    } else {
+      // Update existing settings
+      const [updatedSettings] = await db.update(settings)
+        .set({ 
+          ...data, 
+          updatedAt: now 
+        })
+        .where(eq(settings.id, existingSetting.id))
+        .returning();
+        
+      return updatedSettings;
+    }
+  }
 }
 
 // Export a storage instance
