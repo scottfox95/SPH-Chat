@@ -28,13 +28,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Check if user is already logged in
   const { data, isLoading, refetch } = useQuery({
-    queryKey: ["/api/auth/user"],
+    queryKey: ["/api/auth/me"],
     staleTime: Infinity,
     refetchOnWindowFocus: false,
     retry: false,
     queryFn: async () => {
       try {
-        const res = await fetch("/api/auth/user", {
+        const res = await fetch("/api/auth/me", {
           credentials: "include",
         });
         if (res.status === 401) return null;
