@@ -407,6 +407,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
+  // Clear chat history
+  apiRouter.delete("/chatbots/:id/messages", async (req, res) => {
+    try {
+      const chatbotId = parseInt(req.params.id);
+      const token = req.query.token as string;
+      
+      // Check if token is valid
+      const chatbot = await storage.getChatbot(chatbotId);
+      
+      if (!chatbot) {
+        return res.status(404).json({ message: "Chatbot not found" });
+      }
+      
+      // Check token if authentication is required
+      if (chatbot.requireAuth && chatbot.publicToken !== token) {
+        return res.status(401).json({ message: "Valid token required" });
+      }
+      
+      const success = await storage.clearMessages(chatbotId);
+      
+      res.json({ success });
+    } catch (error) {
+      console.error("Error clearing messages:", error);
+      res.status(500).json({ message: "Failed to clear chat history" });
+    }
+  });
+  
   apiRouter.post("/chatbots/:id/chat", async (req, res) => {
     try {
       const chatbotId = parseInt(req.params.id);

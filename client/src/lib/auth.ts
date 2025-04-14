@@ -67,3 +67,27 @@ export async function getChatMessages(chatbotId: number, token?: string) {
     throw error;
   }
 }
+
+/**
+ * Clears all chat messages for a chatbot
+ * @param chatbotId The ID of the chatbot
+ * @param token Optional token for public access
+ * @returns Success status
+ */
+export async function clearChatMessages(chatbotId: number, token?: string) {
+  try {
+    const queryParams = token ? `?token=${token}` : "";
+    const res = await fetch(`/api/chatbots/${chatbotId}/messages${queryParams}`, {
+      method: 'DELETE',
+    });
+    
+    if (!res.ok) {
+      throw new Error(`Failed to clear messages: ${res.statusText}`);
+    }
+    
+    return await res.json();
+  } catch (error) {
+    console.error("Error clearing messages:", error);
+    throw error;
+  }
+}

@@ -61,6 +61,7 @@ export interface IStorage {
   // Message methods
   getMessages(chatbotId: number, limit?: number): Promise<Message[]>;
   createMessage(message: InsertMessage): Promise<Message>;
+  clearMessages(chatbotId: number): Promise<boolean>;
   
   // Settings methods
   getSettings(): Promise<Settings | undefined>;
@@ -285,6 +286,19 @@ export class MemStorage implements IStorage {
     return newMessage;
   }
   
+  async clearMessages(chatbotId: number): Promise<boolean> {
+    // Get all messages for this chatbot
+    const chatbotMessages = Array.from(this.messages.entries())
+      .filter(([_, message]) => message.chatbotId === chatbotId);
+    
+    // Delete each message
+    chatbotMessages.forEach(([id, _]) => {
+      this.messages.delete(id);
+    });
+    
+    return true;
+  }
+  
   // Settings methods
   async getSettings(): Promise<Settings | undefined> {
     if (!this.appSettings) {
@@ -483,6 +497,12 @@ export class DatabaseStorage implements IStorage {
       .returning();
     
     return newMessage;
+  }
+  
+  async clearMessages(chatbotId: number): Promise<boolean> {
+    // Delete all messages for this chatbot
+    await db.delete(messages).where(eq(messages.chatbotId, chatbotId));
+    return true;
   }
   
   // Settings methods
