@@ -1,0 +1,63 @@
+# Project Name
+SPH Chat
+
+## Project Description
+SPH Chat is a web application designed for homebuilding companies to generate project-specific AI chatbots, one for each ongoing home build. These bots are powered by OpenAI’s Responses API and are trained on:
+- Project files (e.g., budgets, schedules, blueprints) uploaded manually per project
+- Slack messages from the home’s dedicated Slack channel, accessed via Slack's MCP Server
+
+Each chatbot is accessible via a public sharable link, allowing users to ask questions like "What's the drywall status?" and receive contextually relevant answers. Only authenticated admins can create or modify chatbots.
+
+The system also generates a weekly summary of Slack channel activity, which is emailed to stakeholders.
+
+## Target Audience
+- Project Managers (on-site and remote)
+- Company Executives (e.g., Directors of Construction)
+- Optional future use: contractors, external vendors, inspectors
+
+## Desired Features
+
+### Chatbot Creation and Admin Panel
+- [x] Manual chatbot creation interface
+    - [x] Input home name and Slack channel ID
+    - [x] Upload initial documents (PDF, Excel)
+        - [x] Auto-convert to plain text for embedding
+    - [x] Generate and display public shareable link
+- [x] Admin authentication for creating/editing bots
+
+### Knowledge Integration
+- [x] Embed document data using vector storage or RAG
+    - [x] Support PDF and Excel conversion to text
+    - [x] Retain references to page/row for citations
+- [x] Slack MCP Server integration
+    - [x] Use a single Slack bot token for all project channels
+    - [x] Read Slack messages for each linked channel
+    - [x] Store messages in searchable format for each bot
+
+### Conversational AI
+- [x] Use OpenAI’s Responses API
+- [x] Natural language input supported (e.g., “Who was last on site?”)
+- [x] Responses synthesized from both documents and Slack history
+- [x] Session-based memory (remembers during current chat session only)
+
+### Weekly Summary Reports
+- [x] Automatically generate weekly summary of Slack activity
+    - [x] Highlights key messages, decisions, or updates
+- [x] Email summary to designated recipients per bot
+
+## Design Requests
+- [x] Admin dashboard with:
+    - [x] List of all bots and their linked channels
+    - [x] Status indicators (active/inactive)
+    - [x] Access to summary history
+- [x] Individual bot interface with:
+    - [x] Web chat UI
+    - [x] Citations for message/document sources
+- [x] Responsive design for mobile device access
+
+## Other Notes
+- Code must be written for and compatible with Replit’s coding agent
+- All AI responses powered by OpenAI's Responses API
+- Slack integration must use Slack's MCP Server
+- Each bot must be accessible via a unique public link
+- Only authenticated admins may create/edit/delete bots
