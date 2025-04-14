@@ -99,13 +99,19 @@ export const insertEmailRecipientSchema = createInsertSchema(emailRecipients).pi
   email: true,
 });
 
-export const insertMessageSchema = createInsertSchema(messages).pick({
-  chatbotId: true,
-  userId: true,
-  content: true,
-  isUserMessage: true,
-  citation: true,
-});
+export const insertMessageSchema = createInsertSchema(messages)
+  .pick({
+    chatbotId: true,
+    userId: true,
+    content: true,
+    isUserMessage: true,
+    citation: true,
+  })
+  .transform((data) => ({
+    ...data,
+    userId: data.userId ?? null,
+    citation: data.citation ?? null
+  }));
 
 // Types
 export type User = typeof users.$inferSelect;

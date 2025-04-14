@@ -108,8 +108,11 @@ export class MemStorage implements IStorage {
   
   async createUser(insertUser: InsertUser): Promise<User> {
     const id = this.currentUserId++;
-    const now = new Date();
-    const user: User = { ...insertUser, id };
+    const user: User = { 
+      ...insertUser, 
+      id,
+      role: insertUser.role || "user" // Ensure role is not undefined
+    };
     this.users.set(id, user);
     return user;
   }
@@ -138,7 +141,9 @@ export class MemStorage implements IStorage {
       ...chatbot,
       id,
       publicToken,
-      createdAt: now
+      createdAt: now,
+      isActive: chatbot.isActive ?? true,
+      requireAuth: chatbot.requireAuth ?? false
     };
     
     this.chatbots.set(id, newChatbot);
@@ -246,7 +251,9 @@ export class MemStorage implements IStorage {
     const newMessage: Message = {
       ...message,
       id,
-      createdAt: now
+      createdAt: now,
+      userId: message.userId ?? null,
+      citation: message.citation ?? null
     };
     
     this.messages.set(id, newMessage);
