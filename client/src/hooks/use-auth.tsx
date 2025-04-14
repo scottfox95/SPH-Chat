@@ -28,13 +28,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Check if user is already logged in
   const { data, isLoading, refetch } = useQuery({
-    queryKey: ["/api/user"],
+    queryKey: ["/api/auth/user"],
     staleTime: Infinity,
     refetchOnWindowFocus: false,
     retry: false,
     queryFn: async () => {
       try {
-        const res = await fetch("/api/user", {
+        const res = await fetch("/api/auth/user", {
           credentials: "include",
         });
         if (res.status === 401) return null;
@@ -58,7 +58,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const loginMutation = useMutation({
     mutationFn: async ({ username, password }: { username: string; password: string }) => {
       try {
-        const res = await fetch("/api/login", {
+        const res = await fetch("/api/auth/login", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ username, password }),
@@ -96,7 +96,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logoutMutation = useMutation({
     mutationFn: async () => {
       try {
-        const res = await fetch("/api/logout", {
+        const res = await fetch("/api/auth/logout", {
           method: "POST",
           credentials: "include" 
         });
