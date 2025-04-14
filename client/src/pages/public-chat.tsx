@@ -56,7 +56,7 @@ export default function PublicChat() {
         <div className="w-10 h-10 rounded-xl bg-[#D2B48C] flex items-center justify-center mb-4">
           <span className="text-white font-semibold">SPH</span>
         </div>
-        <h1 className="text-xl font-semibold mb-2">HomeBuildBot</h1>
+        <h1 className="text-xl font-semibold mb-2">SPH ChatBot</h1>
         <div className="animate-spin h-6 w-6 border-2 border-[#D2B48C] border-t-transparent rounded-full"></div>
         <p className="mt-2 text-gray-500">Loading chatbot...</p>
       </div>
@@ -69,7 +69,7 @@ export default function PublicChat() {
         <div className="w-10 h-10 rounded-xl bg-[#D2B48C] flex items-center justify-center mb-4">
           <span className="text-white font-semibold">SPH</span>
         </div>
-        <h1 className="text-xl font-semibold mb-2">HomeBuildBot</h1>
+        <h1 className="text-xl font-semibold mb-2">SPH ChatBot</h1>
         <p className="text-gray-800 text-center max-w-md">
           The chatbot link you're trying to access is invalid or has expired.
         </p>
@@ -89,7 +89,7 @@ export default function PublicChat() {
           </div>
           <div className="ml-3">
             <h1 className="text-lg font-semibold">{chatbotName}</h1>
-            <p className="text-xs text-gray-500">HomeBuildBot Assistant</p>
+            <p className="text-xs text-gray-500">SPH ChatBot Assistant</p>
           </div>
         </div>
         <Button
@@ -121,7 +121,7 @@ export default function PublicChat() {
       </div>
 
       <footer className="bg-white border-t border-gray-200 p-3 text-center text-xs text-gray-500">
-        Powered by HomeBuildBot · AI Assistant for Construction Projects
+        Powered by SPH ChatBot · AI Assistant for Construction Projects
       </footer>
     </div>
   );
