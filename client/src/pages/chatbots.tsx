@@ -45,7 +45,7 @@ export default function Chatbots() {
         <div className="flex justify-between items-center">
           <div>
             <h1 className="text-xl font-semibold">All Chatbots</h1>
-            <p className="text-sm text-gray-500">Manage your HomeBuildBot assistants</p>
+            <p className="text-sm text-gray-500">Manage your SPH ChatBot assistants</p>
           </div>
           <Button 
             onClick={() => setCreateModalOpen(true)}
@@ -137,7 +137,7 @@ export default function Chatbots() {
       <Dialog open={createModalOpen} onOpenChange={setCreateModalOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Create New HomeBuildBot</DialogTitle>
+            <DialogTitle>Create New SPH ChatBot</DialogTitle>
           </DialogHeader>
           <CreateChatbotForm />
         </DialogContent>

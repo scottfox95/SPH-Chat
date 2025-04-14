@@ -162,7 +162,7 @@ export default function Settings() {
         <div className="flex justify-between items-center">
           <div>
             <h1 className="text-xl font-semibold">Settings</h1>
-            <p className="text-sm text-gray-500">Manage your HomeBuildBot configuration</p>
+            <p className="text-sm text-gray-500">Manage your SPH ChatBot configuration</p>
           </div>
         </div>
       </header>
