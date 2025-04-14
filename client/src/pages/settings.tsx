@@ -22,8 +22,12 @@ import {
   MessageSquare,
   Settings as SettingsIcon,
   UserIcon,
-  KeyIcon
+  KeyIcon,
+  CheckCircle,
+  XCircle,
+  Loader2
 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 export default function Settings() {
   const { user } = useAuth();
@@ -37,6 +41,22 @@ export default function Settings() {
     smtpUser: "",
     smtpPass: "",
   });
+  
+  // Connection testing states
+  const [testingSlack, setTestingSlack] = useState(false);
+  const [slackStatus, setSlackStatus] = useState<null | {
+    connected: boolean;
+    teamName?: string;
+    botName?: string;
+    error?: string;
+  }>(null);
+  
+  const [testingOpenAI, setTestingOpenAI] = useState(false);
+  const [openAIStatus, setOpenAIStatus] = useState<null | {
+    connected: boolean;
+    model?: string;
+    error?: string;
+  }>(null);
 
   const handleSaveApiSettings = () => {
     // In a real app, this would save to the server
@@ -44,6 +64,10 @@ export default function Settings() {
       title: "Settings saved",
       description: "API settings have been updated successfully.",
     });
+    
+    // Reset connection statuses after saving new credentials
+    setSlackStatus(null);
+    setOpenAIStatus(null);
   };
 
   const handleSaveEmailSettings = () => {
@@ -52,6 +76,84 @@ export default function Settings() {
       title: "Email settings saved",
       description: "Email settings have been updated successfully.",
     });
+  };
+  
+  // Test Slack connection
+  const testSlackConnection = async () => {
+    setTestingSlack(true);
+    setSlackStatus(null);
+    
+    try {
+      const response = await fetch("/api/system/test-slack");
+      const data = await response.json();
+      
+      setSlackStatus(data);
+      
+      if (data.connected) {
+        toast({
+          title: "Slack connection successful",
+          description: `Connected to ${data.teamName} as ${data.botName}`,
+        });
+      } else {
+        toast({
+          title: "Slack connection failed",
+          description: data.error || "Unknown error",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      setSlackStatus({
+        connected: false,
+        error: "Network error checking Slack connection",
+      });
+      
+      toast({
+        title: "Slack connection check failed",
+        description: "Could not connect to the server",
+        variant: "destructive",
+      });
+    } finally {
+      setTestingSlack(false);
+    }
+  };
+  
+  // Test OpenAI connection
+  const testOpenAIConnection = async () => {
+    setTestingOpenAI(true);
+    setOpenAIStatus(null);
+    
+    try {
+      const response = await fetch("/api/system/test-openai");
+      const data = await response.json();
+      
+      setOpenAIStatus(data);
+      
+      if (data.connected) {
+        toast({
+          title: "OpenAI connection successful",
+          description: `Connected to model: ${data.model}`,
+        });
+      } else {
+        toast({
+          title: "OpenAI connection failed",
+          description: data.error || "Unknown error",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      setOpenAIStatus({
+        connected: false,
+        error: "Network error checking OpenAI connection",
+      });
+      
+      toast({
+        title: "OpenAI connection check failed",
+        description: "Could not connect to the server",
+        variant: "destructive",
+      });
+    } finally {
+      setTestingOpenAI(false);
+    }
   };
 
   return (
@@ -80,7 +182,21 @@ export default function Settings() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="slack-token">Slack Bot Token</Label>
+                <div className="flex justify-between items-end">
+                  <Label htmlFor="slack-token">Slack Bot Token</Label>
+                  {slackStatus !== null && (
+                    <Badge 
+                      className={`mb-1 ${slackStatus.connected ? 'bg-green-100 text-green-800 hover:bg-green-100' : 'bg-red-100 text-red-800 hover:bg-red-100'}`}
+                    >
+                      {slackStatus.connected ? (
+                        <CheckCircle className="w-3 h-3 mr-1" />
+                      ) : (
+                        <XCircle className="w-3 h-3 mr-1" />
+                      )}
+                      {slackStatus.connected ? 'Connected' : 'Error'}
+                    </Badge>
+                  )}
+                </div>
                 <Input
                   id="slack-token"
                   type="password"
@@ -89,13 +205,55 @@ export default function Settings() {
                   placeholder="xoxb-your-slack-token"
                   className="focus-visible:ring-[#D2B48C]"
                 />
-                <p className="text-xs text-gray-500">
-                  Used to connect to your Slack workspace and access channels
-                </p>
+                <div className="flex justify-between">
+                  <p className="text-xs text-gray-500">
+                    Used to connect to your Slack workspace and access channels
+                  </p>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={testSlackConnection}
+                    disabled={testingSlack}
+                    className="text-xs h-7"
+                  >
+                    {testingSlack ? (
+                      <>
+                        <Loader2 className="mr-1 h-3 w-3 animate-spin" />
+                        Testing
+                      </>
+                    ) : (
+                      'Test Connection'
+                    )}
+                  </Button>
+                </div>
+                {slackStatus?.teamName && (
+                  <p className="text-xs text-green-600">
+                    Connected to {slackStatus.teamName} as {slackStatus.botName}
+                  </p>
+                )}
+                {slackStatus?.error && (
+                  <p className="text-xs text-red-600">
+                    Error: {slackStatus.error}
+                  </p>
+                )}
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="openai-key">OpenAI API Key</Label>
+                <div className="flex justify-between items-end">
+                  <Label htmlFor="openai-key">OpenAI API Key</Label>
+                  {openAIStatus !== null && (
+                    <Badge 
+                      className={`mb-1 ${openAIStatus.connected ? 'bg-green-100 text-green-800 hover:bg-green-100' : 'bg-red-100 text-red-800 hover:bg-red-100'}`}
+                    >
+                      {openAIStatus.connected ? (
+                        <CheckCircle className="w-3 h-3 mr-1" />
+                      ) : (
+                        <XCircle className="w-3 h-3 mr-1" />
+                      )}
+                      {openAIStatus.connected ? 'Connected' : 'Error'}
+                    </Badge>
+                  )}
+                </div>
                 <Input
                   id="openai-key"
                   type="password"
@@ -104,9 +262,37 @@ export default function Settings() {
                   placeholder="sk-your-openai-key"
                   className="focus-visible:ring-[#D2B48C]"
                 />
-                <p className="text-xs text-gray-500">
-                  Required for AI responses and weekly summary generation
-                </p>
+                <div className="flex justify-between">
+                  <p className="text-xs text-gray-500">
+                    Required for AI responses and weekly summary generation
+                  </p>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={testOpenAIConnection}
+                    disabled={testingOpenAI}
+                    className="text-xs h-7"
+                  >
+                    {testingOpenAI ? (
+                      <>
+                        <Loader2 className="mr-1 h-3 w-3 animate-spin" />
+                        Testing
+                      </>
+                    ) : (
+                      'Test Connection'
+                    )}
+                  </Button>
+                </div>
+                {openAIStatus?.connected && openAIStatus.model && (
+                  <p className="text-xs text-green-600">
+                    Connected to model: {openAIStatus.model}
+                  </p>
+                )}
+                {openAIStatus?.error && (
+                  <p className="text-xs text-red-600">
+                    Error: {openAIStatus.error}
+                  </p>
+                )}
               </div>
             </CardContent>
             <CardFooter>
