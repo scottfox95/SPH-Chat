@@ -1,0 +1,84 @@
+import OpenAI from "openai";
+
+// Initialize OpenAI client
+const openai = new OpenAI({ 
+  apiKey: process.env.OPENAI_API_KEY || "sk-placeholder"
+});
+
+// Function to get chatbot response
+export async function getChatbotResponse(
+  prompt: string,
+  documents: string[],
+  slackMessages: string[],
+  systemPrompt: string
+) {
+  try {
+    // Context for the model
+    const context = [
+      ...documents.map((doc) => `DOCUMENT: ${doc}`),
+      ...slackMessages.map((msg) => `SLACK MESSAGE: ${msg}`),
+    ].join("\n\n");
+
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o", // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
+      messages: [
+        {
+          role: "system",
+          content: systemPrompt,
+        },
+        {
+          role: "user",
+          content: `I need information about the following: ${prompt}\n\nHere's all the context I have:\n${context}`,
+        },
+      ],
+      temperature: 0.3,
+    });
+
+    const responseText = response.choices[0].message.content;
+    
+    // Parse the citation if it exists
+    let citation = "";
+    const citationRegex = /\[(?:From |Source: |Slack(?: message)?,? )?(.*?)\]/;
+    const match = responseText?.match(citationRegex);
+    
+    if (match && match[1]) {
+      citation = match[1];
+    }
+    
+    return {
+      content: responseText?.replace(citationRegex, "").trim() || "I wasn't able to find that information in the project files or Slack messages.",
+      citation: citation || "No specific source available"
+    };
+  } catch (error) {
+    console.error("OpenAI API error:", error);
+    return {
+      content: "I'm having trouble connecting to my knowledge base. Please try again later.",
+      citation: "Error"
+    };
+  }
+}
+
+// Function to generate weekly summary
+export async function generateWeeklySummary(slackMessages: string[], projectName: string) {
+  try {
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o", // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
+      messages: [
+        {
+          role: "system",
+          content: `You are an expert construction project manager. Create a concise weekly summary of activity for the ${projectName} homebuilding project based on Slack channel messages. Focus on key decisions, progress updates, issues, and upcoming milestones. Format the summary in HTML with sections for: 1) Key Achievements, 2) Issues or Blockers, 3) Upcoming Work, and 4) Action Items. Keep it professional and informative.`,
+        },
+        {
+          role: "user",
+          content: `Here are the Slack messages from the past week for the ${projectName} project:\n\n${slackMessages.join("\n\n")}`,
+        },
+      ],
+      temperature: 0.5,
+    });
+
+    return response.choices[0].message.content || "Unable to generate summary.";
+  } catch (error) {
+    console.error("OpenAI API error:", error);
+    return `<p>Error generating weekly summary for ${projectName}. Please try again later.</p>`;
+  }
+}
