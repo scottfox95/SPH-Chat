@@ -93,12 +93,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   
   // Chatbot routes
-  apiRouter.get("/chatbots", requireAuth, async (req, res) => {
+  apiRouter.get("/chatbots", async (req, res) => {
     const chatbots = await storage.getChatbots();
     res.json(chatbots);
   });
   
-  apiRouter.get("/chatbots/:id", requireAuth, async (req, res) => {
+  apiRouter.get("/chatbots/:id", async (req, res) => {
     const chatbot = await storage.getChatbot(parseInt(req.params.id));
     
     if (!chatbot) {
@@ -108,7 +108,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.json(chatbot);
   });
   
-  apiRouter.post("/chatbots", requireAdmin, async (req, res) => {
+  apiRouter.post("/chatbots", async (req, res) => {
     try {
       const { name, slackChannelId } = req.body;
       
@@ -131,7 +131,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  apiRouter.put("/chatbots/:id", requireAdmin, async (req, res) => {
+  apiRouter.put("/chatbots/:id", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       const { name, slackChannelId, isActive, requireAuth } = req.body;
