@@ -28,10 +28,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Check if user is already logged in
   const { data, isLoading, refetch } = useQuery({
-    queryKey: ["/api/auth/me"],
+    queryKey: ["/api/user"],
     staleTime: Infinity,
     refetchOnWindowFocus: false,
     retry: false,
+    queryFn: async () => {
+      try {
+        const res = await fetch("/api/user", {
+          credentials: "include",
+        });
+        if (res.status === 401) return null;
+        if (!res.ok) throw new Error('Failed to fetch user data');
+        return await res.json();
+      } catch (error) {
+        console.error("Failed to fetch user:", error);
+        return null;
+      }
+    }
   });
 
   // Set user when data changes
@@ -44,8 +57,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Login mutation
   const loginMutation = useMutation({
     mutationFn: async ({ username, password }: { username: string; password: string }) => {
-      const res = await apiRequest("POST", "/api/auth/login", { username, password });
-      return res.json();
+      try {
+        const res = await fetch("/api/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password }),
+          credentials: "include"
+        });
+        
+        if (!res.ok) {
+          const errorText = await res.text();
+          throw new Error(errorText || "Login failed");
+        }
+        
+        return await res.json();
+      } catch (error) {
+        console.error("Login error:", error);
+        throw error;
+      }
     },
     onSuccess: (data) => {
       setUser(data);
