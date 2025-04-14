@@ -21,7 +21,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import SidebarLayout from '@/components/layouts/sidebar-layout';
 
 export default function KnowledgeBase() {
   const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null);
@@ -98,69 +97,67 @@ export default function KnowledgeBase() {
   };
 
   return (
-    <SidebarLayout>
-      <div className="container mx-auto py-6">
-        <Card className="mb-8">
-          <CardHeader>
-            <CardTitle>Knowledge Base</CardTitle>
-            <CardDescription>
-              Manage all documents uploaded to your chatbots
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {isLoading ? (
-              <div className="flex justify-center items-center py-12">
-                <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-              </div>
-            ) : documents?.length === 0 ? (
-              <div className="text-center py-12 border rounded-lg">
-                <p className="text-muted-foreground mb-2">
-                  No documents have been uploaded yet.
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  Upload documents to your chatbots to provide them with knowledge.
-                </p>
-              </div>
-            ) : (
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Chatbot</TableHead>
-                    <TableHead>Type</TableHead>
-                    <TableHead>Uploaded</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
+    <div className="container mx-auto py-6">
+      <Card className="mb-8">
+        <CardHeader>
+          <CardTitle>Knowledge Base</CardTitle>
+          <CardDescription>
+            Manage all documents uploaded to your chatbots
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {isLoading ? (
+            <div className="flex justify-center items-center py-12">
+              <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+            </div>
+          ) : documents?.length === 0 ? (
+            <div className="text-center py-12 border rounded-lg">
+              <p className="text-muted-foreground mb-2">
+                No documents have been uploaded yet.
+              </p>
+              <p className="text-sm text-muted-foreground">
+                Upload documents to your chatbots to provide them with knowledge.
+              </p>
+            </div>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Chatbot</TableHead>
+                  <TableHead>Type</TableHead>
+                  <TableHead>Uploaded</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {documents?.map((doc: any) => (
+                  <TableRow key={doc.id}>
+                    <TableCell className="font-medium">
+                      <div className="flex items-center">
+                        {getFileIcon(doc.fileType)}
+                        <span className="ml-2">{doc.originalName}</span>
+                      </div>
+                    </TableCell>
+                    <TableCell>{doc.chatbotName}</TableCell>
+                    <TableCell>{doc.fileType.split('/')[1]}</TableCell>
+                    <TableCell>{formatDate(doc.createdAt)}</TableCell>
+                    <TableCell className="text-right">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setConfirmDeleteId(doc.id)}
+                      >
+                        <Trash2 className="h-4 w-4 text-red-500" />
+                      </Button>
+                    </TableCell>
                   </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {documents?.map((doc: any) => (
-                    <TableRow key={doc.id}>
-                      <TableCell className="font-medium">
-                        <div className="flex items-center">
-                          {getFileIcon(doc.fileType)}
-                          <span className="ml-2">{doc.originalName}</span>
-                        </div>
-                      </TableCell>
-                      <TableCell>{doc.chatbotName}</TableCell>
-                      <TableCell>{doc.fileType.split('/')[1]}</TableCell>
-                      <TableCell>{formatDate(doc.createdAt)}</TableCell>
-                      <TableCell className="text-right">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => setConfirmDeleteId(doc.id)}
-                        >
-                          <Trash2 className="h-4 w-4 text-red-500" />
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            )}
-          </CardContent>
-        </Card>
-      </div>
+                ))}
+              </TableBody>
+            </Table>
+          )}
+        </CardContent>
+      </Card>
 
       {/* Confirm Delete Document Modal */}
       <Dialog open={!!confirmDeleteId} onOpenChange={() => setConfirmDeleteId(null)}>
@@ -188,6 +185,6 @@ export default function KnowledgeBase() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </SidebarLayout>
+    </div>
   );
 }
