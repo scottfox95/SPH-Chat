@@ -1,6 +1,4 @@
 import { Switch, Route, useLocation } from "wouter";
-import { queryClient } from "./lib/queryClient";
-import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { useAuth } from "./hooks/use-auth";
 import { Suspense, lazy, useEffect } from "react";
@@ -114,10 +112,10 @@ function Router() {
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
+    <>
       <Router />
       <Toaster />
-    </QueryClientProvider>
+    </>
   );
 }
 
