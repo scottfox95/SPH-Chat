@@ -204,7 +204,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         filename,
         originalName: originalname,
         fileType: mimetype,
-        uploadedById: req.session.userId as number,
+        uploadedById: 1, // Default to user ID 1 since authentication is removed
       });
       
       // Clear document cache for this chatbot
@@ -371,16 +371,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const chatbotId = parseInt(req.params.id);
       const token = req.query.token as string;
       
-      // Check if token is valid or user is authenticated
+      // Check if token is valid
       const chatbot = await storage.getChatbot(chatbotId);
       
       if (!chatbot) {
         return res.status(404).json({ message: "Chatbot not found" });
       }
       
-      // Check authentication
-      if (chatbot.requireAuth && !req.session.userId && chatbot.publicToken !== token) {
-        return res.status(401).json({ message: "Authentication required" });
+      // Check token if authentication is required
+      if (chatbot.requireAuth && chatbot.publicToken !== token) {
+        return res.status(401).json({ message: "Valid token required" });
       }
       
       const messages = await storage.getMessages(chatbotId);
@@ -397,16 +397,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const chatbotId = parseInt(req.params.id);
       const { message, token } = chatMessageSchema.parse(req.body);
       
-      // Check if token is valid or user is authenticated
+      // Check if token is valid
       const chatbot = await storage.getChatbot(chatbotId);
       
       if (!chatbot) {
         return res.status(404).json({ message: "Chatbot not found" });
       }
       
-      // Check authentication
-      if (chatbot.requireAuth && !req.session.userId && chatbot.publicToken !== token) {
-        return res.status(401).json({ message: "Authentication required" });
+      // Check token if authentication is required
+      if (chatbot.requireAuth && chatbot.publicToken !== token) {
+        return res.status(401).json({ message: "Valid token required" });
       }
       
       // Get the system prompt
@@ -427,7 +427,7 @@ You should **never make up information**. You may summarize or synthesize detail
       // Save user message
       const userMessage = await storage.createMessage({
         chatbotId,
-        userId: req.session.userId,
+        userId: 1, // Default to user ID 1 since authentication is removed
         content: message,
         isUserMessage: true,
         citation: null,
