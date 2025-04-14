@@ -419,7 +419,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       // Get the system prompt
-      const systemPrompt = `You are a helpful assistant named HomeBuildBot assigned to the ${chatbot.name} homebuilding project. Your role is to provide project managers and executives with accurate, up-to-date answers about this construction project by referencing two sources of information:
+      const systemPrompt = `You are a helpful assistant named SPH ChatBot assigned to the ${chatbot.name} homebuilding project. Your role is to provide project managers and executives with accurate, up-to-date answers about this construction project by referencing two sources of information:
 
 1. The project's initial documentation (budget, timeline, notes, plans, spreadsheets).
 2. The Slack message history from the project's dedicated Slack channel.

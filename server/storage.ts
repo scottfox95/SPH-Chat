@@ -79,6 +79,8 @@ export class MemStorage implements IStorage {
   private currentEmailRecipientId: number;
   private currentMessageId: number;
   
+  public sessionStore: session.Store;
+  
   constructor() {
     this.users = new Map();
     this.chatbots = new Map();
@@ -93,6 +95,12 @@ export class MemStorage implements IStorage {
     this.currentSummaryId = 1;
     this.currentEmailRecipientId = 1;
     this.currentMessageId = 1;
+    
+    // Set up memory session store
+    const MemoryStore = createMemoryStore(session);
+    this.sessionStore = new MemoryStore({
+      checkPeriod: 86400000, // prune expired entries every 24h
+    });
     
     // Create default admin user
     this.createUser({
@@ -270,5 +278,167 @@ export class MemStorage implements IStorage {
   }
 }
 
+// Database storage implementation
+export class DatabaseStorage implements IStorage {
+  public sessionStore: session.Store;
+
+  constructor() {
+    // Set up PostgreSQL session store
+    const PostgresSessionStore = connectPg(session);
+    this.sessionStore = new PostgresSessionStore({ 
+      pool, 
+      createTableIfMissing: true 
+    });
+    
+    // Create default admin user if it doesn't exist
+    this.getUserByUsername("admin").then(user => {
+      if (!user) {
+        this.createUser({
+          username: "admin",
+          password: "password",
+          displayName: "John Davis",
+          initial: "JD",
+          role: "admin"
+        });
+      }
+    });
+  }
+  
+  // User methods
+  async getUser(id: number): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user;
+  }
+  
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.username, username));
+    return user;
+  }
+  
+  async createUser(insertUser: InsertUser): Promise<User> {
+    const [user] = await db.insert(users).values(insertUser).returning();
+    return user;
+  }
+  
+  // Chatbot methods
+  async getChatbots(): Promise<Chatbot[]> {
+    return db.select().from(chatbots);
+  }
+  
+  async getChatbot(id: number): Promise<Chatbot | undefined> {
+    const [chatbot] = await db.select().from(chatbots).where(eq(chatbots.id, id));
+    return chatbot;
+  }
+  
+  async getChatbotByToken(token: string): Promise<Chatbot | undefined> {
+    const [chatbot] = await db.select().from(chatbots).where(eq(chatbots.publicToken, token));
+    return chatbot;
+  }
+  
+  async createChatbot(chatbot: Omit<InsertChatbot, "publicToken">): Promise<Chatbot> {
+    const publicToken = nanoid(10);
+    
+    const [newChatbot] = await db.insert(chatbots).values({
+      ...chatbot,
+      publicToken,
+      isActive: chatbot.isActive ?? true,
+      requireAuth: chatbot.requireAuth ?? false
+    }).returning();
+    
+    return newChatbot;
+  }
+  
+  async updateChatbot(id: number, data: Partial<InsertChatbot>): Promise<Chatbot | undefined> {
+    const [updatedChatbot] = await db.update(chatbots)
+      .set(data)
+      .where(eq(chatbots.id, id))
+      .returning();
+    
+    return updatedChatbot;
+  }
+  
+  async deleteChatbot(id: number): Promise<boolean> {
+    const result = await db.delete(chatbots).where(eq(chatbots.id, id));
+    return !!result;
+  }
+  
+  // Document methods
+  async getDocuments(chatbotId: number): Promise<Document[]> {
+    return db.select()
+      .from(documents)
+      .where(eq(documents.chatbotId, chatbotId));
+  }
+  
+  async createDocument(document: InsertDocument): Promise<Document> {
+    const [newDocument] = await db.insert(documents)
+      .values(document)
+      .returning();
+    
+    return newDocument;
+  }
+  
+  async deleteDocument(id: number): Promise<boolean> {
+    const result = await db.delete(documents).where(eq(documents.id, id));
+    return !!result;
+  }
+  
+  // Summary methods
+  async getSummaries(chatbotId: number): Promise<Summary[]> {
+    return db.select()
+      .from(summaries)
+      .where(eq(summaries.chatbotId, chatbotId))
+      .orderBy(desc(summaries.sentAt)); // Most recent first
+  }
+  
+  async createSummary(summary: InsertSummary): Promise<Summary> {
+    const [newSummary] = await db.insert(summaries)
+      .values(summary)
+      .returning();
+    
+    return newSummary;
+  }
+  
+  // Email recipient methods
+  async getEmailRecipients(chatbotId: number): Promise<EmailRecipient[]> {
+    return db.select()
+      .from(emailRecipients)
+      .where(eq(emailRecipients.chatbotId, chatbotId));
+  }
+  
+  async createEmailRecipient(recipient: InsertEmailRecipient): Promise<EmailRecipient> {
+    const [newRecipient] = await db.insert(emailRecipients)
+      .values(recipient)
+      .returning();
+    
+    return newRecipient;
+  }
+  
+  async deleteEmailRecipient(id: number): Promise<boolean> {
+    const result = await db.delete(emailRecipients).where(eq(emailRecipients.id, id));
+    return !!result;
+  }
+  
+  // Message methods
+  async getMessages(chatbotId: number, limit = 50): Promise<Message[]> {
+    return db.select()
+      .from(messages)
+      .where(eq(messages.chatbotId, chatbotId))
+      .orderBy(messages.createdAt) // Oldest first
+      .limit(limit);
+  }
+  
+  async createMessage(message: InsertMessage): Promise<Message> {
+    const [newMessage] = await db.insert(messages)
+      .values({
+        ...message,
+        userId: message.userId ?? null,
+        citation: message.citation ?? null
+      })
+      .returning();
+    
+    return newMessage;
+  }
+}
+
 // Export a storage instance
-export const storage = new MemStorage();
+export const storage = new DatabaseStorage();

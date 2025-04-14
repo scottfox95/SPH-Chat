@@ -68,7 +68,7 @@ export async function sendSummaryEmail(
     
     // Send email to all recipients
     const info = await transporter.sendMail({
-      from: process.env.SMTP_FROM || '"HomeBuildBot" <homebuilder@example.com>',
+      from: process.env.SMTP_FROM || '"SPH ChatBot" <homebuilder@example.com>',
       to: recipients.map((r) => r.email).join(", "),
       subject: subject || `Weekly Summary: ${chatbot.name}`,
       html: htmlContent,
