@@ -6,6 +6,7 @@ import {
   summaries, 
   emailRecipients, 
   messages,
+  settings,
   type User, 
   type InsertUser,
   type Chatbot,
@@ -17,7 +18,9 @@ import {
   type EmailRecipient,
   type InsertEmailRecipient,
   type Message,
-  type InsertMessage
+  type InsertMessage,
+  type Settings,
+  type UpdateSettings
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, and, isNull, sql } from "drizzle-orm";
@@ -59,6 +62,10 @@ export interface IStorage {
   getMessages(chatbotId: number, limit?: number): Promise<Message[]>;
   createMessage(message: InsertMessage): Promise<Message>;
   
+  // Settings methods
+  getSettings(): Promise<Settings | undefined>;
+  updateSettings(data: UpdateSettings): Promise<Settings>;
+  
   // Session store for authentication
   sessionStore: session.Store;
 }
@@ -71,6 +78,7 @@ export class MemStorage implements IStorage {
   private summaries: Map<number, Summary>;
   private emailRecipients: Map<number, EmailRecipient>;
   private messages: Map<number, Message>;
+  private appSettings: Settings | undefined;
   
   private currentUserId: number;
   private currentChatbotId: number;
@@ -275,6 +283,44 @@ export class MemStorage implements IStorage {
     
     this.messages.set(id, newMessage);
     return newMessage;
+  }
+  
+  // Settings methods
+  async getSettings(): Promise<Settings | undefined> {
+    if (!this.appSettings) {
+      // Initialize with default settings
+      const now = new Date();
+      this.appSettings = {
+        id: 1,
+        openaiModel: "gpt-4o",
+        createdAt: now,
+        updatedAt: now
+      };
+    }
+    return this.appSettings;
+  }
+  
+  async updateSettings(data: UpdateSettings): Promise<Settings> {
+    const now = new Date();
+    
+    if (!this.appSettings) {
+      // Initialize with defaults and update
+      this.appSettings = {
+        id: 1,
+        openaiModel: data.openaiModel || "gpt-4o",
+        createdAt: now,
+        updatedAt: now
+      };
+    } else {
+      // Update existing settings
+      this.appSettings = {
+        ...this.appSettings,
+        ...data,
+        updatedAt: now
+      };
+    }
+    
+    return this.appSettings;
   }
 }
 

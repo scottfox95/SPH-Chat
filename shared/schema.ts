@@ -2,6 +2,14 @@ import { pgTable, text, serial, integer, boolean, timestamp, json } from "drizzl
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
+// Available OpenAI models
+export const OPENAI_MODELS = [
+  "gpt-4o",
+  "gpt-4-turbo",
+  "gpt-4",
+  "gpt-3.5-turbo"
+];
+
 // Basic user model for authentication
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
@@ -62,6 +70,14 @@ export const messages = pgTable("messages", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
+// Application settings
+export const settings = pgTable("settings", {
+  id: serial("id").primaryKey(),
+  openaiModel: text("openai_model").notNull().default("gpt-4o"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
 // Schema validations
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
@@ -113,6 +129,14 @@ export const insertMessageSchema = createInsertSchema(messages)
     citation: data.citation ?? null
   }));
 
+export const insertSettingsSchema = createInsertSchema(settings).pick({
+  openaiModel: true,
+});
+
+export const updateSettingsSchema = createInsertSchema(settings).pick({
+  openaiModel: true,
+});
+
 // Types
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
@@ -131,6 +155,10 @@ export type InsertEmailRecipient = z.infer<typeof insertEmailRecipientSchema>;
 
 export type Message = typeof messages.$inferSelect;
 export type InsertMessage = z.infer<typeof insertMessageSchema>;
+
+export type Settings = typeof settings.$inferSelect;
+export type InsertSettings = z.infer<typeof insertSettingsSchema>;
+export type UpdateSettings = z.infer<typeof updateSettingsSchema>;
 
 // Custom types for API requests/responses
 export const loginSchema = z.object({
