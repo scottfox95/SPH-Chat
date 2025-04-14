@@ -1,6 +1,6 @@
 import { storage } from "../storage";
 import { processDocument } from "./document-processor";
-import { getFormattedSlackMessages } from "./slack";
+import { getFormattedSlackMessages, validateSlackChannel } from "./slack";
 import path from "path";
 
 // In-memory storage for document content
@@ -66,8 +66,16 @@ export async function getChatbotContext(chatbotId: number, query?: string): Prom
     // Get processed documents
     const documents = await getProcessedDocuments(chatbotId);
     
-    // Get Slack messages
-    const slackMessages = await getFormattedSlackMessages(chatbot.slackChannelId);
+    // Validate Slack channel before trying to get messages
+    let slackMessages: string[] = [];
+    const channelValidation = await validateSlackChannel(chatbot.slackChannelId);
+    
+    if (channelValidation.valid) {
+      // Get Slack messages only if the channel is valid
+      slackMessages = await getFormattedSlackMessages(chatbot.slackChannelId);
+    } else {
+      console.warn(`Cannot retrieve Slack messages for channel ${chatbot.slackChannelId}: ${channelValidation.error}`);
+    }
     
     return {
       documents,

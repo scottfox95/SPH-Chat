@@ -7,7 +7,7 @@ import { upload } from "./middleware/multer";
 import { z } from "zod";
 import { loginSchema, chatMessageSchema, addEmailRecipientSchema } from "@shared/schema";
 import { getChatbotResponse, generateWeeklySummary, testOpenAIConnection } from "./lib/openai";
-import { getFormattedSlackMessages, getWeeklySlackMessages, testSlackConnection } from "./lib/slack";
+import { getFormattedSlackMessages, getWeeklySlackMessages, testSlackConnection, validateSlackChannel } from "./lib/slack";
 import { processDocument } from "./lib/document-processor";
 import { getChatbotContext, clearDocumentCache } from "./lib/vector-storage";
 import { sendSummaryEmail } from "./lib/email";
@@ -97,6 +97,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "Name and Slack channel ID are required" });
       }
       
+      // Validate the Slack channel ID before creating the chatbot
+      const channelValidation = await validateSlackChannel(slackChannelId);
+      
+      if (!channelValidation.valid) {
+        return res.status(400).json({ 
+          message: "Invalid Slack channel",
+          details: channelValidation.error || "The channel ID is invalid or the bot doesn't have access to it."
+        });
+      }
+      
       const chatbot = await storage.createChatbot({
         name,
         slackChannelId,
@@ -121,6 +131,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       if (!chatbot) {
         return res.status(404).json({ message: "Chatbot not found" });
+      }
+      
+      // If a new Slack channel ID is provided, validate it
+      if (slackChannelId && slackChannelId !== chatbot.slackChannelId) {
+        const channelValidation = await validateSlackChannel(slackChannelId);
+        
+        if (!channelValidation.valid) {
+          return res.status(400).json({ 
+            message: "Invalid Slack channel",
+            details: channelValidation.error || "The channel ID is invalid or the bot doesn't have access to it."
+          });
+        }
       }
       
       const updatedChatbot = await storage.updateChatbot(id, {
@@ -497,6 +519,26 @@ You should **never make up information**. You may summarize or synthesize detail
       res.status(500).json({ 
         connected: false, 
         error: "Failed to test OpenAI connection" 
+      });
+    }
+  });
+  
+  // Validate Slack channel
+  apiRouter.get("/system/validate-slack-channel", async (req, res) => {
+    try {
+      const channelId = req.query.channelId as string;
+      
+      if (!channelId) {
+        return res.status(400).json({ message: "Channel ID is required" });
+      }
+      
+      const result = await validateSlackChannel(channelId);
+      res.json(result);
+    } catch (error) {
+      console.error("Error validating Slack channel:", error);
+      res.status(500).json({ 
+        valid: false, 
+        error: "Failed to validate Slack channel" 
       });
     }
   });

@@ -4,6 +4,58 @@ import { WebClient, type ChatPostMessageArguments } from "@slack/web-api";
 const slack = new WebClient(process.env.SLACK_BOT_TOKEN || "xoxb-placeholder");
 
 /**
+ * Validates a Slack channel ID and checks if the bot has access to it
+ * @param channelId The ID of the channel to validate
+ * @returns Object with validation result and channel details if successful
+ */
+export async function validateSlackChannel(channelId: string): Promise<{
+  valid: boolean;
+  name?: string;
+  error?: string;
+  isPrivate?: boolean;
+}> {
+  try {
+    // First try to get channel info to check if it exists and if the bot has access
+    const channelInfo = await slack.conversations.info({
+      channel: channelId
+    });
+    
+    if (!channelInfo.ok || !channelInfo.channel) {
+      return { 
+        valid: false, 
+        error: channelInfo.error || "Could not retrieve channel information" 
+      };
+    }
+    
+    return { 
+      valid: true, 
+      name: channelInfo.channel.name as string,
+      isPrivate: channelInfo.channel.is_private as boolean
+    };
+  } catch (error: any) {
+    console.error("Slack channel validation error:", error);
+    
+    // Extract specific error messages for common issues
+    if (error?.data?.error === 'channel_not_found') {
+      return {
+        valid: false,
+        error: "The channel ID does not exist or the bot does not have access to it. Make sure the bot is invited to the channel."
+      };
+    } else if (error?.data?.error === 'missing_scope') {
+      return {
+        valid: false,
+        error: "The bot token is missing required permissions. Please check the Slack app configuration."
+      };
+    }
+    
+    return {
+      valid: false,
+      error: error?.data?.error || error?.message || "Unknown error validating Slack channel"
+    };
+  }
+}
+
+/**
  * Fetches messages from a Slack channel
  * @param channelId The ID of the channel to fetch messages from
  * @param limit Maximum number of messages to fetch
