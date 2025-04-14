@@ -28,18 +28,14 @@ import {
 export default function Settings() {
   const { user } = useAuth();
   const { toast } = useToast();
-  const [slackToken, setSlackToken] = useState(
-    process.env.SLACK_BOT_TOKEN || ""
-  );
-  const [openaiKey, setOpenaiKey] = useState(
-    process.env.OPENAI_API_KEY || ""
-  );
+  const [slackToken, setSlackToken] = useState("");
+  const [openaiKey, setOpenaiKey] = useState("");
   const [emailSettings, setEmailSettings] = useState({
     enabled: true,
-    smtpHost: process.env.SMTP_HOST || "",
-    smtpPort: process.env.SMTP_PORT || "587",
-    smtpUser: process.env.SMTP_USER || "",
-    smtpPass: process.env.SMTP_PASS || "",
+    smtpHost: "",
+    smtpPort: "587",
+    smtpUser: "",
+    smtpPass: "",
   });
 
   const handleSaveApiSettings = () => {
@@ -262,7 +258,7 @@ export default function Settings() {
                 </div>
                 <div className="flex justify-between items-center text-sm">
                   <span className="text-gray-500">Environment</span>
-                  <span className="font-medium">{process.env.NODE_ENV || "development"}</span>
+                  <span className="font-medium">development</span>
                 </div>
                 <div className="flex justify-between items-center text-sm">
                   <span className="text-gray-500">Storage</span>

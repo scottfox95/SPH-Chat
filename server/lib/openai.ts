@@ -82,3 +82,37 @@ export async function generateWeeklySummary(slackMessages: string[], projectName
     return `<p>Error generating weekly summary for ${projectName}. Please try again later.</p>`;
   }
 }
+
+/**
+ * Test connection to OpenAI API
+ * @returns Object with connection status and model details
+ */
+export async function testOpenAIConnection() {
+  try {
+    // Make a simple request to check if the API key is valid
+    const response = await openai.chat.completions.create({
+      model: "gpt-3.5-turbo", // Use a simpler model for the test
+      messages: [
+        {
+          role: "user",
+          content: "Hello, this is a connection test. Please respond with 'Connection successful'.",
+        },
+      ],
+      max_tokens: 20,
+      temperature: 0,
+    });
+
+    return {
+      connected: true,
+      model: response.model,
+      response: response.choices[0].message.content,
+      usage: response.usage
+    };
+  } catch (error: any) {
+    console.error("OpenAI connection test failed:", error);
+    return {
+      connected: false,
+      error: error?.response?.data?.error?.message || error?.message || "Unknown error"
+    };
+  }
+}

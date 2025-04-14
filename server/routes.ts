@@ -6,8 +6,8 @@ import { requireAuth, requireAdmin } from "./middleware/auth";
 import { upload } from "./middleware/multer";
 import { z } from "zod";
 import { loginSchema, chatMessageSchema, addEmailRecipientSchema } from "@shared/schema";
-import { getChatbotResponse, generateWeeklySummary } from "./lib/openai";
-import { getFormattedSlackMessages, getWeeklySlackMessages } from "./lib/slack";
+import { getChatbotResponse, generateWeeklySummary, testOpenAIConnection } from "./lib/openai";
+import { getFormattedSlackMessages, getWeeklySlackMessages, testSlackConnection } from "./lib/slack";
 import { processDocument } from "./lib/document-processor";
 import { getChatbotContext, clearDocumentCache } from "./lib/vector-storage";
 import { sendSummaryEmail } from "./lib/email";
@@ -471,6 +471,33 @@ You should **never make up information**. You may summarize or synthesize detail
     } catch (error) {
       console.error("Error fetching public chatbot:", error);
       res.status(500).json({ message: "Failed to fetch chatbot" });
+    }
+  });
+  
+  // System connection test routes
+  apiRouter.get("/system/test-slack", async (req, res) => {
+    try {
+      const result = await testSlackConnection();
+      res.json(result);
+    } catch (error) {
+      console.error("Error testing Slack connection:", error);
+      res.status(500).json({ 
+        connected: false, 
+        error: "Failed to test Slack connection" 
+      });
+    }
+  });
+  
+  apiRouter.get("/system/test-openai", async (req, res) => {
+    try {
+      const result = await testOpenAIConnection();
+      res.json(result);
+    } catch (error) {
+      console.error("Error testing OpenAI connection:", error);
+      res.status(500).json({ 
+        connected: false, 
+        error: "Failed to test OpenAI connection" 
+      });
     }
   });
   

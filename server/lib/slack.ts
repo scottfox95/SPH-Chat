@@ -93,3 +93,30 @@ export async function sendSlackMessage(channelId: string, text: string) {
     throw error;
   }
 }
+
+/**
+ * Test connection to Slack API
+ * @returns Object with connection status and details
+ */
+export async function testSlackConnection() {
+  try {
+    // Test auth.test which verifies the token
+    const authTest = await slack.auth.test();
+    
+    // If we get here, the token is valid
+    return {
+      connected: true,
+      botName: authTest.bot_id ? `${authTest.user} (Bot)` : authTest.user,
+      teamName: authTest.team,
+      url: authTest.url,
+      userId: authTest.user_id,
+      teamId: authTest.team_id
+    };
+  } catch (error: any) {
+    console.error("Slack connection test failed:", error);
+    return {
+      connected: false,
+      error: error?.data?.error || error?.message || "Unknown error"
+    };
+  }
+}
