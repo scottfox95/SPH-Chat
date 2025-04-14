@@ -172,3 +172,37 @@ export async function testSlackConnection() {
     };
   }
 }
+
+/**
+ * Lists all channels the bot has access to
+ * @returns Array of channel objects with id and name
+ */
+export async function listAccessibleChannels() {
+  try {
+    // List all public and private channels the bot is a member of
+    const result = await slack.conversations.list({
+      types: "public_channel,private_channel",
+      exclude_archived: true,
+      limit: 1000
+    });
+    
+    if (!result.ok || !result.channels) {
+      throw new Error(`Failed to list channels: ${result.error || "Unknown error"}`);
+    }
+    
+    // Filter to only include channels the bot is a member of
+    const accessibleChannels = result.channels
+      .filter(channel => channel.is_member)
+      .map(channel => ({
+        id: channel.id,
+        name: channel.name,
+        isPrivate: channel.is_private,
+        memberCount: channel.num_members
+      }));
+      
+    return accessibleChannels;
+  } catch (error) {
+    console.error("Error listing Slack channels:", error);
+    throw error;
+  }
+}

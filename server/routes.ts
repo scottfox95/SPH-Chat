@@ -7,7 +7,13 @@ import { upload } from "./middleware/multer";
 import { z } from "zod";
 import { loginSchema, chatMessageSchema, addEmailRecipientSchema } from "@shared/schema";
 import { getChatbotResponse, generateWeeklySummary, testOpenAIConnection } from "./lib/openai";
-import { getFormattedSlackMessages, getWeeklySlackMessages, testSlackConnection, validateSlackChannel } from "./lib/slack";
+import { 
+  getFormattedSlackMessages, 
+  getWeeklySlackMessages, 
+  testSlackConnection, 
+  validateSlackChannel,
+  listAccessibleChannels
+} from "./lib/slack";
 import { processDocument } from "./lib/document-processor";
 import { getChatbotContext, clearDocumentCache } from "./lib/vector-storage";
 import { sendSummaryEmail } from "./lib/email";
@@ -539,6 +545,20 @@ You should **never make up information**. You may summarize or synthesize detail
       res.status(500).json({ 
         valid: false, 
         error: "Failed to validate Slack channel" 
+      });
+    }
+  });
+  
+  // List accessible Slack channels
+  apiRouter.get("/system/slack-channels", async (req, res) => {
+    try {
+      const channels = await listAccessibleChannels();
+      res.json(channels);
+    } catch (error) {
+      console.error("Error listing Slack channels:", error);
+      res.status(500).json({ 
+        error: "Failed to list Slack channels",
+        details: error.message || "Unknown error"
       });
     }
   });
