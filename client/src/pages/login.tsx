@@ -75,7 +75,7 @@ export default function Login() {
       <CardHeader className="space-y-1">
         <CardTitle className="text-2xl font-semibold">Login</CardTitle>
         <CardDescription>
-          Enter your credentials to access the HomeBuildBot dashboard
+          Enter your credentials to access the SPH ChatBot dashboard
         </CardDescription>
       </CardHeader>
       <CardContent>
