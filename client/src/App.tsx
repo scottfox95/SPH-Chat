@@ -12,6 +12,7 @@ const PublicChat = lazy(() => import("@/pages/public-chat"));
 const Login = lazy(() => import("@/pages/login"));
 const Summaries = lazy(() => import("@/pages/summaries"));
 const Settings = lazy(() => import("@/pages/settings"));
+const KnowledgeBase = lazy(() => import("@/pages/knowledge-base"));
 
 function Router() {
   return (
@@ -62,6 +63,14 @@ function Router() {
         <SidebarLayout>
           <Suspense fallback={<div>Loading...</div>}>
             <Settings />
+          </Suspense>
+        </SidebarLayout>
+      </Route>
+      
+      <Route path="/knowledge-base">
+        <SidebarLayout>
+          <Suspense fallback={<div>Loading...</div>}>
+            <KnowledgeBase />
           </Suspense>
         </SidebarLayout>
       </Route>

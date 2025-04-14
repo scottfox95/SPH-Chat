@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { PDFLoader } from "@langchain/community/document_loaders/fs/pdf";
-import * as ExcelJS from "exceljs";
+import ExcelJS from "exceljs";
 import { promisify } from "util";
 
 /**

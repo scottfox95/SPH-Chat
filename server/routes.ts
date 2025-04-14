@@ -191,6 +191,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   
   // Document routes
+  apiRouter.get("/documents", async (req, res) => {
+    try {
+      // Get all chatbots first
+      const chatbots = await storage.getChatbots();
+      
+      // Create a map of chatbot IDs to names for reference
+      const chatbotNames = new Map(
+        chatbots.map(chatbot => [chatbot.id, chatbot.name])
+      );
+      
+      // Get all documents from all chatbots
+      const allDocumentsPromises = chatbots.map(chatbot => 
+        storage.getDocuments(chatbot.id)
+      );
+      
+      const allDocumentsArrays = await Promise.all(allDocumentsPromises);
+      
+      // Flatten the array of arrays and add chatbot name to each document
+      const documents = allDocumentsArrays
+        .flat()
+        .map(doc => ({
+          ...doc,
+          chatbotName: chatbotNames.get(doc.chatbotId) || "Unknown"
+        }));
+      
+      res.json(documents);
+    } catch (error) {
+      console.error("Error fetching all documents:", error);
+      res.status(500).json({ message: "Failed to fetch documents" });
+    }
+  });
+
   apiRouter.get("/chatbots/:id/documents", async (req, res) => {
     try {
       const chatbotId = parseInt(req.params.id);

@@ -2,7 +2,7 @@ import { Link, useLocation } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
 import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
-import { Home, MessageSquare, ClipboardList, Settings, LogOut } from "lucide-react";
+import { Home, MessageSquare, ClipboardList, Settings, LogOut, Database } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useToast } from "@/hooks/use-toast";
 
@@ -80,6 +80,17 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
             )}>
               <ClipboardList className="h-5 w-5 mr-2" />
               Weekly Summaries
+            </a>
+          </Link>
+          <Link href="/knowledge-base">
+            <a className={cn(
+              "flex items-center px-3 py-2 text-sm font-medium rounded-xl",
+              location === "/knowledge-base"
+                ? "bg-[#D2B48C] bg-opacity-10 text-[#D2B48C]"
+                : "text-gray-600 hover:bg-gray-100"
+            )}>
+              <Database className="h-5 w-5 mr-2" />
+              Knowledge Base
             </a>
           </Link>
           <Link href="/settings">
