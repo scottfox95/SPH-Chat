@@ -38,58 +38,39 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // API routes
   const apiRouter = express.Router();
   
-  // Auth routes
+  // Auth routes - simplified for development without authentication
   apiRouter.post("/auth/login", async (req, res) => {
     try {
-      const data = loginSchema.parse(req.body);
+      // Return default admin user without checking credentials
+      const defaultUser = {
+        id: 1,
+        username: "admin",
+        displayName: "Administrator",
+        initial: "A",
+        role: "admin"
+      };
       
-      const user = await storage.getUserByUsername(data.username);
-      
-      if (!user || user.password !== data.password) {
-        return res.status(401).json({ message: "Invalid credentials" });
-      }
-      
-      req.session.userId = user.id;
-      
-      return res.json({
-        id: user.id,
-        username: user.username,
-        displayName: user.displayName,
-        initial: user.initial,
-        role: user.role,
-      });
+      return res.json(defaultUser);
     } catch (error) {
-      if (error instanceof z.ZodError) {
-        return res.status(400).json({ message: error.errors[0].message });
-      }
       return res.status(500).json({ message: "Internal server error" });
     }
   });
   
   apiRouter.post("/auth/logout", (req, res) => {
-    req.session.destroy(() => {
-      res.json({ success: true });
-    });
+    res.json({ success: true });
   });
   
   apiRouter.get("/auth/me", async (req, res) => {
-    if (!req.session.userId) {
-      return res.status(401).json({ message: "Not authenticated" });
-    }
+    // Always return the default admin user since authentication is removed
+    const defaultUser = {
+      id: 1,
+      username: "admin",
+      displayName: "Administrator",
+      initial: "A",
+      role: "admin"
+    };
     
-    const user = await storage.getUser(req.session.userId);
-    
-    if (!user) {
-      return res.status(401).json({ message: "User not found" });
-    }
-    
-    return res.json({
-      id: user.id,
-      username: user.username,
-      displayName: user.displayName,
-      initial: user.initial,
-      role: user.role,
-    });
+    return res.json(defaultUser);
   });
   
   // Chatbot routes
