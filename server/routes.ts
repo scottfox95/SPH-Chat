@@ -119,7 +119,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const chatbot = await storage.createChatbot({
         name,
         slackChannelId,
-        createdById: req.session.userId as number,
+        createdById: 1, // Default to user ID 1 since authentication is removed
         isActive: true,
         requireAuth: false,
       });
@@ -158,7 +158,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  apiRouter.delete("/chatbots/:id", requireAdmin, async (req, res) => {
+  apiRouter.delete("/chatbots/:id", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       
@@ -176,7 +176,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   
   // Document routes
-  apiRouter.get("/chatbots/:id/documents", requireAuth, async (req, res) => {
+  apiRouter.get("/chatbots/:id/documents", async (req, res) => {
     try {
       const chatbotId = parseInt(req.params.id);
       
@@ -189,7 +189,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  apiRouter.post("/chatbots/:id/documents", requireAdmin, upload.single("file"), async (req, res) => {
+  apiRouter.post("/chatbots/:id/documents", upload.single("file"), async (req, res) => {
     try {
       const chatbotId = parseInt(req.params.id);
       
@@ -217,7 +217,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  apiRouter.delete("/documents/:id", requireAdmin, async (req, res) => {
+  apiRouter.delete("/documents/:id", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       
@@ -253,7 +253,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   
   // Email recipient routes
-  apiRouter.get("/chatbots/:id/recipients", requireAuth, async (req, res) => {
+  apiRouter.get("/chatbots/:id/recipients", async (req, res) => {
     try {
       const chatbotId = parseInt(req.params.id);
       
@@ -266,7 +266,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  apiRouter.post("/chatbots/:id/recipients", requireAdmin, async (req, res) => {
+  apiRouter.post("/chatbots/:id/recipients", async (req, res) => {
     try {
       const data = addEmailRecipientSchema.parse({
         ...req.body,
@@ -285,7 +285,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  apiRouter.delete("/recipients/:id", requireAdmin, async (req, res) => {
+  apiRouter.delete("/recipients/:id", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       
@@ -303,7 +303,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   
   // Summary routes
-  apiRouter.get("/chatbots/:id/summaries", requireAuth, async (req, res) => {
+  apiRouter.get("/chatbots/:id/summaries", async (req, res) => {
     try {
       const chatbotId = parseInt(req.params.id);
       
@@ -316,7 +316,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  apiRouter.post("/chatbots/:id/generate-summary", requireAdmin, async (req, res) => {
+  apiRouter.post("/chatbots/:id/generate-summary", async (req, res) => {
     try {
       const chatbotId = parseInt(req.params.id);
       
