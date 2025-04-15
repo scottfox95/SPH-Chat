@@ -48,8 +48,19 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
         {/* Logo */}
         <div className="p-4 border-b border-gray-200">
           <div className="flex items-center">
-            <div className="w-8 h-8 rounded-md bg-[#D2B48C] flex items-center justify-center text-white overflow-hidden">
-              <span className="font-bold">SPH</span>
+            <div className="w-8 h-8 rounded-md overflow-hidden">
+              <img 
+                src="/images/sph-chat-logo.png" 
+                alt="SPH Chat" 
+                className="h-full w-full object-cover"
+                onError={(e) => {
+                  if (e.currentTarget.parentElement) {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.style.display = 'none';
+                    e.currentTarget.parentElement.innerHTML = '<span class="font-bold">SPH</span>';
+                  }
+                }}
+              />
             </div>
             <span className="ml-2 font-semibold text-gray-900">SPH ChatBot</span>
           </div>

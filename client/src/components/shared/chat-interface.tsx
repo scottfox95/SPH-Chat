@@ -181,8 +181,19 @@ export default function ChatInterface({
         {/* Welcome Message if no messages */}
         {messages.length === 0 && (
           <div className="flex items-start">
-            <div className="w-8 h-8 rounded-xl bg-[#D2B48C] flex items-center justify-center text-white mr-3 flex-shrink-0">
-              <span className="font-bold text-xs">SPH</span>
+            <div className="w-8 h-8 rounded-xl overflow-hidden mr-3 flex-shrink-0">
+              <img 
+                src="/images/sph-chat-logo.png" 
+                alt="SPH Chat" 
+                className="h-full w-full object-cover"
+                onError={(e) => {
+                  if (e.currentTarget.parentElement) {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.style.display = 'none';
+                    e.currentTarget.parentElement.innerHTML = '<span class="font-bold text-xs">SPH</span>';
+                  }
+                }}
+              />
             </div>
             <div className="flex-1">
               <div className="bg-white rounded-xl rounded-tl-sm p-4 shadow-sm max-w-3xl">
@@ -204,8 +215,19 @@ export default function ChatInterface({
             )}
           >
             {!message.isUserMessage && (
-              <div className="w-8 h-8 rounded-xl bg-[#D2B48C] flex items-center justify-center text-white mr-3 flex-shrink-0">
-                <span className="font-bold text-xs">SPH</span>
+              <div className="w-8 h-8 rounded-xl overflow-hidden mr-3 flex-shrink-0">
+                <img 
+                  src="/images/sph-chat-logo.png" 
+                  alt="SPH Chat" 
+                  className="h-full w-full object-cover"
+                  onError={(e) => {
+                    if (e.currentTarget.parentElement) {
+                      e.currentTarget.onerror = null;
+                      e.currentTarget.style.display = 'none';
+                      e.currentTarget.parentElement.innerHTML = '<span class="font-bold text-xs">SPH</span>';
+                    }
+                  }}
+                />
               </div>
             )}
             
@@ -238,8 +260,19 @@ export default function ChatInterface({
         {/* Loading indicator */}
         {isLoading && (
           <div className="flex items-start">
-            <div className="w-8 h-8 rounded-xl bg-[#D2B48C] flex items-center justify-center text-white mr-3 flex-shrink-0 animate-pulse">
-              <span className="font-bold text-xs">SPH</span>
+            <div className="w-8 h-8 rounded-xl overflow-hidden mr-3 flex-shrink-0 animate-pulse">
+              <img 
+                src="/images/sph-chat-logo.png" 
+                alt="SPH Chat" 
+                className="h-full w-full object-cover"
+                onError={(e) => {
+                  if (e.currentTarget.parentElement) {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.style.display = 'none';
+                    e.currentTarget.parentElement.innerHTML = '<span class="font-bold text-xs">SPH</span>';
+                  }
+                }}
+              />
             </div>
             <div className="flex-1">
               <div className="bg-white rounded-xl rounded-tl-sm p-4 shadow-sm max-w-3xl">
