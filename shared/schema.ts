@@ -78,6 +78,10 @@ export const messages = pgTable("messages", {
 export const settings = pgTable("settings", {
   id: serial("id").primaryKey(),
   openaiModel: text("openai_model").notNull().default("gpt-4o"),
+  includeSourceDetails: boolean("include_source_details").notNull().default(false),
+  includeDateInSource: boolean("include_date_in_source").notNull().default(false),
+  includeUserInSource: boolean("include_user_in_source").notNull().default(false),
+  responseTemplate: text("response_template"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
@@ -135,10 +139,18 @@ export const insertMessageSchema = createInsertSchema(messages)
 
 export const insertSettingsSchema = createInsertSchema(settings).pick({
   openaiModel: true,
+  includeSourceDetails: true,
+  includeDateInSource: true,
+  includeUserInSource: true,
+  responseTemplate: true,
 });
 
 export const updateSettingsSchema = createInsertSchema(settings).pick({
   openaiModel: true,
+  includeSourceDetails: true,
+  includeDateInSource: true,
+  includeUserInSource: true,
+  responseTemplate: true,
 });
 
 // Types
