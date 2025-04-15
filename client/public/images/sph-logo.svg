@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60">
+  <rect x="5" y="5" width="50" height="50" rx="6" fill="#D2B48C"/>
+  <text x="30" y="37" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="white" text-anchor="middle">SPH</text>
+  <path d="M14 19C14 17.3431 15.3431 16 17 16H27C28.6569 16 30 17.3431 30 19V19C30 20.6569 28.6569 22 27 22H17C15.3431 22 14 20.6569 14 19V19Z" fill="white" fill-opacity="0.2"/>
+  <path d="M30 24C30 22.3431 31.3431 21 33 21H43C44.6569 21 46 22.3431 46 24V24C46 25.6569 44.6569 27 43 27H33C31.3431 27 30 25.6569 30 24V24Z" fill="white" fill-opacity="0.2"/>
+  <path d="M17 29C15.3431 29 14 30.3431 14 32V32C14 33.6569 15.3431 35 17 35H43C44.6569 35 46 33.6569 46 32V32C46 30.3431 44.6569 29 43 29H17Z" fill="white" fill-opacity="0.2"/>
+  <path d="M14 40C14 38.3431 15.3431 37 17 37H37C38.6569 37 40 38.3431 40 40V40C40 41.6569 38.6569 43 37 43H17C15.3431 43 14 41.6569 14 40V40Z" fill="white" fill-opacity="0.2"/>
+</svg>

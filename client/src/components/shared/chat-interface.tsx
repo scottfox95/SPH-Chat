@@ -181,17 +181,8 @@ export default function ChatInterface({
         {/* Welcome Message if no messages */}
         {messages.length === 0 && (
           <div className="flex items-start">
-            <div className="w-8 h-8 rounded-xl bg-[#D2B48C] flex items-center justify-center text-white mr-3 flex-shrink-0 overflow-hidden">
-              <img 
-                src="/images/sph-chat-logo.png" 
-                alt="SPH Chat Logo" 
-                className="h-full w-full object-cover"
-                onError={(e) => {
-                  e.currentTarget.onerror = null;
-                  e.currentTarget.style.display = 'none';
-                  e.currentTarget.parentElement.innerHTML = '<svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>';
-                }}
-              />
+            <div className="w-8 h-8 rounded-xl bg-[#D2B48C] flex items-center justify-center text-white mr-3 flex-shrink-0">
+              <span className="font-bold text-xs">SPH</span>
             </div>
             <div className="flex-1">
               <div className="bg-white rounded-xl rounded-tl-sm p-4 shadow-sm max-w-3xl">
@@ -213,17 +204,8 @@ export default function ChatInterface({
             )}
           >
             {!message.isUserMessage && (
-              <div className="w-8 h-8 rounded-xl bg-[#D2B48C] flex items-center justify-center text-white mr-3 flex-shrink-0 overflow-hidden">
-                <img 
-                  src="/images/sph-chat-logo.png" 
-                  alt="SPH Chat Logo" 
-                  className="h-full w-full object-cover"
-                  onError={(e) => {
-                    e.currentTarget.onerror = null;
-                    e.currentTarget.style.display = 'none';
-                    e.currentTarget.parentElement.innerHTML = '<svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>';
-                  }}
-                />
+              <div className="w-8 h-8 rounded-xl bg-[#D2B48C] flex items-center justify-center text-white mr-3 flex-shrink-0">
+                <span className="font-bold text-xs">SPH</span>
               </div>
             )}
             
@@ -256,17 +238,8 @@ export default function ChatInterface({
         {/* Loading indicator */}
         {isLoading && (
           <div className="flex items-start">
-            <div className="w-8 h-8 rounded-xl bg-[#D2B48C] flex items-center justify-center text-white mr-3 flex-shrink-0 overflow-hidden">
-              <img 
-                src="/images/sph-chat-logo.png" 
-                alt="SPH Chat Logo" 
-                className="h-full w-full object-cover animate-pulse"
-                onError={(e) => {
-                  e.currentTarget.onerror = null;
-                  e.currentTarget.style.display = 'none';
-                  e.currentTarget.parentElement.innerHTML = '<svg class="h-5 w-5 animate-pulse" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>';
-                }}
-              />
+            <div className="w-8 h-8 rounded-xl bg-[#D2B48C] flex items-center justify-center text-white mr-3 flex-shrink-0 animate-pulse">
+              <span className="font-bold text-xs">SPH</span>
             </div>
             <div className="flex-1">
               <div className="bg-white rounded-xl rounded-tl-sm p-4 shadow-sm max-w-3xl">
