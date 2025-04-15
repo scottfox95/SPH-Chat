@@ -50,7 +50,7 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
           <div className="flex items-center">
             <div className="w-8 h-8 rounded-md overflow-hidden">
               <img 
-                src="/images/sph-chat-logo.png" 
+                src="/SPHChat_Icon_PNG.png" 
                 alt="SPH Chat" 
                 className="h-full w-full object-cover"
                 onError={(e) => {

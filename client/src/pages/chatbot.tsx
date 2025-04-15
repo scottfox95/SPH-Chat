@@ -43,17 +43,17 @@ export default function Chatbot({ id }: ChatbotProps) {
   const { toast } = useToast();
 
   // Fetch chatbot data
-  const { data: chatbot, isLoading: chatbotLoading } = useQuery({
+  const { data: chatbot, isLoading: chatbotLoading } = useQuery<any>({
     queryKey: [`/api/chatbots/${id}`],
   });
 
   // Fetch documents
-  const { data: documents = [], isLoading: documentsLoading } = useQuery({
+  const { data: documents = [], isLoading: documentsLoading } = useQuery<any[]>({
     queryKey: [`/api/chatbots/${id}/documents`],
   });
 
   // Fetch email recipients
-  const { data: recipients = [], isLoading: recipientsLoading } = useQuery({
+  const { data: recipients = [], isLoading: recipientsLoading } = useQuery<any[]>({
     queryKey: [`/api/chatbots/${id}/recipients`],
   });
 
@@ -301,6 +301,20 @@ export default function Chatbot({ id }: ChatbotProps) {
             
             <TabsContent value="settings" className="pt-4 space-y-4">
               <div className="space-y-4">
+                <div>
+                  <Label htmlFor="chatbot-name">Chatbot Name</Label>
+                  <div className="mt-1">
+                    <EditableTitle 
+                      value={chatbot.name} 
+                      onSave={async (newName) => {
+                        updateNameMutation.mutate(newName);
+                      }}
+                      isPending={updateNameMutation.isPending}
+                      className="text-base" 
+                    />
+                  </div>
+                </div>
+
                 <div className="flex items-center justify-between">
                   <div>
                     <Label htmlFor="active-status">Active Status</Label>

@@ -183,7 +183,7 @@ export default function ChatInterface({
           <div className="flex items-start">
             <div className="w-8 h-8 rounded-xl overflow-hidden mr-3 flex-shrink-0">
               <img 
-                src="/images/sph-chat-logo.png" 
+                src="/SPHChat_Icon_PNG.png" 
                 alt="SPH Chat" 
                 className="h-full w-full object-cover"
                 onError={(e) => {
@@ -217,7 +217,7 @@ export default function ChatInterface({
             {!message.isUserMessage && (
               <div className="w-8 h-8 rounded-xl overflow-hidden mr-3 flex-shrink-0">
                 <img 
-                  src="/images/sph-chat-logo.png" 
+                  src="/SPHChat_Icon_PNG.png" 
                   alt="SPH Chat" 
                   className="h-full w-full object-cover"
                   onError={(e) => {
@@ -262,7 +262,7 @@ export default function ChatInterface({
           <div className="flex items-start">
             <div className="w-8 h-8 rounded-xl overflow-hidden mr-3 flex-shrink-0 animate-pulse">
               <img 
-                src="/images/sph-chat-logo.png" 
+                src="/SPHChat_Icon_PNG.png" 
                 alt="SPH Chat" 
                 className="h-full w-full object-cover"
                 onError={(e) => {
