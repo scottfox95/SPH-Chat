@@ -36,8 +36,23 @@ export async function getChatbotResponse(
     const settings = await getSettings();
     
     // Prepare Slack messages for the context
+    // Include metadata for proper attribution in a format OpenAI can understand
     const formattedSlackMessages = slackMessages.map(msg => {
-      return `SLACK MESSAGE: ${msg.text}`;
+      // Include attribution data in a structured way that OpenAI can extract
+      let messagePrefix = "SLACK MESSAGE";
+      
+      // Add attribution data if source details are enabled
+      if (settings?.includeSourceDetails) {
+        if (settings?.includeUserInSource && msg.meta?.user) {
+          messagePrefix += ` FROM: ${msg.meta.user}`;
+        }
+        
+        if (settings?.includeDateInSource && msg.meta?.formattedDate) {
+          messagePrefix += ` DATE: ${msg.meta.formattedDate}`;
+        }
+      }
+      
+      return `${messagePrefix}: ${msg.meta?.rawMessage || msg.text}`;
     });
     
     // Context for the model
@@ -50,17 +65,17 @@ export async function getChatbotResponse(
     let enhancedSystemPrompt = systemPrompt;
     
     if (settings?.includeSourceDetails) {
-      enhancedSystemPrompt += "\n\nWhen you use information from Slack messages, you MUST include the source in your response. ";
+      enhancedSystemPrompt += "\n\nIMPORTANT: You MUST provide source attribution whenever you use information from Slack messages. This is critical for users to trust the information. ";
       
       if (settings?.includeUserInSource && settings?.includeDateInSource) {
-        enhancedSystemPrompt += "Include BOTH the name of the person who sent the message AND the date/time when responding.";
+        enhancedSystemPrompt += "ALWAYS include BOTH the name of the person who sent the message AND the date/time when responding.";
       } else if (settings?.includeUserInSource) {
-        enhancedSystemPrompt += "Include the name of the person who sent the message when responding.";
+        enhancedSystemPrompt += "ALWAYS include the name of the person who sent the message when responding.";
       } else if (settings?.includeDateInSource) {
-        enhancedSystemPrompt += "Include the date and time when the message was sent when responding.";
+        enhancedSystemPrompt += "ALWAYS include the date and time when the message was sent when responding.";
       }
       
-      enhancedSystemPrompt += " Format source attribution at the end of your response like this: 'according to [NAME] on [DATE]' or similar natural phrasing.";
+      enhancedSystemPrompt += " Format source attribution at the end of your response like this: 'according to [NAME] on [DATE]' or similar natural phrasing. Never skip this attribution part even if the information seems unimportant.";
     }
 
     // Get the model from settings

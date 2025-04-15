@@ -100,14 +100,27 @@ export async function getFormattedSlackMessages(channelId: string) {
     for (const msg of messages) {
       if (msg.user && !userCache.has(msg.user) && msg.user !== 'unknown') {
         try {
-          const userInfo = await slack.users.info({ user: msg.user });
-          if (userInfo.ok && userInfo.user) {
-            const userName = userInfo.user.real_name || userInfo.user.name || msg.user;
-            userCache.set(msg.user, userName);
+          // Due to possible Slack API scope limitations, we'll try to get user info
+          // but have a fallback mechanism
+          try {
+            const userInfo = await slack.users.info({ user: msg.user });
+            if (userInfo.ok && userInfo.user) {
+              const userName = userInfo.user.real_name || userInfo.user.name || msg.user;
+              userCache.set(msg.user, userName);
+            }
+          } catch (error: any) {
+            // If we get a missing_scope error, fall back to the username from the message
+            if (error && error.data && error.data.error === 'missing_scope') {
+              console.warn("Missing 'users:read' scope for Slack API. Using message username as fallback.");
+              // Use a generic fallback for the username since we can't access Slack profiles
+              userCache.set(msg.user, "a team member");
+            } else {
+              throw error; // Re-throw if it's not a scope issue
+            }
           }
         } catch (error) {
           console.warn(`Could not retrieve user info for ${msg.user}:`, error);
-          userCache.set(msg.user, msg.user);
+          userCache.set(msg.user, "a team member");
         }
       }
     }
