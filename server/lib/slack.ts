@@ -103,19 +103,27 @@ export async function getFormattedSlackMessages(channelId: string) {
           // Due to possible Slack API scope limitations, we'll try to get user info
           // but have a fallback mechanism
           try {
+            console.log(`Attempting to fetch info for user ${msg.user}`);
             const userInfo = await slack.users.info({ user: msg.user });
+            
             if (userInfo.ok && userInfo.user) {
+              console.log(`Successfully retrieved info for user ${msg.user}`);
               const userName = userInfo.user.real_name || userInfo.user.name || msg.user;
               userCache.set(msg.user, userName);
+            } else {
+              console.warn(`Failed to get user info for ${msg.user} but no error was thrown`, userInfo);
+              userCache.set(msg.user, "a team member");
             }
           } catch (error: any) {
+            console.warn(`Error retrieving user ${msg.user} information:`, error?.data || error);
             // If we get a missing_scope error, fall back to the username from the message
             if (error && error.data && error.data.error === 'missing_scope') {
               console.warn("Missing 'users:read' scope for Slack API. Using message username as fallback.");
               // Use a generic fallback for the username since we can't access Slack profiles
               userCache.set(msg.user, "a team member");
             } else {
-              throw error; // Re-throw if it's not a scope issue
+              console.error(`Other error getting user info: ${error?.message || 'Unknown error'}`);
+              userCache.set(msg.user, "a team member");
             }
           }
         } catch (error) {
@@ -197,6 +205,17 @@ export async function testSlackConnection() {
   try {
     // Test auth.test which verifies the token
     const authTest = await slack.auth.test();
+    
+    // Check app scopes for debugging
+    try {
+      // Try to access users.list to see if we have the users:read scope
+      // This is a simpler way to check if we have the permission
+      console.log("Testing users:read scope...");
+      const result = await slack.users.list({ limit: 1 });
+      console.log("users:read scope is available! Example user:", result?.members?.[0]?.name);
+    } catch (scopeError: any) {
+      console.warn("Error testing users:read scope:", scopeError?.data?.error || scopeError?.message || "Unknown error");
+    }
     
     // If we get here, the token is valid
     return {
