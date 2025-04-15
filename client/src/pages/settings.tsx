@@ -69,13 +69,6 @@ export default function Settings() {
     error?: string;
   }>(null);
 
-  // Local state for source attribution settings
-  const [sourceSettings, setSourceSettings] = useState({
-    includeSourceDetails: false,
-    includeUserInSource: false,
-    includeDateInSource: false
-  });
-  
   // Fetch app settings
   const { 
     data: settings, 
@@ -84,17 +77,6 @@ export default function Settings() {
     queryKey: ['/api/settings'],
     queryFn: () => fetch('/api/settings').then(res => res.json())
   });
-  
-  // Set local state whenever settings data changes
-  useEffect(() => {
-    if (settings) {
-      setSourceSettings({
-        includeSourceDetails: settings.includeSourceDetails || false,
-        includeUserInSource: settings.includeUserInSource || false,
-        includeDateInSource: settings.includeDateInSource || false
-      });
-    }
-  }, [settings]);
 
   // Fetch Slack channels
   const { 
@@ -563,19 +545,13 @@ export default function Settings() {
                         </div>
                         <Switch
                           id="include-source-details"
-                          checked={sourceSettings.includeSourceDetails}
+                          checked={settings?.includeSourceDetails || false}
                           onCheckedChange={(checked) => {
-                            // Update local state
-                            const newSettings = {
-                              ...sourceSettings,
-                              includeSourceDetails: checked
-                            };
-                            setSourceSettings(newSettings);
-                            
-                            // Send update to server
                             updateSettingsMutation.mutate({
                               openaiModel: settings?.openaiModel || "gpt-4o",
-                              ...newSettings
+                              includeSourceDetails: checked,
+                              includeUserInSource: settings?.includeUserInSource || false,
+                              includeDateInSource: settings?.includeDateInSource || false
                             });
                           }}
                           disabled={updateSettingsMutation.isPending}
@@ -591,22 +567,16 @@ export default function Settings() {
                           </div>
                           <Switch
                             id="include-user-in-source"
-                            checked={sourceSettings.includeUserInSource}
+                            checked={settings?.includeUserInSource || false}
                             onCheckedChange={(checked) => {
-                              // Update local state
-                              const newSettings = {
-                                ...sourceSettings,
-                                includeUserInSource: checked
-                              };
-                              setSourceSettings(newSettings);
-                              
-                              // Send update to server
                               updateSettingsMutation.mutate({
                                 openaiModel: settings?.openaiModel || "gpt-4o",
-                                ...newSettings
+                                includeSourceDetails: settings?.includeSourceDetails || false,
+                                includeUserInSource: checked,
+                                includeDateInSource: settings?.includeDateInSource || false
                               });
                             }}
-                            disabled={!sourceSettings.includeSourceDetails || updateSettingsMutation.isPending}
+                            disabled={!(settings?.includeSourceDetails) || updateSettingsMutation.isPending}
                             className="data-[state=checked]:bg-[#D2B48C]"
                           />
                         </div>
@@ -618,22 +588,16 @@ export default function Settings() {
                           </div>
                           <Switch
                             id="include-date-in-source"
-                            checked={sourceSettings.includeDateInSource}
+                            checked={settings?.includeDateInSource || false}
                             onCheckedChange={(checked) => {
-                              // Update local state
-                              const newSettings = {
-                                ...sourceSettings,
-                                includeDateInSource: checked
-                              };
-                              setSourceSettings(newSettings);
-                              
-                              // Send update to server
                               updateSettingsMutation.mutate({
                                 openaiModel: settings?.openaiModel || "gpt-4o",
-                                ...newSettings
+                                includeSourceDetails: settings?.includeSourceDetails || false,
+                                includeUserInSource: settings?.includeUserInSource || false,
+                                includeDateInSource: checked
                               });
                             }}
-                            disabled={!sourceSettings.includeSourceDetails || updateSettingsMutation.isPending}
+                            disabled={!(settings?.includeSourceDetails) || updateSettingsMutation.isPending}
                             className="data-[state=checked]:bg-[#D2B48C]"
                           />
                         </div>
