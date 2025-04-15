@@ -247,13 +247,22 @@ export default function Chatbot({ id }: ChatbotProps) {
     <>
       <header className="bg-white border-b border-gray-200 py-4 px-6 flex items-center justify-between">
         <div>
-          <EditableTitle 
-            value={chatbot.name} 
-            onSave={async (newName) => {
-              updateNameMutation.mutate(newName);
-            }}
-            isPending={updateNameMutation.isPending}
-          />
+          <div className="flex items-center gap-2">
+            <h1 className="text-xl font-semibold">{chatbot.name}</h1>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => {
+                const newName = prompt("Enter new chatbot name:", chatbot.name);
+                if (newName && newName !== chatbot.name) {
+                  updateNameMutation.mutate(newName);
+                }
+              }}
+              className="h-7 w-7 hover:bg-gray-100"
+            >
+              <Pencil className="h-4 w-4 text-gray-600" />
+            </Button>
+          </div>
           <p className="text-sm text-gray-500">SPH ChatBot Assistant</p>
         </div>
         <div className="flex items-center space-x-4">
@@ -303,15 +312,21 @@ export default function Chatbot({ id }: ChatbotProps) {
               <div className="space-y-4">
                 <div>
                   <Label htmlFor="chatbot-name">Chatbot Name</Label>
-                  <div className="mt-1">
-                    <EditableTitle 
-                      value={chatbot.name} 
-                      onSave={async (newName) => {
-                        updateNameMutation.mutate(newName);
+                  <div className="flex items-center justify-between mt-1 border rounded p-2 hover:bg-gray-50">
+                    <div className="font-medium text-sm">{chatbot.name}</div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        const newName = prompt("Enter new chatbot name:", chatbot.name);
+                        if (newName && newName !== chatbot.name) {
+                          updateNameMutation.mutate(newName);
+                        }
                       }}
-                      isPending={updateNameMutation.isPending}
-                      className="text-base" 
-                    />
+                      className="text-xs"
+                    >
+                      <Pencil className="h-3 w-3 mr-1" /> Edit
+                    </Button>
                   </div>
                 </div>
 
