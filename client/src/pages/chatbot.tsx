@@ -247,7 +247,11 @@ export default function Chatbot({ id }: ChatbotProps) {
     <>
       <header className="bg-white border-b border-gray-200 py-4 px-6 flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-semibold">{chatbot.name}</h1>
+          <EditableTitle 
+            value={chatbot.name} 
+            onSave={updateNameMutation.mutateAsync}
+            isPending={updateNameMutation.isPending}
+          />
           <p className="text-sm text-gray-500">SPH ChatBot Assistant</p>
         </div>
         <div className="flex items-center space-x-4">
