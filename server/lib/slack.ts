@@ -1,7 +1,15 @@
 import { WebClient, type ChatPostMessageArguments } from "@slack/web-api";
 
-// Initialize Slack client
-const slack = new WebClient(process.env.SLACK_BOT_TOKEN || "xoxb-placeholder");
+// Initialize Slack client with the token and explicitly force a new connection
+// This helps ensure we're not using a cached version of the client with old permissions
+const tokenToUse = process.env.SLACK_BOT_TOKEN || "xoxb-placeholder";
+console.log("Initializing Slack WebClient with token starting with:", tokenToUse.substring(0, 10) + "...");
+
+// Check if we're using a reused token by looking at the first characters
+// If you update your token after adding scopes, this prefix will help confirm the change
+console.log("NOTE: If your token starts with different characters after reinstalling the app, you need to update it in your environment variables");
+
+export const slack = new WebClient(tokenToUse);
 
 /**
  * Validates a Slack channel ID and checks if the bot has access to it

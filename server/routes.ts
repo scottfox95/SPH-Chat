@@ -18,7 +18,8 @@ import {
   getWeeklySlackMessages, 
   testSlackConnection, 
   validateSlackChannel,
-  listAccessibleChannels
+  listAccessibleChannels,
+  slack // Import the slack client directly for testing
 } from "./lib/slack";
 import { processDocument } from "./lib/document-processor";
 import { getChatbotContext, clearDocumentCache } from "./lib/vector-storage";
@@ -571,6 +572,41 @@ You should **never make up information**. You may summarize or synthesize detail
   apiRouter.get("/system/test-slack", async (req, res) => {
     try {
       const result = await testSlackConnection();
+      
+      // Add detailed scope information if available
+      try {
+        // Try the users.list endpoint to directly test the users:read scope
+        const usersResult = await slack.users.list({ limit: 1 });
+        result.hasUsersReadScope = true;
+        result.usersSample = usersResult.members ? 
+          usersResult.members.slice(0, 2).map(m => ({ 
+            id: m.id, 
+            name: m.name, 
+            real_name: m.real_name,
+            is_bot: m.is_bot
+          })) : [];
+      } catch (scopeError: any) {
+        result.hasUsersReadScope = false;
+        result.usersReadError = scopeError?.data?.error || 'unknown_error';
+        result.usersReadErrorDetails = {
+          needed: scopeError?.data?.needed,
+          provided: scopeError?.data?.provided
+        };
+      }
+      
+      // Get information about the token through auth.test
+      try {
+        const authTestResult = await slack.auth.test();
+        result.tokenInfo = {
+          user: authTestResult.user,
+          team: authTestResult.team,
+          botId: authTestResult.bot_id,
+          userId: authTestResult.user_id
+        };
+      } catch (authError) {
+        console.error("Error getting token info:", authError);
+      }
+      
       res.json(result);
     } catch (error) {
       console.error("Error testing Slack connection:", error);
