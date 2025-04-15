@@ -89,7 +89,13 @@ export default function Settings() {
 
   // Update settings mutation
   const updateSettingsMutation = useMutation({
-    mutationFn: async (data: { openaiModel: string }) => {
+    mutationFn: async (data: { 
+      openaiModel: string, 
+      includeSourceDetails?: boolean,
+      includeDateInSource?: boolean, 
+      includeUserInSource?: boolean,
+      responseTemplate?: string 
+    }) => {
       const response = await apiRequest('PUT', '/api/settings', data);
       return response.json();
     },
@@ -97,7 +103,7 @@ export default function Settings() {
       queryClient.invalidateQueries({ queryKey: ['/api/settings'] });
       toast({
         title: "Settings updated",
-        description: "OpenAI model preference has been saved.",
+        description: "AI settings have been saved successfully.",
       });
     },
     onError: (error: any) => {
@@ -499,7 +505,10 @@ export default function Settings() {
                     <Select 
                       defaultValue={settings?.openaiModel || "gpt-4o"}
                       onValueChange={(value) => {
-                        updateSettingsMutation.mutate({ openaiModel: value });
+                        updateSettingsMutation.mutate({ 
+                          ...settings,
+                          openaiModel: value 
+                        });
                       }}
                       disabled={updateSettingsMutation.isPending}
                     >
@@ -522,13 +531,87 @@ export default function Settings() {
                     <p className="text-xs text-gray-500">
                       This model will be used for all AI responses and summary generation across all chatbots
                     </p>
-                    {updateSettingsMutation.isPending && (
-                      <p className="text-xs text-amber-600 flex items-center">
-                        <Loader2 className="h-3 w-3 mr-1 animate-spin" />
-                        Updating model preference...
-                      </p>
-                    )}
                   </div>
+                  
+                  <Separator className="my-4" />
+                  
+                  <div className="space-y-4">
+                    <h3 className="text-sm font-medium">Source Attribution Settings</h3>
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <Label htmlFor="include-source-details">Include Source Details</Label>
+                          <p className="text-xs text-gray-500">When enabled, the AI will include source details in its responses</p>
+                        </div>
+                        <Switch
+                          id="include-source-details"
+                          checked={settings?.includeSourceDetails || false}
+                          onCheckedChange={(checked) => {
+                            updateSettingsMutation.mutate({ 
+                              ...settings,
+                              includeSourceDetails: checked 
+                            });
+                          }}
+                          disabled={updateSettingsMutation.isPending}
+                          className="data-[state=checked]:bg-[#D2B48C]"
+                        />
+                      </div>
+                      
+                      <div className="space-y-4 pl-4 border-l-2 border-gray-100">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <Label htmlFor="include-user-in-source">Include User Names</Label>
+                            <p className="text-xs text-gray-500">Include the name of the person who sent the message</p>
+                          </div>
+                          <Switch
+                            id="include-user-in-source"
+                            checked={settings?.includeUserInSource || false}
+                            onCheckedChange={(checked) => {
+                              updateSettingsMutation.mutate({ 
+                                ...settings,
+                                includeUserInSource: checked 
+                              });
+                            }}
+                            disabled={!settings?.includeSourceDetails || updateSettingsMutation.isPending}
+                            className="data-[state=checked]:bg-[#D2B48C]"
+                          />
+                        </div>
+                        
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <Label htmlFor="include-date-in-source">Include Dates</Label>
+                            <p className="text-xs text-gray-500">Include the date and time when the message was sent</p>
+                          </div>
+                          <Switch
+                            id="include-date-in-source"
+                            checked={settings?.includeDateInSource || false}
+                            onCheckedChange={(checked) => {
+                              updateSettingsMutation.mutate({ 
+                                ...settings,
+                                includeDateInSource: checked 
+                              });
+                            }}
+                            disabled={!settings?.includeSourceDetails || updateSettingsMutation.isPending}
+                            className="data-[state=checked]:bg-[#D2B48C]"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="p-3 bg-amber-50 rounded-md text-amber-800 text-xs">
+                      <p>Example response with source attribution:</p>
+                      <p className="mt-1 font-medium">
+                        "The AC unit is currently on order and is expected to arrive this week, according to the Slack message sent by Aaron Wilson on 4/14/2025 at 8:08:05 PM."
+                      </p>
+                    </div>
+                  </div>
+                  
+                  {updateSettingsMutation.isPending && (
+                    <p className="text-xs text-amber-600 flex items-center mt-2">
+                      <Loader2 className="h-3 w-3 mr-1 animate-spin" />
+                      Updating settings...
+                    </p>
+                  )}
                 </>
               )}
             </CardContent>
