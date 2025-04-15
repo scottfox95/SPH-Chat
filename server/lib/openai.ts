@@ -1,35 +1,67 @@
 import OpenAI from "openai";
 import { storage } from "../storage";
+import { Settings } from "@shared/schema";
 
 // Initialize OpenAI client
 const openai = new OpenAI({ 
   apiKey: process.env.OPENAI_API_KEY || "sk-placeholder"
 });
 
-// Helper to get the current model from settings
-async function getCurrentModel(): Promise<string> {
+// Helper to get the settings
+async function getSettings(): Promise<Settings | null> {
   try {
     const settings = await storage.getSettings();
-    return settings?.openaiModel || "gpt-4o";
+    return settings || null;
   } catch (error) {
-    console.error("Error getting OpenAI model from settings:", error);
-    return "gpt-4o"; // Default to gpt-4o if settings retrieval fails
+    console.error("Error getting settings:", error);
+    return null;
   }
+}
+
+// Helper to get the current model from settings
+async function getCurrentModel(): Promise<string> {
+  const settings = await getSettings();
+  return settings?.openaiModel || "gpt-4o";
 }
 
 // Function to get chatbot response
 export async function getChatbotResponse(
   prompt: string,
   documents: string[],
-  slackMessages: string[],
+  slackMessages: any[],
   systemPrompt: string
 ) {
   try {
+    // Get application settings to determine source attribution behavior
+    const settings = await getSettings();
+    
+    // Prepare Slack messages for the context
+    const formattedSlackMessages = slackMessages.map(msg => {
+      return `SLACK MESSAGE: ${msg.text}`;
+    });
+    
     // Context for the model
     const context = [
       ...documents.map((doc) => `DOCUMENT: ${doc}`),
-      ...slackMessages.map((msg) => `SLACK MESSAGE: ${msg}`),
+      ...formattedSlackMessages,
     ].join("\n\n");
+
+    // Enhance the system prompt with instructions about including source information
+    let enhancedSystemPrompt = systemPrompt;
+    
+    if (settings?.includeSourceDetails) {
+      enhancedSystemPrompt += "\n\nWhen you use information from Slack messages, you MUST include the source in your response. ";
+      
+      if (settings?.includeUserInSource && settings?.includeDateInSource) {
+        enhancedSystemPrompt += "Include BOTH the name of the person who sent the message AND the date/time when responding.";
+      } else if (settings?.includeUserInSource) {
+        enhancedSystemPrompt += "Include the name of the person who sent the message when responding.";
+      } else if (settings?.includeDateInSource) {
+        enhancedSystemPrompt += "Include the date and time when the message was sent when responding.";
+      }
+      
+      enhancedSystemPrompt += " Format source attribution at the end of your response like this: 'according to [NAME] on [DATE]' or similar natural phrasing.";
+    }
 
     // Get the model from settings
     const model = await getCurrentModel();
@@ -39,7 +71,7 @@ export async function getChatbotResponse(
       messages: [
         {
           role: "system",
-          content: systemPrompt,
+          content: enhancedSystemPrompt,
         },
         {
           role: "user",
@@ -58,10 +90,24 @@ export async function getChatbotResponse(
     
     if (match && match[1]) {
       citation = match[1];
+    } else if (settings?.includeSourceDetails) {
+      // Try to extract source details from the response text using patterns like "according to X on Y"
+      const sourceRegex = /according to ([^\.]+)/i;
+      const sourceMatch = responseText?.match(sourceRegex);
+      if (sourceMatch && sourceMatch[1]) {
+        citation = sourceMatch[1].trim();
+      }
+    }
+    
+    let finalContent = responseText || "I wasn't able to find that information in the project files or Slack messages.";
+    
+    // Only strip the citation if it's in the standard bracket format
+    if (match && match[0]) {
+      finalContent = finalContent.replace(citationRegex, "").trim();
     }
     
     return {
-      content: responseText?.replace(citationRegex, "").trim() || "I wasn't able to find that information in the project files or Slack messages.",
+      content: finalContent,
       citation: citation || "No specific source available"
     };
   } catch (error) {

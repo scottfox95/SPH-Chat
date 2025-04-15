@@ -93,10 +93,40 @@ export async function getFormattedSlackMessages(channelId: string) {
   try {
     const messages = await getSlackMessages(channelId);
     
+    // Try to get detailed user information when available
+    const userCache = new Map<string, string>();
+    
+    // Attempt to resolve user IDs to names
+    for (const msg of messages) {
+      if (msg.user && !userCache.has(msg.user) && msg.user !== 'unknown') {
+        try {
+          const userInfo = await slack.users.info({ user: msg.user });
+          if (userInfo.ok && userInfo.user) {
+            const userName = userInfo.user.real_name || userInfo.user.name || msg.user;
+            userCache.set(msg.user, userName);
+          }
+        } catch (error) {
+          console.warn(`Could not retrieve user info for ${msg.user}:`, error);
+          userCache.set(msg.user, msg.user);
+        }
+      }
+    }
+    
     return messages.map((msg) => {
       const date = new Date(parseFloat(msg.timestamp) * 1000);
       const formattedDate = `${date.toLocaleDateString()} @ ${date.toLocaleTimeString()}`;
-      return `${msg.user} (${formattedDate}): ${msg.text}`;
+      const userName = userCache.get(msg.user) || msg.user;
+      
+      // Store detailed information in the message for attribution
+      return {
+        text: `${userName} (${formattedDate}): ${msg.text}`,
+        meta: {
+          user: userName,
+          timestamp: msg.timestamp,
+          formattedDate: formattedDate,
+          rawMessage: msg.text
+        }
+      };
     });
   } catch (error) {
     console.error("Error formatting Slack messages:", error);

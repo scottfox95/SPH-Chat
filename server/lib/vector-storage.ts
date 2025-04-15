@@ -49,11 +49,11 @@ export async function getProcessedDocuments(chatbotId: number): Promise<string[]
  * Gets relevant documents and Slack messages for a chatbot
  * @param chatbotId The ID of the chatbot
  * @param query Optional query to filter results (not implemented in MVP)
- * @returns Object containing documents and messages
+ * @returns Object containing documents and messages with metadata
  */
 export async function getChatbotContext(chatbotId: number, query?: string): Promise<{
   documents: string[];
-  slackMessages: string[];
+  slackMessages: any[];
 }> {
   try {
     // Get chatbot
@@ -67,12 +67,15 @@ export async function getChatbotContext(chatbotId: number, query?: string): Prom
     const documents = await getProcessedDocuments(chatbotId);
     
     // Validate Slack channel before trying to get messages
-    let slackMessages: string[] = [];
+    let slackMessages: any[] = [];
     const channelValidation = await validateSlackChannel(chatbot.slackChannelId);
     
     if (channelValidation.valid) {
       // Get Slack messages only if the channel is valid
-      slackMessages = await getFormattedSlackMessages(chatbot.slackChannelId);
+      const formattedMessages = await getFormattedSlackMessages(chatbot.slackChannelId);
+      
+      // Keep the full message objects with metadata for use in response generation
+      slackMessages = formattedMessages;
     } else {
       console.warn(`Cannot retrieve Slack messages for channel ${chatbot.slackChannelId}: ${channelValidation.error}`);
     }
