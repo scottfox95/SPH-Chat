@@ -39,9 +39,11 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
         {/* Logo */}
         <div className="p-4 border-b border-gray-200">
           <div className="flex items-center">
-            <div className="w-8 h-8 rounded-xl bg-[#D2B48C] flex items-center justify-center">
-              <span className="text-white font-semibold">SPH</span>
-            </div>
+            <img 
+              src="/images/sph-chat-logo.png" 
+              alt="SPH Chat Logo" 
+              className="w-8 h-8 rounded-md"
+            />
             <span className="ml-2 font-semibold text-gray-900">SPH ChatBot</span>
           </div>
         </div>
