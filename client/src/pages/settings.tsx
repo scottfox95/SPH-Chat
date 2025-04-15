@@ -547,10 +547,13 @@ export default function Settings() {
                           id="include-source-details"
                           checked={settings?.includeSourceDetails || false}
                           onCheckedChange={(checked) => {
-                            updateSettingsMutation.mutate({ 
-                              ...settings,
-                              includeSourceDetails: checked 
-                            });
+                            const updatedSettings = {
+                              openaiModel: settings?.openaiModel || "gpt-4o",
+                              includeSourceDetails: checked,
+                              includeUserInSource: settings?.includeUserInSource || false,
+                              includeDateInSource: settings?.includeDateInSource || false
+                            };
+                            updateSettingsMutation.mutate(updatedSettings);
                           }}
                           disabled={updateSettingsMutation.isPending}
                           className="data-[state=checked]:bg-[#D2B48C]"
@@ -567,10 +570,13 @@ export default function Settings() {
                             id="include-user-in-source"
                             checked={settings?.includeUserInSource || false}
                             onCheckedChange={(checked) => {
-                              updateSettingsMutation.mutate({ 
-                                ...settings,
-                                includeUserInSource: checked 
-                              });
+                              const updatedSettings = {
+                                openaiModel: settings?.openaiModel || "gpt-4o",
+                                includeSourceDetails: settings?.includeSourceDetails || false,
+                                includeUserInSource: checked,
+                                includeDateInSource: settings?.includeDateInSource || false
+                              };
+                              updateSettingsMutation.mutate(updatedSettings);
                             }}
                             disabled={!settings?.includeSourceDetails || updateSettingsMutation.isPending}
                             className="data-[state=checked]:bg-[#D2B48C]"
@@ -586,10 +592,13 @@ export default function Settings() {
                             id="include-date-in-source"
                             checked={settings?.includeDateInSource || false}
                             onCheckedChange={(checked) => {
-                              updateSettingsMutation.mutate({ 
-                                ...settings,
-                                includeDateInSource: checked 
-                              });
+                              const updatedSettings = {
+                                openaiModel: settings?.openaiModel || "gpt-4o",
+                                includeSourceDetails: settings?.includeSourceDetails || false,
+                                includeUserInSource: settings?.includeUserInSource || false,
+                                includeDateInSource: checked
+                              };
+                              updateSettingsMutation.mutate(updatedSettings);
                             }}
                             disabled={!settings?.includeSourceDetails || updateSettingsMutation.isPending}
                             className="data-[state=checked]:bg-[#D2B48C]"
