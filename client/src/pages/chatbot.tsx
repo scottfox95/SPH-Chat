@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Share2, Bell, Settings, FileUp, Trash2 } from "lucide-react";
+import { Share2, Bell, Settings, FileUp, Trash2, Pencil } from "lucide-react";
+import EditableTitle from "@/components/shared/editable-title";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import ChatInterface from "@/components/shared/chat-interface";
 import ShareModal from "@/components/shared/share-modal";
@@ -145,6 +146,31 @@ export default function Chatbot({ id }: ChatbotProps) {
     onError: (error: any) => {
       toast({
         title: "Failed to update status",
+        description: error.message || "Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  // Update chatbot name mutation
+  const updateNameMutation = useMutation({
+    mutationFn: async (name: string) => {
+      const res = await apiRequest("PUT", `/api/chatbots/${id}`, {
+        name,
+      });
+      return res.json();
+    },
+    onSuccess: (data) => {
+      toast({
+        title: "Chatbot renamed",
+        description: `Chatbot has been renamed to ${data.name}.`,
+      });
+      queryClient.invalidateQueries({ queryKey: [`/api/chatbots/${id}`] });
+      queryClient.invalidateQueries({ queryKey: ["/api/chatbots"] });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Failed to rename chatbot",
         description: error.message || "Please try again.",
         variant: "destructive",
       });
