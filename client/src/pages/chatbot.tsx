@@ -247,11 +247,22 @@ export default function Chatbot({ id }: ChatbotProps) {
     <>
       <header className="bg-white border-b border-gray-200 py-4 px-6 flex items-center justify-between">
         <div>
-          <EditableTitle 
-            value={chatbot.name} 
-            onSave={updateNameMutation.mutateAsync}
-            isPending={updateNameMutation.isPending}
-          />
+          <h1 className="text-xl font-semibold group flex items-center gap-2">
+            {chatbot.name}
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => {
+                const newName = prompt("Enter new chatbot name:", chatbot.name);
+                if (newName && newName !== chatbot.name) {
+                  updateNameMutation.mutate(newName);
+                }
+              }}
+              className="opacity-0 group-hover:opacity-100 transition-opacity h-6 w-6"
+            >
+              <Pencil className="h-4 w-4 text-gray-500" />
+            </Button>
+          </h1>
           <p className="text-sm text-gray-500">SPH ChatBot Assistant</p>
         </div>
         <div className="flex items-center space-x-4">
