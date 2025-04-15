@@ -72,7 +72,8 @@ export default function Settings() {
   // Fetch app settings
   const { 
     data: settings, 
-    isLoading: isLoadingSettings 
+    isLoading: isLoadingSettings,
+    refetch: refetchSettings
   } = useQuery({
     queryKey: ['/api/settings'],
     queryFn: () => fetch('/api/settings').then(res => res.json())
@@ -99,8 +100,10 @@ export default function Settings() {
       const response = await apiRequest('PUT', '/api/settings', data);
       return response.json();
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/settings'] });
+    onSuccess: async () => {
+      // Force an immediate refetch of settings
+      await refetchSettings();
+      
       toast({
         title: "Settings updated",
         description: "AI settings have been saved successfully.",
@@ -607,8 +610,20 @@ export default function Settings() {
                     <div className="p-3 bg-amber-50 rounded-md text-amber-800 text-xs">
                       <p>Example response with source attribution:</p>
                       <p className="mt-1 font-medium">
-                        "The AC unit is currently on order and is expected to arrive this week, according to the Slack message sent by Aaron Wilson on 4/14/2025 at 8:08:05 PM."
+                        "The AC unit is currently on order and is expected to arrive this week, 
+                        {settings?.includeSourceDetails && ' according to the Slack message'}
+                        {settings?.includeSourceDetails && settings?.includeUserInSource && ' sent by Aaron Wilson'}
+                        {settings?.includeSourceDetails && settings?.includeDateInSource && ' on 4/14/2025 at 8:08:05 PM'}.
+                        "
                       </p>
+                    </div>
+                    
+                    {/* Debug section to show current state */}
+                    <div className="mt-4 p-3 bg-slate-50 rounded-md text-slate-800 text-xs">
+                      <p className="font-medium mb-1">Current settings:</p>
+                      <p>Include Source Details: {settings?.includeSourceDetails ? 'Yes' : 'No'}</p>
+                      <p>Include User in Source: {settings?.includeUserInSource ? 'Yes' : 'No'}</p>
+                      <p>Include Date in Source: {settings?.includeDateInSource ? 'Yes' : 'No'}</p>
                     </div>
                   </div>
                   
