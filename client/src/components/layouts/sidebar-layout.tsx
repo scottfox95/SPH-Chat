@@ -5,9 +5,18 @@ import { useQuery } from "@tanstack/react-query";
 import { Home, MessageSquare, ClipboardList, Settings, LogOut, Database } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useToast } from "@/hooks/use-toast";
+import { ReactNode } from "react";
+
+interface Chatbot {
+  id: number;
+  name: string;
+  slackChannelId?: string;
+  publicToken?: string;
+  isActive?: boolean;
+}
 
 interface SidebarLayoutProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 export default function SidebarLayout({ children }: SidebarLayoutProps) {
@@ -16,7 +25,7 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
   const { toast } = useToast();
   
   // Get all chatbots for sidebar navigation
-  const { data: chatbots = [] } = useQuery({
+  const { data: chatbots = [] } = useQuery<Chatbot[]>({
     queryKey: ["/api/chatbots"],
   });
   
@@ -49,60 +58,65 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
         {/* Navigation */}
         <nav className="flex-1 overflow-y-auto p-4 space-y-1">
           <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Navigation</div>
-          <Link href="/">
-            <a className={cn(
+          <Link 
+            href="/" 
+            className={cn(
               "flex items-center px-3 py-2 text-sm font-medium rounded-xl",
               location === "/" 
                 ? "bg-[#D2B48C] bg-opacity-10 text-[#D2B48C]" 
                 : "text-gray-600 hover:bg-gray-100"
-            )}>
-              <Home className="h-5 w-5 mr-2" />
-              Dashboard
-            </a>
+            )}
+          >
+            <Home className="h-5 w-5 mr-2" />
+            Dashboard
           </Link>
-          <Link href="/chatbots">
-            <a className={cn(
+          <Link 
+            href="/chatbots"
+            className={cn(
               "flex items-center px-3 py-2 text-sm font-medium rounded-xl",
               location === "/chatbots"
                 ? "bg-[#D2B48C] bg-opacity-10 text-[#D2B48C]"
                 : "text-gray-600 hover:bg-gray-100"
-            )}>
-              <MessageSquare className="h-5 w-5 mr-2" />
-              All Chatbots
-            </a>
+            )}
+          >
+            <MessageSquare className="h-5 w-5 mr-2" />
+            All Chatbots
           </Link>
-          <Link href="/summaries">
-            <a className={cn(
+          <Link 
+            href="/summaries"
+            className={cn(
               "flex items-center px-3 py-2 text-sm font-medium rounded-xl",
               location === "/summaries"
                 ? "bg-[#D2B48C] bg-opacity-10 text-[#D2B48C]"
                 : "text-gray-600 hover:bg-gray-100"
-            )}>
-              <ClipboardList className="h-5 w-5 mr-2" />
-              Weekly Summaries
-            </a>
+            )}
+          >
+            <ClipboardList className="h-5 w-5 mr-2" />
+            Weekly Summaries
           </Link>
-          <Link href="/knowledge-base">
-            <a className={cn(
+          <Link 
+            href="/knowledge-base"
+            className={cn(
               "flex items-center px-3 py-2 text-sm font-medium rounded-xl",
               location === "/knowledge-base"
                 ? "bg-[#D2B48C] bg-opacity-10 text-[#D2B48C]"
                 : "text-gray-600 hover:bg-gray-100"
-            )}>
-              <Database className="h-5 w-5 mr-2" />
-              Knowledge Base
-            </a>
+            )}
+          >
+            <Database className="h-5 w-5 mr-2" />
+            Knowledge Base
           </Link>
-          <Link href="/settings">
-            <a className={cn(
+          <Link 
+            href="/settings"
+            className={cn(
               "flex items-center px-3 py-2 text-sm font-medium rounded-xl",
               location === "/settings"
                 ? "bg-[#D2B48C] bg-opacity-10 text-[#D2B48C]"
                 : "text-gray-600 hover:bg-gray-100"
-            )}>
-              <Settings className="h-5 w-5 mr-2" />
-              Settings
-            </a>
+            )}
+          >
+            <Settings className="h-5 w-5 mr-2" />
+            Settings
           </Link>
         </nav>
         
@@ -111,17 +125,19 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
           <div className="p-4 border-t border-gray-200">
             <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Active Projects</div>
             <div className="space-y-2">
-              {chatbots.map((chatbot: any) => (
-                <Link key={chatbot.id} href={`/chatbot/${chatbot.id}`}>
-                  <a className={cn(
+              {chatbots.map((chatbot: Chatbot) => (
+                <Link 
+                  key={chatbot.id} 
+                  href={`/chatbot/${chatbot.id}`}
+                  className={cn(
                     "flex items-center px-3 py-2 text-sm font-medium rounded-xl",
                     location === `/chatbot/${chatbot.id}`
                       ? "bg-[#D2B48C] text-white"
                       : "text-gray-600 hover:bg-gray-100"
-                  )}>
-                    <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
-                    {chatbot.name}
-                  </a>
+                  )}
+                >
+                  <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                  {chatbot.name}
                 </Link>
               ))}
             </div>
