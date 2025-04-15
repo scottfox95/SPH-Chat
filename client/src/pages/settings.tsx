@@ -69,6 +69,13 @@ export default function Settings() {
     error?: string;
   }>(null);
 
+  // Local state for source attribution settings
+  const [sourceSettings, setSourceSettings] = useState({
+    includeSourceDetails: false,
+    includeUserInSource: false,
+    includeDateInSource: false
+  });
+  
   // Fetch app settings
   const { 
     data: settings, 
@@ -77,6 +84,17 @@ export default function Settings() {
     queryKey: ['/api/settings'],
     queryFn: () => fetch('/api/settings').then(res => res.json())
   });
+  
+  // Set local state whenever settings data changes
+  useEffect(() => {
+    if (settings) {
+      setSourceSettings({
+        includeSourceDetails: settings.includeSourceDetails || false,
+        includeUserInSource: settings.includeUserInSource || false,
+        includeDateInSource: settings.includeDateInSource || false
+      });
+    }
+  }, [settings]);
 
   // Fetch Slack channels
   const { 
@@ -545,15 +563,20 @@ export default function Settings() {
                         </div>
                         <Switch
                           id="include-source-details"
-                          checked={settings?.includeSourceDetails || false}
+                          checked={sourceSettings.includeSourceDetails}
                           onCheckedChange={(checked) => {
-                            const updatedSettings = {
-                              openaiModel: settings?.openaiModel || "gpt-4o",
-                              includeSourceDetails: checked,
-                              includeUserInSource: settings?.includeUserInSource || false,
-                              includeDateInSource: settings?.includeDateInSource || false
+                            // Update local state
+                            const newSettings = {
+                              ...sourceSettings,
+                              includeSourceDetails: checked
                             };
-                            updateSettingsMutation.mutate(updatedSettings);
+                            setSourceSettings(newSettings);
+                            
+                            // Send update to server
+                            updateSettingsMutation.mutate({
+                              openaiModel: settings?.openaiModel || "gpt-4o",
+                              ...newSettings
+                            });
                           }}
                           disabled={updateSettingsMutation.isPending}
                           className="data-[state=checked]:bg-[#D2B48C]"
@@ -568,17 +591,22 @@ export default function Settings() {
                           </div>
                           <Switch
                             id="include-user-in-source"
-                            checked={settings?.includeUserInSource || false}
+                            checked={sourceSettings.includeUserInSource}
                             onCheckedChange={(checked) => {
-                              const updatedSettings = {
-                                openaiModel: settings?.openaiModel || "gpt-4o",
-                                includeSourceDetails: settings?.includeSourceDetails || false,
-                                includeUserInSource: checked,
-                                includeDateInSource: settings?.includeDateInSource || false
+                              // Update local state
+                              const newSettings = {
+                                ...sourceSettings,
+                                includeUserInSource: checked
                               };
-                              updateSettingsMutation.mutate(updatedSettings);
+                              setSourceSettings(newSettings);
+                              
+                              // Send update to server
+                              updateSettingsMutation.mutate({
+                                openaiModel: settings?.openaiModel || "gpt-4o",
+                                ...newSettings
+                              });
                             }}
-                            disabled={!settings?.includeSourceDetails || updateSettingsMutation.isPending}
+                            disabled={!sourceSettings.includeSourceDetails || updateSettingsMutation.isPending}
                             className="data-[state=checked]:bg-[#D2B48C]"
                           />
                         </div>
@@ -590,17 +618,22 @@ export default function Settings() {
                           </div>
                           <Switch
                             id="include-date-in-source"
-                            checked={settings?.includeDateInSource || false}
+                            checked={sourceSettings.includeDateInSource}
                             onCheckedChange={(checked) => {
-                              const updatedSettings = {
-                                openaiModel: settings?.openaiModel || "gpt-4o",
-                                includeSourceDetails: settings?.includeSourceDetails || false,
-                                includeUserInSource: settings?.includeUserInSource || false,
+                              // Update local state
+                              const newSettings = {
+                                ...sourceSettings,
                                 includeDateInSource: checked
                               };
-                              updateSettingsMutation.mutate(updatedSettings);
+                              setSourceSettings(newSettings);
+                              
+                              // Send update to server
+                              updateSettingsMutation.mutate({
+                                openaiModel: settings?.openaiModel || "gpt-4o",
+                                ...newSettings
+                              });
                             }}
-                            disabled={!settings?.includeSourceDetails || updateSettingsMutation.isPending}
+                            disabled={!sourceSettings.includeSourceDetails || updateSettingsMutation.isPending}
                             className="data-[state=checked]:bg-[#D2B48C]"
                           />
                         </div>
