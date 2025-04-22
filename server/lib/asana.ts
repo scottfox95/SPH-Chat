@@ -11,54 +11,83 @@ import { storage } from "../storage";
 const ASANA_API_BASE = "https://app.asana.com/api/1.0";
 
 /**
- * Retrieves the Asana Personal Access Token (PAT) from the database
- * Falls back to environment variable if not found in database
+ * Retrieves the Asana Personal Access Token (PAT)
+ * First tries the environment variable (ASANA_PAT), then falls back to database
+ * Validates token format and prioritizes tokens that match expected Asana PAT format
  * @returns The Asana PAT or null if not configured
  */
 async function getAsanaPAT(): Promise<string | null> {
   try {
-    console.log("Attempting to retrieve Asana PAT from database");
+    console.log("Attempting to retrieve Asana PAT");
     
-    // First try to get from database
+    // First try the environment variable as it will be most up-to-date
+    const envToken = process.env.ASANA_PAT;
+    console.log("Checking environment variable, token exists:", !!envToken);
+    
+    if (envToken) {
+      console.log("Environment token found, length:", envToken.length);
+      console.log("Environment token first 5 chars:", envToken.substring(0, 5));
+      
+      // Validate token format for Asana PAT (should start with "1/" for most Asana PATs)
+      if (envToken.startsWith("1/")) {
+        console.log("Environment token format appears valid (starts with 1/)");
+        return envToken;
+      } else {
+        console.warn("Environment token format may be invalid - does not start with '1/'");
+        // Continue to try database token as fallback
+      }
+    }
+    
+    // If no environment token or format is invalid, try database
+    console.log("Checking database for Asana PAT");
     const token = await storage.getApiToken('asana');
+    
     if (token && token.tokenHash) {
       console.log("Asana token found in database, tokenHash length:", token.tokenHash.length);
       try {
         // Decode the token from base64
         const decodedToken = Buffer.from(token.tokenHash, 'base64').toString();
-        console.log("Token successfully decoded, length:", decodedToken.length);
+        console.log("Database token successfully decoded, length:", decodedToken.length);
         
         // Validate token format for Asana PAT (should start with "1/" for most Asana PATs)
         if (decodedToken.startsWith("1/")) {
-          console.log("Token format appears valid (starts with 1/)");
+          console.log("Database token format appears valid (starts with 1/)");
+          return decodedToken;
         } else {
-          console.warn("Token format may be invalid - does not start with '1/'");
-          console.log("Token first 5 chars:", decodedToken.substring(0, 5));
+          console.warn("Database token format may be invalid - does not start with '1/'");
+          console.log("Database token first 5 chars:", decodedToken.substring(0, 5));
+          
+          // If we have environment token (even if invalid format), prefer it over invalid db token
+          if (envToken) {
+            console.log("Using environment token despite format concerns");
+            return envToken;
+          }
+          
+          // Otherwise return the database token as last resort
+          return decodedToken;
         }
-        
-        // Return the decoded token regardless of format warning
-        return decodedToken;
       } catch (decodeError) {
         console.error("Error decoding token from base64:", decodeError);
         console.log("Raw token hash (first 10 chars):", token.tokenHash.substring(0, 10));
-        // Continue to fallback
+        
+        // If there was an error decoding but we have env token, return that
+        if (envToken) {
+          console.log("Using environment token due to decode error");
+          return envToken;
+        }
       }
     } else {
       console.log("No Asana token found in database");
     }
     
-    // Fallback to environment variable
-    const envToken = process.env.ASANA_PAT;
-    console.log("Falling back to environment variable, token exists:", !!envToken);
-    if (envToken) {
-      console.log("Environment token first 5 chars:", envToken.substring(0, 5));
-      console.log("Environment token length:", envToken.length);
-    }
-    return envToken || null;
+    // If we get here, no valid tokens were found
+    console.log("No valid Asana tokens found in environment or database");
+    return null;
   } catch (error) {
     console.error("Error retrieving Asana PAT:", error);
+    // Last resort fallback to environment variable
     const envToken = process.env.ASANA_PAT;
-    console.log("Error occurred, falling back to environment variable, token exists:", !!envToken);
+    console.log("Error occurred, trying environment variable as last resort, token exists:", !!envToken);
     return envToken || null;
   }
 }
