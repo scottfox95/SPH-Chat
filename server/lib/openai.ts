@@ -100,7 +100,7 @@ export async function getChatbotResponse(
     
     // Parse the citation if it exists
     let citation = "";
-    const citationRegex = /\[(?:From |Source: |Slack(?: message)?,? )?(.*?)\]/;
+    const citationRegex = /\[(?:From |Source: |Slack(?: message)?,? |Asana(?: Task)?,? )?(.*?)\]/;
     const match = responseText?.match(citationRegex);
     
     if (match && match[1]) {
@@ -114,7 +114,7 @@ export async function getChatbotResponse(
       }
     }
     
-    let finalContent = responseText || "I wasn't able to find that information in the project files or Slack messages.";
+    let finalContent = responseText || "I wasn't able to find that information in the project files, Slack messages, or Asana tasks.";
     
     // Only strip the citation if it's in the standard bracket format
     if (match && match[0]) {

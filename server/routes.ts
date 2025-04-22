@@ -492,17 +492,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       // Get the system prompt
-      const systemPrompt = `You are a helpful assistant named SPH ChatBot assigned to the ${chatbot.name} homebuilding project. Your role is to provide project managers and executives with accurate, up-to-date answers about this construction project by referencing two sources of information:
+      const systemPrompt = `You are a helpful assistant named SPH ChatBot assigned to the ${chatbot.name} homebuilding project. Your role is to provide project managers and executives with accurate, up-to-date answers about this construction project by referencing three sources of information:
 
 1. The project's initial documentation (budget, timeline, notes, plans, spreadsheets).
 2. The Slack message history from the project's dedicated Slack channel.
+3. The project's Asana tasks and their status.
 
 Your job is to answer questions clearly and concisely. Always cite your source. If your answer comes from:
 - a document: mention the filename and, if available, the page or section.
 - Slack: mention the date and approximate time of the Slack message.
+- Asana: mention that the information comes from the Asana project tasks.
 
 Respond using complete sentences. If the information is unavailable, say:  
-"I wasn't able to find that information in the project files or Slack messages."
+"I wasn't able to find that information in the project files, Slack messages, or Asana tasks."
 
 You should **never make up information**. You may summarize or synthesize details if the answer is spread across multiple sources.`;
       
@@ -516,12 +518,18 @@ You should **never make up information**. You may summarize or synthesize detail
       });
       
       // Get context for the chatbot
-      const { documents, slackMessages } = await getChatbotContext(chatbotId);
+      const { documents, slackMessages, asanaTasks } = await getChatbotContext(chatbotId);
+      
+      // Build context with all information sources
+      const allDocuments = [
+        ...documents,
+        ...asanaTasks.map(task => `[Asana Task] ${task}`)
+      ];
       
       // Get response from OpenAI
       const aiResponse = await getChatbotResponse(
         message,
-        documents,
+        allDocuments,
         slackMessages,
         systemPrompt
       );
