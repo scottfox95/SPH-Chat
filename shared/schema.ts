@@ -30,6 +30,7 @@ export const chatbots = pgTable("chatbots", {
   name: text("name").notNull(),
   slackChannelId: text("slack_channel_id").notNull(),
   asanaProjectId: text("asana_project_id"),
+  asanaConnectionId: text("asana_connection_id"), // Keep this field for backward compatibility
   createdById: integer("created_by_id").notNull().references(() => users.id),
   publicToken: text("public_token").notNull().unique(),
   isActive: boolean("is_active").notNull().default(true),

@@ -157,17 +157,34 @@ export class MemStorage implements IStorage {
   
   // Chatbot methods
   async getChatbots(): Promise<Chatbot[]> {
-    return Array.from(this.chatbots.values());
+    const chatbots = Array.from(this.chatbots.values());
+    // Map each chatbot through the compatibility method
+    return chatbots.map(chatbot => this.ensureChatbotFieldBackwardCompatibility(chatbot));
   }
   
   async getChatbot(id: number): Promise<Chatbot | undefined> {
-    return this.chatbots.get(id);
+    const chatbot = this.chatbots.get(id);
+    return chatbot ? this.ensureChatbotFieldBackwardCompatibility(chatbot) : undefined;
   }
   
   async getChatbotByToken(token: string): Promise<Chatbot | undefined> {
-    return Array.from(this.chatbots.values()).find(
+    const chatbot = Array.from(this.chatbots.values()).find(
       (chatbot) => chatbot.publicToken === token
     );
+    return chatbot ? this.ensureChatbotFieldBackwardCompatibility(chatbot) : undefined;
+  }
+  
+  // Helper method to ensure all chatbot instances have the asanaConnectionId field
+  private ensureChatbotFieldBackwardCompatibility(chatbot: any): Chatbot {
+    if ('asanaConnectionId' in chatbot) {
+      return chatbot as Chatbot;
+    }
+    
+    // Cast to any to avoid type issues
+    const typedChatbot = chatbot as any;
+    typedChatbot.asanaConnectionId = null;
+    
+    return typedChatbot as Chatbot;
   }
   
   async createChatbot(chatbot: Omit<InsertChatbot, "publicToken">): Promise<Chatbot> {
@@ -181,6 +198,7 @@ export class MemStorage implements IStorage {
       publicToken,
       createdAt: now,
       asanaProjectId: chatbot.asanaProjectId || null,
+      asanaConnectionId: null, // Initialize as null for backward compatibility
       isActive: chatbot.isActive ?? true,
       requireAuth: chatbot.requireAuth ?? false
     };
