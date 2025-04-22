@@ -657,6 +657,21 @@ You should **never make up information**. You may summarize or synthesize detail
     }
   });
   
+  // Test Asana connection
+  apiRouter.get("/system/test-asana", async (req, res) => {
+    try {
+      const result = await testAsanaConnection();
+      res.json(result);
+    } catch (error) {
+      console.error("Error testing Asana connection:", error);
+      res.status(500).json({ 
+        connected: false, 
+        message: "Failed to test Asana connection",
+        error: "An unexpected error occurred"
+      });
+    }
+  });
+  
   // Validate Slack channel
   apiRouter.get("/system/validate-slack-channel", async (req, res) => {
     try {
@@ -686,6 +701,70 @@ You should **never make up information**. You may summarize or synthesize detail
       console.error("Error listing Slack channels:", error);
       res.status(500).json({ 
         error: "Failed to list Slack channels",
+        details: error.message || "Unknown error"
+      });
+    }
+  });
+  
+  // List Asana projects from workspace
+  apiRouter.get("/system/asana-projects", async (req, res) => {
+    try {
+      const workspaceId = req.query.workspaceId as string;
+      
+      if (!workspaceId) {
+        return res.status(400).json({ message: "Workspace ID is required" });
+      }
+      
+      const result = await getAsanaProjects(workspaceId);
+      res.json(result);
+    } catch (error) {
+      console.error("Error listing Asana projects:", error);
+      res.status(500).json({ 
+        success: false,
+        error: "Failed to list Asana projects",
+        details: error.message || "Unknown error"
+      });
+    }
+  });
+  
+  // Get tasks from Asana project
+  apiRouter.get("/system/asana-tasks", async (req, res) => {
+    try {
+      const projectId = req.query.projectId as string;
+      const includeCompleted = req.query.includeCompleted === 'true';
+      
+      if (!projectId) {
+        return res.status(400).json({ message: "Project ID is required" });
+      }
+      
+      const result = await getAsanaProjectTasks(projectId, includeCompleted);
+      res.json(result);
+    } catch (error) {
+      console.error("Error fetching Asana tasks:", error);
+      res.status(500).json({ 
+        success: false,
+        error: "Failed to fetch Asana tasks",
+        details: error.message || "Unknown error"
+      });
+    }
+  });
+  
+  // Get details of a specific Asana task
+  apiRouter.get("/system/asana-task-details", async (req, res) => {
+    try {
+      const taskId = req.query.taskId as string;
+      
+      if (!taskId) {
+        return res.status(400).json({ message: "Task ID is required" });
+      }
+      
+      const result = await getAsanaTaskDetails(taskId);
+      res.json(result);
+    } catch (error) {
+      console.error("Error fetching Asana task details:", error);
+      res.status(500).json({ 
+        success: false,
+        error: "Failed to fetch Asana task details",
         details: error.message || "Unknown error"
       });
     }
