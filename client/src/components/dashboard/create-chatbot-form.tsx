@@ -21,6 +21,7 @@ import { useLocation } from "wouter";
 const formSchema = z.object({
   name: z.string().min(1, "Project name is required"),
   slackChannelId: z.string().min(1, "Slack channel ID is required"),
+  asanaProjectId: z.string().optional(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -36,6 +37,7 @@ export default function CreateChatbotForm() {
     defaultValues: {
       name: "",
       slackChannelId: "",
+      asanaProjectId: "",
     },
   });
   
@@ -104,6 +106,27 @@ export default function CreateChatbotForm() {
                   className="focus-visible:ring-[#D2B48C]"
                 />
               </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        
+        <FormField
+          control={form.control}
+          name="asanaProjectId"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Asana Project ID (Optional)</FormLabel>
+              <FormControl>
+                <Input
+                  placeholder="Enter Asana project ID (e.g. 1234567890123456)"
+                  {...field}
+                  className="focus-visible:ring-[#D2B48C]"
+                />
+              </FormControl>
+              <p className="text-xs text-gray-500">
+                Link this chatbot to an Asana project to include tasks in responses
+              </p>
               <FormMessage />
             </FormItem>
           )}
