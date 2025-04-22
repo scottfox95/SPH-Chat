@@ -1,5 +1,52 @@
 import axios from 'axios';
 
+// MCP OAuth Configuration
+const ASANA_CLIENT_ID = process.env.ASANA_CLIENT_ID;
+const ASANA_CLIENT_SECRET = process.env.ASANA_CLIENT_SECRET;
+const MCP_BASE_URL = 'https://mcp.so';
+
+// Check if required environment variables are set
+if (!ASANA_CLIENT_ID || !ASANA_CLIENT_SECRET) {
+  console.warn('Warning: ASANA_CLIENT_ID and/or ASANA_CLIENT_SECRET environment variables are not set. Asana integration will not function properly.');
+}
+
+/**
+ * Generates the OAuth URL for Asana authentication via MCP
+ * @returns The URL to redirect users to for Asana authorization
+ */
+export function getAsanaOAuthUrl() {
+  // Check if credentials are available
+  if (!ASANA_CLIENT_ID || !ASANA_CLIENT_SECRET) {
+    throw new Error('Asana client ID and secret must be configured');
+  }
+
+  return `${MCP_BASE_URL}/server/asana/oauth?client_id=${ASANA_CLIENT_ID}&client_secret=${ASANA_CLIENT_SECRET}`;
+}
+
+/**
+ * Exchanges an OAuth code for an Asana connection via MCP
+ * @param code The authorization code from the OAuth redirect
+ * @returns The connection details including connection ID
+ */
+export async function exchangeAsanaOAuthCode(code: string) {
+  try {
+    if (!ASANA_CLIENT_ID || !ASANA_CLIENT_SECRET) {
+      throw new Error('Asana client ID and secret must be configured');
+    }
+    
+    const response = await axios.post(`${MCP_BASE_URL}/server/asana/token`, {
+      client_id: ASANA_CLIENT_ID,
+      client_secret: ASANA_CLIENT_SECRET,
+      code: code
+    });
+    
+    return response.data;
+  } catch (error) {
+    console.error('Error exchanging Asana OAuth code:', error);
+    throw new Error(`Failed to exchange Asana OAuth code: ${(error as any).message}`);
+  }
+}
+
 /**
  * Fetches details about an Asana connection from MCP
  * @param connectionId The MCP connection ID for Asana

@@ -29,7 +29,12 @@ import {
   listAsanaProjects, 
   getAsanaProjectTasks, 
   testAsanaConnection,
-  formatAsanaTasksForContext
+  formatAsanaTasksForContext,
+  getAsanaOAuthUrl,
+  exchangeAsanaOAuthCode,
+  getOverdueTasks,
+  getIncompleteTasks,
+  getTasksByAssignee
 } from "./lib/asana";
 import * as fs from "fs";
 import { nanoid } from "nanoid";
@@ -681,10 +686,42 @@ You should **never make up information**. You may summarize or synthesize detail
   
   // Asana integration routes
   apiRouter.get("/asana/mcp-auth-url", (req, res) => {
-    // Return the MCP OAuth URL for Asana
-    res.json({
-      url: "https://mcp.so/server/asana/oauth"
-    });
+    try {
+      // Get the OAuth URL using the credentials
+      const authUrl = getAsanaOAuthUrl();
+      res.json({ url: authUrl });
+    } catch (error) {
+      console.error("Error generating Asana OAuth URL:", error);
+      res.status(500).json({ 
+        message: "Failed to generate Asana OAuth URL. Check that ASANA_CLIENT_ID and ASANA_CLIENT_SECRET are set correctly."
+      });
+    }
+  });
+  
+  // Asana OAuth callback handling
+  apiRouter.post("/asana/oauth-callback", async (req, res) => {
+    try {
+      const { code } = req.body;
+      
+      if (!code) {
+        return res.status(400).json({ message: "Authorization code is required" });
+      }
+      
+      // Exchange the code for a connection
+      const connection = await exchangeAsanaOAuthCode(code);
+      
+      res.json({
+        success: true,
+        connectionId: connection.connection_id,
+        userData: connection.user_data
+      });
+    } catch (error) {
+      console.error("Error processing Asana OAuth callback:", error);
+      res.status(500).json({ 
+        message: "Failed to process Asana OAuth callback",
+        details: (error as any).message
+      });
+    }
   });
   
   apiRouter.get("/asana/projects/:connectionId", async (req, res) => {
