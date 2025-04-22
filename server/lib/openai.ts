@@ -37,7 +37,10 @@ export async function getChatbotResponse(
     
     // Prepare Slack messages for the context
     // Include metadata for proper attribution in a format OpenAI can understand
-    const formattedSlackMessages = slackMessages.map(msg => {
+    const formattedSlackMessages = slackMessages.filter(msg => {
+      // Filter out any items that are actually Asana task strings (not objects with meta property)
+      return typeof msg !== 'string';
+    }).map(msg => {
       // Include attribution data in a structured way that OpenAI can extract
       let messagePrefix = "SLACK MESSAGE";
       
@@ -55,10 +58,14 @@ export async function getChatbotResponse(
       return `${messagePrefix}: ${msg.meta?.rawMessage || msg.text}`;
     });
     
+    // Extract Asana tasks (these were passed as strings)
+    const asanaTasks = slackMessages.filter(msg => typeof msg === 'string');
+    
     // Context for the model
     const context = [
       ...documents.map((doc) => `DOCUMENT: ${doc}`),
       ...formattedSlackMessages,
+      ...asanaTasks.map(task => `ASANA TASK DATA: ${task}`)
     ].join("\n\n");
 
     // Enhance the system prompt with instructions about including source information
