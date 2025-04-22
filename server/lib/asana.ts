@@ -10,7 +10,11 @@ import { storage } from "../storage";
 // Base URL for Asana API
 const ASANA_API_BASE = "https://app.asana.com/api/1.0";
 
-// Get the Asana PAT from database or environment variable
+/**
+ * Retrieves the Asana Personal Access Token (PAT) from the database
+ * Falls back to environment variable if not found in database
+ * @returns The Asana PAT or null if not configured
+ */
 async function getAsanaPAT(): Promise<string | null> {
   try {
     // First try to get from database
@@ -27,20 +31,6 @@ async function getAsanaPAT(): Promise<string | null> {
     return process.env.ASANA_PAT || null;
   }
 }
-
-// Create headers with authorization
-const getHeaders = async () => {
-  const token = await getAsanaPAT();
-  if (!token) {
-    throw new Error("Asana PAT is not available. Please configure it in settings.");
-  }
-  
-  return {
-    "Authorization": `Bearer ${token}`,
-    "Content-Type": "application/json",
-    "Accept": "application/json"
-  };
-};
 
 // Interface for Asana API responses
 interface AsanaTask {
@@ -249,7 +239,9 @@ export async function getAsanaTaskDetails(taskId: string): Promise<{
   error?: string;
 }> {
   try {
-    if (!ASANA_PAT) {
+    // Check if Asana PAT is available
+    const token = await getAsanaPAT();
+    if (!token) {
       return {
         success: false,
         error: "Asana PAT is not configured"
@@ -263,10 +255,17 @@ export async function getAsanaTaskDetails(taskId: string): Promise<{
       };
     }
 
+    // Create headers with authorization
+    const headers = {
+      "Authorization": `Bearer ${token}`,
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    };
+
     const response = await fetch(
       `${ASANA_API_BASE}/tasks/${taskId}?opt_fields=name,completed,due_on,assignee,notes,projects,custom_fields,dependencies,dependents,subtasks`,
       {
-        headers: getHeaders(),
+        headers,
       }
     );
 
@@ -327,7 +326,9 @@ export async function getAsanaProjects(workspaceId: string): Promise<{
   error?: string;
 }> {
   try {
-    if (!ASANA_PAT) {
+    // Check if Asana PAT is available
+    const token = await getAsanaPAT();
+    if (!token) {
       return {
         success: false,
         error: "Asana PAT is not configured"
@@ -341,10 +342,17 @@ export async function getAsanaProjects(workspaceId: string): Promise<{
       };
     }
 
+    // Create headers with authorization
+    const headers = {
+      "Authorization": `Bearer ${token}`,
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    };
+
     const response = await fetch(
       `${ASANA_API_BASE}/projects?workspace=${workspaceId}&limit=100`,
       {
-        headers: getHeaders(),
+        headers,
       }
     );
 

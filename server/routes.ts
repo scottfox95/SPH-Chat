@@ -841,7 +841,7 @@ You should **never make up information**. You may summarize or synthesize detail
     try {
       // Check each service token
       const services = ['slack', 'openai', 'asana'];
-      const tokenStatus = {};
+      const tokenStatus: Record<string, { exists: boolean; lastUpdated: Date | null }> = {};
       
       for (const service of services) {
         const token = await storage.getApiToken(service);
