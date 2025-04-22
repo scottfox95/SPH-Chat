@@ -29,6 +29,7 @@ export const chatbots = pgTable("chatbots", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
   slackChannelId: text("slack_channel_id").notNull(),
+  asanaProjectId: text("asana_project_id"),
   createdById: integer("created_by_id").notNull().references(() => users.id),
   publicToken: text("public_token").notNull().unique(),
   isActive: boolean("is_active").notNull().default(true),
@@ -98,6 +99,7 @@ export const insertUserSchema = createInsertSchema(users).pick({
 export const insertChatbotSchema = createInsertSchema(chatbots).pick({
   name: true,
   slackChannelId: true,
+  asanaProjectId: true,
   createdById: true,
   publicToken: true,
   isActive: true,

@@ -21,6 +21,13 @@ import {
   listAccessibleChannels,
   slack // Import the slack client directly for testing
 } from "./lib/slack";
+import {
+  testAsanaConnection,
+  getAsanaProjects,
+  getAsanaProjectTasks,
+  getAsanaTaskDetails,
+  formatTasksForChatbot
+} from "./lib/asana";
 import { processDocument } from "./lib/document-processor";
 import { getChatbotContext, clearDocumentCache } from "./lib/vector-storage";
 import { sendSummaryEmail } from "./lib/email";
@@ -138,7 +145,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   apiRouter.put("/chatbots/:id", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
-      const { name, slackChannelId, isActive, requireAuth } = req.body;
+      const { name, slackChannelId, asanaProjectId, isActive, requireAuth } = req.body;
       
       const chatbot = await storage.getChatbot(id);
       
@@ -158,9 +165,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       }
       
+      // If a new Asana project ID is provided, validate it
+      if (asanaProjectId && asanaProjectId !== chatbot.asanaProjectId) {
+        try {
+          const projectResponse = await getAsanaProjectTasks(asanaProjectId, false);
+          
+          if (!projectResponse.success) {
+            return res.status(400).json({ 
+              message: "Invalid Asana project ID",
+              details: projectResponse.error || "The project ID is invalid or cannot be accessed with the current Asana PAT."
+            });
+          }
+        } catch (error) {
+          return res.status(400).json({ 
+            message: "Invalid Asana project ID",
+            details: "The project ID could not be validated. Please ensure it's a valid Asana project ID."
+          });
+        }
+      }
+      
       const updatedChatbot = await storage.updateChatbot(id, {
         name: name || chatbot.name,
         slackChannelId: slackChannelId || chatbot.slackChannelId,
+        asanaProjectId: asanaProjectId !== undefined ? asanaProjectId : chatbot.asanaProjectId,
         isActive: isActive !== undefined ? isActive : chatbot.isActive,
         requireAuth: requireAuth !== undefined ? requireAuth : chatbot.requireAuth,
         createdById: chatbot.createdById,
