@@ -34,7 +34,8 @@ import {
   XCircle,
   Loader2,
   Database,
-  MessageCircle
+  MessageCircle,
+  ExternalLink
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useQuery, useMutation } from "@tanstack/react-query";
