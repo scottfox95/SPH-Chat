@@ -76,6 +76,15 @@ export default function Settings() {
     workspaces?: any[];
     error?: string;
   }>(null);
+  
+  // API tokens status
+  const { data: tokenStatus, isLoading: isLoadingTokenStatus } = useQuery({
+    queryKey: ['/api/settings/api-tokens/status'],
+    queryFn: async () => {
+      const response = await apiRequest('GET', '/api/settings/api-tokens/status');
+      return response.json();
+    }
+  });
 
   // Fetch app settings
   const { 
@@ -167,8 +176,9 @@ export default function Settings() {
       return response.json();
     },
     onSuccess: async () => {
-      // Force an immediate refetch of settings
+      // Force an immediate refetch of settings and token status
       await refetchSettings();
+      await queryClient.invalidateQueries({ queryKey: ['/api/settings/api-tokens/status'] });
       
       toast({
         title: "API token updated",
@@ -361,18 +371,26 @@ export default function Settings() {
               <div className="space-y-2">
                 <div className="flex justify-between items-end">
                   <Label htmlFor="slack-token">Slack Bot Token</Label>
-                  {slackStatus !== null && (
-                    <Badge 
-                      className={`mb-1 ${slackStatus.connected ? 'bg-green-100 text-green-800 hover:bg-green-100' : 'bg-red-100 text-red-800 hover:bg-red-100'}`}
-                    >
-                      {slackStatus.connected ? (
-                        <CheckCircle className="w-3 h-3 mr-1" />
-                      ) : (
-                        <XCircle className="w-3 h-3 mr-1" />
-                      )}
-                      {slackStatus.connected ? 'Connected' : 'Error'}
-                    </Badge>
-                  )}
+                  <div className="flex items-center gap-2">
+                    {!isLoadingTokenStatus && tokenStatus?.slack?.exists && (
+                      <Badge className="mb-1 bg-blue-100 text-blue-800 hover:bg-blue-100">
+                        <Database className="w-3 h-3 mr-1" />
+                        Stored
+                      </Badge>
+                    )}
+                    {slackStatus !== null && (
+                      <Badge 
+                        className={`mb-1 ${slackStatus.connected ? 'bg-green-100 text-green-800 hover:bg-green-100' : 'bg-red-100 text-red-800 hover:bg-red-100'}`}
+                      >
+                        {slackStatus.connected ? (
+                          <CheckCircle className="w-3 h-3 mr-1" />
+                        ) : (
+                          <XCircle className="w-3 h-3 mr-1" />
+                        )}
+                        {slackStatus.connected ? 'Connected' : 'Error'}
+                      </Badge>
+                    )}
+                  </div>
                 </div>
                 <Input
                   id="slack-token"
@@ -383,9 +401,14 @@ export default function Settings() {
                   className="focus-visible:ring-[#D2B48C]"
                 />
                 <div className="flex justify-between">
-                  <p className="text-xs text-gray-500">
-                    Used to connect to your Slack workspace and access channels
-                  </p>
+                  <div className="text-xs text-gray-500">
+                    <p>Used to connect to your Slack workspace and access channels</p>
+                    {!isLoadingTokenStatus && tokenStatus?.slack?.exists && (
+                      <p className="text-xs text-blue-600 mt-1">
+                        Last updated: {new Date(tokenStatus.slack.lastUpdated).toLocaleString()}
+                      </p>
+                    )}
+                  </div>
                   <Button 
                     variant="outline" 
                     size="sm" 
@@ -418,18 +441,26 @@ export default function Settings() {
               <div className="space-y-2">
                 <div className="flex justify-between items-end">
                   <Label htmlFor="openai-key">OpenAI API Key</Label>
-                  {openAIStatus !== null && (
-                    <Badge 
-                      className={`mb-1 ${openAIStatus.connected ? 'bg-green-100 text-green-800 hover:bg-green-100' : 'bg-red-100 text-red-800 hover:bg-red-100'}`}
-                    >
-                      {openAIStatus.connected ? (
-                        <CheckCircle className="w-3 h-3 mr-1" />
-                      ) : (
-                        <XCircle className="w-3 h-3 mr-1" />
-                      )}
-                      {openAIStatus.connected ? 'Connected' : 'Error'}
-                    </Badge>
-                  )}
+                  <div className="flex items-center gap-2">
+                    {!isLoadingTokenStatus && tokenStatus?.openai?.exists && (
+                      <Badge className="mb-1 bg-blue-100 text-blue-800 hover:bg-blue-100">
+                        <Database className="w-3 h-3 mr-1" />
+                        Stored
+                      </Badge>
+                    )}
+                    {openAIStatus !== null && (
+                      <Badge 
+                        className={`mb-1 ${openAIStatus.connected ? 'bg-green-100 text-green-800 hover:bg-green-100' : 'bg-red-100 text-red-800 hover:bg-red-100'}`}
+                      >
+                        {openAIStatus.connected ? (
+                          <CheckCircle className="w-3 h-3 mr-1" />
+                        ) : (
+                          <XCircle className="w-3 h-3 mr-1" />
+                        )}
+                        {openAIStatus.connected ? 'Connected' : 'Error'}
+                      </Badge>
+                    )}
+                  </div>
                 </div>
                 <Input
                   id="openai-key"
@@ -440,9 +471,14 @@ export default function Settings() {
                   className="focus-visible:ring-[#D2B48C]"
                 />
                 <div className="flex justify-between">
-                  <p className="text-xs text-gray-500">
-                    Required for AI responses and weekly summary generation
-                  </p>
+                  <div className="text-xs text-gray-500">
+                    <p>Required for AI responses and weekly summary generation</p>
+                    {!isLoadingTokenStatus && tokenStatus?.openai?.exists && (
+                      <p className="text-xs text-blue-600 mt-1">
+                        Last updated: {new Date(tokenStatus.openai.lastUpdated).toLocaleString()}
+                      </p>
+                    )}
+                  </div>
                   <Button 
                     variant="outline" 
                     size="sm" 
@@ -475,18 +511,26 @@ export default function Settings() {
               <div className="space-y-2">
                 <div className="flex justify-between items-end">
                   <Label htmlFor="asana-pat">Asana Personal Access Token</Label>
-                  {asanaStatus !== null && (
-                    <Badge 
-                      className={`mb-1 ${asanaStatus.connected ? 'bg-green-100 text-green-800 hover:bg-green-100' : 'bg-red-100 text-red-800 hover:bg-red-100'}`}
-                    >
-                      {asanaStatus.connected ? (
-                        <CheckCircle className="w-3 h-3 mr-1" />
-                      ) : (
-                        <XCircle className="w-3 h-3 mr-1" />
-                      )}
-                      {asanaStatus.connected ? 'Connected' : 'Error'}
-                    </Badge>
-                  )}
+                  <div className="flex items-center gap-2">
+                    {!isLoadingTokenStatus && tokenStatus?.asana?.exists && (
+                      <Badge className="mb-1 bg-blue-100 text-blue-800 hover:bg-blue-100">
+                        <Database className="w-3 h-3 mr-1" />
+                        Stored
+                      </Badge>
+                    )}
+                    {asanaStatus !== null && (
+                      <Badge 
+                        className={`mb-1 ${asanaStatus.connected ? 'bg-green-100 text-green-800 hover:bg-green-100' : 'bg-red-100 text-red-800 hover:bg-red-100'}`}
+                      >
+                        {asanaStatus.connected ? (
+                          <CheckCircle className="w-3 h-3 mr-1" />
+                        ) : (
+                          <XCircle className="w-3 h-3 mr-1" />
+                        )}
+                        {asanaStatus.connected ? 'Connected' : 'Error'}
+                      </Badge>
+                    )}
+                  </div>
                 </div>
                 <Input
                   id="asana-pat"
@@ -497,9 +541,14 @@ export default function Settings() {
                   className="focus-visible:ring-[#D2B48C]"
                 />
                 <div className="flex justify-between">
-                  <p className="text-xs text-gray-500">
-                    Required to access Asana projects and tasks
-                  </p>
+                  <div className="text-xs text-gray-500">
+                    <p>Required to access Asana projects and tasks</p>
+                    {!isLoadingTokenStatus && tokenStatus?.asana?.exists && (
+                      <p className="text-xs text-blue-600 mt-1">
+                        Last updated: {new Date(tokenStatus.asana.lastUpdated).toLocaleString()}
+                      </p>
+                    )}
+                  </div>
                   <Button 
                     variant="outline" 
                     size="sm" 
