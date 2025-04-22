@@ -55,20 +55,9 @@ export async function getChatbotResponse(
       return `${messagePrefix}: ${msg.meta?.rawMessage || msg.text}`;
     });
     
-    // Process documents to identify and properly format Asana task data
-    const processedDocuments = documents.map(doc => {
-      // Check if this is an Asana task document
-      if (doc.includes('[Asana Task]')) {
-        // Already formatted correctly when added to the context in routes.ts
-        return doc;
-      } else {
-        return `DOCUMENT: ${doc}`;
-      }
-    });
-    
     // Context for the model
     const context = [
-      ...processedDocuments,
+      ...documents.map((doc) => `DOCUMENT: ${doc}`),
       ...formattedSlackMessages,
     ].join("\n\n");
 
@@ -76,7 +65,7 @@ export async function getChatbotResponse(
     let enhancedSystemPrompt = systemPrompt;
     
     if (settings?.includeSourceDetails) {
-      enhancedSystemPrompt += "\n\nIMPORTANT: You MUST provide source attribution whenever you use information from Slack messages or Asana tasks. This is critical for users to trust the information. ";
+      enhancedSystemPrompt += "\n\nIMPORTANT: You MUST provide source attribution whenever you use information from Slack messages. This is critical for users to trust the information. ";
       
       if (settings?.includeUserInSource && settings?.includeDateInSource) {
         enhancedSystemPrompt += "ALWAYS include BOTH the name of the person who sent the message AND the date/time when responding.";
@@ -87,9 +76,6 @@ export async function getChatbotResponse(
       }
       
       enhancedSystemPrompt += " Format source attribution at the end of your response like this: 'according to [NAME] on [DATE]' or similar natural phrasing. Never skip this attribution part even if the information seems unimportant.";
-      
-      // Add Asana-specific attribution instructions
-      enhancedSystemPrompt += "\n\nWhen referencing information from Asana tasks, include a citation like '[Asana project: PROJECT_NAME]' at the end of sentences that contain task information. This ensures proper attribution of project management data.";
     }
 
     // Get the model from settings
@@ -114,8 +100,7 @@ export async function getChatbotResponse(
     
     // Parse the citation if it exists
     let citation = "";
-    // Enhanced regex to capture Asana project citations as well
-    const citationRegex = /\[(?:From |Source: |Slack(?: message)?,? |Asana(?: Task| project:?)?,? )?(.*?)\]/;
+    const citationRegex = /\[(?:From |Source: |Slack(?: message)?,? )?(.*?)\]/;
     const match = responseText?.match(citationRegex);
     
     if (match && match[1]) {
@@ -127,18 +112,9 @@ export async function getChatbotResponse(
       if (sourceMatch && sourceMatch[1]) {
         citation = sourceMatch[1].trim();
       }
-      
-      // Try to match Asana citations in different formats
-      if (!citation) {
-        const asanaRegex = /(?:from|in) Asana(?: project| tasks?)?(?: for| named)? ([^\.]+)/i;
-        const asanaMatch = responseText?.match(asanaRegex);
-        if (asanaMatch && asanaMatch[1]) {
-          citation = `Asana project: ${asanaMatch[1].trim()}`;
-        }
-      }
     }
     
-    let finalContent = responseText || "I wasn't able to find that information in the project files, Slack messages, or Asana tasks.";
+    let finalContent = responseText || "I wasn't able to find that information in the project files or Slack messages.";
     
     // Only strip the citation if it's in the standard bracket format
     if (match && match[0]) {

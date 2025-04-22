@@ -10,7 +10,6 @@ import {
   chatMessageSchema, 
   addEmailRecipientSchema, 
   updateSettingsSchema,
-  asanaIntegrationSchema,
   OPENAI_MODELS
 } from "@shared/schema";
 import { getChatbotResponse, generateWeeklySummary, testOpenAIConnection } from "./lib/openai";
@@ -25,17 +24,6 @@ import {
 import { processDocument } from "./lib/document-processor";
 import { getChatbotContext, clearDocumentCache } from "./lib/vector-storage";
 import { sendSummaryEmail } from "./lib/email";
-import { 
-  listAsanaProjects, 
-  getAsanaProjectTasks, 
-  testAsanaConnection,
-  formatAsanaTasksForContext,
-  getAsanaOAuthUrl,
-  exchangeAsanaOAuthCode,
-  getOverdueTasks,
-  getIncompleteTasks,
-  getTasksByAssignee
-} from "./lib/asana";
 import * as fs from "fs";
 import { nanoid } from "nanoid";
 import { format } from "date-fns";
@@ -497,19 +485,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       // Get the system prompt
-      const systemPrompt = `You are a helpful assistant named SPH ChatBot assigned to the ${chatbot.name} homebuilding project. Your role is to provide project managers and executives with accurate, up-to-date answers about this construction project by referencing three sources of information:
+      const systemPrompt = `You are a helpful assistant named SPH ChatBot assigned to the ${chatbot.name} homebuilding project. Your role is to provide project managers and executives with accurate, up-to-date answers about this construction project by referencing two sources of information:
 
 1. The project's initial documentation (budget, timeline, notes, plans, spreadsheets).
 2. The Slack message history from the project's dedicated Slack channel.
-3. The project's Asana tasks and their status.
 
 Your job is to answer questions clearly and concisely. Always cite your source. If your answer comes from:
 - a document: mention the filename and, if available, the page or section.
 - Slack: mention the date and approximate time of the Slack message.
-- Asana: mention that the information comes from the Asana project tasks.
 
 Respond using complete sentences. If the information is unavailable, say:  
-"I wasn't able to find that information in the project files, Slack messages, or Asana tasks."
+"I wasn't able to find that information in the project files or Slack messages."
 
 You should **never make up information**. You may summarize or synthesize details if the answer is spread across multiple sources.`;
       
@@ -523,18 +509,12 @@ You should **never make up information**. You may summarize or synthesize detail
       });
       
       // Get context for the chatbot
-      const { documents, slackMessages, asanaTasks } = await getChatbotContext(chatbotId);
-      
-      // Build context with all information sources
-      const allDocuments = [
-        ...documents,
-        ...asanaTasks.map(task => `[Asana Task] ${task}`)
-      ];
+      const { documents, slackMessages } = await getChatbotContext(chatbotId);
       
       // Get response from OpenAI
       const aiResponse = await getChatbotResponse(
         message,
-        allDocuments,
+        documents,
         slackMessages,
         systemPrompt
       );
@@ -650,40 +630,6 @@ You should **never make up information**. You may summarize or synthesize detail
     }
   });
   
-  apiRouter.get("/system/test-asana", async (req, res) => {
-    try {
-      // First check if credentials are configured
-      if (!process.env.ASANA_CLIENT_ID || !process.env.ASANA_CLIENT_SECRET) {
-        return res.status(500).json({
-          connected: false,
-          error: "Asana API credentials not configured. Make sure ASANA_CLIENT_ID and ASANA_CLIENT_SECRET are set."
-        });
-      }
-      
-      // Get the OAuth URL to verify credentials are valid
-      try {
-        const authUrl = getAsanaOAuthUrl();
-        
-        return res.json({
-          connected: true,
-          message: "Asana API credentials are configured correctly",
-          authUrl
-        });
-      } catch (error) {
-        return res.status(500).json({
-          connected: false,
-          error: "Invalid Asana API credentials"
-        });
-      }
-    } catch (error) {
-      console.error("Error testing Asana connection:", error);
-      res.status(500).json({
-        connected: false,
-        error: "Failed to test Asana connection"
-      });
-    }
-  });
-  
   // Validate Slack channel
   apiRouter.get("/system/validate-slack-channel", async (req, res) => {
     try {
@@ -718,149 +664,6 @@ You should **never make up information**. You may summarize or synthesize detail
     }
   });
   
-  // Asana integration routes
-  apiRouter.get("/asana/mcp-auth-url", (req, res) => {
-    try {
-      // Get the OAuth URL using the credentials
-      const authUrl = getAsanaOAuthUrl();
-      res.json({ url: authUrl });
-    } catch (error) {
-      console.error("Error generating Asana OAuth URL:", error);
-      res.status(500).json({ 
-        message: "Failed to generate Asana OAuth URL. Check that ASANA_CLIENT_ID and ASANA_CLIENT_SECRET are set correctly."
-      });
-    }
-  });
-  
-  // Asana OAuth callback handling
-  apiRouter.post("/asana/oauth-callback", async (req, res) => {
-    try {
-      const { code } = req.body;
-      
-      if (!code) {
-        return res.status(400).json({ message: "Authorization code is required" });
-      }
-      
-      // Exchange the code for a connection
-      const connection = await exchangeAsanaOAuthCode(code);
-      
-      res.json({
-        success: true,
-        connectionId: connection.connection_id,
-        userData: connection.user_data
-      });
-    } catch (error) {
-      console.error("Error processing Asana OAuth callback:", error);
-      res.status(500).json({ 
-        message: "Failed to process Asana OAuth callback",
-        details: (error as any).message
-      });
-    }
-  });
-  
-  apiRouter.get("/asana/projects/:connectionId", async (req, res) => {
-    try {
-      const connectionId = req.params.connectionId;
-      
-      if (!connectionId) {
-        return res.status(400).json({ message: "Connection ID is required" });
-      }
-      
-      // Check if connection is valid
-      const connectionValid = await testAsanaConnection(connectionId);
-      
-      if (!connectionValid.valid) {
-        return res.status(400).json({ 
-          message: "Invalid Asana connection",
-          details: connectionValid.message
-        });
-      }
-      
-      // Get projects
-      const projects = await listAsanaProjects(connectionId);
-      
-      res.json(projects);
-    } catch (error) {
-      console.error("Error fetching Asana projects:", error);
-      res.status(500).json({ message: "Failed to fetch Asana projects" });
-    }
-  });
-  
-  apiRouter.post("/chatbots/:id/asana-integration", async (req, res) => {
-    try {
-      const data = asanaIntegrationSchema.parse({
-        ...req.body,
-        chatbotId: parseInt(req.params.id),
-      });
-      
-      const chatbot = await storage.getChatbot(data.chatbotId);
-      
-      if (!chatbot) {
-        return res.status(404).json({ message: "Chatbot not found" });
-      }
-      
-      // Check if Asana connection is valid
-      const connectionValid = await testAsanaConnection(data.asanaConnectionId);
-      
-      if (!connectionValid.valid) {
-        return res.status(400).json({ 
-          message: "Invalid Asana connection",
-          details: connectionValid.message
-        });
-      }
-      
-      // Update chatbot with Asana integration details
-      const updatedChatbot = await storage.updateChatbot(data.chatbotId, {
-        asanaConnectionId: data.asanaConnectionId,
-        asanaProjectId: data.asanaProjectId,
-        // Keep existing values
-        name: chatbot.name,
-        slackChannelId: chatbot.slackChannelId,
-        isActive: chatbot.isActive,
-        requireAuth: chatbot.requireAuth,
-        createdById: chatbot.createdById,
-        publicToken: chatbot.publicToken,
-      });
-      
-      res.json(updatedChatbot);
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        return res.status(400).json({ message: error.errors[0].message });
-      }
-      console.error("Error setting up Asana integration:", error);
-      res.status(500).json({ message: "Failed to set up Asana integration" });
-    }
-  });
-  
-  apiRouter.get("/chatbots/:id/asana-tasks", async (req, res) => {
-    try {
-      const chatbotId = parseInt(req.params.id);
-      
-      const chatbot = await storage.getChatbot(chatbotId);
-      
-      if (!chatbot) {
-        return res.status(404).json({ message: "Chatbot not found" });
-      }
-      
-      if (!chatbot.asanaConnectionId || !chatbot.asanaProjectId) {
-        return res.status(400).json({ 
-          message: "No Asana integration configured for this chatbot" 
-        });
-      }
-      
-      // Fetch tasks from Asana
-      const tasks = await getAsanaProjectTasks(
-        chatbot.asanaConnectionId, 
-        chatbot.asanaProjectId
-      );
-      
-      res.json(tasks);
-    } catch (error) {
-      console.error("Error fetching Asana tasks:", error);
-      res.status(500).json({ message: "Failed to fetch Asana tasks" });
-    }
-  });
-
   // Settings routes
   apiRouter.get("/settings", async (req, res) => {
     try {

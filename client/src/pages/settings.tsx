@@ -34,9 +34,7 @@ import {
   XCircle,
   Loader2,
   Database,
-  MessageCircle,
-  ExternalLink,
-  PlugZap
+  MessageCircle
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useQuery, useMutation } from "@tanstack/react-query";
@@ -68,13 +66,6 @@ export default function Settings() {
   const [openAIStatus, setOpenAIStatus] = useState<null | {
     connected: boolean;
     model?: string;
-    error?: string;
-  }>(null);
-  
-  const [testingAsana, setTestingAsana] = useState(false);
-  const [asanaStatus, setAsanaStatus] = useState<null | {
-    connected: boolean;
-    authUrl?: string;
     error?: string;
   }>(null);
 
@@ -224,45 +215,6 @@ export default function Settings() {
       setTestingOpenAI(false);
     }
   };
-  
-  // Test Asana connection
-  const testAsanaConnection = async () => {
-    setTestingAsana(true);
-    setAsanaStatus(null);
-    
-    try {
-      const response = await fetch("/api/system/test-asana");
-      const data = await response.json();
-      
-      setAsanaStatus(data);
-      
-      if (data.connected) {
-        toast({
-          title: "Asana API credentials configured",
-          description: "Asana credentials are valid and ready to use.",
-        });
-      } else {
-        toast({
-          title: "Asana connection failed",
-          description: data.error || "Unknown error",
-          variant: "destructive",
-        });
-      }
-    } catch (error) {
-      setAsanaStatus({
-        connected: false,
-        error: "Network error checking Asana connection",
-      });
-      
-      toast({
-        title: "Asana connection check failed",
-        description: "Could not connect to the server",
-        variant: "destructive",
-      });
-    } finally {
-      setTestingAsana(false);
-    }
-  };
 
   return (
     <>
@@ -401,76 +353,6 @@ export default function Settings() {
                     Error: {openAIStatus.error}
                   </p>
                 )}
-              </div>
-              
-              <Separator className="my-3" />
-              
-              <div className="space-y-2">
-                <div className="flex justify-between items-end">
-                  <Label>Asana Integration</Label>
-                  {asanaStatus !== null && (
-                    <Badge 
-                      className={`mb-1 ${asanaStatus.connected ? 'bg-green-100 text-green-800 hover:bg-green-100' : 'bg-red-100 text-red-800 hover:bg-red-100'}`}
-                    >
-                      {asanaStatus.connected ? (
-                        <CheckCircle className="w-3 h-3 mr-1" />
-                      ) : (
-                        <XCircle className="w-3 h-3 mr-1" />
-                      )}
-                      {asanaStatus.connected ? 'Configured' : 'Error'}
-                    </Badge>
-                  )}
-                </div>
-                <div className="flex items-center justify-between bg-gray-50 rounded p-3">
-                  <div>
-                    <h4 className="text-sm font-medium">Asana API Credentials</h4>
-                    <p className="text-xs text-gray-500 mt-1">
-                      Connect to Asana via MCP OAuth for task access
-                    </p>
-                  </div>
-                  <div className="flex gap-2">
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      onClick={testAsanaConnection}
-                      disabled={testingAsana}
-                      className="text-xs h-7"
-                    >
-                      {testingAsana ? (
-                        <>
-                          <Loader2 className="mr-1 h-3 w-3 animate-spin" />
-                          Testing
-                        </>
-                      ) : (
-                        'Check Status'
-                      )}
-                    </Button>
-                    
-                    {asanaStatus?.connected && asanaStatus.authUrl && (
-                      <Button 
-                        size="sm" 
-                        onClick={() => window.open(asanaStatus.authUrl, "_blank")}
-                        className="bg-[#D2B48C] hover:bg-[#D2B48C]/90 text-xs h-7"
-                      >
-                        <ExternalLink className="mr-1 h-3 w-3" />
-                        Authorize
-                      </Button>
-                    )}
-                  </div>
-                </div>
-                {asanaStatus?.connected && (
-                  <p className="text-xs text-green-600">
-                    Asana API credentials are properly configured
-                  </p>
-                )}
-                {asanaStatus?.error && (
-                  <p className="text-xs text-red-600">
-                    Error: {asanaStatus.error}
-                  </p>
-                )}
-                <p className="text-xs text-gray-500">
-                  The Asana integration enables chatbots to access project tasks through the configuration on each chatbot's settings page.
-                </p>
               </div>
             </CardContent>
             <CardFooter>

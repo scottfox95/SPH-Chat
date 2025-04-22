@@ -1,7 +1,6 @@
 import { storage } from "../storage";
 import { processDocument } from "./document-processor";
 import { getFormattedSlackMessages, validateSlackChannel } from "./slack";
-import { getAsanaProjectTasks, formatAsanaTasksForContext, testAsanaConnection } from "./asana";
 import path from "path";
 
 // In-memory storage for document content
@@ -55,7 +54,6 @@ export async function getProcessedDocuments(chatbotId: number): Promise<string[]
 export async function getChatbotContext(chatbotId: number, query?: string): Promise<{
   documents: string[];
   slackMessages: any[];
-  asanaTasks: string[];
 }> {
   try {
     // Get chatbot
@@ -82,40 +80,15 @@ export async function getChatbotContext(chatbotId: number, query?: string): Prom
       console.warn(`Cannot retrieve Slack messages for channel ${chatbot.slackChannelId}: ${channelValidation.error}`);
     }
     
-    // Get Asana tasks if connection is configured
-    let asanaTasks: string[] = [];
-    if (chatbot.asanaConnectionId && chatbot.asanaProjectId) {
-      try {
-        // Check if Asana connection is valid
-        const connectionValid = await testAsanaConnection(chatbot.asanaConnectionId);
-        
-        if (connectionValid.valid) {
-          // Get tasks from Asana and format them
-          const tasks = await getAsanaProjectTasks(
-            chatbot.asanaConnectionId, 
-            chatbot.asanaProjectId
-          );
-          
-          asanaTasks = formatAsanaTasksForContext(tasks);
-        } else {
-          console.warn(`Cannot retrieve Asana tasks: ${connectionValid.message}`);
-        }
-      } catch (asanaError) {
-        console.error("Error fetching Asana tasks:", asanaError);
-      }
-    }
-    
     return {
       documents,
       slackMessages,
-      asanaTasks,
     };
   } catch (error) {
     console.error("Error getting chatbot context:", error);
     return {
       documents: [],
       slackMessages: [],
-      asanaTasks: [],
     };
   }
 }

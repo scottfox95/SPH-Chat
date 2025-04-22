@@ -164,16 +164,12 @@ export class MemStorage implements IStorage {
     const now = new Date();
     
     const newChatbot: Chatbot = {
+      ...chatbot,
       id,
-      name: chatbot.name,
-      slackChannelId: chatbot.slackChannelId,
-      createdById: chatbot.createdById,
       publicToken,
       createdAt: now,
       isActive: chatbot.isActive ?? true,
-      requireAuth: chatbot.requireAuth ?? false,
-      asanaConnectionId: chatbot.asanaConnectionId ?? null,
-      asanaProjectId: chatbot.asanaProjectId ?? null
+      requireAuth: chatbot.requireAuth ?? false
     };
     
     this.chatbots.set(id, newChatbot);
@@ -311,10 +307,6 @@ export class MemStorage implements IStorage {
       this.appSettings = {
         id: 1,
         openaiModel: "gpt-4o",
-        includeSourceDetails: false,
-        includeDateInSource: false,
-        includeUserInSource: false,
-        responseTemplate: null,
         createdAt: now,
         updatedAt: now
       };
@@ -330,10 +322,6 @@ export class MemStorage implements IStorage {
       this.appSettings = {
         id: 1,
         openaiModel: data.openaiModel || "gpt-4o",
-        includeSourceDetails: false,
-        includeDateInSource: false,
-        includeUserInSource: false,
-        responseTemplate: null,
         createdAt: now,
         updatedAt: now
       };
@@ -538,10 +526,6 @@ export class DatabaseStorage implements IStorage {
       const [newSettings] = await db.insert(settings)
         .values({
           openaiModel: data.openaiModel || "gpt-4o",
-          includeSourceDetails: data.includeSourceDetails ?? false,
-          includeDateInSource: data.includeDateInSource ?? false,
-          includeUserInSource: data.includeUserInSource ?? false,
-          responseTemplate: data.responseTemplate ?? null,
           updatedAt: now
         })
         .returning();
