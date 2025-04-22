@@ -49,12 +49,12 @@ async function getAsanaPAT(): Promise<string | null> {
         const decodedToken = Buffer.from(token.tokenHash, 'base64').toString();
         console.log("Database token successfully decoded, length:", decodedToken.length);
         
-        // Validate token format for Asana PAT (should start with "1/" for most Asana PATs)
-        if (decodedToken.startsWith("1/")) {
-          console.log("Database token format appears valid (starts with 1/)");
+        // Validate token format for Asana PAT (should start with "1/" or "2/" for Asana PATs)
+        if (decodedToken.startsWith("1/") || decodedToken.startsWith("2/")) {
+          console.log(`Database token format appears valid (starts with ${decodedToken.substring(0, 2)})`);
           return decodedToken;
         } else {
-          console.warn("Database token format may be invalid - does not start with '1/'");
+          console.warn("Database token format may be invalid - does not start with '1/' or '2/'");
           console.log("Database token first 5 chars:", decodedToken.substring(0, 5));
           
           // If we have environment token (even if invalid format), prefer it over invalid db token
@@ -157,13 +157,13 @@ export async function testAsanaConnection(): Promise<{
     };
     
     // For Asana Personal Access Tokens, the format should be "Bearer" + token
-    // Typical Asana PAT format starts with "1/"
-    if (token.startsWith("1/")) {
-      console.log("Using standard Bearer authorization format");
+    // Asana PAT format can start with "1/" or "2/"
+    if (token.startsWith("1/") || token.startsWith("2/")) {
+      console.log(`Using standard Bearer authorization format for ${token.substring(0, 2)} token`);
       headers["Authorization"] = `Bearer ${token}`;
     } else {
-      // If token doesn't have the expected format, try both formats
-      console.log("Token doesn't have expected format, trying standard format anyway");
+      // If token doesn't have the expected format, try standard format anyway
+      console.log("Token format not recognized, trying standard Bearer format anyway");
       headers["Authorization"] = `Bearer ${token}`;
     }
     
@@ -252,12 +252,12 @@ export async function getAsanaProjectTasks(
     };
     
     // For Asana Personal Access Tokens, the format should be "Bearer" + token
-    // Typical Asana PAT format starts with "1/"
-    if (token.startsWith("1/")) {
-      console.log("Using standard Bearer authorization format for tasks request");
+    // Asana PAT format can start with "1/" or "2/"
+    if (token.startsWith("1/") || token.startsWith("2/")) {
+      console.log(`Using standard Bearer authorization format for ${token.substring(0, 2)} token (tasks request)`);
       headers["Authorization"] = `Bearer ${token}`;
     } else {
-      console.log("Token doesn't have expected format, trying standard format anyway for tasks request");
+      console.log("Token format not recognized, trying standard Bearer format anyway for tasks request");
       headers["Authorization"] = `Bearer ${token}`;
     }
 
@@ -354,9 +354,9 @@ export async function getAsanaTaskDetails(taskId: string): Promise<{
     };
     
     // For Asana Personal Access Tokens, the format should be "Bearer" + token
-    // Typical Asana PAT format starts with "1/"
-    if (token.startsWith("1/")) {
-      console.log("Using standard Bearer authorization format for task details request");
+    // Asana PAT format can start with "1/" or "2/"
+    if (token.startsWith("1/") || token.startsWith("2/")) {
+      console.log(`Using standard Bearer authorization format for ${token.substring(0, 2)} token (task details request)`);
       headers["Authorization"] = `Bearer ${token}`;
     } else {
       console.log("Token doesn't have expected format, trying standard format anyway for task details request");
@@ -451,9 +451,9 @@ export async function getAsanaProjects(workspaceId: string): Promise<{
     };
     
     // For Asana Personal Access Tokens, the format should be "Bearer" + token
-    // Typical Asana PAT format starts with "1/"
-    if (token.startsWith("1/")) {
-      console.log("Using standard Bearer authorization format for projects request");
+    // Asana PAT format can start with "1/" or "2/"
+    if (token.startsWith("1/") || token.startsWith("2/")) {
+      console.log(`Using standard Bearer authorization format for ${token.substring(0, 2)} token (projects request)`);
       headers["Authorization"] = `Bearer ${token}`;
     } else {
       console.log("Token doesn't have expected format, trying standard format anyway for projects request");
