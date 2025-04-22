@@ -359,7 +359,7 @@ export async function getAsanaTaskDetails(taskId: string): Promise<{
       console.log(`Using standard Bearer authorization format for ${token.substring(0, 2)} token (task details request)`);
       headers["Authorization"] = `Bearer ${token}`;
     } else {
-      console.log("Token doesn't have expected format, trying standard format anyway for task details request");
+      console.log("Token format not recognized, trying standard Bearer format anyway for task details request");
       headers["Authorization"] = `Bearer ${token}`;
     }
 
@@ -456,7 +456,7 @@ export async function getAsanaProjects(workspaceId: string): Promise<{
       console.log(`Using standard Bearer authorization format for ${token.substring(0, 2)} token (projects request)`);
       headers["Authorization"] = `Bearer ${token}`;
     } else {
-      console.log("Token doesn't have expected format, trying standard format anyway for projects request");
+      console.log("Token format not recognized, trying standard Bearer format anyway for projects request");
       headers["Authorization"] = `Bearer ${token}`;
     }
 
