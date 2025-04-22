@@ -8,6 +8,7 @@ import { apiRequest, queryClient } from "@/lib/queryClient";
 import ChatInterface from "@/components/shared/chat-interface";
 import ShareModal from "@/components/shared/share-modal";
 import UploadDocuments from "@/components/dashboard/upload-documents";
+import AsanaProjectSelector from "@/components/dashboard/asana-project-selector";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
@@ -257,6 +258,11 @@ export default function Chatbot({ id }: ChatbotProps) {
   
   const handleUpdateAsanaProject = () => {
     updateAsanaProjectMutation.mutate(asanaProjectId);
+  };
+  
+  const handleAsanaProjectSelect = (projectId: string) => {
+    setAsanaProjectId(projectId);
+    updateAsanaProjectMutation.mutate(projectId);
   };
 
   if (chatbotLoading) {

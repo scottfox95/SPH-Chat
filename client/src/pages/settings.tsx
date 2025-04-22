@@ -126,12 +126,49 @@ export default function Settings() {
     }
   });
 
+  const updateApiTokenMutation = useMutation({
+    mutationFn: async (data: { 
+      type: string, 
+      token: string 
+    }) => {
+      const response = await apiRequest('PUT', '/api/settings/api-tokens', data);
+      return response.json();
+    },
+    onSuccess: async () => {
+      // Force an immediate refetch of settings
+      await refetchSettings();
+      
+      toast({
+        title: "API token updated",
+        description: "Token has been saved successfully.",
+      });
+      
+      // Reset connection statuses after saving new credentials
+      setSlackStatus(null);
+      setOpenAIStatus(null);
+      setAsanaStatus(null);
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Failed to update token",
+        description: error.message || "An error occurred",
+        variant: "destructive",
+      });
+    }
+  });
+
   const handleSaveApiSettings = () => {
-    // In a real app, this would save to the server
-    toast({
-      title: "Settings saved",
-      description: "API settings have been updated successfully.",
-    });
+    if (slackToken) {
+      updateApiTokenMutation.mutate({ type: 'slack', token: slackToken });
+    }
+    
+    if (openaiKey) {
+      updateApiTokenMutation.mutate({ type: 'openai', token: openaiKey });
+    }
+    
+    if (asanaPAT) {
+      updateApiTokenMutation.mutate({ type: 'asana', token: asanaPAT });
+    }
     
     // Reset connection statuses after saving new credentials
     setSlackStatus(null);
