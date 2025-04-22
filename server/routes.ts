@@ -650,6 +650,40 @@ You should **never make up information**. You may summarize or synthesize detail
     }
   });
   
+  apiRouter.get("/system/test-asana", async (req, res) => {
+    try {
+      // First check if credentials are configured
+      if (!process.env.ASANA_CLIENT_ID || !process.env.ASANA_CLIENT_SECRET) {
+        return res.status(500).json({
+          connected: false,
+          error: "Asana API credentials not configured. Make sure ASANA_CLIENT_ID and ASANA_CLIENT_SECRET are set."
+        });
+      }
+      
+      // Get the OAuth URL to verify credentials are valid
+      try {
+        const authUrl = getAsanaOAuthUrl();
+        
+        return res.json({
+          connected: true,
+          message: "Asana API credentials are configured correctly",
+          authUrl
+        });
+      } catch (error) {
+        return res.status(500).json({
+          connected: false,
+          error: "Invalid Asana API credentials"
+        });
+      }
+    } catch (error) {
+      console.error("Error testing Asana connection:", error);
+      res.status(500).json({
+        connected: false,
+        error: "Failed to test Asana connection"
+      });
+    }
+  });
+  
   // Validate Slack channel
   apiRouter.get("/system/validate-slack-channel", async (req, res) => {
     try {
