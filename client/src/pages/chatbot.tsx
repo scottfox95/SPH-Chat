@@ -40,6 +40,7 @@ export default function Chatbot({ id }: ChatbotProps) {
   const [emailModalOpen, setEmailModalOpen] = useState(false);
   const [newEmail, setNewEmail] = useState("");
   const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null);
+  const [asanaProjectId, setAsanaProjectId] = useState("");
   const { toast } = useToast();
 
   // Fetch chatbot data
@@ -197,6 +198,32 @@ export default function Chatbot({ id }: ChatbotProps) {
       });
     },
   });
+  
+  // Update Asana project ID mutation
+  const updateAsanaProjectMutation = useMutation({
+    mutationFn: async (projectId: string) => {
+      const res = await apiRequest("PUT", `/api/chatbots/${id}`, {
+        asanaProjectId: projectId || null,
+      });
+      return res.json();
+    },
+    onSuccess: (data) => {
+      toast({
+        title: "Asana project updated",
+        description: data.asanaProjectId 
+          ? "Chatbot is now linked to the Asana project." 
+          : "Chatbot has been unlinked from Asana project.",
+      });
+      queryClient.invalidateQueries({ queryKey: [`/api/chatbots/${id}`] });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Failed to update Asana project",
+        description: error.message || "Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
 
   const handleAddEmail = (e: React.FormEvent) => {
     e.preventDefault();
@@ -219,6 +246,10 @@ export default function Chatbot({ id }: ChatbotProps) {
 
   const handleGenerateSummary = () => {
     generateSummaryMutation.mutate();
+  };
+  
+  const handleUpdateAsanaProject = () => {
+    updateAsanaProjectMutation.mutate(asanaProjectId);
   };
 
   if (chatbotLoading) {
@@ -351,6 +382,30 @@ export default function Chatbot({ id }: ChatbotProps) {
                     readOnly
                     className="mt-1 bg-gray-50"
                   />
+                </div>
+                
+                <div>
+                  <Label htmlFor="asana-project">Asana Project ID</Label>
+                  <div className="flex items-center mt-1 gap-2">
+                    <Input
+                      id="asana-project"
+                      value={chatbot.asanaProjectId || ""}
+                      onChange={(e) => setAsanaProjectId(e.target.value)}
+                      placeholder="Enter Asana project ID"
+                      className="flex-1"
+                    />
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleUpdateAsanaProject}
+                      disabled={updateAsanaProjectMutation.isPending}
+                    >
+                      {updateAsanaProjectMutation.isPending ? "Saving..." : "Save"}
+                    </Button>
+                  </div>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Link this chatbot to an Asana project to include tasks in responses
+                  </p>
                 </div>
                 
                 <div>
