@@ -10,6 +10,7 @@ import {
   chatMessageSchema, 
   addEmailRecipientSchema, 
   updateSettingsSchema,
+  asanaIntegrationSchema,
   OPENAI_MODELS
 } from "@shared/schema";
 import { getChatbotResponse, generateWeeklySummary, testOpenAIConnection } from "./lib/openai";
@@ -24,6 +25,12 @@ import {
 import { processDocument } from "./lib/document-processor";
 import { getChatbotContext, clearDocumentCache } from "./lib/vector-storage";
 import { sendSummaryEmail } from "./lib/email";
+import { 
+  listAsanaProjects, 
+  getAsanaProjectTasks, 
+  testAsanaConnection,
+  formatAsanaTasksForContext
+} from "./lib/asana";
 import * as fs from "fs";
 import { nanoid } from "nanoid";
 import { format } from "date-fns";
@@ -664,6 +671,117 @@ You should **never make up information**. You may summarize or synthesize detail
     }
   });
   
+  // Asana integration routes
+  apiRouter.get("/asana/mcp-auth-url", (req, res) => {
+    // Return the MCP OAuth URL for Asana
+    res.json({
+      url: "https://mcp.so/server/asana/oauth"
+    });
+  });
+  
+  apiRouter.get("/asana/projects/:connectionId", async (req, res) => {
+    try {
+      const connectionId = req.params.connectionId;
+      
+      if (!connectionId) {
+        return res.status(400).json({ message: "Connection ID is required" });
+      }
+      
+      // Check if connection is valid
+      const connectionValid = await testAsanaConnection(connectionId);
+      
+      if (!connectionValid.valid) {
+        return res.status(400).json({ 
+          message: "Invalid Asana connection",
+          details: connectionValid.message
+        });
+      }
+      
+      // Get projects
+      const projects = await listAsanaProjects(connectionId);
+      
+      res.json(projects);
+    } catch (error) {
+      console.error("Error fetching Asana projects:", error);
+      res.status(500).json({ message: "Failed to fetch Asana projects" });
+    }
+  });
+  
+  apiRouter.post("/chatbots/:id/asana-integration", async (req, res) => {
+    try {
+      const data = asanaIntegrationSchema.parse({
+        ...req.body,
+        chatbotId: parseInt(req.params.id),
+      });
+      
+      const chatbot = await storage.getChatbot(data.chatbotId);
+      
+      if (!chatbot) {
+        return res.status(404).json({ message: "Chatbot not found" });
+      }
+      
+      // Check if Asana connection is valid
+      const connectionValid = await testAsanaConnection(data.asanaConnectionId);
+      
+      if (!connectionValid.valid) {
+        return res.status(400).json({ 
+          message: "Invalid Asana connection",
+          details: connectionValid.message
+        });
+      }
+      
+      // Update chatbot with Asana integration details
+      const updatedChatbot = await storage.updateChatbot(data.chatbotId, {
+        asanaConnectionId: data.asanaConnectionId,
+        asanaProjectId: data.asanaProjectId,
+        // Keep existing values
+        name: chatbot.name,
+        slackChannelId: chatbot.slackChannelId,
+        isActive: chatbot.isActive,
+        requireAuth: chatbot.requireAuth,
+        createdById: chatbot.createdById,
+        publicToken: chatbot.publicToken,
+      });
+      
+      res.json(updatedChatbot);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: error.errors[0].message });
+      }
+      console.error("Error setting up Asana integration:", error);
+      res.status(500).json({ message: "Failed to set up Asana integration" });
+    }
+  });
+  
+  apiRouter.get("/chatbots/:id/asana-tasks", async (req, res) => {
+    try {
+      const chatbotId = parseInt(req.params.id);
+      
+      const chatbot = await storage.getChatbot(chatbotId);
+      
+      if (!chatbot) {
+        return res.status(404).json({ message: "Chatbot not found" });
+      }
+      
+      if (!chatbot.asanaConnectionId || !chatbot.asanaProjectId) {
+        return res.status(400).json({ 
+          message: "No Asana integration configured for this chatbot" 
+        });
+      }
+      
+      // Fetch tasks from Asana
+      const tasks = await getAsanaProjectTasks(
+        chatbot.asanaConnectionId, 
+        chatbot.asanaProjectId
+      );
+      
+      res.json(tasks);
+    } catch (error) {
+      console.error("Error fetching Asana tasks:", error);
+      res.status(500).json({ message: "Failed to fetch Asana tasks" });
+    }
+  });
+
   // Settings routes
   apiRouter.get("/settings", async (req, res) => {
     try {

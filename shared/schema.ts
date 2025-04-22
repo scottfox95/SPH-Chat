@@ -33,6 +33,8 @@ export const chatbots = pgTable("chatbots", {
   publicToken: text("public_token").notNull().unique(),
   isActive: boolean("is_active").notNull().default(true),
   requireAuth: boolean("require_auth").notNull().default(false),
+  asanaConnectionId: text("asana_connection_id"),
+  asanaProjectId: text("asana_project_id"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
@@ -102,6 +104,8 @@ export const insertChatbotSchema = createInsertSchema(chatbots).pick({
   publicToken: true,
   isActive: true,
   requireAuth: true,
+  asanaConnectionId: true,
+  asanaProjectId: true,
 });
 
 export const insertDocumentSchema = createInsertSchema(documents).pick({
@@ -191,4 +195,10 @@ export const chatMessageSchema = z.object({
 export const addEmailRecipientSchema = z.object({
   chatbotId: z.number(),
   email: z.string().email("Invalid email format"),
+});
+
+export const asanaIntegrationSchema = z.object({
+  chatbotId: z.number(),
+  asanaConnectionId: z.string().min(1, "Asana connection ID is required"),
+  asanaProjectId: z.string().min(1, "Asana project ID is required"),
 });
