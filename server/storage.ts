@@ -168,6 +168,7 @@ export class MemStorage implements IStorage {
       id,
       publicToken,
       createdAt: now,
+      asanaProjectId: chatbot.asanaProjectId || null,
       isActive: chatbot.isActive ?? true,
       requireAuth: chatbot.requireAuth ?? false
     };
@@ -307,6 +308,10 @@ export class MemStorage implements IStorage {
       this.appSettings = {
         id: 1,
         openaiModel: "gpt-4o",
+        includeSourceDetails: false,
+        includeDateInSource: false,
+        includeUserInSource: false,
+        responseTemplate: null,
         createdAt: now,
         updatedAt: now
       };
@@ -322,6 +327,10 @@ export class MemStorage implements IStorage {
       this.appSettings = {
         id: 1,
         openaiModel: data.openaiModel || "gpt-4o",
+        includeSourceDetails: data.includeSourceDetails ?? false,
+        includeDateInSource: data.includeDateInSource ?? false,
+        includeUserInSource: data.includeUserInSource ?? false,
+        responseTemplate: data.responseTemplate ?? null,
         createdAt: now,
         updatedAt: now
       };
@@ -526,6 +535,10 @@ export class DatabaseStorage implements IStorage {
       const [newSettings] = await db.insert(settings)
         .values({
           openaiModel: data.openaiModel || "gpt-4o",
+          includeSourceDetails: data.includeSourceDetails ?? false,
+          includeDateInSource: data.includeDateInSource ?? false,
+          includeUserInSource: data.includeUserInSource ?? false,
+          responseTemplate: data.responseTemplate ?? null,
           updatedAt: now
         })
         .returning();

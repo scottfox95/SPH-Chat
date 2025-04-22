@@ -511,18 +511,51 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(401).json({ message: "Valid token required" });
       }
       
+      // Get context for the chatbot
+      const { documents, slackMessages } = await getChatbotContext(chatbotId);
+      
+      // Prepare the context sources for the prompt
+      let contextSources = [
+        "1. The project's initial documentation (budget, timeline, notes, plans, spreadsheets).",
+        "2. The Slack message history from the project's dedicated Slack channel."
+      ];
+      
+      // Prepare asana tasks data if available
+      let asanaTasks: string[] = [];
+      if (chatbot.asanaProjectId) {
+        try {
+          const asanaResult = await getAsanaProjectTasks(chatbot.asanaProjectId, true);
+          if (asanaResult.success && asanaResult.tasks && asanaResult.tasks.length > 0) {
+            // Add Asana as a context source
+            contextSources.push("3. The project's Asana tasks and their status.");
+            
+            // Format tasks for different views that might be requested
+            const allTasksFormatted = formatTasksForChatbot(asanaResult.tasks, asanaResult.projectName || "Project", "all");
+            const overdueTasksFormatted = formatTasksForChatbot(asanaResult.tasks, asanaResult.projectName || "Project", "overdue");
+            const upcomingTasksFormatted = formatTasksForChatbot(asanaResult.tasks, asanaResult.projectName || "Project", "upcoming");
+            const completedTasksFormatted = formatTasksForChatbot(asanaResult.tasks, asanaResult.projectName || "Project", "completed");
+            
+            // Add formatted task data to context
+            asanaTasks = [allTasksFormatted, overdueTasksFormatted, upcomingTasksFormatted, completedTasksFormatted];
+          }
+        } catch (asanaError) {
+          console.error("Error fetching Asana tasks for context:", asanaError);
+          // Continue without Asana tasks in the context
+        }
+      }
+      
       // Get the system prompt
-      const systemPrompt = `You are a helpful assistant named SPH ChatBot assigned to the ${chatbot.name} homebuilding project. Your role is to provide project managers and executives with accurate, up-to-date answers about this construction project by referencing two sources of information:
+      const systemPrompt = `You are a helpful assistant named SPH ChatBot assigned to the ${chatbot.name} homebuilding project. Your role is to provide project managers and executives with accurate, up-to-date answers about this construction project by referencing the following sources of information:
 
-1. The project's initial documentation (budget, timeline, notes, plans, spreadsheets).
-2. The Slack message history from the project's dedicated Slack channel.
+${contextSources.join("\n")}
 
 Your job is to answer questions clearly and concisely. Always cite your source. If your answer comes from:
 - a document: mention the filename and, if available, the page or section.
 - Slack: mention the date and approximate time of the Slack message.
+${chatbot.asanaProjectId ? "- Asana: mention that the information comes from Asana project tasks." : ""}
 
 Respond using complete sentences. If the information is unavailable, say:  
-"I wasn't able to find that information in the project files or Slack messages."
+"I wasn't able to find that information in the project files or messages."
 
 You should **never make up information**. You may summarize or synthesize details if the answer is spread across multiple sources.`;
       
@@ -535,14 +568,11 @@ You should **never make up information**. You may summarize or synthesize detail
         citation: null,
       });
       
-      // Get context for the chatbot
-      const { documents, slackMessages } = await getChatbotContext(chatbotId);
-      
       // Get response from OpenAI
       const aiResponse = await getChatbotResponse(
         message,
         documents,
-        slackMessages,
+        [...slackMessages, ...asanaTasks],
         systemPrompt
       );
       
