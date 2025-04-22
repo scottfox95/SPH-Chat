@@ -690,14 +690,19 @@ You should **never make up information**. You may summarize or synthesize detail
   // Test Asana connection
   apiRouter.get("/system/test-asana", async (req, res) => {
     try {
+      console.log("Received request to test Asana connection");
       const result = await testAsanaConnection();
+      console.log("Asana connection test result:", JSON.stringify(result));
       res.json(result);
     } catch (error) {
       console.error("Error testing Asana connection:", error);
+      const errorDetails = error instanceof Error ? error.stack : String(error);
+      console.error("Detailed error:", errorDetails);
+      
       res.status(500).json({ 
         connected: false, 
         message: "Failed to test Asana connection",
-        error: "An unexpected error occurred"
+        error: error instanceof Error ? error.message : "An unexpected error occurred"
       });
     }
   });

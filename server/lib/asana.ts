@@ -17,18 +17,34 @@ const ASANA_API_BASE = "https://app.asana.com/api/1.0";
  */
 async function getAsanaPAT(): Promise<string | null> {
   try {
+    console.log("Attempting to retrieve Asana PAT from database");
+    
     // First try to get from database
     const token = await storage.getApiToken('asana');
     if (token) {
-      // Decode the token from base64
-      return Buffer.from(token.tokenHash, 'base64').toString();
+      console.log("Asana token found in database, token hash exists:", !!token.tokenHash);
+      try {
+        // Decode the token from base64
+        const decodedToken = Buffer.from(token.tokenHash, 'base64').toString();
+        console.log("Token successfully decoded, length:", decodedToken.length);
+        return decodedToken;
+      } catch (decodeError) {
+        console.error("Error decoding token from base64:", decodeError);
+        // Continue to fallback
+      }
+    } else {
+      console.log("No Asana token found in database");
     }
     
     // Fallback to environment variable
-    return process.env.ASANA_PAT || null;
+    const envToken = process.env.ASANA_PAT;
+    console.log("Falling back to environment variable, token exists:", !!envToken);
+    return envToken || null;
   } catch (error) {
     console.error("Error retrieving Asana PAT:", error);
-    return process.env.ASANA_PAT || null;
+    const envToken = process.env.ASANA_PAT;
+    console.log("Error occurred, falling back to environment variable, token exists:", !!envToken);
+    return envToken || null;
   }
 }
 
@@ -73,15 +89,21 @@ export async function testAsanaConnection(): Promise<{
   error?: string;
 }> {
   try {
+    console.log("Testing Asana connection");
+    
     // Check if Asana PAT is available
     const token = await getAsanaPAT();
     if (!token) {
+      console.log("No Asana token available");
       return {
         connected: false,
         message: "Asana PAT is not configured",
         error: "No Asana PAT found in storage or environment variables"
       };
     }
+    
+    console.log("Asana token retrieved, first 5 chars:", token.substring(0, 5));
+    console.log("Token length:", token.length);
 
     // Test API access by fetching user data
     const headers = {
@@ -90,13 +112,17 @@ export async function testAsanaConnection(): Promise<{
       "Accept": "application/json"
     };
     
+    console.log("Making request to Asana API /users/me");
     const response = await fetch(`${ASANA_API_BASE}/users/me`, {
       headers,
     });
 
+    console.log("Asana API response status:", response.status);
     const data = await response.json();
+    console.log("Asana API response data:", JSON.stringify(data).substring(0, 200) + "...");
 
     if (response.status !== 200) {
+      console.log("Asana API connection failed:", data.errors?.[0]?.message);
       return {
         connected: false,
         message: "Failed to connect to Asana API",
