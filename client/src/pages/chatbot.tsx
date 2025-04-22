@@ -47,6 +47,13 @@ export default function Chatbot({ id }: ChatbotProps) {
   const { data: chatbot, isLoading: chatbotLoading } = useQuery<any>({
     queryKey: [`/api/chatbots/${id}`],
   });
+  
+  // Set Asana project ID when data loads
+  useEffect(() => {
+    if (chatbot && chatbot.asanaProjectId) {
+      setAsanaProjectId(chatbot.asanaProjectId);
+    }
+  }, [chatbot]);
 
   // Fetch documents
   const { data: documents = [], isLoading: documentsLoading } = useQuery<any[]>({

@@ -45,6 +45,7 @@ export default function Settings() {
   const { toast } = useToast();
   const [slackToken, setSlackToken] = useState("");
   const [openaiKey, setOpenaiKey] = useState("");
+  const [asanaPAT, setAsanaPAT] = useState("");
   const [emailSettings, setEmailSettings] = useState({
     enabled: true,
     smtpHost: "",
@@ -66,6 +67,13 @@ export default function Settings() {
   const [openAIStatus, setOpenAIStatus] = useState<null | {
     connected: boolean;
     model?: string;
+    error?: string;
+  }>(null);
+  
+  const [testingAsana, setTestingAsana] = useState(false);
+  const [asanaStatus, setAsanaStatus] = useState<null | {
+    connected: boolean;
+    workspaces?: any[];
     error?: string;
   }>(null);
 
@@ -128,6 +136,7 @@ export default function Settings() {
     // Reset connection statuses after saving new credentials
     setSlackStatus(null);
     setOpenAIStatus(null);
+    setAsanaStatus(null);
   };
 
   const handleSaveEmailSettings = () => {
@@ -213,6 +222,45 @@ export default function Settings() {
       });
     } finally {
       setTestingOpenAI(false);
+    }
+  };
+  
+  // Test Asana connection
+  const testAsanaConnection = async () => {
+    setTestingAsana(true);
+    setAsanaStatus(null);
+    
+    try {
+      const response = await fetch("/api/system/test-asana");
+      const data = await response.json();
+      
+      setAsanaStatus(data);
+      
+      if (data.connected) {
+        toast({
+          title: "Asana connection successful",
+          description: `Connected with access to ${data.workspaces?.length || 0} workspace(s)`,
+        });
+      } else {
+        toast({
+          title: "Asana connection failed",
+          description: data.error || "Unknown error",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      setAsanaStatus({
+        connected: false,
+        error: "Network error checking Asana connection",
+      });
+      
+      toast({
+        title: "Asana connection check failed",
+        description: "Could not connect to the server",
+        variant: "destructive",
+      });
+    } finally {
+      setTestingAsana(false);
     }
   };
 
@@ -351,6 +399,63 @@ export default function Settings() {
                 {openAIStatus?.error && (
                   <p className="text-xs text-red-600">
                     Error: {openAIStatus.error}
+                  </p>
+                )}
+              </div>
+              
+              <div className="space-y-2">
+                <div className="flex justify-between items-end">
+                  <Label htmlFor="asana-pat">Asana Personal Access Token</Label>
+                  {asanaStatus !== null && (
+                    <Badge 
+                      className={`mb-1 ${asanaStatus.connected ? 'bg-green-100 text-green-800 hover:bg-green-100' : 'bg-red-100 text-red-800 hover:bg-red-100'}`}
+                    >
+                      {asanaStatus.connected ? (
+                        <CheckCircle className="w-3 h-3 mr-1" />
+                      ) : (
+                        <XCircle className="w-3 h-3 mr-1" />
+                      )}
+                      {asanaStatus.connected ? 'Connected' : 'Error'}
+                    </Badge>
+                  )}
+                </div>
+                <Input
+                  id="asana-pat"
+                  type="password"
+                  value={asanaPAT}
+                  onChange={(e) => setAsanaPAT(e.target.value)}
+                  placeholder="1/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                  className="focus-visible:ring-[#D2B48C]"
+                />
+                <div className="flex justify-between">
+                  <p className="text-xs text-gray-500">
+                    Required to access Asana projects and tasks
+                  </p>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={testAsanaConnection}
+                    disabled={testingAsana}
+                    className="text-xs h-7"
+                  >
+                    {testingAsana ? (
+                      <>
+                        <Loader2 className="mr-1 h-3 w-3 animate-spin" />
+                        Testing
+                      </>
+                    ) : (
+                      'Test Connection'
+                    )}
+                  </Button>
+                </div>
+                {asanaStatus?.connected && asanaStatus.workspaces && (
+                  <p className="text-xs text-green-600">
+                    Connected with access to {asanaStatus.workspaces.length} workspace(s)
+                  </p>
+                )}
+                {asanaStatus?.error && (
+                  <p className="text-xs text-red-600">
+                    Error: {asanaStatus.error}
                   </p>
                 )}
               </div>
