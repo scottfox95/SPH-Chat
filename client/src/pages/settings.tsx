@@ -86,6 +86,38 @@ export default function Settings() {
     queryKey: ['/api/settings'],
     queryFn: () => fetch('/api/settings').then(res => res.json())
   });
+  
+  // Load stored credentials (in a real app, these would be loaded from a secure store)
+  useEffect(() => {
+    // API keys would normally not be exposed to the client 
+    // This is just for demo purposes
+    const checkSecrets = async () => {
+      try {
+        // Check if API credentials are available
+        const slackResp = await fetch("/api/system/test-slack");
+        if (slackResp.ok) {
+          const data = await slackResp.json();
+          setSlackStatus(data);
+        }
+        
+        const openaiResp = await fetch("/api/system/test-openai");
+        if (openaiResp.ok) {
+          const data = await openaiResp.json();
+          setOpenAIStatus(data);
+        }
+        
+        const asanaResp = await fetch("/api/system/test-asana");
+        if (asanaResp.ok) {
+          const data = await asanaResp.json();
+          setAsanaStatus(data);
+        }
+      } catch (error) {
+        console.error("Error checking API credentials:", error);
+      }
+    };
+    
+    checkSecrets();
+  }, []);
 
   // Fetch Slack channels
   const { 

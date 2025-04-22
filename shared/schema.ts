@@ -87,6 +87,15 @@ export const settings = pgTable("settings", {
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
+// API tokens (for secure storage in DB)
+export const apiTokens = pgTable("api_tokens", {
+  id: serial("id").primaryKey(),
+  service: text("service").notNull().unique(), // 'slack', 'openai', 'asana'
+  tokenHash: text("token_hash").notNull(), // Hashed token for security
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
 // Schema validations
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
@@ -155,6 +164,15 @@ export const updateSettingsSchema = createInsertSchema(settings).pick({
   responseTemplate: true,
 });
 
+export const insertApiTokenSchema = createInsertSchema(apiTokens).pick({
+  service: true,
+  tokenHash: true,
+});
+
+export const updateApiTokenSchema = createInsertSchema(apiTokens).pick({
+  tokenHash: true,
+});
+
 // Types
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
@@ -177,6 +195,10 @@ export type InsertMessage = z.infer<typeof insertMessageSchema>;
 export type Settings = typeof settings.$inferSelect;
 export type InsertSettings = z.infer<typeof insertSettingsSchema>;
 export type UpdateSettings = z.infer<typeof updateSettingsSchema>;
+
+export type ApiToken = typeof apiTokens.$inferSelect;
+export type InsertApiToken = z.infer<typeof insertApiTokenSchema>;
+export type UpdateApiToken = z.infer<typeof updateApiTokenSchema>;
 
 // Custom types for API requests/responses
 export const loginSchema = z.object({

@@ -836,6 +836,37 @@ You should **never make up information**. You may summarize or synthesize detail
     }
   });
   
+  // Update API tokens (stored in environment variables)
+  apiRouter.put("/settings/api-tokens", async (req, res) => {
+    try {
+      const { type, token } = req.body;
+      
+      if (!type || !token) {
+        return res.status(400).json({ message: "Token type and value are required" });
+      }
+      
+      // Here, we would normally update the token in a secure store
+      // For this application, we're using environment variables
+      
+      // Save token in environment (in production, this would be done differently)
+      // This is just a mock implementation for the demo
+      if (type === 'slack') {
+        process.env.SLACK_BOT_TOKEN = token;
+      } else if (type === 'openai') {
+        process.env.OPENAI_API_KEY = token;
+      } else if (type === 'asana') {
+        process.env.ASANA_PAT = token;
+      } else {
+        return res.status(400).json({ message: "Invalid token type" });
+      }
+      
+      res.json({ success: true, message: `${type} token updated successfully` });
+    } catch (error) {
+      console.error("Error updating API token:", error);
+      res.status(500).json({ message: "Failed to update API token" });
+    }
+  });
+  
   // Register API routes
   app.use("/api", apiRouter);
   
