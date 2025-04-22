@@ -548,12 +548,26 @@ function AsanaIntegration({ chatbotId, chatbot }: AsanaIntegrationProps) {
   const { data: projects = [], isLoading: projectsLoading, refetch: refetchProjects } = useQuery<any[]>({
     queryKey: [`/api/asana/projects/${connectionId}`],
     enabled: !!connectionId,
+    queryFn: async () => {
+      const res = await fetch(`/api/asana/projects/${connectionId}`);
+      if (!res.ok) {
+        throw new Error("Failed to fetch Asana projects");
+      }
+      return res.json();
+    },
   });
 
   // Fetch Asana tasks if connection and project are set
   const { data: tasks = [], isLoading: tasksLoading } = useQuery<any[]>({
     queryKey: [`/api/chatbots/${chatbotId}/asana-tasks`],
     enabled: !!chatbot.asanaConnectionId && !!chatbot.asanaProjectId,
+    queryFn: async () => {
+      const res = await fetch(`/api/chatbots/${chatbotId}/asana-tasks`);
+      if (!res.ok) {
+        throw new Error("Failed to fetch Asana tasks");
+      }
+      return res.json();
+    },
   });
 
   // Save Asana integration mutation
@@ -581,7 +595,11 @@ function AsanaIntegration({ chatbotId, chatbot }: AsanaIntegrationProps) {
   // Get Asana OAuth URL
   const getAsanaAuthUrlMutation = useMutation({
     mutationFn: async () => {
-      const res = await apiRequest("GET", "/api/asana/mcp-auth-url", {});
+      // Using direct fetch instead of apiRequest because GET shouldn't have a body
+      const res = await fetch("/api/asana/mcp-auth-url");
+      if (!res.ok) {
+        throw new Error("Failed to fetch Asana auth URL");
+      }
       return res.json();
     },
     onSuccess: (data) => {
