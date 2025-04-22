@@ -28,12 +28,12 @@ async function getAsanaPAT(): Promise<string | null> {
       console.log("Environment token found, length:", envToken.length);
       console.log("Environment token first 5 chars:", envToken.substring(0, 5));
       
-      // Validate token format for Asana PAT (should start with "1/" for most Asana PATs)
-      if (envToken.startsWith("1/")) {
-        console.log("Environment token format appears valid (starts with 1/)");
+      // Validate token format for Asana PAT (should start with "1/" or "2/" for Asana PATs)
+      if (envToken.startsWith("1/") || envToken.startsWith("2/")) {
+        console.log(`Environment token format appears valid (starts with ${envToken.substring(0, 2)})`);
         return envToken;
       } else {
-        console.warn("Environment token format may be invalid - does not start with '1/'");
+        console.warn("Environment token format may be invalid - does not start with '1/' or '2/'");
         // Continue to try database token as fallback
       }
     }
