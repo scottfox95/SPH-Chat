@@ -552,7 +552,13 @@ ${contextSources.join("\n")}
 Your job is to answer questions clearly and concisely. Always cite your source. If your answer comes from:
 - a document: mention the filename and, if available, the page or section.
 - Slack: mention the date and approximate time of the Slack message.
-${chatbot.asanaProjectId ? "- Asana: mention that the information comes from Asana project tasks." : ""}
+${chatbot.asanaProjectId ? "- Asana: always mention that the information comes from Asana project tasks and include the project name." : ""}
+
+IMPORTANT FOR ASANA TASKS: 
+1. When users ask about "tasks", "Asana", "project status", "overdue", "upcoming", "progress", or other task-related information, ALWAYS prioritize checking the Asana data.
+2. Pay special attention to content that begins with "ASANA TASK DATA:" in your provided context. This contains valuable task information.
+3. When answering Asana-related questions, directly reference the tasks, including their status, due dates, and assignees if available.
+4. Try to match the user's question with the most relevant task view (all tasks, overdue tasks, upcoming tasks, or completed tasks).
 
 Respond using complete sentences. If the information is unavailable, say:  
 "I wasn't able to find that information in the project files or messages."
