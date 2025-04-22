@@ -7,6 +7,7 @@ import {
   emailRecipients, 
   messages,
   settings,
+  apiTokens,
   type User, 
   type InsertUser,
   type Chatbot,
@@ -20,7 +21,10 @@ import {
   type Message,
   type InsertMessage,
   type Settings,
-  type UpdateSettings
+  type UpdateSettings,
+  type ApiToken,
+  type InsertApiToken,
+  type UpdateApiToken
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, and, isNull, sql } from "drizzle-orm";
@@ -67,6 +71,10 @@ export interface IStorage {
   getSettings(): Promise<Settings | undefined>;
   updateSettings(data: UpdateSettings): Promise<Settings>;
   
+  // API token methods
+  getApiToken(service: string): Promise<ApiToken | undefined>;
+  saveApiToken(token: InsertApiToken): Promise<ApiToken>;
+  
   // Session store for authentication
   sessionStore: session.Store;
 }
@@ -79,6 +87,7 @@ export class MemStorage implements IStorage {
   private summaries: Map<number, Summary>;
   private emailRecipients: Map<number, EmailRecipient>;
   private messages: Map<number, Message>;
+  private apiTokens: Map<string, ApiToken>; // API tokens by service name
   private appSettings: Settings | undefined;
   
   private currentUserId: number;
@@ -87,6 +96,7 @@ export class MemStorage implements IStorage {
   private currentSummaryId: number;
   private currentEmailRecipientId: number;
   private currentMessageId: number;
+  private currentApiTokenId: number;
   
   public sessionStore: session.Store;
   
@@ -97,6 +107,7 @@ export class MemStorage implements IStorage {
     this.summaries = new Map();
     this.emailRecipients = new Map();
     this.messages = new Map();
+    this.apiTokens = new Map();
     
     this.currentUserId = 1;
     this.currentChatbotId = 1;
@@ -104,6 +115,7 @@ export class MemStorage implements IStorage {
     this.currentSummaryId = 1;
     this.currentEmailRecipientId = 1;
     this.currentMessageId = 1;
+    this.currentApiTokenId = 1;
     
     // Set up memory session store
     const MemoryStore = createMemoryStore(session);
@@ -345,6 +357,45 @@ export class MemStorage implements IStorage {
     
     return this.appSettings;
   }
+  
+  // API token methods
+  async getApiToken(service: string): Promise<ApiToken | undefined> {
+    return Array.from(this.apiTokens.values()).find(
+      (token) => token.service === service
+    );
+  }
+  
+  async saveApiToken(token: InsertApiToken): Promise<ApiToken> {
+    const now = new Date();
+    
+    // Check if token already exists for this service
+    const existingToken = await this.getApiToken(token.service);
+    
+    if (existingToken) {
+      // Update existing token
+      const updatedToken: ApiToken = {
+        ...existingToken,
+        tokenHash: token.tokenHash,
+        updatedAt: now
+      };
+      
+      this.apiTokens.set(token.service, updatedToken);
+      return updatedToken;
+    } else {
+      // Create new token
+      const id = this.currentApiTokenId++;
+      
+      const newToken: ApiToken = {
+        ...token,
+        id,
+        createdAt: now,
+        updatedAt: now
+      };
+      
+      this.apiTokens.set(token.service, newToken);
+      return newToken;
+    }
+  }
 }
 
 // Database storage implementation
@@ -555,6 +606,43 @@ export class DatabaseStorage implements IStorage {
         .returning();
         
       return updatedSettings;
+    }
+  }
+  
+  // API token methods
+  async getApiToken(service: string): Promise<ApiToken | undefined> {
+    const [token] = await db.select()
+      .from(apiTokens)
+      .where(eq(apiTokens.service, service));
+      
+    return token;
+  }
+  
+  async saveApiToken(token: InsertApiToken): Promise<ApiToken> {
+    const now = new Date();
+    const existingToken = await this.getApiToken(token.service);
+    
+    if (existingToken) {
+      // Update existing token
+      const [updatedToken] = await db.update(apiTokens)
+        .set({ 
+          tokenHash: token.tokenHash,
+          updatedAt: now 
+        })
+        .where(eq(apiTokens.id, existingToken.id))
+        .returning();
+        
+      return updatedToken;
+    } else {
+      // Create new token
+      const [newToken] = await db.insert(apiTokens)
+        .values({
+          ...token,
+          updatedAt: now
+        })
+        .returning();
+        
+      return newToken;
     }
   }
 }
