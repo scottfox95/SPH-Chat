@@ -5,22 +5,42 @@
 
 // Simple implementation using fetch API without additional libraries
 // This approach keeps dependencies minimal
-
-// Check if Asana PAT is available
-const ASANA_PAT = process.env.ASANA_PAT;
-if (!ASANA_PAT) {
-  console.warn("Warning: ASANA_PAT environment variable is not set. Asana integration will not work.");
-}
+import { storage } from "../storage";
 
 // Base URL for Asana API
 const ASANA_API_BASE = "https://app.asana.com/api/1.0";
 
+// Get the Asana PAT from database or environment variable
+async function getAsanaPAT(): Promise<string | null> {
+  try {
+    // First try to get from database
+    const token = await storage.getApiToken('asana');
+    if (token) {
+      // Decode the token from base64
+      return Buffer.from(token.tokenHash, 'base64').toString();
+    }
+    
+    // Fallback to environment variable
+    return process.env.ASANA_PAT || null;
+  } catch (error) {
+    console.error("Error retrieving Asana PAT:", error);
+    return process.env.ASANA_PAT || null;
+  }
+}
+
 // Create headers with authorization
-const getHeaders = () => ({
-  "Authorization": `Bearer ${ASANA_PAT}`,
-  "Content-Type": "application/json",
-  "Accept": "application/json"
-});
+const getHeaders = async () => {
+  const token = await getAsanaPAT();
+  if (!token) {
+    throw new Error("Asana PAT is not available. Please configure it in settings.");
+  }
+  
+  return {
+    "Authorization": `Bearer ${token}`,
+    "Content-Type": "application/json",
+    "Accept": "application/json"
+  };
+};
 
 // Interface for Asana API responses
 interface AsanaTask {
@@ -63,17 +83,25 @@ export async function testAsanaConnection(): Promise<{
   error?: string;
 }> {
   try {
-    if (!ASANA_PAT) {
+    // Check if Asana PAT is available
+    const token = await getAsanaPAT();
+    if (!token) {
       return {
         connected: false,
         message: "Asana PAT is not configured",
-        error: "Missing ASANA_PAT environment variable"
+        error: "No Asana PAT found in storage or environment variables"
       };
     }
 
     // Test API access by fetching user data
+    const headers = {
+      "Authorization": `Bearer ${token}`,
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    };
+    
     const response = await fetch(`${ASANA_API_BASE}/users/me`, {
-      headers: getHeaders(),
+      headers,
     });
 
     const data = await response.json();
@@ -89,7 +117,7 @@ export async function testAsanaConnection(): Promise<{
     // If successful, also fetch workspaces for the user
     // This helps validate that the PAT has appropriate permissions
     const workspacesResponse = await fetch(`${ASANA_API_BASE}/workspaces`, {
-      headers: getHeaders(),
+      headers,
     });
 
     const workspacesData = await workspacesResponse.json();
@@ -129,7 +157,9 @@ export async function getAsanaProjectTasks(
   error?: string;
 }> {
   try {
-    if (!ASANA_PAT) {
+    // Check if Asana PAT is available
+    const token = await getAsanaPAT();
+    if (!token) {
       return {
         success: false,
         error: "Asana PAT is not configured"
@@ -143,9 +173,16 @@ export async function getAsanaProjectTasks(
       };
     }
 
+    // Create headers with authorization
+    const headers = {
+      "Authorization": `Bearer ${token}`,
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    };
+
     // First, get project details to verify it exists and get the name
     const projectResponse = await fetch(`${ASANA_API_BASE}/projects/${projectId}`, {
-      headers: getHeaders(),
+      headers,
     });
 
     if (projectResponse.status !== 200) {
@@ -163,7 +200,7 @@ export async function getAsanaProjectTasks(
     const tasksResponse = await fetch(
       `${ASANA_API_BASE}/tasks?project=${projectId}&completed=${completed}&opt_fields=name,completed,due_on,assignee,notes`,
       {
-        headers: getHeaders(),
+        headers,
       }
     );
 

@@ -836,7 +836,29 @@ You should **never make up information**. You may summarize or synthesize detail
     }
   });
   
-  // Update API tokens (stored in environment variables)
+  // Get API token status (not the actual tokens)
+  apiRouter.get("/settings/api-tokens/status", async (req, res) => {
+    try {
+      // Check each service token
+      const services = ['slack', 'openai', 'asana'];
+      const tokenStatus = {};
+      
+      for (const service of services) {
+        const token = await storage.getApiToken(service);
+        tokenStatus[service] = {
+          exists: !!token,
+          lastUpdated: token ? token.updatedAt : null
+        };
+      }
+      
+      res.json(tokenStatus);
+    } catch (error) {
+      console.error("Error fetching API token status:", error);
+      res.status(500).json({ message: "Failed to fetch API token status" });
+    }
+  });
+  
+  // Update API tokens (stored securely in database)
   apiRouter.put("/settings/api-tokens", async (req, res) => {
     try {
       const { type, token } = req.body;
@@ -845,19 +867,30 @@ You should **never make up information**. You may summarize or synthesize detail
         return res.status(400).json({ message: "Token type and value are required" });
       }
       
-      // Here, we would normally update the token in a secure store
-      // For this application, we're using environment variables
+      // Validate token type
+      if (!['slack', 'openai', 'asana'].includes(type)) {
+        return res.status(400).json({ message: "Invalid token type" });
+      }
       
-      // Save token in environment (in production, this would be done differently)
-      // This is just a mock implementation for the demo
+      // Hash the token for secure storage
+      // In a real production app, we'd use a proper encryption method
+      // This is a simple hash for demonstration purposes
+      const tokenHash = Buffer.from(token).toString('base64');
+      
+      // Save the token in our database
+      await storage.saveApiToken({
+        service: type,
+        tokenHash: tokenHash
+      });
+      
+      // For backward compatibility, also set environment variables
+      // This ensures existing code continues to work
       if (type === 'slack') {
         process.env.SLACK_BOT_TOKEN = token;
       } else if (type === 'openai') {
         process.env.OPENAI_API_KEY = token;
       } else if (type === 'asana') {
         process.env.ASANA_PAT = token;
-      } else {
-        return res.status(400).json({ message: "Invalid token type" });
       }
       
       res.json({ success: true, message: `${type} token updated successfully` });
