@@ -396,7 +396,7 @@ export default function Chatbot({ id }: ChatbotProps) {
                   <div className="flex items-center mt-1 gap-2">
                     <Input
                       id="asana-project"
-                      value={chatbot.asanaProjectId || ""}
+                      value={asanaProjectId}
                       onChange={(e) => setAsanaProjectId(e.target.value)}
                       placeholder="Enter Asana project ID"
                       className="flex-1"
@@ -410,9 +410,15 @@ export default function Chatbot({ id }: ChatbotProps) {
                       {updateAsanaProjectMutation.isPending ? "Saving..." : "Save"}
                     </Button>
                   </div>
-                  <p className="text-xs text-gray-500 mt-1">
-                    Link this chatbot to an Asana project to include tasks in responses
-                  </p>
+                  <div className="flex justify-between items-center mt-1">
+                    <p className="text-xs text-gray-500">
+                      Link this chatbot to an Asana project to include tasks in responses
+                    </p>
+                    <AsanaProjectSelector 
+                      onSelect={handleAsanaProjectSelect}
+                      currentProjectId={chatbot.asanaProjectId}
+                    />
+                  </div>
                 </div>
                 
                 <div>
