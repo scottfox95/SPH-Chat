@@ -21,15 +21,26 @@ async function getAsanaPAT(): Promise<string | null> {
     
     // First try to get from database
     const token = await storage.getApiToken('asana');
-    if (token) {
-      console.log("Asana token found in database, token hash exists:", !!token.tokenHash);
+    if (token && token.tokenHash) {
+      console.log("Asana token found in database, tokenHash length:", token.tokenHash.length);
       try {
         // Decode the token from base64
         const decodedToken = Buffer.from(token.tokenHash, 'base64').toString();
         console.log("Token successfully decoded, length:", decodedToken.length);
+        
+        // Validate token format for Asana PAT (should start with "1/" for most Asana PATs)
+        if (decodedToken.startsWith("1/")) {
+          console.log("Token format appears valid (starts with 1/)");
+        } else {
+          console.warn("Token format may be invalid - does not start with '1/'");
+          console.log("Token first 5 chars:", decodedToken.substring(0, 5));
+        }
+        
+        // Return the decoded token regardless of format warning
         return decodedToken;
       } catch (decodeError) {
         console.error("Error decoding token from base64:", decodeError);
+        console.log("Raw token hash (first 10 chars):", token.tokenHash.substring(0, 10));
         // Continue to fallback
       }
     } else {
@@ -39,6 +50,10 @@ async function getAsanaPAT(): Promise<string | null> {
     // Fallback to environment variable
     const envToken = process.env.ASANA_PAT;
     console.log("Falling back to environment variable, token exists:", !!envToken);
+    if (envToken) {
+      console.log("Environment token first 5 chars:", envToken.substring(0, 5));
+      console.log("Environment token length:", envToken.length);
+    }
     return envToken || null;
   } catch (error) {
     console.error("Error retrieving Asana PAT:", error);
@@ -106,11 +121,22 @@ export async function testAsanaConnection(): Promise<{
     console.log("Token length:", token.length);
 
     // Test API access by fetching user data
-    const headers = {
-      "Authorization": `Bearer ${token}`,
+    // Try different authorization formats based on token structure
+    const headers: Record<string, string> = {
       "Content-Type": "application/json",
       "Accept": "application/json"
     };
+    
+    // For Asana Personal Access Tokens, the format should be "Bearer" + token
+    // Typical Asana PAT format starts with "1/"
+    if (token.startsWith("1/")) {
+      console.log("Using standard Bearer authorization format");
+      headers["Authorization"] = `Bearer ${token}`;
+    } else {
+      // If token doesn't have the expected format, try both formats
+      console.log("Token doesn't have expected format, trying standard format anyway");
+      headers["Authorization"] = `Bearer ${token}`;
+    }
     
     console.log("Making request to Asana API /users/me");
     const response = await fetch(`${ASANA_API_BASE}/users/me`, {
@@ -190,11 +216,21 @@ export async function getAsanaProjectTasks(
     }
 
     // Create headers with authorization
-    const headers = {
-      "Authorization": `Bearer ${token}`,
+    // Try different authorization formats based on token structure
+    const headers: Record<string, string> = {
       "Content-Type": "application/json",
       "Accept": "application/json"
     };
+    
+    // For Asana Personal Access Tokens, the format should be "Bearer" + token
+    // Typical Asana PAT format starts with "1/"
+    if (token.startsWith("1/")) {
+      console.log("Using standard Bearer authorization format for tasks request");
+      headers["Authorization"] = `Bearer ${token}`;
+    } else {
+      console.log("Token doesn't have expected format, trying standard format anyway for tasks request");
+      headers["Authorization"] = `Bearer ${token}`;
+    }
 
     // First, get project details to verify it exists and get the name
     const projectResponse = await fetch(`${ASANA_API_BASE}/projects/${projectId}`, {
@@ -282,11 +318,21 @@ export async function getAsanaTaskDetails(taskId: string): Promise<{
     }
 
     // Create headers with authorization
-    const headers = {
-      "Authorization": `Bearer ${token}`,
+    // Try different authorization formats based on token structure
+    const headers: Record<string, string> = {
       "Content-Type": "application/json",
       "Accept": "application/json"
     };
+    
+    // For Asana Personal Access Tokens, the format should be "Bearer" + token
+    // Typical Asana PAT format starts with "1/"
+    if (token.startsWith("1/")) {
+      console.log("Using standard Bearer authorization format for task details request");
+      headers["Authorization"] = `Bearer ${token}`;
+    } else {
+      console.log("Token doesn't have expected format, trying standard format anyway for task details request");
+      headers["Authorization"] = `Bearer ${token}`;
+    }
 
     const response = await fetch(
       `${ASANA_API_BASE}/tasks/${taskId}?opt_fields=name,completed,due_on,assignee,notes,projects,custom_fields,dependencies,dependents,subtasks`,
@@ -369,11 +415,21 @@ export async function getAsanaProjects(workspaceId: string): Promise<{
     }
 
     // Create headers with authorization
-    const headers = {
-      "Authorization": `Bearer ${token}`,
+    // Try different authorization formats based on token structure
+    const headers: Record<string, string> = {
       "Content-Type": "application/json",
       "Accept": "application/json"
     };
+    
+    // For Asana Personal Access Tokens, the format should be "Bearer" + token
+    // Typical Asana PAT format starts with "1/"
+    if (token.startsWith("1/")) {
+      console.log("Using standard Bearer authorization format for projects request");
+      headers["Authorization"] = `Bearer ${token}`;
+    } else {
+      console.log("Token doesn't have expected format, trying standard format anyway for projects request");
+      headers["Authorization"] = `Bearer ${token}`;
+    }
 
     const response = await fetch(
       `${ASANA_API_BASE}/projects?workspace=${workspaceId}&limit=100`,

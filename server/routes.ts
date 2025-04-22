@@ -877,10 +877,25 @@ You should **never make up information**. You may summarize or synthesize detail
         return res.status(400).json({ message: "Invalid token type" });
       }
       
-      // Hash the token for secure storage
+      // Encode the token for secure storage
       // In a real production app, we'd use a proper encryption method
-      // This is a simple hash for demonstration purposes
+      // This is a simple encoding for demonstration purposes
+      console.log(`Saving ${type} token to database, token length:`, token.length);
+      console.log(`Token first 5 chars:`, token.substring(0, 5));
+      
       const tokenHash = Buffer.from(token).toString('base64');
+      console.log(`Encoded token length:`, tokenHash.length);
+      console.log(`Encoded token first 10 chars:`, tokenHash.substring(0, 10));
+      
+      // To verify encoding consistency, let's test decode it right away
+      const decodedToken = Buffer.from(tokenHash, 'base64').toString();
+      if (decodedToken !== token) {
+        console.error("WARNING: Encoding/decoding mismatch detected!");
+        console.log(`Original length: ${token.length}, Decoded length: ${decodedToken.length}`);
+        console.log(`Original first 5: ${token.substring(0, 5)}, Decoded first 5: ${decodedToken.substring(0, 5)}`);
+      } else {
+        console.log("Encoding/decoding validation successful");
+      }
       
       // Save the token in our database
       await storage.saveApiToken({
