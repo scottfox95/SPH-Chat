@@ -49,6 +49,7 @@ export default function AsanaProjectsManager({ chatbotId }: AsanaProjectsManager
     refetch
   } = useQuery<AsanaProject[]>({
     queryKey: [`/api/chatbots/${chatbotId}/asana-projects`],
+    staleTime: 30000,
   });
   
   // Add a new Asana project
@@ -122,7 +123,7 @@ export default function AsanaProjectsManager({ chatbotId }: AsanaProjectsManager
   };
   
   // Handle project selection from AsanaProjectSelector
-  const handleProjectSelect = (projectId: string, projectName: string) => {
+  const handleProjectSelect = (projectId: string, projectName: string): void => {
     setPendingProjectId(projectId);
     setPendingProjectName(projectName);
   };
@@ -196,7 +197,7 @@ export default function AsanaProjectsManager({ chatbotId }: AsanaProjectsManager
           
           <div className="flex gap-2 items-center">
             <AsanaProjectSelector 
-              onSelect={(projectId, projectName) => handleProjectSelect(projectId, projectName)}
+              onSelect={handleProjectSelect}
             />
             {pendingProjectName && (
               <div className="text-xs font-medium text-gray-700 ml-2 flex-1 truncate">
