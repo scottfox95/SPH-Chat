@@ -2,6 +2,7 @@ import { nanoid } from "nanoid";
 import { 
   users, 
   chatbots, 
+  chatbotAsanaProjects,
   documents, 
   summaries, 
   emailRecipients, 
@@ -12,6 +13,8 @@ import {
   type InsertUser,
   type Chatbot,
   type InsertChatbot,
+  type ChatbotAsanaProject,
+  type InsertChatbotAsanaProject,
   type Document,
   type InsertDocument, 
   type Summary,
@@ -227,6 +230,25 @@ export class MemStorage implements IStorage {
   
   async deleteChatbot(id: number): Promise<boolean> {
     return this.chatbots.delete(id);
+  }
+  
+  // Chatbot Asana project methods
+  async getChatbotAsanaProjects(chatbotId: number): Promise<ChatbotAsanaProject[]> {
+    // Implementation would go here in a real memory storage
+    // Since we're switching to database storage, this is a placeholder
+    return [];
+  }
+  
+  async addChatbotAsanaProject(project: InsertChatbotAsanaProject): Promise<ChatbotAsanaProject> {
+    // Implementation would go here in a real memory storage
+    // Since we're switching to database storage, this is a placeholder
+    throw new Error("Not implemented in MemStorage");
+  }
+  
+  async deleteChatbotAsanaProject(id: number): Promise<boolean> {
+    // Implementation would go here in a real memory storage
+    // Since we're switching to database storage, this is a placeholder
+    return false;
   }
   
   // Document methods
