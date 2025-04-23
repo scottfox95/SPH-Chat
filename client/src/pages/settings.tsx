@@ -20,6 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+
 import { useToast } from "@/hooks/use-toast";
 import { 
   Shield, 
@@ -858,15 +859,8 @@ export default function Settings() {
                       <Label htmlFor="system-prompt">Default System Prompt</Label>
                       <textarea
                         id="system-prompt"
-                        value={settings?.responseTemplate || ""}
-                        onChange={(e) => {
-                          // Local state for the textarea
-                          const newTemplate = e.target.value;
-                          // We're not saving on every keystroke, user will need to click Save button
-                        }}
-                        placeholder="You are a helpful assistant named SPH ChatBot assigned to the {{chatbotName}} homebuilding project..."
                         className="min-h-[200px] w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#D2B48C] focus:border-transparent font-mono"
-                      />
+                      >{settings?.responseTemplate || ""}</textarea>
                       <div className="text-xs text-gray-500">
                         <p>This template will be used as the system prompt for all chatbots. You can use the following variables:</p>
                         <ul className="list-disc pl-5 mt-1 space-y-1">
@@ -874,7 +868,42 @@ export default function Settings() {
                           <li><code className="bg-gray-100 px-1 rounded">{'{{contextSources}}'}</code> - The list of available context sources</li>
                         </ul>
                       </div>
-                      <div className="flex justify-end mt-2">
+                      <div className="flex justify-between mt-2">
+                        <Button
+                          variant="outline"
+                          onClick={() => {
+                            // Set the default template in the textarea
+                            const defaultTemplate = `You are a helpful assistant named SPH ChatBot assigned to the {{chatbotName}} homebuilding project. Your role is to provide project managers and executives with accurate, up-to-date answers about this construction project by referencing the following sources of information:
+
+{{contextSources}}
+
+Your job is to answer questions clearly and concisely. Always cite your source. If your answer comes from:
+- a document: mention the filename and, if available, the page or section.
+- Slack: mention the date and approximate time of the Slack message.
+{{asanaNote}}
+
+IMPORTANT FOR ASANA TASKS: 
+1. When users ask about "tasks", "Asana", "project status", "overdue", "upcoming", "progress", or other task-related information, ALWAYS prioritize checking the Asana data.
+2. Pay special attention to content that begins with "ASANA TASK DATA:" in your provided context. This contains valuable task information.
+3. When answering Asana-related questions, directly reference the tasks, including their status, due dates, and assignees if available.
+4. Try to match the user's question with the most relevant task view (all tasks, overdue tasks, upcoming tasks, or completed tasks).
+
+Respond using complete sentences. If the information is unavailable, say:  
+"I wasn't able to find that information in the project files or messages."
+
+You should **never make up information**. You may summarize or synthesize details if the answer is spread across multiple sources.`;
+                            
+                            // Update the textarea
+                            const textarea = document.getElementById('system-prompt') as HTMLTextAreaElement;
+                            if (textarea) {
+                              textarea.value = defaultTemplate;
+                            }
+                          }}
+                          className="text-gray-500"
+                        >
+                          Reset to Default
+                        </Button>
+                        
                         <Button
                           onClick={() => {
                             // Get current value from the textarea
