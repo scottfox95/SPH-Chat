@@ -23,7 +23,7 @@ interface AsanaWorkspace {
 }
 
 interface AsanaProjectSelectorProps {
-  onSelect: (projectId: string) => void;
+  onSelect: (projectId: string, projectName: string) => void;
   currentProjectId?: string;
 }
 
@@ -111,7 +111,7 @@ export default function AsanaProjectSelector({ onSelect, currentProjectId }: Asa
   
   // Handle project selection
   const handleProjectSelect = (project: AsanaProject) => {
-    onSelect(project.id);
+    onSelect(project.id, project.name);
     setOpen(false);
     
     toast({

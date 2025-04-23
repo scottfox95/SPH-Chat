@@ -9,6 +9,7 @@ import ChatInterface from "@/components/shared/chat-interface";
 import ShareModal from "@/components/shared/share-modal";
 import UploadDocuments from "@/components/dashboard/upload-documents";
 import AsanaProjectSelector from "@/components/dashboard/asana-project-selector";
+import AsanaProjectsManager from "@/components/dashboard/asana-projects-manager";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
@@ -398,33 +399,23 @@ export default function Chatbot({ id }: ChatbotProps) {
                 </div>
                 
                 <div>
-                  <Label htmlFor="asana-project">Asana Project ID</Label>
-                  <div className="flex items-center mt-1 gap-2">
-                    <Input
-                      id="asana-project"
-                      value={asanaProjectId}
-                      onChange={(e) => setAsanaProjectId(e.target.value)}
-                      placeholder="Enter Asana project ID"
-                      className="flex-1"
-                    />
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={handleUpdateAsanaProject}
-                      disabled={updateAsanaProjectMutation.isPending}
-                    >
-                      {updateAsanaProjectMutation.isPending ? "Saving..." : "Save"}
-                    </Button>
+                  <Label htmlFor="asana-projects">Asana Projects</Label>
+                  <div className="mt-2">
+                    <AsanaProjectsManager chatbotId={chatbot.id} />
                   </div>
-                  <div className="flex justify-between items-center mt-1">
-                    <p className="text-xs text-gray-500">
-                      Link this chatbot to an Asana project to include tasks in responses
-                    </p>
-                    <AsanaProjectSelector 
-                      onSelect={handleAsanaProjectSelect}
-                      currentProjectId={chatbot.asanaProjectId}
-                    />
-                  </div>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Link this chatbot to multiple Asana projects with different project types
+                  </p>
+                  
+                  {/* Legacy Single Project Support */}
+                  {chatbot.asanaProjectId && (
+                    <div className="mt-3 border-t pt-3">
+                      <p className="text-xs font-medium text-gray-700">Legacy Project ID</p>
+                      <div className="text-xs text-gray-500 mt-1">
+                        This chatbot is also linked to a legacy single project: {chatbot.asanaProjectId}
+                      </div>
+                    </div>
+                  )}
                 </div>
                 
                 <div>
