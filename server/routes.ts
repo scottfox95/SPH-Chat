@@ -662,15 +662,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
         contextSources.push("3. The project's Asana tasks and their status from multiple Asana projects.");
       }
       
-      // Get the system prompt
-      const systemPrompt = `You are a helpful assistant named SPH ChatBot assigned to the ${chatbot.name} homebuilding project. Your role is to provide project managers and executives with accurate, up-to-date answers about this construction project by referencing the following sources of information:
+      // Fetch settings to check for a custom system prompt template
+      const appSettings = await storage.getSettings();
+      
+      // Default system prompt template
+      const defaultSystemPromptTemplate = `You are a helpful assistant named SPH ChatBot assigned to the {{chatbotName}} homebuilding project. Your role is to provide project managers and executives with accurate, up-to-date answers about this construction project by referencing the following sources of information:
 
-${contextSources.join("\n")}
+{{contextSources}}
 
 Your job is to answer questions clearly and concisely. Always cite your source. If your answer comes from:
 - a document: mention the filename and, if available, the page or section.
 - Slack: mention the date and approximate time of the Slack message.
-${chatbot.asanaProjectId ? "- Asana: always mention that the information comes from Asana project tasks and include the project name." : ""}
+{{asanaNote}}
 
 IMPORTANT FOR ASANA TASKS: 
 1. When users ask about "tasks", "Asana", "project status", "overdue", "upcoming", "progress", or other task-related information, ALWAYS prioritize checking the Asana data.
@@ -682,6 +685,15 @@ Respond using complete sentences. If the information is unavailable, say:
 "I wasn't able to find that information in the project files or messages."
 
 You should **never make up information**. You may summarize or synthesize details if the answer is spread across multiple sources.`;
+      
+      // Get the system prompt (either from settings or use default)
+      let systemPromptTemplate = appSettings?.responseTemplate || defaultSystemPromptTemplate;
+      
+      // Replace variables in the template
+      let systemPrompt = systemPromptTemplate
+        .replace(/{{chatbotName}}/g, chatbot.name)
+        .replace(/{{contextSources}}/g, contextSources.join("\n"))
+        .replace(/{{asanaNote}}/g, chatbot.asanaProjectId ? "- Asana: always mention that the information comes from Asana project tasks and include the project name." : "");
       
       // Save user message
       const userMessage = await storage.createMessage({

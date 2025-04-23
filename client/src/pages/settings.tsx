@@ -849,6 +849,60 @@ export default function Settings() {
                       <p>Include Date in Source: {settings?.includeDateInSource ? 'Yes' : 'No'}</p>
                     </div>
                   </div>
+
+                  <Separator className="my-4" />
+                  
+                  <div className="space-y-4">
+                    <h3 className="text-sm font-medium">System Prompt Template</h3>
+                    <div className="space-y-2">
+                      <Label htmlFor="system-prompt">Default System Prompt</Label>
+                      <textarea
+                        id="system-prompt"
+                        value={settings?.responseTemplate || ""}
+                        onChange={(e) => {
+                          // Local state for the textarea
+                          const newTemplate = e.target.value;
+                          // We're not saving on every keystroke, user will need to click Save button
+                        }}
+                        placeholder="You are a helpful assistant named SPH ChatBot assigned to the {{chatbotName}} homebuilding project..."
+                        className="min-h-[200px] w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#D2B48C] focus:border-transparent font-mono"
+                      />
+                      <div className="text-xs text-gray-500">
+                        <p>This template will be used as the system prompt for all chatbots. You can use the following variables:</p>
+                        <ul className="list-disc pl-5 mt-1 space-y-1">
+                          <li><code className="bg-gray-100 px-1 rounded">{'{{chatbotName}}'}</code> - The name of the chatbot</li>
+                          <li><code className="bg-gray-100 px-1 rounded">{'{{contextSources}}'}</code> - The list of available context sources</li>
+                        </ul>
+                      </div>
+                      <div className="flex justify-end mt-2">
+                        <Button
+                          onClick={() => {
+                            // Get current value from the textarea
+                            const template = (document.getElementById('system-prompt') as HTMLTextAreaElement)?.value;
+                            
+                            updateSettingsMutation.mutate({
+                              openaiModel: settings?.openaiModel || "gpt-4o",
+                              includeSourceDetails: settings?.includeSourceDetails || false,
+                              includeUserInSource: settings?.includeUserInSource || false,
+                              includeDateInSource: settings?.includeDateInSource || false,
+                              responseTemplate: template
+                            });
+                          }}
+                          disabled={updateSettingsMutation.isPending}
+                          className="bg-[#D2B48C] hover:bg-[#D2B48C]/90"
+                        >
+                          {updateSettingsMutation.isPending ? (
+                            <>
+                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                              Saving...
+                            </>
+                          ) : (
+                            'Save Template'
+                          )}
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
                   
                   {updateSettingsMutation.isPending && (
                     <p className="text-xs text-amber-600 flex items-center mt-2">
