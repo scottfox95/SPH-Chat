@@ -161,7 +161,10 @@ export default function AsanaProjectsManager({ chatbotId }: AsanaProjectsManager
                 <Badge variant={getProjectTypeBadgeVariant(project.projectType)}>
                   {getProjectTypeLabel(project.projectType)}
                 </Badge>
-                <span className="text-sm font-medium">{project.projectName}</span>
+                <div>
+                  <div className="text-sm font-medium">{project.projectName}</div>
+                  <div className="text-xs text-gray-500">ID: {project.asanaProjectId}</div>
+                </div>
               </div>
               <Button 
                 variant="ghost" 
@@ -200,8 +203,15 @@ export default function AsanaProjectsManager({ chatbotId }: AsanaProjectsManager
               onSelect={handleProjectSelect}
             />
             {pendingProjectName && (
-              <div className="text-xs font-medium text-gray-700 ml-2 flex-1 truncate">
-                {pendingProjectName}
+              <div className="ml-2 flex-1">
+                <div className="text-xs font-medium text-gray-700 truncate">
+                  {pendingProjectName}
+                </div>
+                {pendingProjectId && (
+                  <div className="text-xs text-gray-500 truncate">
+                    ID: {pendingProjectId}
+                  </div>
+                )}
               </div>
             )}
           </div>
