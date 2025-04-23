@@ -208,8 +208,9 @@ export default function AsanaProjectSelector({ onSelect, currentProjectId }: Asa
                               className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors text-left"
                               onClick={() => handleProjectSelect(project)}
                             >
-                              <div className="flex items-center">
+                              <div className="flex flex-col">
                                 <span className="text-sm font-medium">{project.name}</span>
+                                <span className="text-xs text-gray-500">ID: {project.id}</span>
                               </div>
                               {currentProjectId === project.id && (
                                 <CheckCircle2 className="h-5 w-5 text-[#D2B48C]" />
