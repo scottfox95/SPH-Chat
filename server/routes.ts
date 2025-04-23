@@ -9,6 +9,7 @@ import {
   loginSchema, 
   chatMessageSchema, 
   addEmailRecipientSchema, 
+  addAsanaProjectSchema,
   updateSettingsSchema,
   OPENAI_MODELS
 } from "@shared/schema";
@@ -292,6 +293,80 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
+  // Asana project routes
+  apiRouter.get("/chatbots/:id/asana-projects", async (req, res) => {
+    try {
+      const chatbotId = parseInt(req.params.id);
+      
+      const projects = await storage.getChatbotAsanaProjects(chatbotId);
+      
+      res.json(projects);
+    } catch (error) {
+      console.error("Error fetching Asana projects:", error);
+      res.status(500).json({ message: "Failed to fetch Asana projects" });
+    }
+  });
+  
+  apiRouter.post("/chatbots/:id/asana-projects", async (req, res) => {
+    try {
+      const chatbotId = parseInt(req.params.id);
+      const { asanaProjectId, projectName, projectType } = req.body;
+      
+      // Validate the data
+      const validatedData = addAsanaProjectSchema.parse({
+        chatbotId,
+        asanaProjectId,
+        projectName,
+        projectType: projectType || "main"
+      });
+      
+      // Check if the Asana project is valid
+      try {
+        const projectResponse = await getAsanaProjectTasks(asanaProjectId, false);
+        
+        if (!projectResponse.success) {
+          return res.status(400).json({ 
+            message: "Invalid Asana project ID",
+            details: projectResponse.error || "The project ID is invalid or cannot be accessed with the current Asana PAT."
+          });
+        }
+      } catch (error) {
+        return res.status(400).json({ 
+          message: "Invalid Asana project ID",
+          details: "The project ID could not be validated. Please ensure it's a valid Asana project ID."
+        });
+      }
+      
+      // Add the project
+      const project = await storage.addChatbotAsanaProject(validatedData);
+      
+      res.status(201).json(project);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: error.errors[0].message });
+      }
+      console.error("Error adding Asana project:", error);
+      res.status(500).json({ message: "Failed to add Asana project" });
+    }
+  });
+  
+  apiRouter.delete("/asana-projects/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      
+      const success = await storage.deleteChatbotAsanaProject(id);
+      
+      if (!success) {
+        return res.status(404).json({ message: "Asana project association not found" });
+      }
+      
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error deleting Asana project association:", error);
+      res.status(500).json({ message: "Failed to delete Asana project association" });
+    }
+  });
+  
   apiRouter.delete("/documents/:id", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
@@ -522,12 +597,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Prepare asana tasks data if available
       let asanaTasks: string[] = [];
+      let hasAsanaProjects = false;
+      
+      // First check for the legacy single project (for backward compatibility)
       if (chatbot.asanaProjectId) {
         try {
           const asanaResult = await getAsanaProjectTasks(chatbot.asanaProjectId, true);
           if (asanaResult.success && asanaResult.tasks && asanaResult.tasks.length > 0) {
-            // Add Asana as a context source
-            contextSources.push("3. The project's Asana tasks and their status.");
+            hasAsanaProjects = true;
             
             // Format tasks for different views that might be requested
             const allTasksFormatted = formatTasksForChatbot(asanaResult.tasks, asanaResult.projectName || "Project", "all");
@@ -536,12 +613,53 @@ export async function registerRoutes(app: Express): Promise<Server> {
             const completedTasksFormatted = formatTasksForChatbot(asanaResult.tasks, asanaResult.projectName || "Project", "completed");
             
             // Add formatted task data to context
-            asanaTasks = [allTasksFormatted, overdueTasksFormatted, upcomingTasksFormatted, completedTasksFormatted];
+            asanaTasks = [...asanaTasks, allTasksFormatted, overdueTasksFormatted, upcomingTasksFormatted, completedTasksFormatted];
           }
         } catch (asanaError) {
-          console.error("Error fetching Asana tasks for context:", asanaError);
-          // Continue without Asana tasks in the context
+          console.error("Error fetching legacy Asana project tasks:", asanaError);
         }
+      }
+      
+      // Then get all linked Asana projects from the new table
+      try {
+        const asanaProjects = await storage.getChatbotAsanaProjects(chatbotId);
+        
+        if (asanaProjects.length > 0) {
+          // Process each linked Asana project
+          for (const project of asanaProjects) {
+            try {
+              const asanaResult = await getAsanaProjectTasks(project.asanaProjectId, true);
+              if (asanaResult.success && asanaResult.tasks && asanaResult.tasks.length > 0) {
+                hasAsanaProjects = true;
+                
+                // Get project name from our DB record or fallback to Asana API result
+                const projectName = project.projectName || asanaResult.projectName || "Project";
+                const projectType = project.projectType || "main";
+                
+                // Format tasks with project type (useful for filtering in prompt)
+                const projectPrefix = `[${projectType.toUpperCase()}] ${projectName}`;
+                
+                // Format tasks for different views
+                const allTasksFormatted = formatTasksForChatbot(asanaResult.tasks, projectPrefix, "all");
+                const overdueTasksFormatted = formatTasksForChatbot(asanaResult.tasks, projectPrefix, "overdue");
+                const upcomingTasksFormatted = formatTasksForChatbot(asanaResult.tasks, projectPrefix, "upcoming");
+                const completedTasksFormatted = formatTasksForChatbot(asanaResult.tasks, projectPrefix, "completed");
+                
+                // Add formatted task data to context
+                asanaTasks = [...asanaTasks, allTasksFormatted, overdueTasksFormatted, upcomingTasksFormatted, completedTasksFormatted];
+              }
+            } catch (projectError) {
+              console.error(`Error fetching Asana tasks for project ${project.projectName}:`, projectError);
+            }
+          }
+        }
+      } catch (projectsError) {
+        console.error("Error fetching Asana projects for chatbot:", projectsError);
+      }
+      
+      // Add Asana as a context source if we have any tasks
+      if (hasAsanaProjects) {
+        contextSources.push("3. The project's Asana tasks and their status from multiple Asana projects.");
       }
       
       // Get the system prompt
