@@ -48,6 +48,11 @@ export interface IStorage {
   updateChatbot(id: number, data: Partial<InsertChatbot>): Promise<Chatbot | undefined>;
   deleteChatbot(id: number): Promise<boolean>;
   
+  // Chatbot Asana project methods
+  getChatbotAsanaProjects(chatbotId: number): Promise<ChatbotAsanaProject[]>;
+  addChatbotAsanaProject(project: InsertChatbotAsanaProject): Promise<ChatbotAsanaProject>;
+  deleteChatbotAsanaProject(id: number): Promise<boolean>;
+  
   // Document methods
   getDocuments(chatbotId: number): Promise<Document[]>;
   createDocument(document: InsertDocument): Promise<Document>;
@@ -497,6 +502,26 @@ export class DatabaseStorage implements IStorage {
   
   async deleteChatbot(id: number): Promise<boolean> {
     const result = await db.delete(chatbots).where(eq(chatbots.id, id));
+    return !!result;
+  }
+  
+  // Chatbot Asana project methods
+  async getChatbotAsanaProjects(chatbotId: number): Promise<ChatbotAsanaProject[]> {
+    return db.select()
+      .from(chatbotAsanaProjects)
+      .where(eq(chatbotAsanaProjects.chatbotId, chatbotId));
+  }
+  
+  async addChatbotAsanaProject(project: InsertChatbotAsanaProject): Promise<ChatbotAsanaProject> {
+    const [newProject] = await db.insert(chatbotAsanaProjects)
+      .values(project)
+      .returning();
+    
+    return newProject;
+  }
+  
+  async deleteChatbotAsanaProject(id: number): Promise<boolean> {
+    const result = await db.delete(chatbotAsanaProjects).where(eq(chatbotAsanaProjects.id, id));
     return !!result;
   }
   

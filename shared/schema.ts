@@ -29,12 +29,22 @@ export const chatbots = pgTable("chatbots", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
   slackChannelId: text("slack_channel_id").notNull(),
-  asanaProjectId: text("asana_project_id"),
-  asanaConnectionId: text("asana_connection_id"), // Keep this field for backward compatibility
+  asanaProjectId: text("asana_project_id"), // Keep for backward compatibility
+  asanaConnectionId: text("asana_connection_id"), // Keep for backward compatibility
   createdById: integer("created_by_id").notNull().references(() => users.id),
   publicToken: text("public_token").notNull().unique(),
   isActive: boolean("is_active").notNull().default(true),
   requireAuth: boolean("require_auth").notNull().default(false),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+// Relation table for chatbot to Asana project associations
+export const chatbotAsanaProjects = pgTable("chatbot_asana_projects", {
+  id: serial("id").primaryKey(),
+  chatbotId: integer("chatbot_id").notNull().references(() => chatbots.id, { onDelete: 'cascade' }),
+  asanaProjectId: text("asana_project_id").notNull(),
+  projectName: text("project_name").notNull(), // Store project name for display purposes
+  projectType: text("project_type").notNull().default("main"), // "main", "permit", "design", etc.
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
@@ -201,6 +211,18 @@ export type ApiToken = typeof apiTokens.$inferSelect;
 export type InsertApiToken = z.infer<typeof insertApiTokenSchema>;
 export type UpdateApiToken = z.infer<typeof updateApiTokenSchema>;
 
+// Add schema for chatbot-asana project relation
+export const insertChatbotAsanaProjectSchema = createInsertSchema(chatbotAsanaProjects).pick({
+  chatbotId: true,
+  asanaProjectId: true,
+  projectName: true,
+  projectType: true,
+});
+
+// Add types for chatbot-asana project relation
+export type ChatbotAsanaProject = typeof chatbotAsanaProjects.$inferSelect;
+export type InsertChatbotAsanaProject = z.infer<typeof insertChatbotAsanaProjectSchema>;
+
 // Custom types for API requests/responses
 export const loginSchema = z.object({
   username: z.string().min(1, "Username is required"),
@@ -216,4 +238,11 @@ export const chatMessageSchema = z.object({
 export const addEmailRecipientSchema = z.object({
   chatbotId: z.number(),
   email: z.string().email("Invalid email format"),
+});
+
+export const addAsanaProjectSchema = z.object({
+  chatbotId: z.number(),
+  asanaProjectId: z.string().min(1, "Asana project ID is required"),
+  projectName: z.string().min(1, "Project name is required"),
+  projectType: z.string().default("main"),
 });
