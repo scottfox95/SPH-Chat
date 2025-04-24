@@ -1,4 +1,4 @@
-import { Link, useLocation } from "wouter";
+import { useLocation } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
 import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
@@ -69,7 +69,7 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
         {/* Navigation */}
         <nav className="flex-1 overflow-y-auto p-4 space-y-1">
           <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Navigation</div>
-          <Link 
+          <a 
             href="/" 
             className={cn(
               "flex items-center px-3 py-2 text-sm font-medium rounded-xl",
@@ -80,8 +80,8 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
           >
             <Home className="h-5 w-5 mr-2" />
             Dashboard
-          </Link>
-          <Link 
+          </a>
+          <a 
             href="/chatbots"
             className={cn(
               "flex items-center px-3 py-2 text-sm font-medium rounded-xl",
@@ -92,8 +92,8 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
           >
             <MessageSquare className="h-5 w-5 mr-2" />
             All Chatbots
-          </Link>
-          <Link 
+          </a>
+          <a 
             href="/summaries"
             className={cn(
               "flex items-center px-3 py-2 text-sm font-medium rounded-xl",
@@ -104,8 +104,8 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
           >
             <ClipboardList className="h-5 w-5 mr-2" />
             Weekly Summaries
-          </Link>
-          <Link 
+          </a>
+          <a 
             href="/knowledge-base"
             className={cn(
               "flex items-center px-3 py-2 text-sm font-medium rounded-xl",
@@ -116,8 +116,8 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
           >
             <Database className="h-5 w-5 mr-2" />
             Knowledge Base
-          </Link>
-          <Link 
+          </a>
+          <a 
             href="/settings"
             className={cn(
               "flex items-center px-3 py-2 text-sm font-medium rounded-xl",
@@ -128,7 +128,7 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
           >
             <Settings className="h-5 w-5 mr-2" />
             Settings
-          </Link>
+          </a>
         </nav>
         
         {/* Active Projects */}
@@ -137,7 +137,7 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
             <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Active Projects</div>
             <div className="space-y-2">
               {chatbots.map((chatbot: Chatbot) => (
-                <Link 
+                <a 
                   key={chatbot.id} 
                   href={`/chatbot/${chatbot.id}`}
                   className={cn(
@@ -149,7 +149,7 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
                 >
                   <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
                   {chatbot.name}
-                </Link>
+                </a>
               ))}
             </div>
           </div>
