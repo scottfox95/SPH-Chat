@@ -20,7 +20,8 @@ export function setupAuth(app: Express) {
     saveUninitialized: false,
     cookie: {
       maxAge: 1000 * 60 * 60 * 24, // 1 day
-      secure: process.env.NODE_ENV === "production",
+      secure: false, // Allow cookies over HTTP for Replit deployments
+      sameSite: 'lax', // Better cookie security without breaking functionality
     },
     store: storage.sessionStore,
   };
