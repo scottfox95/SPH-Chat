@@ -1,55 +1,49 @@
 import { useAuth } from "@/hooks/useAuth";
 import { Redirect } from "wouter";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Loader2, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
 
-export default function AuthPage() {
-  const { user, isLoading } = useAuth();
-
-  // If the user is already logged in, redirect to home
-  if (user && !isLoading) {
+export default function Auth() {
+  const { isAuthenticated, isLoading } = useAuth();
+  
+  // If already authenticated, redirect to home
+  if (isAuthenticated) {
     return <Redirect to="/" />;
   }
-
+  
+  // Show loading state
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+  
+  // Handle login
   const handleLogin = () => {
     window.location.href = "/api/login";
   };
-
+  
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center bg-gray-50 px-4">
-      <div className="w-full max-w-md">
-        <div className="flex justify-center mb-8">
-          <div className="flex items-center">
-            <div className="w-10 h-10 rounded-xl bg-[#D2B48C] flex items-center justify-center">
-              <span className="text-white font-semibold text-lg">SPH</span>
-            </div>
-            <span className="ml-3 text-xl font-semibold text-gray-900">SPH ChatBot</span>
-          </div>
+    <div className="flex flex-col items-center justify-center min-h-screen p-4">
+      <div className="w-full max-w-md space-y-8 bg-white p-8 rounded-lg shadow-lg">
+        <div className="text-center">
+          <h1 className="text-3xl font-bold">Sign In</h1>
+          <p className="mt-2 text-gray-600">
+            Use Replit authentication to access the dashboard
+          </p>
         </div>
-
-        <Card className="w-full">
-          <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl font-semibold">Login</CardTitle>
-            <CardDescription>
-              Sign in to access the ChatBot dashboard
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {isLoading ? (
-              <div className="flex justify-center py-4">
-                <Loader2 className="h-6 w-6 animate-spin text-[#D2B48C]" />
-              </div>
-            ) : (
-              <Button
-                onClick={handleLogin}
-                className="w-full bg-[#D2B48C] hover:bg-[#D2B48C]/90"
-              >
-                Sign in with Replit
-              </Button>
-            )}
-          </CardContent>
-        </Card>
+        
+        <div className="mt-8 space-y-6">
+          <Button
+            onClick={handleLogin}
+            className="w-full flex items-center justify-center"
+          >
+            <LogIn className="mr-2 h-5 w-5" />
+            Login with Replit
+          </Button>
+        </div>
       </div>
     </div>
   );
