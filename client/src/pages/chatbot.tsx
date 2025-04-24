@@ -85,26 +85,32 @@ export default function Chatbot({ id }: ChatbotProps) {
     }
   }, [chatbot]);
 
-  // Fetch documents
+  // Fetch documents - explicit fetch implementation to ensure documents load correctly
   const { data: documents = [], isLoading: documentsLoading } = useQuery<any[]>({
     queryKey: [`/api/chatbots/${id}/documents`],
     queryFn: async () => {
-      console.log(`Explicitly fetching documents for chatbot ${id}`);
       const response = await fetch(`/api/chatbots/${id}/documents`, {
         credentials: 'include'
       });
       if (!response.ok) {
         throw new Error(`Failed to fetch documents: ${response.status}`);
       }
-      const data = await response.json();
-      console.log(`Documents fetched explicitly for chatbot ${id}:`, data);
-      return data;
+      return response.json();
     }
   });
 
-  // Fetch email recipients
+  // Fetch email recipients - using same explicit fetch pattern for consistency
   const { data: recipients = [], isLoading: recipientsLoading } = useQuery<any[]>({
     queryKey: [`/api/chatbots/${id}/recipients`],
+    queryFn: async () => {
+      const response = await fetch(`/api/chatbots/${id}/recipients`, {
+        credentials: 'include'
+      });
+      if (!response.ok) {
+        throw new Error(`Failed to fetch recipients: ${response.status}`);
+      }
+      return response.json();
+    }
   });
 
   // Add email recipient mutation
@@ -480,15 +486,7 @@ export default function Chatbot({ id }: ChatbotProps) {
                 {documentsLoading ? (
                   <p className="text-sm text-gray-500">Loading documents...</p>
                 ) : documents.length === 0 ? (
-                  <>
-                    <p className="text-sm text-gray-500">No documents uploaded yet.</p>
-                    <p className="text-xs text-red-500 mt-1" onClick={() => queryClient.invalidateQueries({ queryKey: [`/api/chatbots/${id}/documents`] })}>
-                      Click to refresh document list
-                    </p>
-                    <button className="text-xs mt-2 p-1 bg-gray-100 rounded" onClick={() => console.log("Documents state:", {documents, documentsLoading, chatbotId: chatbot.id})}>
-                      Debug Documents
-                    </button>
-                  </>
+                  <p className="text-sm text-gray-500">No documents uploaded yet.</p>
                 ) : (
                   <div className="space-y-2 max-h-64 overflow-y-auto">
                     {documents.map((doc: any) => (
