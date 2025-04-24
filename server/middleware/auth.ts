@@ -1,44 +1,41 @@
 import { Request, Response, NextFunction } from "express";
 import { storage } from "../storage";
+import { User } from "@shared/schema";
+
+// Extend Express Session to include userId
+declare module 'express-session' {
+  interface SessionData {
+    userId?: number;
+  }
+}
 
 // Middleware to check if user is authenticated
 export const requireAuth = async (req: Request, res: Response, next: NextFunction) => {
-  if (!req.session.userId) {
+  if (!req.isAuthenticated()) {
     return res.status(401).json({ message: "Unauthorized" });
   }
   
-  const user = await storage.getUser(req.session.userId);
-  
-  if (!user) {
-    req.session.destroy(() => {});
-    return res.status(401).json({ message: "Unauthorized" });
-  }
-  
-  req.user = user;
   next();
 };
 
 // Middleware to check if user is an admin
 export const requireAdmin = async (req: Request, res: Response, next: NextFunction) => {
-  if (!req.session.userId) {
+  if (!req.isAuthenticated()) {
     return res.status(401).json({ message: "Unauthorized" });
   }
   
-  const user = await storage.getUser(req.session.userId);
+  const user = req.user as User;
   
-  if (!user || user.role !== "admin") {
+  if (user.role !== "admin") {
     return res.status(403).json({ message: "Forbidden - Admin access required" });
   }
   
-  req.user = user;
   next();
 };
 
 // Extend Express Request type to include user property
 declare global {
   namespace Express {
-    interface Request {
-      user?: any;
-    }
+    interface User extends User {}
   }
 }

@@ -1,5 +1,4 @@
-import express, { type Express } from "express";
-import session from "express-session";
+import express, { type Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { requireAuth, requireAdmin } from "./middleware/auth";
@@ -35,64 +34,14 @@ import { sendSummaryEmail } from "./lib/email";
 import * as fs from "fs";
 import { nanoid } from "nanoid";
 import { format } from "date-fns";
-import MemoryStore from "memorystore";
-
-const SessionStore = MemoryStore(session);
+import { setupAuth } from "./auth";
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Set up session middleware
-  app.use(
-    session({
-      secret: process.env.SESSION_SECRET || "homebuildbot-secret",
-      resave: false,
-      saveUninitialized: false,
-      cookie: {
-        maxAge: 1000 * 60 * 60 * 24, // 1 day
-        secure: process.env.NODE_ENV === "production",
-      },
-      store: new SessionStore({
-        checkPeriod: 86400000, // 24 hours
-      }),
-    })
-  );
+  // Set up authentication
+  const { isAuthenticated } = setupAuth(app);
 
   // API routes
   const apiRouter = express.Router();
-  
-  // Auth routes - simplified for development without authentication
-  apiRouter.post("/auth/login", async (req, res) => {
-    try {
-      // Return default admin user without checking credentials
-      const defaultUser = {
-        id: 1,
-        username: "admin",
-        displayName: "Administrator",
-        initial: "A",
-        role: "admin"
-      };
-      
-      return res.json(defaultUser);
-    } catch (error) {
-      return res.status(500).json({ message: "Internal server error" });
-    }
-  });
-  
-  apiRouter.post("/auth/logout", (req, res) => {
-    res.json({ success: true });
-  });
-  
-  apiRouter.get("/auth/me", async (req, res) => {
-    // Always return the default admin user since authentication is removed
-    const defaultUser = {
-      id: 1,
-      username: "admin",
-      displayName: "Administrator",
-      initial: "A",
-      role: "admin"
-    };
-    
-    return res.json(defaultUser);
-  });
   
   // Chatbot routes
   apiRouter.get("/chatbots", async (req, res) => {
