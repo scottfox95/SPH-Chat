@@ -70,7 +70,14 @@ export default function AuthPage() {
   const onLoginSubmit = async (values: LoginFormValues) => {
     setIsLoginPending(true);
     try {
-      await login(values.username, values.password);
+      const success = await login(values.username, values.password);
+      if (success) {
+        // Force navigation to homepage after short delay
+        console.log("Login successful, forcing redirect to homepage");
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 500);
+      }
     } finally {
       setIsLoginPending(false);
     }
@@ -79,7 +86,14 @@ export default function AuthPage() {
   const onRegisterSubmit = async (values: RegisterFormValues) => {
     setIsRegisterPending(true);
     try {
-      await register(values.username, values.password, values.displayName);
+      const success = await register(values.username, values.password, values.displayName);
+      if (success) {
+        // Force navigation to homepage after short delay
+        console.log("Registration successful, forcing redirect to homepage");
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 500);
+      }
     } finally {
       setIsRegisterPending(false);
     }
