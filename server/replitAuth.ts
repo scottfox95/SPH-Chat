@@ -248,7 +248,24 @@ export async function setupAuth(app: Express) {
   // User info route
   app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
     try {
-      // Get user details from database
+      // For development mode, we directly return the dev user
+      if (process.env.NODE_ENV === 'development') {
+        console.log("[Auth] Development mode - returning fixed user");
+        
+        // Return a fixed user for development
+        return res.json({
+          id: "dev-user-123",
+          username: "devuser",
+          email: "dev@example.com",
+          firstName: "Development",
+          lastName: "User",
+          profileImageUrl: null,
+          bio: "Development mode user for testing"
+        });
+      }
+      
+      // For production, get user from Replit Auth
+      console.log("[Auth] Production mode - getting user from claims");
       const userId = req.user.claims.sub;
       const user = await storage.getReplitUser(userId);
       res.json(user);
