@@ -25,9 +25,13 @@ export default function Chatbots() {
   const [searchQuery, setSearchQuery] = useState("");
   
   // Fetch chatbots
-  const { data: chatbots = [], isLoading } = useQuery({
+  const { data: chatbots = [], isLoading, error } = useQuery({
     queryKey: ["/api/chatbots"],
   });
+  
+  // Debug chatbots data
+  console.log("Chatbots page data:", chatbots);
+  console.log("Chatbots page error:", error);
   
   const handleShareClick = (chatbot: any) => {
     setSelectedChatbot(chatbot);

@@ -524,12 +524,27 @@ export class DatabaseStorage implements IStorage {
   
   // Chatbot methods
   async getChatbots(): Promise<Chatbot[]> {
-    return db.select().from(chatbots);
+    try {
+      console.log("Fetching all chatbots from database");
+      const results = await db.select().from(chatbots);
+      console.log("Fetched chatbots count:", results.length);
+      return results;
+    } catch (error) {
+      console.error("Error fetching chatbots:", error);
+      return [];
+    }
   }
   
   async getChatbot(id: number): Promise<Chatbot | undefined> {
-    const [chatbot] = await db.select().from(chatbots).where(eq(chatbots.id, id));
-    return chatbot;
+    try {
+      console.log(`Fetching chatbot with id: ${id}`);
+      const [chatbot] = await db.select().from(chatbots).where(eq(chatbots.id, id));
+      console.log(`Chatbot found:`, chatbot ? "Yes" : "No");
+      return chatbot;
+    } catch (error) {
+      console.error(`Error fetching chatbot with id ${id}:`, error);
+      return undefined;
+    }
   }
   
   async getChatbotByToken(token: string): Promise<Chatbot | undefined> {

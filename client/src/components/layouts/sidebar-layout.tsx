@@ -25,9 +25,12 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
   const { toast } = useToast();
   
   // Get all chatbots for sidebar navigation
-  const { data: chatbots = [] } = useQuery<Chatbot[]>({
+  const { data: chatbots = [], isLoading: chatbotsLoading, error: chatbotsError } = useQuery<Chatbot[]>({
     queryKey: ["/api/chatbots"],
   });
+  
+  // Debug chatbots data
+  console.log("Sidebar chatbots:", chatbots);
   
   const handleLogout = async () => {
     try {
