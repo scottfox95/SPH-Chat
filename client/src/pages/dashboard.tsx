@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, MessageSquare, FileText, Mail } from "lucide-react";
+import { Plus, MessageSquare, FileText, Mail, Loader2 } from "lucide-react";
 import CreateChatbotForm from "@/components/dashboard/create-chatbot-form";
 import ChatbotCard from "@/components/shared/chatbot-card";
 import ShareModal from "@/components/shared/share-modal";
@@ -17,6 +17,16 @@ export default function Dashboard() {
   // Fetch chatbots
   const { data: chatbots = [] } = useQuery({
     queryKey: ["/api/chatbots"],
+  });
+  
+  // Fetch documents
+  const { data: documents = [], isLoading: documentsLoading } = useQuery({
+    queryKey: ["/api/documents"],
+  });
+  
+  // Fetch summaries
+  const { data: summaries = [], isLoading: summariesLoading } = useQuery({
+    queryKey: ["/api/summaries"],
   });
   
   const handleShareClick = (chatbot: any) => {
@@ -67,7 +77,11 @@ export default function Dashboard() {
             <CardContent>
               <div className="flex items-center">
                 <FileText className="h-5 w-5 text-[#D2B48C] mr-2" />
-                <span className="text-2xl font-bold">--</span>
+                {documentsLoading ? (
+                  <Loader2 className="h-5 w-5 animate-spin" />
+                ) : (
+                  <span className="text-2xl font-bold">{documents.length}</span>
+                )}
               </div>
             </CardContent>
           </Card>

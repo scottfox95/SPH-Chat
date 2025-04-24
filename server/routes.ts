@@ -537,6 +537,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   
   // Summary routes
+  apiRouter.get("/summaries", isAuthenticated, async (req, res) => {
+    try {
+      // Get all chatbots first
+      const chatbots = await storage.getChatbots();
+      
+      // Create a map of chatbot IDs to names for reference
+      const chatbotNames = new Map(
+        chatbots.map(chatbot => [chatbot.id, chatbot.name])
+      );
+      
+      // Get all summaries from all chatbots
+      const allSummariesPromises = chatbots.map(chatbot => 
+        storage.getSummaries(chatbot.id)
+      );
+      
+      const allSummariesArrays = await Promise.all(allSummariesPromises);
+      
+      // Flatten the array of arrays and add chatbot name to each summary
+      const summaries = allSummariesArrays
+        .flat()
+        .map(summary => ({
+          ...summary,
+          chatbotName: chatbotNames.get(summary.chatbotId) || "Unknown"
+        }));
+      
+      res.json(summaries);
+    } catch (error) {
+      console.error("Error fetching all summaries:", error);
+      res.status(500).json({ message: "Failed to fetch summaries" });
+    }
+  });
+  
   apiRouter.get("/chatbots/:id/summaries", isAuthenticated, async (req, res) => {
     try {
       const chatbotId = parseInt(req.params.id);
