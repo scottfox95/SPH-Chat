@@ -187,6 +187,24 @@ export async function setupAuth(app: Express) {
       res.status(500).json({ message: "Failed to fetch user" });
     }
   });
+  
+  // Auth status route - doesn't require authentication
+  app.get('/api/auth/status', (req: any, res) => {
+    if (req.isAuthenticated() && req.user?.claims) {
+      const claims = req.user.claims;
+      res.json({ 
+        isAuthenticated: true,
+        userInfo: {
+          id: claims.sub,
+          username: claims.username,
+          email: claims.email,
+          profileImageUrl: claims.profile_image_url
+        } 
+      });
+    } else {
+      res.json({ isAuthenticated: false });
+    }
+  });
 }
 
 /**
