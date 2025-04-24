@@ -94,7 +94,11 @@ export default function Dashboard() {
             <CardContent>
               <div className="flex items-center">
                 <Mail className="h-5 w-5 text-[#D2B48C] mr-2" />
-                <span className="text-2xl font-bold">--</span>
+                {summariesLoading ? (
+                  <Loader2 className="h-5 w-5 animate-spin" />
+                ) : (
+                  <span className="text-2xl font-bold">{summaries.length}</span>
+                )}
               </div>
             </CardContent>
           </Card>
