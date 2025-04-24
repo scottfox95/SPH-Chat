@@ -30,6 +30,7 @@ const registerSchema = z.object({
   password: z.string().min(6, "Password must be at least 6 characters"),
   displayName: z.string().min(1, "Display name is required"),
   initial: z.string().min(1, "Initial is required").max(2, "Initial must be 1-2 characters"),
+  isAdmin: z.boolean().optional().default(false),
 });
 
 type LoginFormValues = z.infer<typeof loginSchema>;
@@ -127,7 +128,7 @@ export default function AuthPage() {
           password: values.password,
           displayName: values.displayName,
           initial: values.initial || values.displayName.substring(0, 1),
-          role: "user"
+          role: values.isAdmin ? "admin" : "user"
         }),
         credentials: 'include',
       });
@@ -371,6 +372,34 @@ export default function AuthPage() {
                               </Button>
                             </div>
                             <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={registerForm.control}
+                        name="isAdmin"
+                        render={({ field }) => (
+                          <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                            <FormControl>
+                              <div className="flex items-center">
+                                <input
+                                  type="checkbox"
+                                  className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                                  checked={field.value}
+                                  onChange={field.onChange}
+                                  id="isAdmin"
+                                />
+                              </div>
+                            </FormControl>
+                            <div className="space-y-1 leading-none">
+                              <FormLabel htmlFor="isAdmin">
+                                Register as Admin
+                              </FormLabel>
+                              <p className="text-sm text-muted-foreground">
+                                Admin users can manage other users and have full access to all features
+                              </p>
+                            </div>
                           </FormItem>
                         )}
                       />
