@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Suspense, lazy } from "react";
 import SidebarLayout from "./components/layouts/sidebar-layout";
 import NotFound from "@/pages/not-found";
-import { AuthProvider, useAuth } from "@/components/auth-provider";
+import { AuthProvider, useAuth } from "@/hooks/use-auth";
 import { ProtectedRoute } from "@/components/protected-route";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
