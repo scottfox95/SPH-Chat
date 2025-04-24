@@ -1,5 +1,5 @@
 import { Link, useLocation } from "wouter";
-import { useAuth } from "@/hooks/use-auth";
+import { useAuth } from "@/hooks/useAuth";
 import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { Home, MessageSquare, ClipboardList, Settings, LogOut, Database } from "lucide-react";
@@ -21,7 +21,7 @@ interface SidebarLayoutProps {
 
 export default function SidebarLayout({ children }: SidebarLayoutProps) {
   const [location] = useLocation();
-  const { user, logout } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const { toast } = useToast();
   
   // Get all chatbots for sidebar navigation
@@ -29,16 +29,8 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
     queryKey: ["/api/chatbots"],
   });
   
-  const handleLogout = async () => {
-    try {
-      await logout();
-    } catch (error) {
-      toast({
-        title: "Logout failed",
-        description: "There was an error logging out.",
-        variant: "destructive",
-      });
-    }
+  const handleLogout = () => {
+    window.location.href = "/api/logout";
   };
   
   return (
@@ -159,20 +151,33 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
         <div className="p-4 border-t border-gray-200">
           <div className="flex items-center">
             <Avatar>
-              <AvatarFallback className="bg-[#A0522D] text-white">
-                {user?.initial || "U"}
-              </AvatarFallback>
+              {user?.profileImageUrl ? (
+                <img 
+                  src={user.profileImageUrl} 
+                  alt={user.username || "User"} 
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <AvatarFallback className="bg-[#A0522D] text-white">
+                  {user?.username ? user.username.charAt(0).toUpperCase() : "U"}
+                </AvatarFallback>
+              )}
             </Avatar>
             <div className="ml-2">
-              <div className="text-sm font-medium">{user?.displayName || "User"}</div>
-              <div className="text-xs text-gray-500">{user?.role === "admin" ? "Admin" : "User"}</div>
+              <div className="text-sm font-medium">{user?.username || "User"}</div>
+              <div className="text-xs text-gray-500">
+                {user?.email || "Authenticated User"}
+              </div>
             </div>
-            <button 
-              className="ml-auto text-gray-400 hover:text-gray-600"
-              onClick={handleLogout}
-            >
-              <LogOut className="h-5 w-5" />
-            </button>
+            {isAuthenticated && (
+              <button 
+                className="ml-auto text-gray-400 hover:text-gray-600"
+                onClick={handleLogout}
+                title="Logout"
+              >
+                <LogOut className="h-5 w-5" />
+              </button>
+            )}
           </div>
         </div>
       </div>

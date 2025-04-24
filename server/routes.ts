@@ -1,5 +1,4 @@
 import express, { type Express } from "express";
-import session from "express-session";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { requireAuth, requireAdmin } from "./middleware/auth";
@@ -35,26 +34,11 @@ import { sendSummaryEmail } from "./lib/email";
 import * as fs from "fs";
 import { nanoid } from "nanoid";
 import { format } from "date-fns";
-import MemoryStore from "memorystore";
-
-const SessionStore = MemoryStore(session);
+import { setupAuth, isAuthenticated } from "./replitAuth";
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Set up session middleware
-  app.use(
-    session({
-      secret: process.env.SESSION_SECRET || "homebuildbot-secret",
-      resave: false,
-      saveUninitialized: false,
-      cookie: {
-        maxAge: 1000 * 60 * 60 * 24, // 1 day
-        secure: process.env.NODE_ENV === "production",
-      },
-      store: new SessionStore({
-        checkPeriod: 86400000, // 24 hours
-      }),
-    })
-  );
+  // Set up authentication using Replit Auth
+  await setupAuth(app);
 
   // API routes
   const apiRouter = express.Router();
