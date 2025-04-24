@@ -10,7 +10,7 @@ import {
   settings,
   apiTokens,
   type User, 
-  type InsertUser,
+  type UpsertUser,
   type Chatbot,
   type InsertChatbot,
   type ChatbotAsanaProject,
@@ -39,9 +39,10 @@ import createMemoryStore from "memorystore";
 // Interface for storage methods
 export interface IStorage {
   // User methods
-  getUser(id: number): Promise<User | undefined>;
+  getUser(id: string): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
-  createUser(user: InsertUser): Promise<User>;
+  createUser(user: Omit<UpsertUser, "id">): Promise<User>;
+  upsertUser(user: UpsertUser): Promise<User>;
   
   // Chatbot methods
   getChatbots(): Promise<Chatbot[]>;
@@ -142,8 +143,8 @@ export class MemStorage implements IStorage {
   }
   
   // User methods
-  async getUser(id: number): Promise<User | undefined> {
-    return this.users.get(id);
+  async getUser(id: string): Promise<User | undefined> {
+    return this.users.get(Number(id));
   }
   
   async getUserByUsername(username: string): Promise<User | undefined> {
@@ -152,14 +153,55 @@ export class MemStorage implements IStorage {
     );
   }
   
-  async createUser(insertUser: InsertUser): Promise<User> {
-    const id = this.currentUserId++;
+  async createUser(userData: Omit<UpsertUser, "id">): Promise<User> {
+    const id = String(this.currentUserId++);
     const user: User = { 
-      ...insertUser, 
+      ...userData, 
       id,
-      role: insertUser.role || "user" // Ensure role is not undefined
+      role: userData.role || "user", // Ensure role is not undefined
+      email: userData.email || null,
+      firstName: userData.firstName || null,
+      lastName: userData.lastName || null,
+      bio: userData.bio || null,
+      profileImageUrl: userData.profileImageUrl || null,
+      initial: userData.initial || "U",
+      createdAt: new Date(),
+      updatedAt: new Date()
     };
-    this.users.set(id, user);
+    this.users.set(Number(id), user);
+    return user;
+  }
+  
+  async upsertUser(userData: UpsertUser): Promise<User> {
+    // Convert string ID to number for in-memory storage
+    const numericId = Number(userData.id);
+    const existingUser = this.users.get(numericId);
+    
+    if (existingUser) {
+      // Update existing user
+      const updatedUser: User = {
+        ...existingUser,
+        ...userData,
+        updatedAt: new Date()
+      };
+      this.users.set(numericId, updatedUser);
+      return updatedUser;
+    }
+    
+    // Create new user
+    const user: User = {
+      ...userData,
+      role: userData.role || "user",
+      email: userData.email || null,
+      firstName: userData.firstName || null,
+      lastName: userData.lastName || null,
+      bio: userData.bio || null,
+      profileImageUrl: userData.profileImageUrl || null,
+      initial: userData.initial || "U",
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+    this.users.set(numericId, user);
     return user;
   }
   
@@ -460,8 +502,9 @@ export class DatabaseStorage implements IStorage {
       if (!user) {
         this.createUser({
           username: "admin",
-          password: "password",
-          displayName: "John Davis",
+          email: "admin@example.com",
+          firstName: "John",
+          lastName: "Davis",
           initial: "JD",
           role: "admin"
         });
@@ -470,7 +513,7 @@ export class DatabaseStorage implements IStorage {
   }
   
   // User methods
-  async getUser(id: number): Promise<User | undefined> {
+  async getUser(id: string): Promise<User | undefined> {
     const [user] = await db.select().from(users).where(eq(users.id, id));
     return user;
   }
@@ -480,8 +523,23 @@ export class DatabaseStorage implements IStorage {
     return user;
   }
   
-  async createUser(insertUser: InsertUser): Promise<User> {
-    const [user] = await db.insert(users).values(insertUser).returning();
+  async createUser(userData: Omit<UpsertUser, "id">): Promise<User> {
+    const [user] = await db.insert(users).values(userData as any).returning();
+    return user;
+  }
+  
+  async upsertUser(userData: UpsertUser): Promise<User> {
+    const [user] = await db
+      .insert(users)
+      .values(userData)
+      .onConflictDoUpdate({
+        target: users.id,
+        set: {
+          ...userData,
+          updatedAt: new Date(),
+        },
+      })
+      .returning();
     return user;
   }
   
