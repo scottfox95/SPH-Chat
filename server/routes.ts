@@ -43,13 +43,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // API routes
   const apiRouter = express.Router();
   
-  // Chatbot routes
-  apiRouter.get("/chatbots", async (req, res) => {
+  // Chatbot routes - protected with authentication
+  apiRouter.get("/chatbots", isAuthenticated, async (req, res) => {
     const chatbots = await storage.getChatbots();
     res.json(chatbots);
   });
   
-  apiRouter.get("/chatbots/:id", async (req, res) => {
+  apiRouter.get("/chatbots/:id", isAuthenticated, async (req, res) => {
     const chatbot = await storage.getChatbot(parseInt(req.params.id));
     
     if (!chatbot) {
@@ -59,7 +59,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.json(chatbot);
   });
   
-  apiRouter.post("/chatbots", async (req, res) => {
+  apiRouter.post("/chatbots", isAuthenticated, async (req, res) => {
     try {
       const { name, slackChannelId } = req.body;
       
@@ -77,10 +77,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
       
+      const user = req.user as Express.User;
       const chatbot = await storage.createChatbot({
         name,
         slackChannelId,
-        createdById: 1, // Default to user ID 1 since authentication is removed
+        createdById: user.id,
         isActive: true,
         requireAuth: false,
       });
@@ -92,7 +93,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  apiRouter.put("/chatbots/:id", async (req, res) => {
+  apiRouter.put("/chatbots/:id", isAuthenticated, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       const { name, slackChannelId, asanaProjectId, isActive, requireAuth } = req.body;
@@ -214,7 +215,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  apiRouter.post("/chatbots/:id/documents", upload.single("file"), async (req, res) => {
+  apiRouter.post("/chatbots/:id/documents", isAuthenticated, upload.single("file"), async (req, res) => {
     try {
       const chatbotId = parseInt(req.params.id);
       
@@ -224,12 +225,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       const { filename, originalname, mimetype } = req.file;
       
+      const user = req.user as Express.User;
       const document = await storage.createDocument({
         chatbotId,
         filename,
         originalName: originalname,
         fileType: mimetype,
-        uploadedById: 1, // Default to user ID 1 since authentication is removed
+        uploadedById: user.id
       });
       
       // Clear document cache for this chatbot

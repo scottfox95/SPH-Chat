@@ -1,11 +1,12 @@
-import { Switch, Route } from "wouter";
+import { Switch, Route, Redirect } from "wouter";
 import { Toaster } from "@/components/ui/toaster";
 import { Suspense, lazy } from "react";
 import SidebarLayout from "./components/layouts/sidebar-layout";
 import NotFound from "@/pages/not-found";
-import { AuthProvider } from "@/components/auth-provider";
+import { AuthProvider, useAuth } from "@/components/auth-provider";
 import { ProtectedRoute } from "@/components/protected-route";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Loader2 } from "lucide-react";
 
 // Create query client
 const queryClient = new QueryClient({
@@ -62,15 +63,31 @@ function Router() {
       <ProtectedSidebarRoute path="/" component={Dashboard} />
       <ProtectedSidebarRoute path="/chatbots" component={Chatbots} />
       
-      <ProtectedRoute
+      <Route
         path="/chatbot/:id"
-        component={(params: { id: string }) => (
-          <SidebarLayout>
-            <Suspense fallback={<div>Loading...</div>}>
-              <Chatbot id={parseInt(params.id)} />
-            </Suspense>
-          </SidebarLayout>
-        )}
+        component={(props: { params: { id: string } }) => {
+          const { user, isLoading } = useAuth();
+          
+          if (isLoading) {
+            return (
+              <div className="flex items-center justify-center min-h-screen">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              </div>
+            );
+          }
+          
+          if (!user) {
+            return <Redirect to="/auth" />;
+          }
+          
+          return (
+            <SidebarLayout>
+              <Suspense fallback={<div>Loading...</div>}>
+                <Chatbot id={parseInt(props.params.id)} />
+              </Suspense>
+            </SidebarLayout>
+          );
+        }}
       />
       
       <ProtectedSidebarRoute path="/summaries" component={Summaries} />
