@@ -595,6 +595,32 @@ export class DatabaseStorage implements IStorage {
     return user;
   }
   
+  // Replit Auth user methods
+  async getReplitUser(id: string): Promise<ReplitUser | undefined> {
+    const [user] = await db.select().from(replitUsers).where(eq(replitUsers.id, id));
+    return user;
+  }
+  
+  async getReplitUserByUsername(username: string): Promise<ReplitUser | undefined> {
+    const [user] = await db.select().from(replitUsers).where(eq(replitUsers.username, username));
+    return user;
+  }
+  
+  async upsertReplitUser(userData: UpsertReplitUser): Promise<ReplitUser> {
+    const [user] = await db
+      .insert(replitUsers)
+      .values(userData)
+      .onConflictDoUpdate({
+        target: replitUsers.id,
+        set: {
+          ...userData,
+          updatedAt: new Date(),
+        },
+      })
+      .returning();
+    return user;
+  }
+  
   // Chatbot methods
   async getChatbots(): Promise<Chatbot[]> {
     return db.select().from(chatbots);

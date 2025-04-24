@@ -73,7 +73,7 @@ function updateUserSession(
 async function upsertUser(claims: any) {
   const userId = claims["sub"];
   
-  await storage.upsertUser({
+  await storage.upsertReplitUser({
     id: userId,
     username: claims["username"],
     email: claims["email"],
@@ -180,7 +180,7 @@ export async function setupAuth(app: Express) {
     try {
       // Get user details from database
       const userId = req.user.claims.sub;
-      const user = await storage.getUser(userId);
+      const user = await storage.getReplitUser(userId);
       res.json(user);
     } catch (error) {
       console.error("Error fetching user:", error);
