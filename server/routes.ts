@@ -200,14 +200,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "Name and Slack channel ID are required" });
       }
       
-      // Validate the Slack channel ID before creating the chatbot
-      const channelValidation = await validateSlackChannel(slackChannelId);
-      
-      if (!channelValidation.valid) {
-        return res.status(400).json({ 
-          message: "Invalid Slack channel",
-          details: channelValidation.error || "The channel ID is invalid or the bot doesn't have access to it."
-        });
+      // Try to validate the Slack channel ID, but continue even if validation fails
+      let channelValidation;
+      try {
+        channelValidation = await validateSlackChannel(slackChannelId);
+        
+        // Log result but don't block creation if validation fails
+        if (!channelValidation.valid) {
+          console.warn(`Slack channel validation failed but continuing: ${channelValidation.error}`);
+        }
+      } catch (error) {
+        console.warn("Slack validation error but continuing with chatbot creation:", error);
       }
       
       const user = req.user as Express.User;
@@ -237,34 +240,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "Chatbot not found" });
       }
       
-      // If a new Slack channel ID is provided, validate it
+      // If a new Slack channel ID is provided, try to validate it but don't block updates
       if (slackChannelId && slackChannelId !== chatbot.slackChannelId) {
-        const channelValidation = await validateSlackChannel(slackChannelId);
-        
-        if (!channelValidation.valid) {
-          return res.status(400).json({ 
-            message: "Invalid Slack channel",
-            details: channelValidation.error || "The channel ID is invalid or the bot doesn't have access to it."
-          });
+        try {
+          const channelValidation = await validateSlackChannel(slackChannelId);
+          
+          // Just log warnings but continue with the update
+          if (!channelValidation.valid) {
+            console.warn(`Slack channel validation failed but continuing with update: ${channelValidation.error}`);
+          }
+        } catch (error) {
+          console.warn("Slack channel validation error but continuing with update:", error);
         }
       }
       
-      // If a new Asana project ID is provided, validate it
+      // If a new Asana project ID is provided, try to validate it but don't block updates
       if (asanaProjectId && asanaProjectId !== chatbot.asanaProjectId) {
         try {
           const projectResponse = await getAsanaProjectTasks(asanaProjectId, false);
           
           if (!projectResponse.success) {
-            return res.status(400).json({ 
-              message: "Invalid Asana project ID",
-              details: projectResponse.error || "The project ID is invalid or cannot be accessed with the current Asana PAT."
-            });
+            console.warn(`Asana project validation failed but continuing with update: ${projectResponse.error}`);
           }
         } catch (error) {
-          return res.status(400).json({ 
-            message: "Invalid Asana project ID",
-            details: "The project ID could not be validated. Please ensure it's a valid Asana project ID."
-          });
+          console.warn("Asana project validation error but continuing with update:", error);
         }
       }
       
