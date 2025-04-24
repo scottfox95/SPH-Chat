@@ -883,7 +883,7 @@ You should **never make up information**. You may summarize or synthesize detail
   });
   
   // Get details of a specific Asana task
-  apiRouter.get("/system/asana-task-details", async (req, res) => {
+  apiRouter.get("/system/asana-task-details", isAuthenticated, async (req, res) => {
     try {
       const taskId = req.query.taskId as string;
       
@@ -904,7 +904,7 @@ You should **never make up information**. You may summarize or synthesize detail
   });
   
   // Settings routes
-  apiRouter.get("/settings", async (req, res) => {
+  apiRouter.get("/settings", isAuthenticated, async (req, res) => {
     try {
       const settings = await storage.getSettings();
       
@@ -919,7 +919,7 @@ You should **never make up information**. You may summarize or synthesize detail
     }
   });
   
-  apiRouter.put("/settings", async (req, res) => {
+  apiRouter.put("/settings", isAuthenticated, async (req, res) => {
     try {
       const data = updateSettingsSchema.parse(req.body);
       
@@ -940,7 +940,7 @@ You should **never make up information**. You may summarize or synthesize detail
   });
   
   // Get API token status (not the actual tokens)
-  apiRouter.get("/settings/api-tokens/status", async (req, res) => {
+  apiRouter.get("/settings/api-tokens/status", isAuthenticated, async (req, res) => {
     try {
       // Check each service token
       const services = ['slack', 'openai', 'asana'];
@@ -962,7 +962,7 @@ You should **never make up information**. You may summarize or synthesize detail
   });
   
   // Update API tokens (stored securely in database)
-  apiRouter.put("/settings/api-tokens", async (req, res) => {
+  apiRouter.put("/settings/api-tokens", isAuthenticated, async (req, res) => {
     try {
       const { type, token } = req.body;
       
