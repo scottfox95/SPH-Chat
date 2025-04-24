@@ -88,11 +88,17 @@ export default function Chatbot({ id }: ChatbotProps) {
   // Fetch documents
   const { data: documents = [], isLoading: documentsLoading } = useQuery<any[]>({
     queryKey: [`/api/chatbots/${id}/documents`],
-    onSuccess: (data) => {
-      console.log(`Documents fetched for chatbot ${id}:`, data);
-    },
-    onError: (error) => {
-      console.error(`Error fetching documents for chatbot ${id}:`, error);
+    queryFn: async () => {
+      console.log(`Explicitly fetching documents for chatbot ${id}`);
+      const response = await fetch(`/api/chatbots/${id}/documents`, {
+        credentials: 'include'
+      });
+      if (!response.ok) {
+        throw new Error(`Failed to fetch documents: ${response.status}`);
+      }
+      const data = await response.json();
+      console.log(`Documents fetched explicitly for chatbot ${id}:`, data);
+      return data;
     }
   });
 
