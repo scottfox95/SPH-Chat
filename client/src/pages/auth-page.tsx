@@ -70,14 +70,31 @@ export default function AuthPage() {
   const onLoginSubmit = async (values: LoginFormValues) => {
     setIsLoginPending(true);
     try {
-      const success = await login(values.username, values.password);
-      if (success) {
-        // Force navigation to homepage after short delay
-        console.log("Login successful, forcing redirect to homepage");
-        setTimeout(() => {
-          window.location.href = "/";
-        }, 500);
+      // Send login request directly without using the hook
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: values.username,
+          password: values.password,
+        }),
+        credentials: 'include',
+      });
+      
+      if (response.ok) {
+        const userData = await response.json();
+        console.log("Login successful, redirecting to dashboard now");
+        
+        // Force page reload and redirect to ensure session is recognized
+        window.location.href = "/";
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Login failed');
       }
+    } catch (error) {
+      console.error("Login error:", error);
     } finally {
       setIsLoginPending(false);
     }
@@ -86,14 +103,34 @@ export default function AuthPage() {
   const onRegisterSubmit = async (values: RegisterFormValues) => {
     setIsRegisterPending(true);
     try {
-      const success = await register(values.username, values.password, values.displayName);
-      if (success) {
-        // Force navigation to homepage after short delay
-        console.log("Registration successful, forcing redirect to homepage");
-        setTimeout(() => {
-          window.location.href = "/";
-        }, 500);
+      // Send registration request directly without using the hook
+      const response = await fetch('/api/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: values.username,
+          password: values.password,
+          displayName: values.displayName,
+          initial: values.initial || values.displayName.substring(0, 1),
+          role: "user"
+        }),
+        credentials: 'include',
+      });
+      
+      if (response.ok) {
+        const userData = await response.json();
+        console.log("Registration successful, redirecting to dashboard now");
+        
+        // Force page reload and redirect to ensure session is recognized
+        window.location.href = "/";
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Registration failed');
       }
+    } catch (error) {
+      console.error("Registration error:", error);
     } finally {
       setIsRegisterPending(false);
     }
