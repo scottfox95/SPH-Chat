@@ -88,6 +88,15 @@ export default function UserManagement() {
   } = useQuery<User[]>({
     queryKey: ["/api/users"],
     refetchOnWindowFocus: false,
+    queryFn: async () => {
+      const res = await fetch("/api/users", {
+        credentials: "include",
+      });
+      if (!res.ok) {
+        throw new Error(`Failed to fetch users: ${res.statusText}`);
+      }
+      return res.json();
+    },
   });
 
   // Create user mutation
