@@ -450,10 +450,47 @@ export class DatabaseStorage implements IStorage {
   constructor() {
     // Set up PostgreSQL session store
     const PostgresSessionStore = connectPg(session);
+    
+    // Don't use createTableIfMissing, instead create the table via SQL
+    // This avoids the "IDX_session_expire already exists" error
     this.sessionStore = new PostgresSessionStore({ 
-      pool, 
-      createTableIfMissing: true 
+      pool,
+      createTableIfMissing: false,
+      tableName: 'session'
     });
+    
+    // Ensure the session table exists with a manual query
+    // This is a safer approach than using createTableIfMissing
+    (async () => {
+      try {
+        // This query is idempotent - it won't fail if the table already exists
+        await pool.query(`
+          CREATE TABLE IF NOT EXISTS "session" (
+            "sid" varchar NOT NULL COLLATE "default",
+            "sess" json NOT NULL,
+            "expire" timestamp(6) NOT NULL,
+            CONSTRAINT "session_pkey" PRIMARY KEY ("sid")
+          );
+        `);
+        
+        // Create index if it doesn't exist (also idempotent)
+        await pool.query(`
+          DO $$
+          BEGIN
+            IF NOT EXISTS (
+              SELECT 1 FROM pg_indexes WHERE indexname = 'IDX_session_expire'
+            ) THEN
+              CREATE INDEX "IDX_session_expire" ON "session" ("expire");
+            END IF;
+          END
+          $$;
+        `);
+        
+        console.log("Session table and indexes initialized successfully");
+      } catch (error) {
+        console.error("Error initializing session table:", error);
+      }
+    })();
     
     // Create default admin user if it doesn't exist
     this.getUserByUsername("admin").then(user => {
