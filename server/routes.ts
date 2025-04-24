@@ -256,7 +256,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   
   // Asana project routes
-  apiRouter.get("/chatbots/:id/asana-projects", async (req, res) => {
+  apiRouter.get("/chatbots/:id/asana-projects", isAuthenticated, async (req, res) => {
     try {
       const chatbotId = parseInt(req.params.id);
       
@@ -269,7 +269,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  apiRouter.post("/chatbots/:id/asana-projects", async (req, res) => {
+  apiRouter.post("/chatbots/:id/asana-projects", isAuthenticated, async (req, res) => {
     try {
       const chatbotId = parseInt(req.params.id);
       const { asanaProjectId, projectName, projectType } = req.body;
@@ -312,7 +312,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  apiRouter.delete("/asana-projects/:id", async (req, res) => {
+  apiRouter.delete("/asana-projects/:id", isAuthenticated, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       
@@ -329,7 +329,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  apiRouter.delete("/documents/:id", async (req, res) => {
+  apiRouter.delete("/documents/:id", isAuthenticated, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       
@@ -365,7 +365,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   
   // Email recipient routes
-  apiRouter.get("/chatbots/:id/recipients", async (req, res) => {
+  apiRouter.get("/chatbots/:id/recipients", isAuthenticated, async (req, res) => {
     try {
       const chatbotId = parseInt(req.params.id);
       
@@ -378,7 +378,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  apiRouter.post("/chatbots/:id/recipients", async (req, res) => {
+  apiRouter.post("/chatbots/:id/recipients", isAuthenticated, async (req, res) => {
     try {
       const data = addEmailRecipientSchema.parse({
         ...req.body,
@@ -397,7 +397,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  apiRouter.delete("/recipients/:id", async (req, res) => {
+  apiRouter.delete("/recipients/:id", isAuthenticated, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       
@@ -415,7 +415,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   
   // Summary routes
-  apiRouter.get("/chatbots/:id/summaries", async (req, res) => {
+  apiRouter.get("/chatbots/:id/summaries", isAuthenticated, async (req, res) => {
     try {
       const chatbotId = parseInt(req.params.id);
       
@@ -428,7 +428,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  apiRouter.post("/chatbots/:id/generate-summary", async (req, res) => {
+  apiRouter.post("/chatbots/:id/generate-summary", isAuthenticated, async (req, res) => {
     try {
       const chatbotId = parseInt(req.params.id);
       
@@ -806,7 +806,7 @@ You should **never make up information**. You may summarize or synthesize detail
   });
   
   // Validate Slack channel
-  apiRouter.get("/system/validate-slack-channel", async (req, res) => {
+  apiRouter.get("/system/validate-slack-channel", isAuthenticated, async (req, res) => {
     try {
       const channelId = req.query.channelId as string;
       
