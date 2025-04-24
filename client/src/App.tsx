@@ -78,6 +78,7 @@ function Router() {
       
       {/* Protected routes */}
       <ProtectedSidebarRoute path="/" component={Dashboard} />
+      <ProtectedSidebarRoute path="/dashboard" component={Dashboard} />
       <ProtectedSidebarRoute path="/chatbots" component={Chatbots} />
       
       <Route path="/chatbot/:id">

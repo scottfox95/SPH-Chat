@@ -87,14 +87,25 @@ export default function AuthPage() {
         const userData = await response.json();
         console.log("Login successful, redirecting to dashboard now");
         
+        // Use the new localStorage auth approach
+        // Generate a simple token (in a real app, this would come from the server)
+        const token = `auth_${Date.now()}_${Math.random().toString(36).substring(2, 15)}`;
+        localStorage.setItem("auth_token", token);
+        localStorage.setItem("auth_user", JSON.stringify(userData));
+        
         // Force page reload and redirect to ensure session is recognized
-        window.location.href = "/";
+        window.location.href = "/dashboard";
       } else {
         const errorData = await response.json();
         throw new Error(errorData.message || 'Login failed');
       }
     } catch (error) {
       console.error("Login error:", error);
+      toast({
+        title: "Login failed",
+        description: error instanceof Error ? error.message : "Unknown error occurred",
+        variant: "destructive",
+      });
     } finally {
       setIsLoginPending(false);
     }
@@ -123,14 +134,25 @@ export default function AuthPage() {
         const userData = await response.json();
         console.log("Registration successful, redirecting to dashboard now");
         
+        // Use the new localStorage auth approach
+        // Generate a simple token (in a real app, this would come from the server)
+        const token = `auth_${Date.now()}_${Math.random().toString(36).substring(2, 15)}`;
+        localStorage.setItem("auth_token", token);
+        localStorage.setItem("auth_user", JSON.stringify(userData));
+        
         // Force page reload and redirect to ensure session is recognized
-        window.location.href = "/";
+        window.location.href = "/dashboard";
       } else {
         const errorData = await response.json();
         throw new Error(errorData.message || 'Registration failed');
       }
     } catch (error) {
       console.error("Registration error:", error);
+      toast({
+        title: "Registration failed",
+        description: error instanceof Error ? error.message : "Unknown error occurred",
+        variant: "destructive",
+      });
     } finally {
       setIsRegisterPending(false);
     }

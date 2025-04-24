@@ -11,7 +11,7 @@ export function ProtectedRoute({
   component: Component,
   path
 }: ProtectedRouteProps) {
-  const { user, isLoading } = useAuth();
+  const { token, user, isLoading } = useAuth();
 
   if (isLoading) {
     return (
@@ -23,12 +23,10 @@ export function ProtectedRoute({
     );
   }
 
-  if (!user) {
-    return (
-      <Route path={path}>
-        <Redirect to="/auth" />
-      </Route>
-    );
+  if (!token || !user) {
+    // Use hard redirect for authentication issues
+    window.location.href = "/auth";
+    return null;
   }
 
   return (
