@@ -474,7 +474,15 @@ export default function Chatbot({ id }: ChatbotProps) {
                 {documentsLoading ? (
                   <p className="text-sm text-gray-500">Loading documents...</p>
                 ) : documents.length === 0 ? (
-                  <p className="text-sm text-gray-500">No documents uploaded yet.</p>
+                  <>
+                    <p className="text-sm text-gray-500">No documents uploaded yet.</p>
+                    <p className="text-xs text-red-500 mt-1" onClick={() => queryClient.invalidateQueries({ queryKey: [`/api/chatbots/${id}/documents`] })}>
+                      Click to refresh document list
+                    </p>
+                    <button className="text-xs mt-2 p-1 bg-gray-100 rounded" onClick={() => console.log("Documents state:", {documents, documentsLoading, chatbotId: chatbot.id})}>
+                      Debug Documents
+                    </button>
+                  </>
                 ) : (
                   <div className="space-y-2 max-h-64 overflow-y-auto">
                     {documents.map((doc: any) => (
