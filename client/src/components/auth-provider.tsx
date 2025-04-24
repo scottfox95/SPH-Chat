@@ -18,6 +18,7 @@ type AuthContextType = {
   isLoading: boolean;
   isAuthenticated: boolean;
   error: Error | null;
+  login: () => Promise<boolean>;
 };
 
 // Create auth context
@@ -34,11 +35,55 @@ export function AuthProvider({ children }: AuthProviderProps) {
     data: user,
     error,
     isLoading,
+    refetch,
   } = useQuery<User | null, Error>({
     queryKey: ["/api/auth/user"],
     staleTime: 1000 * 60 * 10, // 10 minutes
-    retry: false,
+    retry: 1, // Try once more in case of initial failure
+    refetchOnWindowFocus: true, // Refetch when window gets focus
   });
+  
+  // Add a login function to be used by auth pages
+  const login = async () => {
+    try {
+      console.log("Login attempt starting...");
+      
+      // Call the login API
+      const response = await fetch("/api/login", {
+        method: "GET",
+        credentials: "include",
+      });
+      
+      console.log("Login API response:", response.status, response.redirected);
+      
+      // If login appears successful
+      if (response.ok || response.redirected) {
+        // Force refetch user data
+        const result = await refetch();
+        console.log("Refetch result:", result.isSuccess, !!result.data);
+        
+        // If we now have user data after refetch, success!
+        if (result.isSuccess && result.data) {
+          console.log("Login successful, user data received");
+          return true;
+        }
+        
+        // If we don't have user data yet, try one more time after a short delay
+        await new Promise(resolve => setTimeout(resolve, 500));
+        const retryResult = await refetch();
+        console.log("Retry refetch result:", retryResult.isSuccess, !!retryResult.data);
+        
+        // Return final authentication state
+        return retryResult.isSuccess && !!retryResult.data;
+      }
+      
+      console.log("Login failed");
+      return false;
+    } catch (error) {
+      console.error("Login error:", error);
+      return false;
+    }
+  };
 
   return (
     <AuthContext.Provider
@@ -47,6 +92,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         isLoading,
         isAuthenticated: !!user,
         error: error || null,
+        login,
       }}
     >
       {children}

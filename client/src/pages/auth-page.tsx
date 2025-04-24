@@ -4,7 +4,7 @@ import { Loader2, LogIn, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function AuthPage() {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading, login } = useAuth();
   
   // If already authenticated, redirect to home
   if (isAuthenticated) {
@@ -23,19 +23,14 @@ export default function AuthPage() {
   // Handle login
   const handleLogin = async () => {
     try {
-      // Call the login API
-      const response = await fetch("/api/login", {
-        method: "GET",
-        credentials: "include", // Important for cookies/session
-        redirect: "follow"
-      });
+      // Use the login function from auth context
+      const success = await login();
       
-      // Check if login was successful (302 redirect)
-      if (response.ok || response.redirected) {
-        // Manually navigate to the root page
+      if (success) {
+        // Manually navigate to the root page if successful
         window.location.href = "/";
       } else {
-        console.error("Login failed:", response.status);
+        console.error("Login failed");
       }
     } catch (error) {
       console.error("Login error:", error);
