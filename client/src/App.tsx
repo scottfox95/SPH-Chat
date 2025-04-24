@@ -27,6 +27,7 @@ const AuthPage = lazy(() => import("@/pages/auth-page"));
 const Summaries = lazy(() => import("@/pages/summaries"));
 const Settings = lazy(() => import("@/pages/settings"));
 const KnowledgeBase = lazy(() => import("@/pages/knowledge-base"));
+const UserManagement = lazy(() => import("@/pages/user-management"));
 
 function ProtectedSidebarRoute({ component: Component, path }: { component: React.ComponentType<any>, path: string }) {
   const { token, user, isLoading } = useAuth();

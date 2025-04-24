@@ -43,6 +43,138 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // API routes
   const apiRouter = express.Router();
   
+  // User management routes
+  apiRouter.get("/users", requireAdmin, async (req, res) => {
+    try {
+      const users = await storage.getUsers();
+      // Remove password from the response
+      const sanitizedUsers = users.map(({ password, ...user }) => user);
+      res.json(sanitizedUsers);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      res.status(500).json({ message: "Failed to fetch users" });
+    }
+  });
+  
+  apiRouter.get("/users/:id", requireAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const user = await storage.getUser(id);
+      
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      // Remove password from response
+      const { password, ...userData } = user;
+      res.json(userData);
+    } catch (error) {
+      console.error("Error fetching user:", error);
+      res.status(500).json({ message: "Failed to fetch user" });
+    }
+  });
+  
+  apiRouter.post("/users", requireAdmin, async (req, res) => {
+    try {
+      const { username, password, displayName, initial, role } = req.body;
+      
+      if (!username || !password || !displayName || !initial) {
+        return res.status(400).json({ message: "Missing required fields" });
+      }
+      
+      // Check if username already exists
+      const existingUser = await storage.getUserByUsername(username);
+      if (existingUser) {
+        return res.status(400).json({ message: "Username already exists" });
+      }
+      
+      // Hash the password
+      const hashedPassword = await hashPassword(password);
+      
+      const user = await storage.createUser({
+        username,
+        password: hashedPassword,
+        displayName,
+        initial,
+        role: role || "user"
+      });
+      
+      // Remove password from response
+      const { password: _, ...userData } = user;
+      res.status(201).json(userData);
+    } catch (error) {
+      console.error("Error creating user:", error);
+      res.status(500).json({ message: "Failed to create user" });
+    }
+  });
+  
+  apiRouter.put("/users/:id", requireAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const { username, password, displayName, initial, role } = req.body;
+      
+      const user = await storage.getUser(id);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      // If username is being changed, check if it already exists
+      if (username && username !== user.username) {
+        const existingUser = await storage.getUserByUsername(username);
+        if (existingUser) {
+          return res.status(400).json({ message: "Username already exists" });
+        }
+      }
+      
+      // Prepare update data
+      const updateData: Partial<typeof req.body> = {};
+      if (username) updateData.username = username;
+      if (displayName) updateData.displayName = displayName;
+      if (initial) updateData.initial = initial;
+      if (role) updateData.role = role;
+      
+      // Handle password update separately
+      if (password) {
+        updateData.password = await hashPassword(password);
+      }
+      
+      const updatedUser = await storage.updateUser(id, updateData);
+      
+      if (!updatedUser) {
+        return res.status(500).json({ message: "Failed to update user" });
+      }
+      
+      // Remove password from response
+      const { password: _, ...userData } = updatedUser;
+      res.json(userData);
+    } catch (error) {
+      console.error("Error updating user:", error);
+      res.status(500).json({ message: "Failed to update user" });
+    }
+  });
+  
+  apiRouter.delete("/users/:id", requireAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      
+      // Check if it's the admin user (id 1)
+      if (id === 1) {
+        return res.status(403).json({ message: "Cannot delete the admin user" });
+      }
+      
+      const success = await storage.deleteUser(id);
+      
+      if (!success) {
+        return res.status(404).json({ message: "User not found or could not be deleted" });
+      }
+      
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error deleting user:", error);
+      res.status(500).json({ message: "Failed to delete user" });
+    }
+  });
+  
   // Chatbot routes - admin users need access to all chatbots
   apiRouter.get("/chatbots", async (req, res) => {
     const chatbots = await storage.getChatbots();

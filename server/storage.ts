@@ -41,7 +41,10 @@ export interface IStorage {
   // User methods
   getUser(id: number): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
+  getUsers(): Promise<User[]>;
   createUser(user: InsertUser): Promise<User>;
+  updateUser(id: number, data: Partial<InsertUser>): Promise<User | undefined>;
+  deleteUser(id: number): Promise<boolean>;
   
   // Chatbot methods
   getChatbots(): Promise<Chatbot[]>;
@@ -152,6 +155,10 @@ export class MemStorage implements IStorage {
     );
   }
   
+  async getUsers(): Promise<User[]> {
+    return Array.from(this.users.values());
+  }
+  
   async createUser(insertUser: InsertUser): Promise<User> {
     const id = this.currentUserId++;
     const user: User = { 
@@ -161,6 +168,28 @@ export class MemStorage implements IStorage {
     };
     this.users.set(id, user);
     return user;
+  }
+  
+  async updateUser(id: number, data: Partial<InsertUser>): Promise<User | undefined> {
+    const user = this.users.get(id);
+    if (!user) return undefined;
+    
+    const updatedUser: User = {
+      ...user,
+      ...data,
+      // Keep the original ID
+      id: user.id
+    };
+    
+    this.users.set(id, updatedUser);
+    return updatedUser;
+  }
+  
+  async deleteUser(id: number): Promise<boolean> {
+    // Don't allow deleting the admin user (id 1)
+    if (id === 1) return false;
+    
+    return this.users.delete(id);
   }
   
   // Chatbot methods
@@ -517,9 +546,46 @@ export class DatabaseStorage implements IStorage {
     return user;
   }
   
+  async getUsers(): Promise<User[]> {
+    return await db.select().from(users);
+  }
+  
   async createUser(insertUser: InsertUser): Promise<User> {
     const [user] = await db.insert(users).values(insertUser).returning();
     return user;
+  }
+  
+  async updateUser(id: number, data: Partial<InsertUser>): Promise<User | undefined> {
+    // Hash password if it's being updated
+    if (data.password) {
+      // We need to hash the password before storing it
+      // This is a simplified example. In a real app, use a proper password hashing function
+      try {
+        const crypto = require('crypto');
+        const salt = crypto.randomBytes(16).toString('hex');
+        const hash = crypto.scryptSync(data.password, salt, 64).toString('hex');
+        data.password = `${hash}.${salt}`;
+      } catch (error) {
+        console.error('Error hashing password:', error);
+        // If hashing fails, don't update the password
+        delete data.password;
+      }
+    }
+    
+    const [updatedUser] = await db.update(users)
+      .set(data)
+      .where(eq(users.id, id))
+      .returning();
+    
+    return updatedUser;
+  }
+  
+  async deleteUser(id: number): Promise<boolean> {
+    // Don't allow deleting the admin user (id 1)
+    if (id === 1) return false;
+    
+    const result = await db.delete(users).where(eq(users.id, id));
+    return !!result;
   }
   
   // Chatbot methods
