@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Home, MessageSquare, ClipboardList, Settings, LogOut, Database } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useToast } from "@/hooks/use-toast";
-import { ReactNode } from "react";
+import { ReactNode, useState, useEffect } from "react";
 
 interface Chatbot {
   id: number;
@@ -24,13 +24,38 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
   const { user, logout } = useAuth();
   const { toast } = useToast();
   
-  // Get all chatbots for sidebar navigation
-  const { data: chatbots = [], isLoading: chatbotsLoading, error: chatbotsError } = useQuery<Chatbot[]>({
-    queryKey: ["/api/chatbots"],
-  });
+  // Get all chatbots for sidebar navigation using direct fetch
+  const [chatbots, setChatbots] = useState<Chatbot[]>([]);
+  const [chatbotsLoading, setChatbotsLoading] = useState(true);
+  const [chatbotsError, setChatbotsError] = useState<any>(null);
   
-  // Debug chatbots data
-  console.log("Sidebar chatbots:", chatbots);
+  // Use direct fetch instead of React Query
+  useEffect(() => {
+    async function fetchChatbots() {
+      try {
+        setChatbotsLoading(true);
+        const response = await fetch('/api/chatbots', {
+          credentials: 'include'
+        });
+        console.log("Sidebar fetch response status:", response.status);
+        if (!response.ok) {
+          throw new Error(`API error: ${response.status}`);
+        }
+        const data = await response.json();
+        console.log("Sidebar chatbots fetched directly:", data);
+        setChatbots(data || []);
+        setChatbotsError(null);
+      } catch (err) {
+        console.error("Error fetching sidebar chatbots:", err);
+        setChatbotsError(err);
+        setChatbots([]);
+      } finally {
+        setChatbotsLoading(false);
+      }
+    }
+    
+    fetchChatbots();
+  }, []);
   
   const handleLogout = async () => {
     try {

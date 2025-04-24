@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
@@ -24,14 +24,38 @@ export default function Chatbots() {
   const [shareModalOpen, setShareModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   
-  // Fetch chatbots
-  const { data: chatbots = [], isLoading, error } = useQuery({
-    queryKey: ["/api/chatbots"],
-  });
+  // Fetch chatbots with manual fetch to debug the issue
+  const [chatbots, setChatbots] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<any>(null);
   
-  // Debug chatbots data
-  console.log("Chatbots page data:", chatbots);
-  console.log("Chatbots page error:", error);
+  // Use direct fetch instead of React Query
+  useEffect(() => {
+    async function fetchChatbots() {
+      try {
+        setIsLoading(true);
+        const response = await fetch('/api/chatbots', {
+          credentials: 'include'
+        });
+        console.log("Fetch response status:", response.status);
+        if (!response.ok) {
+          throw new Error(`API error: ${response.status}`);
+        }
+        const data = await response.json();
+        console.log("Chatbots fetched directly:", data);
+        setChatbots(data || []);
+        setError(null);
+      } catch (err) {
+        console.error("Error fetching chatbots:", err);
+        setError(err);
+        setChatbots([]);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    
+    fetchChatbots();
+  }, []);
   
   const handleShareClick = (chatbot: any) => {
     setSelectedChatbot(chatbot);
