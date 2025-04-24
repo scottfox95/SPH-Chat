@@ -21,8 +21,25 @@ export default function AuthPage() {
   }
   
   // Handle login
-  const handleLogin = () => {
-    window.location.href = "/api/login";
+  const handleLogin = async () => {
+    try {
+      // Call the login API
+      const response = await fetch("/api/login", {
+        method: "GET",
+        credentials: "include", // Important for cookies/session
+        redirect: "follow"
+      });
+      
+      // Check if login was successful (302 redirect)
+      if (response.ok || response.redirected) {
+        // Manually navigate to the root page
+        window.location.href = "/";
+      } else {
+        console.error("Login failed:", response.status);
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+    }
   };
   
   return (
