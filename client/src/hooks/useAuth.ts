@@ -1,5 +1,5 @@
-import { useContext } from "react";
-import { AuthContext, type User } from "@/components/auth-provider";
+// Re-export from auth-provider for backward compatibility
+import { useAuth as useAuthProvider, type User } from "@/components/auth-provider";
 
 export type AuthState = {
   user: User | null;
@@ -9,11 +9,5 @@ export type AuthState = {
 };
 
 export function useAuth(): AuthState {
-  const context = useContext(AuthContext);
-  
-  if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-  
-  return context;
+  return useAuthProvider();
 }
