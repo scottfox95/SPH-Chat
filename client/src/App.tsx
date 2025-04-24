@@ -28,18 +28,35 @@ const Summaries = lazy(() => import("@/pages/summaries"));
 const Settings = lazy(() => import("@/pages/settings"));
 const KnowledgeBase = lazy(() => import("@/pages/knowledge-base"));
 
-function ProtectedSidebarRoute({ component: Component, ...rest }: { component: React.ComponentType<any>, path: string }) {
+function ProtectedSidebarRoute({ component: Component, path }: { component: React.ComponentType<any>, path: string }) {
+  const { user, isLoading } = useAuth();
+  
+  if (isLoading) {
+    return (
+      <Route path={path}>
+        <div className="flex items-center justify-center min-h-screen">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      </Route>
+    );
+  }
+  
+  if (!user) {
+    return (
+      <Route path={path}>
+        <Redirect to="/auth" />
+      </Route>
+    );
+  }
+  
   return (
-    <ProtectedRoute
-      {...rest}
-      component={(props: any) => (
-        <SidebarLayout>
-          <Suspense fallback={<div>Loading...</div>}>
-            <Component {...props} />
-          </Suspense>
-        </SidebarLayout>
-      )}
-    />
+    <Route path={path}>
+      <SidebarLayout>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Component />
+        </Suspense>
+      </SidebarLayout>
+    </Route>
   );
 }
 
@@ -63,27 +80,14 @@ function Router() {
       <ProtectedSidebarRoute path="/" component={Dashboard} />
       <ProtectedSidebarRoute path="/chatbots" component={Chatbots} />
       
-      <Route
+      <ProtectedRoute
         path="/chatbot/:id"
-        component={(props: { params: { id: string } }) => {
-          const { user, isLoading } = useAuth();
-          
-          if (isLoading) {
-            return (
-              <div className="flex items-center justify-center min-h-screen">
-                <Loader2 className="h-8 w-8 animate-spin text-primary" />
-              </div>
-            );
-          }
-          
-          if (!user) {
-            return <Redirect to="/auth" />;
-          }
-          
+        component={() => {
+          const [, params] = useRoute<{ id: string }>("/chatbot/:id");
           return (
             <SidebarLayout>
               <Suspense fallback={<div>Loading...</div>}>
-                <Chatbot id={parseInt(props.params.id)} />
+                <Chatbot id={parseInt(params?.id || "0")} />
               </Suspense>
             </SidebarLayout>
           );

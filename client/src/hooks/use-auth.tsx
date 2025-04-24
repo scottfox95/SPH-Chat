@@ -74,8 +74,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         description: `Welcome, ${userData.displayName || userData.username}!`,
       });
       
-      // Redirect to dashboard
-      setLocation("/");
+      console.log("Login successful - redirecting to homepage");
+      
+      // Redirect to dashboard - using timeout to ensure state updates first
+      setTimeout(() => {
+        setLocation("/");
+      }, 100);
     },
     onError: (error: Error) => {
       toast({
@@ -118,8 +122,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         description: `Welcome, ${userData.displayName || userData.username}!`,
       });
       
-      // Redirect to dashboard
-      setLocation("/");
+      console.log("Registration successful - redirecting to homepage");
+      
+      // Redirect to dashboard - using timeout to ensure state updates first
+      setTimeout(() => {
+        setLocation("/");
+      }, 100);
     },
     onError: (error: Error) => {
       toast({
