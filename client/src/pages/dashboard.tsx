@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -14,19 +14,61 @@ export default function Dashboard() {
   const [selectedChatbot, setSelectedChatbot] = useState<any>(null);
   const [shareModalOpen, setShareModalOpen] = useState(false);
   
-  // Fetch chatbots
+  // Direct state for counts to avoid any React Query caching issues
+  const [chatbotCount, setChatbotCount] = useState(0);
+  const [documentCount, setDocumentCount] = useState(0);
+  const [summaryCount, setSummaryCount] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  
+  // Fetch data directly instead of using React Query's cache
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      
+      try {
+        // Fetch chatbots
+        const chatbotsResponse = await fetch('/api/chatbots');
+        const chatbotsData = await chatbotsResponse.json();
+        
+        if (Array.isArray(chatbotsData)) {
+          const activeChatbots = chatbotsData.filter(bot => bot.isActive);
+          setChatbotCount(activeChatbots.length);
+        }
+        
+        // Fetch documents
+        const documentsResponse = await fetch('/api/documents');
+        const documentsData = await documentsResponse.json();
+        
+        if (Array.isArray(documentsData)) {
+          setDocumentCount(documentsData.length);
+        }
+        
+        // Check if summaries endpoint exists, otherwise default to 0
+        try {
+          const summariesResponse = await fetch('/api/summaries');
+          if (summariesResponse.ok) {
+            const summariesData = await summariesResponse.json();
+            if (Array.isArray(summariesData)) {
+              setSummaryCount(summariesData.length);
+            }
+          }
+        } catch (error) {
+          console.error("Error fetching summaries:", error);
+          setSummaryCount(0);
+        }
+      } catch (error) {
+        console.error("Error fetching dashboard data:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    fetchData();
+  }, []);
+  
+  // Fetch chatbots for the cards display
   const { data: chatbots = [] } = useQuery({
     queryKey: ["/api/chatbots"],
-  });
-  
-  // Fetch documents
-  const { data: documents = [], isLoading: documentsLoading } = useQuery({
-    queryKey: ["/api/documents"],
-  });
-  
-  // Fetch summaries
-  const { data: summaries = [], isLoading: summariesLoading } = useQuery({
-    queryKey: ["/api/summaries"],
   });
   
   const handleShareClick = (chatbot: any) => {
@@ -62,9 +104,11 @@ export default function Dashboard() {
             <CardContent>
               <div className="flex items-center">
                 <MessageSquare className="h-5 w-5 text-[#D2B48C] mr-2" />
-                <span className="text-2xl font-bold">
-                  {chatbots.filter((bot: any) => bot.isActive).length}
-                </span>
+                {isLoading ? (
+                  <Loader2 className="h-5 w-5 animate-spin" />
+                ) : (
+                  <span className="text-2xl font-bold">{chatbotCount}</span>
+                )}
               </div>
             </CardContent>
           </Card>
@@ -77,10 +121,10 @@ export default function Dashboard() {
             <CardContent>
               <div className="flex items-center">
                 <FileText className="h-5 w-5 text-[#D2B48C] mr-2" />
-                {documentsLoading ? (
+                {isLoading ? (
                   <Loader2 className="h-5 w-5 animate-spin" />
                 ) : (
-                  <span className="text-2xl font-bold">{documents.length}</span>
+                  <span className="text-2xl font-bold">{documentCount}</span>
                 )}
               </div>
             </CardContent>
@@ -94,10 +138,10 @@ export default function Dashboard() {
             <CardContent>
               <div className="flex items-center">
                 <Mail className="h-5 w-5 text-[#D2B48C] mr-2" />
-                {summariesLoading ? (
+                {isLoading ? (
                   <Loader2 className="h-5 w-5 animate-spin" />
                 ) : (
-                  <span className="text-2xl font-bold">{summaries.length}</span>
+                  <span className="text-2xl font-bold">{summaryCount}</span>
                 )}
               </div>
             </CardContent>
