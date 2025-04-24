@@ -32,16 +32,19 @@ interface AuthProviderProps {
 // Auth provider component
 export function AuthProvider({ children }: AuthProviderProps) {
   const {
-    data: user,
+    data: authStatus,
     error,
     isLoading,
     refetch,
-  } = useQuery<User | null, Error>({
-    queryKey: ["/api/auth/user"],
+  } = useQuery<{ isAuthenticated: boolean; userInfo?: User }>({
+    queryKey: ["/api/auth/status"],
     staleTime: 1000 * 60 * 10, // 10 minutes
     retry: 1, // Try once more in case of initial failure
     refetchOnWindowFocus: true, // Refetch when window gets focus
   });
+  
+  // Extract user from auth status
+  const user = authStatus?.isAuthenticated ? authStatus.userInfo || null : null;
   
   // Add a login function to be used by auth pages
   const login = async () => {
