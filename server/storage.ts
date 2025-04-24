@@ -1,6 +1,7 @@
 import { nanoid } from "nanoid";
 import { 
-  users, 
+  users,
+  replitUsers,
   chatbots, 
   chatbotAsanaProjects,
   documents, 
@@ -11,6 +12,8 @@ import {
   apiTokens,
   type User, 
   type UpsertUser,
+  type ReplitUser,
+  type UpsertReplitUser,
   type Chatbot,
   type InsertChatbot,
   type ChatbotAsanaProject,
@@ -43,6 +46,11 @@ export interface IStorage {
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: Omit<UpsertUser, "id">): Promise<User>;
   upsertUser(user: UpsertUser): Promise<User>;
+  
+  // Replit Auth user methods
+  getReplitUser(id: string): Promise<ReplitUser | undefined>;
+  getReplitUserByUsername(username: string): Promise<ReplitUser | undefined>;
+  upsertReplitUser(user: UpsertReplitUser): Promise<ReplitUser>;
   
   // Chatbot methods
   getChatbots(): Promise<Chatbot[]>;
@@ -91,6 +99,7 @@ export interface IStorage {
 // In-memory storage implementation
 export class MemStorage implements IStorage {
   private users: Map<number, User>;
+  private replitUsers: Map<string, ReplitUser>;
   private chatbots: Map<number, Chatbot>;
   private documents: Map<number, Document>;
   private summaries: Map<number, Summary>;
@@ -111,6 +120,7 @@ export class MemStorage implements IStorage {
   
   constructor() {
     this.users = new Map();
+    this.replitUsers = new Map();
     this.chatbots = new Map();
     this.documents = new Map();
     this.summaries = new Map();
@@ -202,6 +212,48 @@ export class MemStorage implements IStorage {
       updatedAt: new Date()
     };
     this.users.set(numericId, user);
+    return user;
+  }
+  
+  // Replit Auth user methods
+  async getReplitUser(id: string): Promise<ReplitUser | undefined> {
+    return this.replitUsers.get(id);
+  }
+  
+  async getReplitUserByUsername(username: string): Promise<ReplitUser | undefined> {
+    return Array.from(this.replitUsers.values()).find(
+      (user) => user.username === username
+    );
+  }
+  
+  async upsertReplitUser(userData: UpsertReplitUser): Promise<ReplitUser> {
+    const existingUser = this.replitUsers.get(userData.id);
+    
+    if (existingUser) {
+      // Update existing user
+      const updatedUser: ReplitUser = {
+        ...existingUser,
+        ...userData,
+        updatedAt: new Date()
+      };
+      this.replitUsers.set(userData.id, updatedUser);
+      return updatedUser;
+    }
+    
+    // Create new user
+    const user: ReplitUser = {
+      ...userData,
+      role: userData.role || "user",
+      email: userData.email || null,
+      firstName: userData.firstName || null,
+      lastName: userData.lastName || null,
+      bio: userData.bio || null,
+      profileImageUrl: userData.profileImageUrl || null,
+      initial: userData.initial || "U",
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+    this.replitUsers.set(userData.id, user);
     return user;
   }
   
