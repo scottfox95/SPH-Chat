@@ -43,13 +43,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // API routes
   const apiRouter = express.Router();
   
-  // Chatbot routes - protected with authentication
-  apiRouter.get("/chatbots", isAuthenticated, async (req, res) => {
+  // Chatbot routes - admin users need access to all chatbots
+  apiRouter.get("/chatbots", async (req, res) => {
     const chatbots = await storage.getChatbots();
     res.json(chatbots);
   });
   
-  apiRouter.get("/chatbots/:id", isAuthenticated, async (req, res) => {
+  apiRouter.get("/chatbots/:id", async (req, res) => {
     const chatbot = await storage.getChatbot(parseInt(req.params.id));
     
     if (!chatbot) {
