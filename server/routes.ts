@@ -826,7 +826,7 @@ You should **never make up information**. You may summarize or synthesize detail
   });
   
   // List accessible Slack channels
-  apiRouter.get("/system/slack-channels", async (req, res) => {
+  apiRouter.get("/system/slack-channels", isAuthenticated, async (req, res) => {
     try {
       const channels = await listAccessibleChannels();
       res.json(channels);
@@ -840,7 +840,7 @@ You should **never make up information**. You may summarize or synthesize detail
   });
   
   // List Asana projects from workspace
-  apiRouter.get("/system/asana-projects", async (req, res) => {
+  apiRouter.get("/system/asana-projects", isAuthenticated, async (req, res) => {
     try {
       const workspaceId = req.query.workspaceId as string;
       
@@ -861,7 +861,7 @@ You should **never make up information**. You may summarize or synthesize detail
   });
   
   // Get tasks from Asana project
-  apiRouter.get("/system/asana-tasks", async (req, res) => {
+  apiRouter.get("/system/asana-tasks", isAuthenticated, async (req, res) => {
     try {
       const projectId = req.query.projectId as string;
       const includeCompleted = req.query.includeCompleted === 'true';
