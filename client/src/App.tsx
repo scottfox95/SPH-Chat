@@ -1,4 +1,4 @@
-import { Switch, Route, Redirect } from "wouter";
+import { Switch, Route, Redirect, useRoute } from "wouter";
 import { Toaster } from "@/components/ui/toaster";
 import { Suspense, lazy } from "react";
 import SidebarLayout from "./components/layouts/sidebar-layout";
@@ -80,19 +80,31 @@ function Router() {
       <ProtectedSidebarRoute path="/" component={Dashboard} />
       <ProtectedSidebarRoute path="/chatbots" component={Chatbots} />
       
-      <ProtectedRoute
-        path="/chatbot/:id"
-        component={() => {
-          const [, params] = useRoute<{ id: string }>("/chatbot/:id");
+      <Route path="/chatbot/:id">
+        {(params) => {
+          const { user, isLoading } = useAuth();
+          
+          if (isLoading) {
+            return (
+              <div className="flex items-center justify-center min-h-screen">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              </div>
+            );
+          }
+          
+          if (!user) {
+            return <Redirect to="/auth" />;
+          }
+          
           return (
             <SidebarLayout>
               <Suspense fallback={<div>Loading...</div>}>
-                <Chatbot id={parseInt(params?.id || "0")} />
+                <Chatbot id={parseInt(params.id)} />
               </Suspense>
             </SidebarLayout>
           );
         }}
-      />
+      </Route>
       
       <ProtectedSidebarRoute path="/summaries" component={Summaries} />
       <ProtectedSidebarRoute path="/settings" component={Settings} />
