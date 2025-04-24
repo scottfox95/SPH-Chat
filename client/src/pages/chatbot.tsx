@@ -88,6 +88,12 @@ export default function Chatbot({ id }: ChatbotProps) {
   // Fetch documents
   const { data: documents = [], isLoading: documentsLoading } = useQuery<any[]>({
     queryKey: [`/api/chatbots/${id}/documents`],
+    onSuccess: (data) => {
+      console.log(`Documents fetched for chatbot ${id}:`, data);
+    },
+    onError: (error) => {
+      console.error(`Error fetching documents for chatbot ${id}:`, error);
+    }
   });
 
   // Fetch email recipients
