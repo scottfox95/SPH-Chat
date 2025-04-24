@@ -404,7 +404,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   
   // Summary routes
-  apiRouter.get("/chatbots/:id/summaries", async (req, res) => {
+  apiRouter.get("/chatbots/:id/summaries", isAuthenticated, async (req, res) => {
     try {
       const chatbotId = parseInt(req.params.id);
       
@@ -417,7 +417,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  apiRouter.post("/chatbots/:id/generate-summary", async (req, res) => {
+  apiRouter.post("/chatbots/:id/generate-summary", isAuthenticated, async (req, res) => {
     try {
       const chatbotId = parseInt(req.params.id);
       
@@ -646,10 +646,10 @@ You should **never make up information**. You may summarize or synthesize detail
         .replace(/{{contextSources}}/g, contextSources.join("\n"))
         .replace(/{{asanaNote}}/g, chatbot.asanaProjectId ? "- Asana: always mention that the information comes from Asana project tasks and include the project name." : "");
       
-      // Save user message
+      // Save user message - use token-based access, no need for user ID (public interface)
       const userMessage = await storage.createMessage({
         chatbotId,
-        userId: 1, // Default to user ID 1 since authentication is removed
+        userId: null, // No user ID for token-based public access
         content: message,
         isUserMessage: true,
         citation: null,
@@ -893,7 +893,7 @@ You should **never make up information**. You may summarize or synthesize detail
   });
   
   // Settings routes
-  apiRouter.get("/settings", async (req, res) => {
+  apiRouter.get("/settings", isAuthenticated, async (req, res) => {
     try {
       const settings = await storage.getSettings();
       
@@ -908,7 +908,7 @@ You should **never make up information**. You may summarize or synthesize detail
     }
   });
   
-  apiRouter.put("/settings", async (req, res) => {
+  apiRouter.put("/settings", isAuthenticated, async (req, res) => {
     try {
       const data = updateSettingsSchema.parse(req.body);
       
@@ -929,7 +929,7 @@ You should **never make up information**. You may summarize or synthesize detail
   });
   
   // Get API token status (not the actual tokens)
-  apiRouter.get("/settings/api-tokens/status", async (req, res) => {
+  apiRouter.get("/settings/api-tokens/status", isAuthenticated, async (req, res) => {
     try {
       // Check each service token
       const services = ['slack', 'openai', 'asana'];
@@ -951,7 +951,7 @@ You should **never make up information**. You may summarize or synthesize detail
   });
   
   // Update API tokens (stored securely in database)
-  apiRouter.put("/settings/api-tokens", async (req, res) => {
+  apiRouter.put("/settings/api-tokens", isAuthenticated, async (req, res) => {
     try {
       const { type, token } = req.body;
       
