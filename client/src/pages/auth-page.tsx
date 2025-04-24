@@ -9,6 +9,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 import {
   Form,
   FormControl,
@@ -35,7 +36,8 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 type RegisterFormValues = z.infer<typeof registerSchema>;
 
 export default function AuthPage() {
-  const { user, login, register, isLoading } = useAuth();
+  const { user } = useAuth();
+  const { toast } = useToast();
   const [, navigate] = useLocation();
   const [activeTab, setActiveTab] = useState<string>("login");
   const [showPassword, setShowPassword] = useState(false);

@@ -29,7 +29,7 @@ const Settings = lazy(() => import("@/pages/settings"));
 const KnowledgeBase = lazy(() => import("@/pages/knowledge-base"));
 
 function ProtectedSidebarRoute({ component: Component, path }: { component: React.ComponentType<any>, path: string }) {
-  const { user, isLoading } = useAuth();
+  const { token, user, isLoading } = useAuth();
   
   if (isLoading) {
     return (
@@ -41,12 +41,10 @@ function ProtectedSidebarRoute({ component: Component, path }: { component: Reac
     );
   }
   
-  if (!user) {
-    return (
-      <Route path={path}>
-        <Redirect to="/auth" />
-      </Route>
-    );
+  if (!token || !user) {
+    // Use hard redirect for authentication issues
+    window.location.href = "/auth";
+    return null;
   }
   
   return (
@@ -83,7 +81,7 @@ function Router() {
       
       <Route path="/chatbot/:id">
         {(params) => {
-          const { user, isLoading } = useAuth();
+          const { token, user, isLoading } = useAuth();
           
           if (isLoading) {
             return (
@@ -93,8 +91,10 @@ function Router() {
             );
           }
           
-          if (!user) {
-            return <Redirect to="/auth" />;
+          if (!token || !user) {
+            // Use hard redirect for authentication issues
+            window.location.href = "/auth";
+            return null;
           }
           
           return (
