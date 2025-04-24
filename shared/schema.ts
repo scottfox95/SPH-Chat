@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, boolean, timestamp, json, jsonb, varchar, index } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, boolean, timestamp, json } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -14,18 +14,7 @@ export const OPENAI_MODELS = [
   "gpt-3.5-turbo-16k"
 ];
 
-// Session storage table for Replit Auth
-export const sessions = pgTable(
-  "sessions",
-  {
-    sid: varchar("sid").primaryKey(),
-    sess: jsonb("sess").notNull(),
-    expire: timestamp("expire").notNull(),
-  },
-  (table) => [index("IDX_session_expire").on(table.expire)],
-);
-
-// User model - original schema
+// Basic user model for authentication
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
   username: text("username").notNull().unique(),
@@ -33,21 +22,6 @@ export const users = pgTable("users", {
   displayName: text("display_name").notNull(),
   role: text("role").notNull().default("user"),
   initial: text("initial").notNull(),
-});
-
-// Replit Auth users table (separate from regular users)
-export const replitUsers = pgTable("replit_users", {
-  id: varchar("id").primaryKey().notNull(),
-  username: varchar("username").unique().notNull(),
-  email: varchar("email").unique(),
-  firstName: varchar("first_name"),
-  lastName: varchar("last_name"),
-  bio: text("bio"),
-  profileImageUrl: varchar("profile_image_url"),
-  role: text("role").notNull().default("user"),
-  initial: text("initial"),
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
 });
 
 // Chatbot model for project-specific bots
@@ -134,26 +108,12 @@ export const apiTokens = pgTable("api_tokens", {
 });
 
 // Schema validations
-export const upsertUserSchema = createInsertSchema(users).pick({
-  id: true,
+export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
   password: true,
   displayName: true,
-  role: true,
   initial: true,
-});
-
-// Schema for Replit Auth users
-export const upsertReplitUserSchema = createInsertSchema(replitUsers).pick({
-  id: true,
-  username: true,
-  email: true,
-  firstName: true,
-  lastName: true, 
-  bio: true,
-  profileImageUrl: true,
   role: true,
-  initial: true,
 });
 
 export const insertChatbotSchema = createInsertSchema(chatbots).pick({
@@ -226,10 +186,7 @@ export const updateApiTokenSchema = createInsertSchema(apiTokens).pick({
 
 // Types
 export type User = typeof users.$inferSelect;
-export type UpsertUser = z.infer<typeof upsertUserSchema>;
-
-export type ReplitUser = typeof replitUsers.$inferSelect;
-export type UpsertReplitUser = z.infer<typeof upsertReplitUserSchema>;
+export type InsertUser = z.infer<typeof insertUserSchema>;
 
 export type Chatbot = typeof chatbots.$inferSelect;
 export type InsertChatbot = z.infer<typeof insertChatbotSchema>;

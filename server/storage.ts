@@ -1,7 +1,6 @@
 import { nanoid } from "nanoid";
 import { 
-  users,
-  replitUsers,
+  users, 
   chatbots, 
   chatbotAsanaProjects,
   documents, 
@@ -11,9 +10,7 @@ import {
   settings,
   apiTokens,
   type User, 
-  type UpsertUser,
-  type ReplitUser,
-  type UpsertReplitUser,
+  type InsertUser,
   type Chatbot,
   type InsertChatbot,
   type ChatbotAsanaProject,
@@ -42,15 +39,9 @@ import createMemoryStore from "memorystore";
 // Interface for storage methods
 export interface IStorage {
   // User methods
-  getUser(id: string): Promise<User | undefined>;
+  getUser(id: number): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
-  createUser(user: Omit<UpsertUser, "id">): Promise<User>;
-  upsertUser(user: UpsertUser): Promise<User>;
-  
-  // Replit Auth user methods
-  getReplitUser(id: string): Promise<ReplitUser | undefined>;
-  getReplitUserByUsername(username: string): Promise<ReplitUser | undefined>;
-  upsertReplitUser(user: UpsertReplitUser): Promise<ReplitUser>;
+  createUser(user: InsertUser): Promise<User>;
   
   // Chatbot methods
   getChatbots(): Promise<Chatbot[]>;
@@ -99,7 +90,6 @@ export interface IStorage {
 // In-memory storage implementation
 export class MemStorage implements IStorage {
   private users: Map<number, User>;
-  private replitUsers: Map<string, ReplitUser>;
   private chatbots: Map<number, Chatbot>;
   private documents: Map<number, Document>;
   private summaries: Map<number, Summary>;
@@ -120,7 +110,6 @@ export class MemStorage implements IStorage {
   
   constructor() {
     this.users = new Map();
-    this.replitUsers = new Map();
     this.chatbots = new Map();
     this.documents = new Map();
     this.summaries = new Map();
@@ -153,8 +142,8 @@ export class MemStorage implements IStorage {
   }
   
   // User methods
-  async getUser(id: string): Promise<User | undefined> {
-    return this.users.get(Number(id));
+  async getUser(id: number): Promise<User | undefined> {
+    return this.users.get(id);
   }
   
   async getUserByUsername(username: string): Promise<User | undefined> {
@@ -163,97 +152,14 @@ export class MemStorage implements IStorage {
     );
   }
   
-  async createUser(userData: Omit<UpsertUser, "id">): Promise<User> {
-    const id = String(this.currentUserId++);
+  async createUser(insertUser: InsertUser): Promise<User> {
+    const id = this.currentUserId++;
     const user: User = { 
-      ...userData, 
+      ...insertUser, 
       id,
-      role: userData.role || "user", // Ensure role is not undefined
-      email: userData.email || null,
-      firstName: userData.firstName || null,
-      lastName: userData.lastName || null,
-      bio: userData.bio || null,
-      profileImageUrl: userData.profileImageUrl || null,
-      initial: userData.initial || "U",
-      createdAt: new Date(),
-      updatedAt: new Date()
+      role: insertUser.role || "user" // Ensure role is not undefined
     };
-    this.users.set(Number(id), user);
-    return user;
-  }
-  
-  async upsertUser(userData: UpsertUser): Promise<User> {
-    // Convert string ID to number for in-memory storage
-    const numericId = Number(userData.id);
-    const existingUser = this.users.get(numericId);
-    
-    if (existingUser) {
-      // Update existing user
-      const updatedUser: User = {
-        ...existingUser,
-        ...userData,
-        updatedAt: new Date()
-      };
-      this.users.set(numericId, updatedUser);
-      return updatedUser;
-    }
-    
-    // Create new user
-    const user: User = {
-      ...userData,
-      role: userData.role || "user",
-      email: userData.email || null,
-      firstName: userData.firstName || null,
-      lastName: userData.lastName || null,
-      bio: userData.bio || null,
-      profileImageUrl: userData.profileImageUrl || null,
-      initial: userData.initial || "U",
-      createdAt: new Date(),
-      updatedAt: new Date()
-    };
-    this.users.set(numericId, user);
-    return user;
-  }
-  
-  // Replit Auth user methods
-  async getReplitUser(id: string): Promise<ReplitUser | undefined> {
-    return this.replitUsers.get(id);
-  }
-  
-  async getReplitUserByUsername(username: string): Promise<ReplitUser | undefined> {
-    return Array.from(this.replitUsers.values()).find(
-      (user) => user.username === username
-    );
-  }
-  
-  async upsertReplitUser(userData: UpsertReplitUser): Promise<ReplitUser> {
-    const existingUser = this.replitUsers.get(userData.id);
-    
-    if (existingUser) {
-      // Update existing user
-      const updatedUser: ReplitUser = {
-        ...existingUser,
-        ...userData,
-        updatedAt: new Date()
-      };
-      this.replitUsers.set(userData.id, updatedUser);
-      return updatedUser;
-    }
-    
-    // Create new user
-    const user: ReplitUser = {
-      ...userData,
-      role: userData.role || "user",
-      email: userData.email || null,
-      firstName: userData.firstName || null,
-      lastName: userData.lastName || null,
-      bio: userData.bio || null,
-      profileImageUrl: userData.profileImageUrl || null,
-      initial: userData.initial || "U",
-      createdAt: new Date(),
-      updatedAt: new Date()
-    };
-    this.replitUsers.set(userData.id, user);
+    this.users.set(id, user);
     return user;
   }
   
@@ -554,9 +460,8 @@ export class DatabaseStorage implements IStorage {
       if (!user) {
         this.createUser({
           username: "admin",
-          email: "admin@example.com",
-          firstName: "John",
-          lastName: "Davis",
+          password: "password",
+          displayName: "John Davis",
           initial: "JD",
           role: "admin"
         });
@@ -565,7 +470,7 @@ export class DatabaseStorage implements IStorage {
   }
   
   // User methods
-  async getUser(id: string): Promise<User | undefined> {
+  async getUser(id: number): Promise<User | undefined> {
     const [user] = await db.select().from(users).where(eq(users.id, id));
     return user;
   }
@@ -575,49 +480,8 @@ export class DatabaseStorage implements IStorage {
     return user;
   }
   
-  async createUser(userData: Omit<UpsertUser, "id">): Promise<User> {
-    const [user] = await db.insert(users).values(userData as any).returning();
-    return user;
-  }
-  
-  async upsertUser(userData: UpsertUser): Promise<User> {
-    const [user] = await db
-      .insert(users)
-      .values(userData)
-      .onConflictDoUpdate({
-        target: users.id,
-        set: {
-          ...userData,
-          updatedAt: new Date(),
-        },
-      })
-      .returning();
-    return user;
-  }
-  
-  // Replit Auth user methods
-  async getReplitUser(id: string): Promise<ReplitUser | undefined> {
-    const [user] = await db.select().from(replitUsers).where(eq(replitUsers.id, id));
-    return user;
-  }
-  
-  async getReplitUserByUsername(username: string): Promise<ReplitUser | undefined> {
-    const [user] = await db.select().from(replitUsers).where(eq(replitUsers.username, username));
-    return user;
-  }
-  
-  async upsertReplitUser(userData: UpsertReplitUser): Promise<ReplitUser> {
-    const [user] = await db
-      .insert(replitUsers)
-      .values(userData)
-      .onConflictDoUpdate({
-        target: replitUsers.id,
-        set: {
-          ...userData,
-          updatedAt: new Date(),
-        },
-      })
-      .returning();
+  async createUser(insertUser: InsertUser): Promise<User> {
+    const [user] = await db.insert(users).values(insertUser).returning();
     return user;
   }
   

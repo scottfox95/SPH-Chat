@@ -1,10 +1,10 @@
 import express, { type Express } from "express";
+import session from "express-session";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
+import { requireAuth, requireAdmin } from "./middleware/auth";
 import { upload } from "./middleware/multer";
 import { z } from "zod";
-import session from "express-session";
-import MemoryStore from "memorystore";
 import { 
   loginSchema, 
   chatMessageSchema, 
@@ -35,29 +35,67 @@ import { sendSummaryEmail } from "./lib/email";
 import * as fs from "fs";
 import { nanoid } from "nanoid";
 import { format } from "date-fns";
-import { setupAuth, isAuthenticated } from "./replitAuth";
+import MemoryStore from "memorystore";
+
+const SessionStore = MemoryStore(session);
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Set up authentication using Replit Auth
-  await setupAuth(app);
+  // Set up session middleware
+  app.use(
+    session({
+      secret: process.env.SESSION_SECRET || "homebuildbot-secret",
+      resave: false,
+      saveUninitialized: false,
+      cookie: {
+        maxAge: 1000 * 60 * 60 * 24, // 1 day
+        secure: process.env.NODE_ENV === "production",
+      },
+      store: new SessionStore({
+        checkPeriod: 86400000, // 24 hours
+      }),
+    })
+  );
 
   // API routes
   const apiRouter = express.Router();
   
-  // Auth endpoints for Replit Auth
-  apiRouter.get("/auth/user", isAuthenticated, async (req: any, res) => {
+  // Auth routes - simplified for development without authentication
+  apiRouter.post("/auth/login", async (req, res) => {
     try {
-      const userId = req.user.claims.sub;
-      const user = await storage.getReplitUser(userId);
-      res.json(user);
+      // Return default admin user without checking credentials
+      const defaultUser = {
+        id: 1,
+        username: "admin",
+        displayName: "Administrator",
+        initial: "A",
+        role: "admin"
+      };
+      
+      return res.json(defaultUser);
     } catch (error) {
-      console.error("Error fetching user:", error);
-      res.status(500).json({ message: "Failed to fetch user" });
+      return res.status(500).json({ message: "Internal server error" });
     }
   });
   
+  apiRouter.post("/auth/logout", (req, res) => {
+    res.json({ success: true });
+  });
+  
+  apiRouter.get("/auth/me", async (req, res) => {
+    // Always return the default admin user since authentication is removed
+    const defaultUser = {
+      id: 1,
+      username: "admin",
+      displayName: "Administrator",
+      initial: "A",
+      role: "admin"
+    };
+    
+    return res.json(defaultUser);
+  });
+  
   // Chatbot routes
-  apiRouter.get("/chatbots", isAuthenticated, async (req, res) => {
+  apiRouter.get("/chatbots", async (req, res) => {
     const chatbots = await storage.getChatbots();
     res.json(chatbots);
   });
@@ -72,7 +110,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.json(chatbot);
   });
   
-  apiRouter.post("/chatbots", isAuthenticated, async (req, res) => {
+  apiRouter.post("/chatbots", async (req, res) => {
     try {
       const { name, slackChannelId } = req.body;
       
@@ -105,7 +143,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  apiRouter.put("/chatbots/:id", isAuthenticated, async (req, res) => {
+  apiRouter.put("/chatbots/:id", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       const { name, slackChannelId, asanaProjectId, isActive, requireAuth } = req.body;
@@ -164,7 +202,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  apiRouter.delete("/chatbots/:id", isAuthenticated, async (req, res) => {
+  apiRouter.delete("/chatbots/:id", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       
@@ -182,7 +220,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   
   // Document routes
-  apiRouter.get("/documents", isAuthenticated, async (req, res) => {
+  apiRouter.get("/documents", async (req, res) => {
     try {
       // Get all chatbots first
       const chatbots = await storage.getChatbots();
@@ -214,7 +252,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  apiRouter.get("/chatbots/:id/documents", isAuthenticated, async (req, res) => {
+  apiRouter.get("/chatbots/:id/documents", async (req, res) => {
     try {
       const chatbotId = parseInt(req.params.id);
       
@@ -227,7 +265,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  apiRouter.post("/chatbots/:id/documents", isAuthenticated, upload.single("file"), async (req, res) => {
+  apiRouter.post("/chatbots/:id/documents", upload.single("file"), async (req, res) => {
     try {
       const chatbotId = parseInt(req.params.id);
       
@@ -256,7 +294,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   
   // Asana project routes
-  apiRouter.get("/chatbots/:id/asana-projects", isAuthenticated, async (req, res) => {
+  apiRouter.get("/chatbots/:id/asana-projects", async (req, res) => {
     try {
       const chatbotId = parseInt(req.params.id);
       
@@ -269,7 +307,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  apiRouter.post("/chatbots/:id/asana-projects", isAuthenticated, async (req, res) => {
+  apiRouter.post("/chatbots/:id/asana-projects", async (req, res) => {
     try {
       const chatbotId = parseInt(req.params.id);
       const { asanaProjectId, projectName, projectType } = req.body;
@@ -312,7 +350,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  apiRouter.delete("/asana-projects/:id", isAuthenticated, async (req, res) => {
+  apiRouter.delete("/asana-projects/:id", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       
@@ -329,7 +367,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  apiRouter.delete("/documents/:id", isAuthenticated, async (req, res) => {
+  apiRouter.delete("/documents/:id", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       
@@ -365,7 +403,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   
   // Email recipient routes
-  apiRouter.get("/chatbots/:id/recipients", isAuthenticated, async (req, res) => {
+  apiRouter.get("/chatbots/:id/recipients", async (req, res) => {
     try {
       const chatbotId = parseInt(req.params.id);
       
@@ -378,7 +416,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  apiRouter.post("/chatbots/:id/recipients", isAuthenticated, async (req, res) => {
+  apiRouter.post("/chatbots/:id/recipients", async (req, res) => {
     try {
       const data = addEmailRecipientSchema.parse({
         ...req.body,
@@ -397,7 +435,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  apiRouter.delete("/recipients/:id", isAuthenticated, async (req, res) => {
+  apiRouter.delete("/recipients/:id", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       
@@ -415,7 +453,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   
   // Summary routes
-  apiRouter.get("/chatbots/:id/summaries", isAuthenticated, async (req, res) => {
+  apiRouter.get("/chatbots/:id/summaries", async (req, res) => {
     try {
       const chatbotId = parseInt(req.params.id);
       
@@ -428,7 +466,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  apiRouter.post("/chatbots/:id/generate-summary", isAuthenticated, async (req, res) => {
+  apiRouter.post("/chatbots/:id/generate-summary", async (req, res) => {
     try {
       const chatbotId = parseInt(req.params.id);
       
@@ -806,7 +844,7 @@ You should **never make up information**. You may summarize or synthesize detail
   });
   
   // Validate Slack channel
-  apiRouter.get("/system/validate-slack-channel", isAuthenticated, async (req, res) => {
+  apiRouter.get("/system/validate-slack-channel", async (req, res) => {
     try {
       const channelId = req.query.channelId as string;
       
@@ -826,7 +864,7 @@ You should **never make up information**. You may summarize or synthesize detail
   });
   
   // List accessible Slack channels
-  apiRouter.get("/system/slack-channels", isAuthenticated, async (req, res) => {
+  apiRouter.get("/system/slack-channels", async (req, res) => {
     try {
       const channels = await listAccessibleChannels();
       res.json(channels);
@@ -840,7 +878,7 @@ You should **never make up information**. You may summarize or synthesize detail
   });
   
   // List Asana projects from workspace
-  apiRouter.get("/system/asana-projects", isAuthenticated, async (req, res) => {
+  apiRouter.get("/system/asana-projects", async (req, res) => {
     try {
       const workspaceId = req.query.workspaceId as string;
       
@@ -861,7 +899,7 @@ You should **never make up information**. You may summarize or synthesize detail
   });
   
   // Get tasks from Asana project
-  apiRouter.get("/system/asana-tasks", isAuthenticated, async (req, res) => {
+  apiRouter.get("/system/asana-tasks", async (req, res) => {
     try {
       const projectId = req.query.projectId as string;
       const includeCompleted = req.query.includeCompleted === 'true';
@@ -883,7 +921,7 @@ You should **never make up information**. You may summarize or synthesize detail
   });
   
   // Get details of a specific Asana task
-  apiRouter.get("/system/asana-task-details", isAuthenticated, async (req, res) => {
+  apiRouter.get("/system/asana-task-details", async (req, res) => {
     try {
       const taskId = req.query.taskId as string;
       
@@ -904,7 +942,7 @@ You should **never make up information**. You may summarize or synthesize detail
   });
   
   // Settings routes
-  apiRouter.get("/settings", isAuthenticated, async (req, res) => {
+  apiRouter.get("/settings", async (req, res) => {
     try {
       const settings = await storage.getSettings();
       
@@ -919,7 +957,7 @@ You should **never make up information**. You may summarize or synthesize detail
     }
   });
   
-  apiRouter.put("/settings", isAuthenticated, async (req, res) => {
+  apiRouter.put("/settings", async (req, res) => {
     try {
       const data = updateSettingsSchema.parse(req.body);
       
@@ -940,7 +978,7 @@ You should **never make up information**. You may summarize or synthesize detail
   });
   
   // Get API token status (not the actual tokens)
-  apiRouter.get("/settings/api-tokens/status", isAuthenticated, async (req, res) => {
+  apiRouter.get("/settings/api-tokens/status", async (req, res) => {
     try {
       // Check each service token
       const services = ['slack', 'openai', 'asana'];
@@ -962,7 +1000,7 @@ You should **never make up information**. You may summarize or synthesize detail
   });
   
   // Update API tokens (stored securely in database)
-  apiRouter.put("/settings/api-tokens", isAuthenticated, async (req, res) => {
+  apiRouter.put("/settings/api-tokens", async (req, res) => {
     try {
       const { type, token } = req.body;
       

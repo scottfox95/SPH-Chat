@@ -3,78 +3,16 @@ import { Toaster } from "@/components/ui/toaster";
 import { Suspense, lazy } from "react";
 import SidebarLayout from "./components/layouts/sidebar-layout";
 import NotFound from "@/pages/not-found";
-import { ProtectedRoute } from "./components/protected-route";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { AuthProvider } from "./components/auth-provider";
 
 // Lazy loaded pages
 const Dashboard = lazy(() => import("@/pages/dashboard"));
 const Chatbots = lazy(() => import("@/pages/chatbots"));
 const Chatbot = lazy(() => import("@/pages/chatbot"));
 const PublicChat = lazy(() => import("@/pages/public-chat"));
+const Login = lazy(() => import("@/pages/login"));
 const Summaries = lazy(() => import("@/pages/summaries"));
 const Settings = lazy(() => import("@/pages/settings"));
 const KnowledgeBase = lazy(() => import("@/pages/knowledge-base"));
-const AuthPage = lazy(() => import("@/pages/auth-page"));
-
-// Create a client
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: 1,
-      refetchOnWindowFocus: false,
-    },
-  },
-});
-
-// Wrapped components for protected routes
-const ProtectedDashboard = () => (
-  <SidebarLayout>
-    <Suspense fallback={<div>Loading...</div>}>
-      <Dashboard />
-    </Suspense>
-  </SidebarLayout>
-);
-
-const ProtectedChatbots = () => (
-  <SidebarLayout>
-    <Suspense fallback={<div>Loading...</div>}>
-      <Chatbots />
-    </Suspense>
-  </SidebarLayout>
-);
-
-const ProtectedChatbotDetails = ({ id }: { id: number }) => (
-  <SidebarLayout>
-    <Suspense fallback={<div>Loading...</div>}>
-      <Chatbot id={id} />
-    </Suspense>
-  </SidebarLayout>
-);
-
-const ProtectedSummaries = () => (
-  <SidebarLayout>
-    <Suspense fallback={<div>Loading...</div>}>
-      <Summaries />
-    </Suspense>
-  </SidebarLayout>
-);
-
-const ProtectedSettings = () => (
-  <SidebarLayout>
-    <Suspense fallback={<div>Loading...</div>}>
-      <Settings />
-    </Suspense>
-  </SidebarLayout>
-);
-
-const ProtectedKnowledgeBase = () => (
-  <SidebarLayout>
-    <Suspense fallback={<div>Loading...</div>}>
-      <KnowledgeBase />
-    </Suspense>
-  </SidebarLayout>
-);
 
 function Router() {
   return (
@@ -86,28 +24,56 @@ function Router() {
         </Suspense>
       </Route>
       
-      <Route path="/auth">
-        <Suspense fallback={<div>Loading...</div>}>
-          <AuthPage />
-        </Suspense>
+      {/* Dashboard as the default route */}
+      <Route path="/">
+        <SidebarLayout>
+          <Suspense fallback={<div>Loading...</div>}>
+            <Dashboard />
+          </Suspense>
+        </SidebarLayout>
       </Route>
       
-      {/* Protected routes */}
-      <ProtectedRoute path="/" component={ProtectedDashboard} />
-      <ProtectedRoute path="/chatbots" component={ProtectedChatbots} />
+      <Route path="/chatbots">
+        <SidebarLayout>
+          <Suspense fallback={<div>Loading...</div>}>
+            <Chatbots />
+          </Suspense>
+        </SidebarLayout>
+      </Route>
       
       <Route path="/chatbot/:id">
         {({ id }) => (
-          <ProtectedRoute 
-            path={`/chatbot/${id}`} 
-            component={() => <ProtectedChatbotDetails id={parseInt(id)} />} 
-          />
+          <SidebarLayout>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Chatbot id={parseInt(id)} />
+            </Suspense>
+          </SidebarLayout>
         )}
       </Route>
       
-      <ProtectedRoute path="/summaries" component={ProtectedSummaries} />
-      <ProtectedRoute path="/settings" component={ProtectedSettings} />
-      <ProtectedRoute path="/knowledge-base" component={ProtectedKnowledgeBase} />
+      <Route path="/summaries">
+        <SidebarLayout>
+          <Suspense fallback={<div>Loading...</div>}>
+            <Summaries />
+          </Suspense>
+        </SidebarLayout>
+      </Route>
+      
+      <Route path="/settings">
+        <SidebarLayout>
+          <Suspense fallback={<div>Loading...</div>}>
+            <Settings />
+          </Suspense>
+        </SidebarLayout>
+      </Route>
+      
+      <Route path="/knowledge-base">
+        <SidebarLayout>
+          <Suspense fallback={<div>Loading...</div>}>
+            <KnowledgeBase />
+          </Suspense>
+        </SidebarLayout>
+      </Route>
       
       {/* Fallback to 404 */}
       <Route>
@@ -119,12 +85,10 @@ function Router() {
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <Router />
-        <Toaster />
-      </AuthProvider>
-    </QueryClientProvider>
+    <>
+      <Router />
+      <Toaster />
+    </>
   );
 }
 
