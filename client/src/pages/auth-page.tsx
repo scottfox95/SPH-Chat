@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
-import { useAuth } from "@/components/auth-provider";
+import { useAuth } from "@/hooks/use-auth";
 import { useLocation } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -36,10 +35,12 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 type RegisterFormValues = z.infer<typeof registerSchema>;
 
 export default function AuthPage() {
-  const { user, loginMutation, registerMutation } = useAuth();
+  const { user, login, register, isLoading } = useAuth();
   const [, navigate] = useLocation();
   const [activeTab, setActiveTab] = useState<string>("login");
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoginPending, setIsLoginPending] = useState(false);
+  const [isRegisterPending, setIsRegisterPending] = useState(false);
 
   // If user is already logged in, redirect to dashboard
   useEffect(() => {
@@ -66,12 +67,22 @@ export default function AuthPage() {
     },
   });
 
-  const onLoginSubmit = (values: LoginFormValues) => {
-    loginMutation.mutate(values);
+  const onLoginSubmit = async (values: LoginFormValues) => {
+    setIsLoginPending(true);
+    try {
+      await login(values.username, values.password);
+    } finally {
+      setIsLoginPending(false);
+    }
   };
 
-  const onRegisterSubmit = (values: RegisterFormValues) => {
-    registerMutation.mutate(values);
+  const onRegisterSubmit = async (values: RegisterFormValues) => {
+    setIsRegisterPending(true);
+    try {
+      await register(values.username, values.password, values.displayName);
+    } finally {
+      setIsRegisterPending(false);
+    }
   };
 
   const toggleShowPassword = () => {
@@ -171,9 +182,9 @@ export default function AuthPage() {
                       <Button 
                         type="submit" 
                         className="w-full"
-                        disabled={loginMutation.isPending}
+                        disabled={isLoginPending}
                       >
-                        {loginMutation.isPending ? (
+                        {isLoginPending ? (
                           <>
                             <Loader2 className="mr-2 h-4 w-4 animate-spin" /> 
                             Logging in...
@@ -292,9 +303,9 @@ export default function AuthPage() {
                       <Button 
                         type="submit" 
                         className="w-full"
-                        disabled={registerMutation.isPending}
+                        disabled={isRegisterPending}
                       >
-                        {registerMutation.isPending ? (
+                        {isRegisterPending ? (
                           <>
                             <Loader2 className="mr-2 h-4 w-4 animate-spin" /> 
                             Creating account...
