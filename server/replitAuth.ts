@@ -140,7 +140,46 @@ export async function setupAuth(app: Express) {
   passport.deserializeUser((user: Express.User, cb) => cb(null, user));
 
   // Login route
-  app.get("/api/login", (req, res, next) => {
+  app.get("/api/login", async (req, res, next) => {
+    // For development, use a direct redirect to the auth page
+    if (process.env.NODE_ENV === 'development') {
+      // Create a dev user in the database if needed
+      const devUserId = '12345';
+      const devUser = await storage.getReplitUser(devUserId);
+      
+      if (!devUser) {
+        await storage.upsertReplitUser({
+          id: devUserId,
+          username: 'developer',
+          email: 'dev@example.com',
+          firstName: 'Dev',
+          lastName: 'User',
+          bio: 'Development user account',
+          profileImageUrl: null,
+          role: 'admin',
+          initial: 'D',
+        });
+      }
+      
+      // Create a simple development mode login session
+      req.login({ 
+        claims: { 
+          sub: devUserId, 
+          username: 'developer', 
+          email: 'dev@example.com',
+          first_name: 'Dev',
+          last_name: 'User',
+          bio: 'Development user account',
+          profile_image_url: null
+        }
+      }, (err) => {
+        if (err) return next(err);
+        return res.redirect('/');
+      });
+      return;
+    }
+
+    // For production, use Replit Auth
     const hostname = process.env.REPLIT_DOMAINS 
       ? req.hostname 
       : "localhost";
@@ -211,6 +250,15 @@ export async function setupAuth(app: Express) {
  * Middleware to check if a user is authenticated
  */
 export const isAuthenticated: RequestHandler = async (req, res, next) => {
+  // For development mode, only check if the user is authenticated
+  if (process.env.NODE_ENV === 'development') {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+    return next();
+  }
+  
+  // For production, check expiration and refresh token
   const user = req.user as any;
 
   if (!req.isAuthenticated() || !user?.expires_at) {
