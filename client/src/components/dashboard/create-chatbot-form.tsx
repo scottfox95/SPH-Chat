@@ -58,8 +58,8 @@ export default function CreateChatbotForm() {
       // Refresh chatbot list
       await queryClient.invalidateQueries({ queryKey: ["/api/chatbots"] });
       
-      // Navigate to the new chatbot
-      setLocation(`/chatbot/${newChatbot.id}`);
+      // Navigate to the new chatbot using hard navigation
+      window.location.href = `/chatbot/${newChatbot.id}`;
     } catch (error) {
       console.error("Failed to create chatbot", error);
       toast({
