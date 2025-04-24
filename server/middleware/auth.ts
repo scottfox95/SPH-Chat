@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { storage } from "../storage";
-import { User } from "@shared/schema";
+import { User as SchemaUser } from "@shared/schema";
 
 // Extend Express Session to include userId
 declare module 'express-session' {
@@ -24,7 +24,7 @@ export const requireAdmin = async (req: Request, res: Response, next: NextFuncti
     return res.status(401).json({ message: "Unauthorized" });
   }
   
-  const user = req.user as User;
+  const user = req.user as SchemaUser;
   
   if (user.role !== "admin") {
     return res.status(403).json({ message: "Forbidden - Admin access required" });
@@ -36,6 +36,6 @@ export const requireAdmin = async (req: Request, res: Response, next: NextFuncti
 // Extend Express Request type to include user property
 declare global {
   namespace Express {
-    interface User extends User {}
+    interface User extends SchemaUser {}
   }
 }

@@ -1,6 +1,6 @@
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
-import { Express } from "express";
+import { Express, Request, Response, NextFunction } from "express";
 import session from "express-session";
 import { scrypt, randomBytes, timingSafeEqual } from "crypto";
 import { promisify } from "util";
@@ -142,7 +142,7 @@ export function setupAuth(app: Express) {
   
   // Middleware to check if user is authenticated
   return {
-    isAuthenticated: (req, res, next) => {
+    isAuthenticated: (req: Request, res: Response, next: NextFunction) => {
       if (req.isAuthenticated()) {
         return next();
       }
