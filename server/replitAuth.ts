@@ -141,42 +141,57 @@ export async function setupAuth(app: Express) {
 
   // Login route
   app.get("/api/login", async (req, res, next) => {
+    console.log("[Auth] Login attempt, NODE_ENV:", process.env.NODE_ENV);
+    
     // For development, use a direct redirect to the auth page
     if (process.env.NODE_ENV === 'development') {
-      // Create a dev user in the database if needed
-      const devUserId = '12345';
-      const devUser = await storage.getReplitUser(devUserId);
-      
-      if (!devUser) {
-        await storage.upsertReplitUser({
-          id: devUserId,
-          username: 'developer',
-          email: 'dev@example.com',
-          firstName: 'Dev',
-          lastName: 'User',
-          bio: 'Development user account',
-          profileImageUrl: null,
-          role: 'admin',
-          initial: 'D',
-        });
-      }
-      
-      // Create a simple development mode login session
-      req.login({ 
-        claims: { 
-          sub: devUserId, 
-          username: 'developer', 
-          email: 'dev@example.com',
-          first_name: 'Dev',
-          last_name: 'User',
-          bio: 'Development user account',
-          profile_image_url: null
+      console.log("[Auth] Using development mode login");
+      try {
+        // Create a dev user in the database if needed
+        const devUserId = '12345';
+        const devUser = await storage.getReplitUser(devUserId);
+        
+        console.log("[Auth] Dev user exists:", !!devUser);
+        
+        if (!devUser) {
+          console.log("[Auth] Creating development user");
+          await storage.upsertReplitUser({
+            id: devUserId,
+            username: 'developer',
+            email: 'dev@example.com',
+            firstName: 'Dev',
+            lastName: 'User',
+            bio: 'Development user account',
+            profileImageUrl: null,
+            role: 'admin',
+            initial: 'D',
+          });
         }
-      }, (err) => {
-        if (err) return next(err);
-        return res.redirect('/');
-      });
-      return;
+        
+        // Create a simple development mode login session
+        console.log("[Auth] Setting up login session");
+        return req.login({ 
+          claims: { 
+            sub: devUserId, 
+            username: 'developer', 
+            email: 'dev@example.com',
+            first_name: 'Dev',
+            last_name: 'User',
+            bio: 'Development user account',
+            profile_image_url: null
+          }
+        }, (err) => {
+          if (err) {
+            console.error("[Auth] Login error:", err);
+            return next(err);
+          }
+          console.log("[Auth] Login successful, redirecting to /");
+          return res.redirect('/');
+        });
+      } catch (error) {
+        console.error("[Auth] Development login error:", error);
+        return next(error);
+      }
     }
 
     // For production, use Replit Auth
@@ -204,6 +219,22 @@ export async function setupAuth(app: Express) {
 
   // Logout route
   app.get("/api/logout", (req, res) => {
+    console.log("[Auth] Logout attempt, NODE_ENV:", process.env.NODE_ENV);
+    
+    // For development mode, just logout and redirect to home
+    if (process.env.NODE_ENV === 'development') {
+      console.log("[Auth] Using development mode logout");
+      req.logout((err) => {
+        if (err) {
+          console.error("[Auth] Logout error:", err);
+        }
+        console.log("[Auth] Logout successful, redirecting to /");
+        return res.redirect('/');
+      });
+      return;
+    }
+    
+    // For production, use Replit Auth logout
     req.logout(() => {
       res.redirect(
         client.buildEndSessionUrl(config, {
