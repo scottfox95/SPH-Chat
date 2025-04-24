@@ -111,6 +111,7 @@ function Router() {
       <ProtectedSidebarRoute path="/summaries" component={Summaries} />
       <ProtectedSidebarRoute path="/settings" component={Settings} />
       <ProtectedSidebarRoute path="/knowledge-base" component={KnowledgeBase} />
+      <ProtectedSidebarRoute path="/users" component={UserManagement} />
       
       {/* Fallback to 404 */}
       <Route component={NotFound} />

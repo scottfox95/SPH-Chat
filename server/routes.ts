@@ -35,6 +35,7 @@ import * as fs from "fs";
 import { nanoid } from "nanoid";
 import { format } from "date-fns";
 import { setupAuth } from "./auth";
+import { hashPassword } from "./lib/password-utils";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Set up authentication

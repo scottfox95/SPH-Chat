@@ -2,7 +2,7 @@ import { useLocation } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
 import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
-import { Home, MessageSquare, ClipboardList, Settings, LogOut, Database } from "lucide-react";
+import { Home, MessageSquare, ClipboardList, Settings, LogOut, Database, Users } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useToast } from "@/hooks/use-toast";
 import { ReactNode, useState, useEffect } from "react";
@@ -157,6 +157,20 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
             <Settings className="h-5 w-5 mr-2" />
             Settings
           </a>
+          {user?.role === "admin" && (
+            <a 
+              href="/users"
+              className={cn(
+                "flex items-center px-3 py-2 text-sm font-medium rounded-xl",
+                location === "/users"
+                  ? "bg-[#D2B48C] bg-opacity-10 text-[#D2B48C]"
+                  : "text-gray-600 hover:bg-gray-100"
+              )}
+            >
+              <Users className="h-5 w-5 mr-2" />
+              User Management
+            </a>
+          )}
         </nav>
         
         {/* Active Projects */}
