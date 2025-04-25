@@ -1256,6 +1256,48 @@ You should **never make up information**. You may summarize or synthesize detail
     }
   });
   
+  // System status endpoints
+  apiRouter.get("/system/health", async (req, res) => {
+    res.status(200).json({ 
+      status: "ok", 
+      time: new Date().toISOString(), 
+      environment: process.env.NODE_ENV || 'development' 
+    });
+  });
+  
+  // Database health check endpoint
+  apiRouter.get("/system/db-status", async (req, res) => {
+    try {
+      // Import the testDatabaseConnection function
+      const { testDatabaseConnection } = await import('./db');
+      
+      // Check database connection
+      const dbStatus = await testDatabaseConnection();
+      
+      // Include app version and environment info
+      const systemInfo = {
+        version: process.env.npm_package_version || '1.0.0',
+        environment: process.env.NODE_ENV || 'development',
+        timestamp: new Date().toISOString(),
+        database: dbStatus
+      };
+      
+      // Return status based on database connection
+      if (dbStatus.connected) {
+        res.status(200).json(systemInfo);
+      } else {
+        res.status(500).json(systemInfo);
+      }
+    } catch (error) {
+      console.error("Error checking database health:", error);
+      res.status(500).json({
+        status: "error",
+        message: error instanceof Error ? error.message : "Unknown database error",
+        timestamp: new Date().toISOString(),
+      });
+    }
+  });
+  
   // Register API routes
   app.use("/api", apiRouter);
   
