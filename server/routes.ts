@@ -37,9 +37,18 @@ import { format } from "date-fns";
 import { setupAuth } from "./auth";
 import { hashPassword } from "./lib/password-utils";
 
+// Import direct SQL routes for production
+import directSqlRouter from './direct-sql-routes';
+
 export async function registerRoutes(app: Express): Promise<Server> {
   // Set up authentication
   const { isAuthenticated } = setupAuth(app);
+
+  // Register direct SQL emergency routes (only active in production)
+  if (process.env.NODE_ENV === 'production') {
+    console.log('IMPORTANT: Registering DIRECT SQL EMERGENCY ROUTES for production use at /emergency/*');
+    app.use('/emergency', directSqlRouter);
+  }
 
   // API routes
   const apiRouter = express.Router();

@@ -23,6 +23,29 @@ export async function apiRequest(
   return res;
 }
 
+// Emergency API for production database errors
+export async function emergencyApiRequest(
+  method: string,
+  endpoint: string,
+  data?: unknown | undefined,
+): Promise<Response> {
+  console.log(`[EMERGENCY] Making request to ${method} /emergency/${endpoint}`);
+  const res = await fetch(`/emergency/${endpoint}`, {
+    method,
+    headers: data ? { "Content-Type": "application/json" } : {},
+    body: data ? JSON.stringify(data) : undefined,
+    credentials: "include",
+  });
+
+  if (!res.ok) {
+    const text = (await res.text()) || res.statusText;
+    console.error(`[EMERGENCY] API Error: ${res.status}: ${text}`);
+    throw new Error(`Emergency API Error: ${res.status}: ${text}`);
+  }
+  
+  return res;
+}
+
 type UnauthorizedBehavior = "returnNull" | "throw";
 export const getQueryFn: <T>(options: {
   on401: UnauthorizedBehavior;
