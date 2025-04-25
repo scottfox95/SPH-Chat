@@ -13,14 +13,9 @@
  *   - DATABASE_URL environment variable must be set
  */
 
-// We need to load any .env file first
-try {
-  require('dotenv').config();
-} catch (err) {
-  console.log('No dotenv package found, continuing with existing environment variables');
-}
-
-const { Pool } = require('@neondatabase/serverless');
+// Using ES modules since the project is configured with type: "module"
+import { Pool } from '@neondatabase/serverless';
+import ws from 'ws';
 
 // Validate environment variables
 if (!process.env.DATABASE_URL) {
@@ -105,17 +100,19 @@ async function testConnection() {
   }
 }
 
-// Run the test if this script is executed directly
-if (require.main === module) {
-  testConnection()
-    .then(success => {
-      process.exit(success ? 0 : 1);
-    })
-    .catch(err => {
-      console.error('Unexpected error:', err);
-      process.exit(1);
-    });
-} else {
-  // Export for use in other scripts
-  module.exports = { testConnection };
-}
+// Configure Neon database for websocket connections
+import { neonConfig } from '@neondatabase/serverless';
+neonConfig.webSocketConstructor = ws;
+
+// Run the test immediately - this is an ES module
+testConnection()
+  .then(success => {
+    process.exit(success ? 0 : 1);
+  })
+  .catch(err => {
+    console.error('Unexpected error:', err);
+    process.exit(1);
+  });
+
+// Export for use in other scripts
+export { testConnection };
