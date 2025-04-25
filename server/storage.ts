@@ -1,3 +1,4 @@
+import { nanoid } from "nanoid";
 import { 
   users, 
   chatbots, 
@@ -34,6 +35,7 @@ import session from "express-session";
 import connectPg from "connect-pg-simple";
 import { pool } from "./db";
 import createMemoryStore from "memorystore";
+import { generatePublicToken } from "./lib/generatePublicToken";
 
 // Interface for storage methods
 export interface IStorage {
@@ -225,7 +227,8 @@ export class MemStorage implements IStorage {
   
   async createChatbot(chatbot: Omit<InsertChatbot, "publicToken">): Promise<Chatbot> {
     const id = this.currentChatbotId++;
-    const publicToken = nanoid(10);
+    // Use the same UUID generator as the database storage
+    const publicToken = await generatePublicToken();
     const now = new Date();
     
     const newChatbot: Chatbot = {
@@ -637,32 +640,8 @@ export class DatabaseStorage implements IStorage {
         password: "REDACTED"
       }, null, 2));
       
-      // Generate a unique token that hasn't been used before
-      let publicToken = nanoid(10);
-      let tokenExists = true;
-      let attempts = 0;
-      const maxAttempts = 5;
-      
-      // Make sure we don't have a token collision
-      while (tokenExists && attempts < maxAttempts) {
-        attempts++;
-        try {
-          // Check if token already exists
-          const tokenCheck = await db.select({ count: sql`count(*)` })
-            .from(chatbots)
-            .where(eq(chatbots.publicToken, publicToken));
-          
-          tokenExists = parseInt(tokenCheck[0].count.toString()) > 0;
-          if (tokenExists) {
-            console.log(`Token collision detected (attempt ${attempts}), generating new token`);
-            publicToken = nanoid(10);
-          }
-        } catch (tokenErr) {
-          console.warn("Error checking token uniqueness:", tokenErr);
-          // If we can't check, just generate a new one to be safe
-          publicToken = nanoid(10);
-        }
-      }
+      // Generate a UUID token that is guaranteed to be unique
+      const publicToken = await generatePublicToken();
       
       console.log("Using public token:", publicToken);
       
