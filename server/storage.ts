@@ -480,13 +480,22 @@ export class DatabaseStorage implements IStorage {
     // Set up PostgreSQL session store
     const PostgresSessionStore = connectPg(session);
     
-    // Don't use createTableIfMissing, instead create the table via SQL
-    // This avoids the "IDX_session_expire already exists" error
+    // Configure session store with consistent options across environments
+    const isProduction = process.env.NODE_ENV === 'production';
+    
+    // Use more robust session store settings
     this.sessionStore = new PostgresSessionStore({ 
       pool,
-      createTableIfMissing: false,
-      tableName: 'session'
+      createTableIfMissing: false, // We'll create it manually
+      tableName: 'session',
+      // Additional options for production environment
+      ttl: 86400, // Session TTL in seconds (1 day)
+      disableTouch: false, // Keep updating the session expiry on activity
+      errorLog: console.error // Log errors to console
     });
+    
+    // Log which environment we're running in
+    console.log(`Initializing session store in ${isProduction ? 'production' : 'development'} environment`);
     
     // Ensure the session table exists with a manual query
     // This is a safer approach than using createTableIfMissing
@@ -516,6 +525,10 @@ export class DatabaseStorage implements IStorage {
         `);
         
         console.log("Session table and indexes initialized successfully");
+        
+        // Test connection to confirm it's working
+        const testResult = await pool.query('SELECT NOW() as time');
+        console.log(`Database connection confirmed at ${testResult.rows[0].time}`);
       } catch (error) {
         console.error("Error initializing session table:", error);
       }
