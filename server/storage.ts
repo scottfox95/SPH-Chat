@@ -619,16 +619,91 @@ export class DatabaseStorage implements IStorage {
   }
   
   async createChatbot(chatbot: Omit<InsertChatbot, "publicToken">): Promise<Chatbot> {
-    const publicToken = nanoid(10);
-    
-    const [newChatbot] = await db.insert(chatbots).values({
-      ...chatbot,
-      publicToken,
-      isActive: chatbot.isActive ?? true,
-      requireAuth: chatbot.requireAuth ?? false
-    }).returning();
-    
-    return newChatbot;
+    try {
+      console.log("Creating chatbot with data:", JSON.stringify({
+        ...chatbot,
+        password: "REDACTED"
+      }, null, 2));
+      
+      // Generate a unique token that hasn't been used before
+      let publicToken = nanoid(10);
+      let tokenExists = true;
+      let attempts = 0;
+      const maxAttempts = 5;
+      
+      // Make sure we don't have a token collision
+      while (tokenExists && attempts < maxAttempts) {
+        attempts++;
+        try {
+          // Check if token already exists
+          const tokenCheck = await db.select({ count: sql`count(*)` })
+            .from(chatbots)
+            .where(eq(chatbots.publicToken, publicToken));
+          
+          tokenExists = parseInt(tokenCheck[0].count.toString()) > 0;
+          if (tokenExists) {
+            console.log(`Token collision detected (attempt ${attempts}), generating new token`);
+            publicToken = nanoid(10);
+          }
+        } catch (tokenErr) {
+          console.warn("Error checking token uniqueness:", tokenErr);
+          // If we can't check, just generate a new one to be safe
+          publicToken = nanoid(10);
+        }
+      }
+      
+      console.log("Using public token:", publicToken);
+      
+      // Set default values for fields that might be missing
+      const chatbotData = {
+        name: chatbot.name,
+        slackChannelId: chatbot.slackChannelId,
+        createdById: chatbot.createdById,
+        publicToken: publicToken,
+        isActive: chatbot.isActive ?? true,
+        requireAuth: chatbot.requireAuth ?? false,
+        asanaProjectId: chatbot.asanaProjectId || null,
+        asanaConnectionId: null
+      };
+      
+      console.log("Final chatbot data for insertion:", JSON.stringify(chatbotData, null, 2));
+      
+      try {
+        // Try insert with returning
+        const [newChatbot] = await db.insert(chatbots)
+          .values(chatbotData)
+          .returning();
+        
+        console.log("Successfully created chatbot with returning clause:", newChatbot);
+        return newChatbot;
+      } catch (insertError) {
+        console.error("Error during chatbot insertion with returning:", insertError);
+        
+        // If returning fails, try without returning and fetch separately
+        try {
+          console.log("Trying alternative insert without returning");
+          await db.insert(chatbots).values(chatbotData);
+          
+          // Fetch the chatbot we just created
+          const [createdChatbot] = await db.select()
+            .from(chatbots)
+            .where(eq(chatbots.publicToken, publicToken));
+          
+          if (!createdChatbot) {
+            throw new Error("Chatbot was created but couldn't be retrieved");
+          }
+          
+          console.log("Successfully created and retrieved chatbot:", createdChatbot);
+          return createdChatbot;
+        } catch (fallbackError) {
+          console.error("Fallback insertion also failed:", fallbackError);
+          throw fallbackError;
+        }
+      }
+    } catch (error) {
+      console.error("Error in createChatbot:", error);
+      throw error;
+    }
   }
   
   async updateChatbot(id: number, data: Partial<InsertChatbot>): Promise<Chatbot | undefined> {
