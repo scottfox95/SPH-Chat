@@ -1265,7 +1265,7 @@ You should **never make up information**. You may summarize or synthesize detail
     });
   });
   
-  // Database health check endpoint
+  // Basic database health check endpoint
   apiRouter.get("/system/db-status", async (req, res) => {
     try {
       // Import the testDatabaseConnection function
@@ -1293,6 +1293,43 @@ You should **never make up information**. You may summarize or synthesize detail
       res.status(500).json({
         status: "error",
         message: error instanceof Error ? error.message : "Unknown database error",
+        timestamp: new Date().toISOString(),
+      });
+    }
+  });
+  
+  // Comprehensive database verification endpoint
+  apiRouter.get("/system/db-verify", async (req, res) => {
+    try {
+      // Import the verifyDatabaseSetup function
+      const { verifyDatabaseSetup } = await import('./db');
+      
+      // Perform comprehensive database verification
+      const verificationResult = await verifyDatabaseSetup();
+      
+      // Add system info to the result
+      const systemInfo = {
+        appVersion: process.env.npm_package_version || '1.0.0',
+        nodeVersion: process.version,
+        environment: process.env.NODE_ENV || 'development',
+        platform: process.platform,
+        timestamp: new Date().toISOString(),
+        uptime: process.uptime(),
+        verification: verificationResult
+      };
+      
+      // Return appropriate status code based on verification result
+      if (verificationResult.success) {
+        res.status(200).json(systemInfo);
+      } else {
+        // Still return 200 but with success: false to allow the frontend to handle it
+        res.status(200).json(systemInfo);
+      }
+    } catch (error) {
+      console.error("Error verifying database setup:", error);
+      res.status(500).json({
+        status: "error",
+        message: error instanceof Error ? error.message : "Unknown database verification error",
         timestamp: new Date().toISOString(),
       });
     }

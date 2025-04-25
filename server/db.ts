@@ -53,3 +53,92 @@ export async function testDatabaseConnection() {
     };
   }
 }
+
+// More comprehensive database verification function
+export async function verifyDatabaseSetup() {
+  try {
+    console.log('Verifying database setup...');
+    
+    // Basic connection check
+    const connectionCheck = await testDatabaseConnection();
+    if (!connectionCheck.connected) {
+      return {
+        success: false,
+        step: 'connection',
+        error: connectionCheck.error
+      };
+    }
+    
+    // Check for required tables
+    const requiredTables = [
+      'users', 'chatbots', 'documents', 'messages', 
+      'summaries', 'email_recipients', 'session'
+    ];
+    
+    const tableResult = await pool.query(`
+      SELECT table_name 
+      FROM information_schema.tables 
+      WHERE table_schema = 'public'
+      ORDER BY table_name
+    `);
+    
+    // Extract table names
+    const existingTables = tableResult.rows.map(row => row.table_name);
+    
+    // Check for missing tables
+    const missingTables = requiredTables.filter(
+      table => !existingTables.includes(table)
+    );
+    
+    if (missingTables.length > 0) {
+      return {
+        success: false,
+        step: 'schema',
+        error: `Missing required tables: ${missingTables.join(', ')}`,
+        existingTables,
+        missingTables
+      };
+    }
+    
+    // Verify database content (e.g., check if at least one user exists)
+    const userCheck = await pool.query('SELECT COUNT(*) as count FROM users');
+    const userCount = parseInt(userCheck.rows[0].count, 10);
+    
+    if (userCount === 0) {
+      return {
+        success: false,
+        step: 'content',
+        error: 'No users found in database',
+        userCount
+      };
+    }
+    
+    // All checks passed
+    return {
+      success: true,
+      tables: existingTables,
+      userCount,
+      poolInfo: {
+        totalConnections: pool.totalCount,
+        idleConnections: pool.idleCount
+      },
+      environment: process.env.NODE_ENV || 'development'
+    };
+  } catch (error) {
+    console.error('Database verification failed:', error);
+    return { 
+      success: false, 
+      step: 'unknown',
+      error: error instanceof Error ? error.message : String(error)
+    };
+  }
+}
+
+// Log database connection confirmed at startup
+pool.query('SELECT NOW() as time')
+  .then(result => {
+    console.log(`Database connection confirmed at ${result.rows[0].time}`);
+  })
+  .catch(error => {
+    console.error('Failed to connect to database at startup:', error);
+  });
