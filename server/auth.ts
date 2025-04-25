@@ -15,7 +15,8 @@ declare global {
 export function setupAuth(app: Express) {
   // Configure session based on environment
   const isProduction = process.env.NODE_ENV === 'production';
-  const domain = isProduction ? '.sphbuddy.info' : undefined;
+  // Don't use dot prefix for domain in most cases - this was likely causing issues
+  const domain = isProduction ? 'sphbuddy.info' : undefined;
   
   // Log environment settings
   console.log(`Configuring authentication for ${isProduction ? 'production' : 'development'} environment`);
@@ -31,15 +32,19 @@ export function setupAuth(app: Express) {
     cookie: {
       maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
       secure: isProduction, // Use secure cookies only in production
-      sameSite: isProduction ? 'none' : 'lax', // Allow cross-site cookie in production
+      // Most sites need lax in both environments
+      sameSite: 'lax', 
       domain: domain, // Set domain in production
       httpOnly: true, // Better security: client-side JS cannot access cookies
+      path: '/',     // Ensure cookie is valid for all paths
     },
     store: storage.sessionStore,
     proxy: true, // Trust the reverse proxy when secure is set
   };
 
-  app.set("trust proxy", 1);
+  // In production we need to trust proxy to handle secure cookies correctly
+  // This is crucial for secure cookies to work behind a load balancer or proxy
+  app.set("trust proxy", isProduction ? 1 : 0);
   app.use(session(sessionSettings));
   app.use(passport.initialize());
   app.use(passport.session());
@@ -148,11 +153,24 @@ export function setupAuth(app: Express) {
       environment: isProduction ? 'production' : 'development',
       cookieSettings: {
         secure: isProduction,
-        sameSite: isProduction ? 'none' : 'lax',
-        domain: isProduction ? '.sphbuddy.info' : undefined,
+        sameSite: 'lax',
+        domain: isProduction ? 'sphbuddy.info' : undefined,
+        path: '/',
+      },
+      cors: {
+        enabled: true,
+        origin: isProduction 
+          ? ['https://sphbuddy.info', 'https://www.sphbuddy.info']
+          : 'any',
+        credentials: true
       },
       userExists: !!req.user,
-      timestamp: new Date().toISOString()
+      userId: req.user ? (req.user as Express.User).id : null,
+      timestamp: new Date().toISOString(),
+      // Include raw session cookie info for debugging
+      sessionCookie: req.headers.cookie ? 
+        req.headers.cookie.split(';').find(c => c.trim().startsWith('connect.sid=')) : 
+        null
     };
     
     res.json(authStatus);
