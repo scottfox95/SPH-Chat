@@ -669,22 +669,75 @@ export class DatabaseStorage implements IStorage {
       console.log("Final chatbot data for insertion:", JSON.stringify(chatbotData, null, 2));
       
       try {
-        // Try insert with returning
-        const [newChatbot] = await db.insert(chatbots)
-          .values(chatbotData)
-          .returning();
+        // Using raw SQL for the most compatibility across PostgreSQL versions
+        console.log("Attempting direct SQL insert of chatbot");
         
-        console.log("Successfully created chatbot with returning clause:", newChatbot);
-        return newChatbot;
+        const result = await db.execute(sql`
+          INSERT INTO chatbots (
+            name, 
+            slack_channel_id, 
+            created_by_id, 
+            public_token, 
+            is_active, 
+            require_auth
+          )
+          VALUES (
+            ${chatbotData.name}, 
+            ${chatbotData.slackChannelId}, 
+            ${chatbotData.createdById}, 
+            ${chatbotData.publicToken}, 
+            ${chatbotData.isActive}, 
+            ${chatbotData.requireAuth}
+          )
+          RETURNING *
+        `);
+        
+        if (result && result.length > 0) {
+          console.log("Successfully created chatbot with direct SQL:", result[0]);
+          return result[0];
+        }
+        
+        // If we don't get a result with RETURNING, try to fetch it
+        console.log("Insert succeeded but no returning data, fetching chatbot by token");
+        const [createdChatbot] = await db.select()
+          .from(chatbots)
+          .where(eq(chatbots.publicToken, publicToken));
+        
+        if (!createdChatbot) {
+          throw new Error("Chatbot was created but couldn't be retrieved");
+        }
+        
+        console.log("Successfully retrieved created chatbot:", createdChatbot);
+        return createdChatbot;
       } catch (insertError) {
-        console.error("Error during chatbot insertion with returning:", insertError);
+        console.error("Error during chatbot insertion:", insertError);
         
-        // If returning fails, try without returning and fetch separately
+        // Last-resort fallback - try plain insert
         try {
-          console.log("Trying alternative insert without returning");
-          await db.insert(chatbots).values(chatbotData);
+          console.log("Trying direct SQL insert without returning");
+          await db.execute(sql`
+            INSERT INTO chatbots (
+              name, 
+              slack_channel_id, 
+              created_by_id, 
+              public_token, 
+              is_active, 
+              require_auth
+            )
+            VALUES (
+              ${chatbotData.name}, 
+              ${chatbotData.slackChannelId}, 
+              ${chatbotData.createdById}, 
+              ${chatbotData.publicToken}, 
+              ${chatbotData.isActive}, 
+              ${chatbotData.requireAuth}
+            )
+          `);
           
-          // Fetch the chatbot we just created
+          // Wait a moment to ensure the database has time to complete the insert
+          await new Promise(resolve => setTimeout(resolve, 500));
+          
+          // Try to fetch the chatbot we just created
           const [createdChatbot] = await db.select()
             .from(chatbots)
             .where(eq(chatbots.publicToken, publicToken));
@@ -693,11 +746,24 @@ export class DatabaseStorage implements IStorage {
             throw new Error("Chatbot was created but couldn't be retrieved");
           }
           
-          console.log("Successfully created and retrieved chatbot:", createdChatbot);
+          console.log("Successfully created and retrieved chatbot with fallback method:", createdChatbot);
           return createdChatbot;
         } catch (fallbackError) {
-          console.error("Fallback insertion also failed:", fallbackError);
-          throw fallbackError;
+          console.error("All insertion methods failed:", fallbackError);
+          
+          // Try to provide helpful diagnostic information
+          try {
+            const tableInfo = await db.execute(sql`
+              SELECT column_name, data_type, is_nullable
+              FROM information_schema.columns
+              WHERE table_name = 'chatbots'
+            `);
+            console.error("Chatbots table schema:", tableInfo);
+          } catch (schemaError) {
+            console.error("Failed to get schema info:", schemaError);
+          }
+          
+          throw new Error(`Failed to create chatbot: ${fallbackError instanceof Error ? fallbackError.message : "Unknown error"}`);
         }
       }
     } catch (error) {
