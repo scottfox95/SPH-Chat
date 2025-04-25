@@ -29,9 +29,9 @@ export async function validateSlackChannel(channelId: string): Promise<{
   error?: string;
   isPrivate?: boolean;
 }> {
-  // Early return with success if token is missing or invalid (for deployments)
-  if (!process.env.SLACK_BOT_TOKEN || process.env.SLACK_BOT_TOKEN === "xoxb-placeholder") {
-    console.warn("Skipping Slack validation as no valid token is configured");
+  // Always return success if token is missing or invalid (for deployments)
+  if (!process.env.SLACK_BOT_TOKEN) {
+    console.warn("Skipping Slack validation as no token is configured");
     return { 
       valid: true,
       name: "Unknown Channel (No Token)",
@@ -127,6 +127,12 @@ export async function getSlackMessages(channelId: string, limit = 100) {
  * @returns Array of formatted message strings
  */
 export async function getFormattedSlackMessages(channelId: string) {
+  // If no Slack token is configured, return an empty array
+  if (!process.env.SLACK_BOT_TOKEN) {
+    console.warn("Skipping Slack message fetching as no token is configured");
+    return [];
+  }
+  
   try {
     const messages = await getSlackMessages(channelId);
     
@@ -198,6 +204,12 @@ export async function getFormattedSlackMessages(channelId: string) {
  * @returns Array of messages from the past week
  */
 export async function getWeeklySlackMessages(channelId: string) {
+  // If no Slack token is configured, return an empty array
+  if (!process.env.SLACK_BOT_TOKEN) {
+    console.warn("Skipping weekly Slack message fetching as no token is configured");
+    return [];
+  }
+  
   try {
     const allMessages = await getSlackMessages(channelId, 200);
     const oneWeekAgo = new Date();
@@ -217,9 +229,15 @@ export async function getWeeklySlackMessages(channelId: string) {
  * Sends a message to a Slack channel
  * @param channelId The ID of the channel to send the message to
  * @param text The message text
- * @returns Response from the Slack API
+ * @returns Response from the Slack API or null if sending failed
  */
 export async function sendSlackMessage(channelId: string, text: string) {
+  // If no Slack token is configured, return null
+  if (!process.env.SLACK_BOT_TOKEN) {
+    console.warn("Skipping Slack message sending as no token is configured");
+    return null;
+  }
+  
   try {
     const message: ChatPostMessageArguments = {
       channel: channelId,
@@ -230,7 +248,7 @@ export async function sendSlackMessage(channelId: string, text: string) {
     return result;
   } catch (error) {
     console.error("Error sending Slack message:", error);
-    throw error;
+    return null;
   }
 }
 

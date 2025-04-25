@@ -20,10 +20,11 @@ export function setupAuth(app: Express) {
     saveUninitialized: false,
     cookie: {
       maxAge: 1000 * 60 * 60 * 24, // 1 day
-      secure: false, // Allow cookies over HTTP for Replit deployments
+      secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
       sameSite: 'lax', // Better cookie security without breaking functionality
     },
     store: storage.sessionStore,
+    proxy: true, // Trust the reverse proxy when secure is set
   };
 
   app.set("trust proxy", 1);
@@ -128,71 +129,24 @@ export function setupAuth(app: Express) {
   // Middleware to check if user is authenticated
   return {
     isAuthenticated: (req: Request, res: Response, next: NextFunction) => {
-      // Skip authentication entirely in production for now
-      if (process.env.NODE_ENV === 'production') {
-        console.log("Production environment: BYPASSING AUTHENTICATION");
-        
-        // For critical operations that need a user ID, set a default user
-        if (req.path.includes('/api/chatbots') || req.path.includes('/documents')) {
-          // Create a temporary admin user object for this request only
-          // This doesn't modify the database - just allows the current request to proceed
-          req.user = {
-            id: 1,
-            username: 'admin',
-            displayName: 'Admin User',
-            role: 'admin',
-            password: '',  // Never used - just to satisfy the type
-            initial: 'A',
-            createdAt: new Date()
-          };
-          console.log("Set temporary admin user for production request");
+      // Log authentication checks in development for debugging
+      if (process.env.NODE_ENV !== 'production') {
+        console.log("Auth check - session ID:", req.sessionID);
+        console.log("Auth check - isAuthenticated:", req.isAuthenticated());
+        if (req.user) {
+          console.log("Auth check - user:", `ID: ${(req.user as Express.User).id}, Username: ${(req.user as Express.User).username}`);
+        } else {
+          console.log("Auth check - user: No user");
         }
-        
+      }
+      
+      // Standard authentication check for all environments
+      if (req.isAuthenticated()) {
         return next();
       }
       
-      // For development environment, use regular auth checks
-      try {
-        console.log("Auth check - session ID:", req.sessionID);
-        console.log("Auth check - isAuthenticated:", req.isAuthenticated());
-        console.log("Auth check - user:", req.user ? `ID: ${(req.user as Express.User).id}, Username: ${(req.user as Express.User).username}` : "No user");
-        
-        // First check session-based auth (Passport.js)
-        if (req.isAuthenticated()) {
-          return next();
-        }
-        
-        // Special case for critical paths only in dev
-        if ((req.path === '/api/chatbots' && req.method === 'POST')) {
-          console.log("Dev environment: Allowing critical operation without authentication for testing");
-          
-          // Check for any user to set as creator
-          storage.getUsers().then(users => {
-            // Use first available user
-            if (users.length > 0) {
-              req.user = users[0];
-              return next();
-            } else {
-              // No users found - very unlikely but handle it
-              return res.status(400).json({ 
-                message: "Cannot proceed",
-                details: "No users exist in the system"
-              });
-            }
-          }).catch(err => {
-            console.error("Error finding users:", err);
-            res.status(500).json({ message: "Authentication error" });
-          });
-          return;
-        }
-        
-        // For any other authenticated routes in dev, fail if not authenticated
-        console.error("Auth check failed - not authenticated");
-        return res.status(401).json({ message: "Not authenticated" });
-      } catch (error) {
-        console.error("Auth check error:", error);
-        return res.status(500).json({ message: "Authentication error" });
-      }
+      // If not authenticated, return 401
+      return res.status(401).json({ message: "Authentication required" });
     }
   };
 }

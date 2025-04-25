@@ -13,7 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { apiRequest, emergencyApiRequest } from "@/lib/queryClient";
+import { apiRequest } from "@/lib/queryClient";
 import { queryClient } from "@/lib/queryClient";
 import { useLocation } from "wouter";
 
@@ -47,113 +47,30 @@ export default function CreateChatbotForm() {
       setIsSubmitting(true);
       console.log("Submitting chatbot creation with data:", data);
       
-      // First try the normal API endpoint
       try {
-        console.log("Attempting chatbot creation via standard API...");
-        const response = await fetch('/api/chatbots', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(data),
-          credentials: 'include',
+        // Use the standardized apiRequest helper for consistency
+        const response = await apiRequest('POST', '/api/chatbots', data);
+        const newChatbot = await response.json();
+        
+        console.log("Successfully created chatbot:", newChatbot);
+        
+        // Show success message
+        toast({
+          title: "Chatbot created",
+          description: `${newChatbot.name} chatbot has been created successfully.`,
         });
         
-        console.log("Standard API response status:", response.status);
+        // Refresh chatbot list
+        await queryClient.invalidateQueries({ queryKey: ["/api/chatbots"] });
         
-        // If the response is ok, process it as normal
-        if (response.ok) {
-          const newChatbot = await response.json();
-          console.log("Successfully created chatbot via standard API:", newChatbot);
-          
-          // Show success message
-          toast({
-            title: "Chatbot created",
-            description: `${newChatbot.name} chatbot has been created successfully.`,
-          });
-          
-          // Refresh chatbot list
-          await queryClient.invalidateQueries({ queryKey: ["/api/chatbots"] });
-          
-          // Navigate to the new chatbot
-          window.location.href = `/chatbot/${newChatbot.id}`;
-          return;
-        }
-        
-        // If we're here, the standard API failed - get error details
-        let errorDetail = "";
-        try {
-          const errorData = await response.json();
-          console.error("Error response data:", errorData);
-          errorDetail = errorData.message || errorData.details || "";
-        } catch {
-          errorDetail = response.statusText;
-        }
-        
-        // Throw error to trigger emergency API attempt
-        console.warn(`Standard API failed with ${response.status}: ${errorDetail}`);
-        throw new Error(`Server error (${response.status}): ${errorDetail}`);
-      } catch (standardApiError) {
-        console.warn("Standard API attempt failed, trying emergency API...", standardApiError);
-        
-        // If the standard API failed, try the emergency API
-        try {
-          console.log("Attempting emergency chatbot creation...");
-          
-          // Set up database if needed
-          try {
-            const setupResponse = await emergencyApiRequest('POST', 'setup', {});
-            console.log("Emergency setup response:", await setupResponse.json());
-          } catch (setupError) {
-            console.warn("Emergency setup failed but continuing:", setupError);
-          }
-          
-          // Create chatbot using emergency API
-          const emergencyResponse = await emergencyApiRequest('POST', 'chatbot', {
-            name: data.name,
-            slackChannelId: data.slackChannelId
-          });
-          
-          const newChatbot = await emergencyResponse.json();
-          console.log("Successfully created chatbot via emergency API:", newChatbot);
-          
-          // Show success message with emergency note
-          toast({
-            title: "Chatbot created",
-            description: `${newChatbot.name} chatbot has been created using emergency mode.`,
-          });
-          
-          // Refresh chatbot list (try both endpoints)
-          try {
-            await queryClient.invalidateQueries({ queryKey: ["/api/chatbots"] });
-          } catch (e) {
-            console.warn("Failed to invalidate standard API cache:", e);
-          }
-          
-          try {
-            await emergencyApiRequest('GET', 'chatbots', {});
-          } catch (e) {
-            console.warn("Failed to fetch emergency chatbots:", e);
-          }
-          
-          // Show success message for potential next steps
-          toast({
-            title: "Important",
-            description: "Emergency mode used - some chatbot features may be limited. Contact support if issues persist.",
-            duration: 8000,
-          });
-          
-          // Navigate to the dashboard instead of the chatbot detail page
-          // since the emergency chatbot might have different structure
-          window.location.href = '/';
-          return;
-        } catch (emergencyError) {
-          console.error("Emergency API also failed:", emergencyError);
-          throw emergencyError;
-        }
+        // Navigate to the new chatbot
+        window.location.href = `/chatbot/${newChatbot.id}`;
+      } catch (error) {
+        console.error("Failed to create chatbot:", error);
+        throw error;
       }
     } catch (error) {
-      console.error("All attempts to create chatbot failed", error);
+      console.error("Chatbot creation failed", error);
       const errorMessage = error instanceof Error ? error.message : "Unknown error";
       toast({
         title: "Creation failed",
