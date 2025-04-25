@@ -75,6 +75,11 @@ app.use((req, res, next) => {
     await setupVite(app, server);
   } else {
     serveStatic(app);
+    
+    // Add explicit handler for root path in production
+    app.get('/', (req, res) => {
+      res.sendFile(path.resolve(import.meta.dirname, "public", "index.html"));
+    });
   }
 
   // ALWAYS serve the app on port 5000
