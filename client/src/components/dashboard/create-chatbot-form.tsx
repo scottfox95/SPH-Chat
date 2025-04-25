@@ -45,26 +45,66 @@ export default function CreateChatbotForm() {
   const onSubmit = async (data: FormValues) => {
     try {
       setIsSubmitting(true);
+      console.log("Submitting chatbot creation with data:", data);
       
-      const response = await apiRequest("POST", "/api/chatbots", data);
-      const newChatbot = await response.json();
-      
-      // Show success message
-      toast({
-        title: "Chatbot created",
-        description: `${newChatbot.name} chatbot has been created successfully.`,
-      });
-      
-      // Refresh chatbot list
-      await queryClient.invalidateQueries({ queryKey: ["/api/chatbots"] });
-      
-      // Navigate to the new chatbot using hard navigation
-      window.location.href = `/chatbot/${newChatbot.id}`;
+      let response;
+      try {
+        response = await fetch('/api/chatbots', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+          credentials: 'include',
+        });
+        
+        console.log("Raw response status:", response.status);
+        // Get response headers in a compatible way
+        const headers: Record<string, string> = {};
+        response.headers.forEach((value, key) => {
+          headers[key] = value;
+        });
+        console.log("Raw response headers:", headers);
+        
+        // Check if the response is ok (status in the range 200-299)
+        if (!response.ok) {
+          // Try to get error details from the response
+          let errorDetail = "";
+          try {
+            const errorData = await response.json();
+            console.error("Error response data:", errorData);
+            errorDetail = errorData.message || errorData.details || "";
+          } catch {
+            errorDetail = response.statusText;
+          }
+          
+          throw new Error(`Server error (${response.status}): ${errorDetail}`);
+        }
+        
+        const newChatbot = await response.json();
+        console.log("Successfully created chatbot:", newChatbot);
+        
+        // Show success message
+        toast({
+          title: "Chatbot created",
+          description: `${newChatbot.name} chatbot has been created successfully.`,
+        });
+        
+        // Refresh chatbot list
+        await queryClient.invalidateQueries({ queryKey: ["/api/chatbots"] });
+        
+        // Navigate to the new chatbot using hard navigation
+        window.location.href = `/chatbot/${newChatbot.id}`;
+      } catch (fetchError) {
+        console.error("Fetch error details:", fetchError);
+        throw fetchError;
+      }
     } catch (error) {
       console.error("Failed to create chatbot", error);
+      const errorMessage = error instanceof Error ? error.message : "Unknown error";
       toast({
         title: "Creation failed",
-        description: "Failed to create the chatbot. Please try again.",
+        description: `Failed to create the chatbot: ${errorMessage}`,
         variant: "destructive",
       });
     } finally {

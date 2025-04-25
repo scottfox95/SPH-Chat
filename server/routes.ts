@@ -194,38 +194,67 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   apiRouter.post("/chatbots", isAuthenticated, async (req, res) => {
     try {
+      console.log("POST /api/chatbots received with body:", req.body);
+      
       const { name, slackChannelId } = req.body;
       
       if (!name || !slackChannelId) {
+        console.warn("Missing required fields in request:", req.body);
         return res.status(400).json({ message: "Name and Slack channel ID are required" });
       }
       
       // Try to validate the Slack channel ID, but continue even if validation fails
       let channelValidation;
       try {
+        console.log("Attempting to validate Slack channel:", slackChannelId);
         channelValidation = await validateSlackChannel(slackChannelId);
         
         // Log result but don't block creation if validation fails
         if (!channelValidation.valid) {
           console.warn(`Slack channel validation failed but continuing: ${channelValidation.error}`);
+        } else {
+          console.log("Slack channel validation succeeded:", channelValidation);
         }
       } catch (error) {
         console.warn("Slack validation error but continuing with chatbot creation:", error);
       }
       
-      const user = req.user as Express.User;
-      const chatbot = await storage.createChatbot({
-        name,
-        slackChannelId,
-        createdById: user.id,
-        isActive: true,
-        requireAuth: false,
-      });
+      // Ensure we have a valid user before proceeding
+      if (!req.user || !(req.user as Express.User).id) {
+        console.error("No authenticated user found in request. Session may be invalid.");
+        return res.status(401).json({ 
+          message: "Authentication required",
+          details: "No valid user session found. Please log in again."
+        });
+      }
       
-      res.status(201).json(chatbot);
+      const user = req.user as Express.User;
+      console.log("Creating chatbot for user:", user.id, user.username);
+      
+      try {
+        const chatbot = await storage.createChatbot({
+          name,
+          slackChannelId,
+          createdById: user.id,
+          isActive: true,
+          requireAuth: false,
+        });
+        
+        console.log("Successfully created chatbot:", chatbot);
+        res.status(201).json(chatbot);
+      } catch (storageError) {
+        console.error("Database error creating chatbot:", storageError);
+        return res.status(500).json({ 
+          message: "Database error",
+          details: storageError instanceof Error ? storageError.message : "Unknown database error"
+        });
+      }
     } catch (error) {
-      console.error("Error creating chatbot:", error);
-      res.status(500).json({ message: "Failed to create chatbot" });
+      console.error("Unexpected error creating chatbot:", error);
+      res.status(500).json({ 
+        message: "Failed to create chatbot", 
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
     }
   });
   
