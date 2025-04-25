@@ -13,15 +13,27 @@ declare global {
 }
 
 export function setupAuth(app: Express) {
-  // Use existing session store from storage
+  // Configure session based on environment
+  const isProduction = process.env.NODE_ENV === 'production';
+  const domain = isProduction ? '.sphbuddy.info' : undefined;
+  
+  // Log environment settings
+  console.log(`Configuring authentication for ${isProduction ? 'production' : 'development'} environment`);
+  if (isProduction) {
+    console.log(`Using domain: ${domain} for cookies`);
+  }
+  
+  // Use environment-specific session settings
   const sessionSettings: session.SessionOptions = {
     secret: process.env.SESSION_SECRET || "homebuildbot-secret",
     resave: false,
     saveUninitialized: false,
     cookie: {
-      maxAge: 1000 * 60 * 60 * 24, // 1 day
-      secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
-      sameSite: 'lax', // Better cookie security without breaking functionality
+      maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+      secure: isProduction, // Use secure cookies only in production
+      sameSite: isProduction ? 'none' : 'lax', // Allow cross-site cookie in production
+      domain: domain, // Set domain in production
+      httpOnly: true, // Better security: client-side JS cannot access cookies
     },
     store: storage.sessionStore,
     proxy: true, // Trust the reverse proxy when secure is set
@@ -124,6 +136,26 @@ export function setupAuth(app: Express) {
       role: user.role,
       initial: user.initial,
     });
+  });
+
+  // Auth status endpoint (for debugging authentication issues)
+  app.get("/api/auth-status", (req, res) => {
+    // Provide basic auth info without exposing sensitive data
+    const isProduction = process.env.NODE_ENV === 'production';
+    const authStatus = {
+      authenticated: req.isAuthenticated(),
+      sessionID: req.sessionID,
+      environment: isProduction ? 'production' : 'development',
+      cookieSettings: {
+        secure: isProduction,
+        sameSite: isProduction ? 'none' : 'lax',
+        domain: isProduction ? '.sphbuddy.info' : undefined,
+      },
+      userExists: !!req.user,
+      timestamp: new Date().toISOString()
+    };
+    
+    res.json(authStatus);
   });
   
   // Middleware to check if user is authenticated
