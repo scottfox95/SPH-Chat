@@ -47,6 +47,14 @@
       "displayName": "Test5",
       "role": "user",
       "initial": "TS"
+    },
+    {
+      "id": 9,
+      "username": "Test7",
+      "password": "8e0f8dfa6954766b4b151af5a38348a3a39684b523593c640c312f5df4a8ff007d679bdbb4735ce53044f98207699048e04eee92562cd226b148b2b9cd4f2df0.5de72040c520f8557e246ec764e4f0b8",
+      "displayName": "test7",
+      "role": "admin",
+      "initial": "TS"
     }
   ],
   "chatbots": [
@@ -92,7 +100,26 @@
           "createdAt": "2025-04-24T20:56:14.849Z"
         }
       ],
-      "messages": [],
+      "messages": [
+        {
+          "id": 35,
+          "chatbotId": 1,
+          "userId": null,
+          "content": "what happened today",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-04-28T17:43:24.721Z"
+        },
+        {
+          "id": 36,
+          "chatbotId": 1,
+          "userId": null,
+          "content": "I'm having trouble connecting to my knowledge base. Please try again later.",
+          "isUserMessage": false,
+          "citation": "Error",
+          "createdAt": "2025-04-28T17:43:26.674Z"
+        }
+      ],
       "summaries": [],
       "emailRecipients": [],
       "asanaProjects": []
@@ -419,6 +446,24 @@
           "isUserMessage": false,
           "citation": "No specific source available",
           "createdAt": "2025-04-28T15:55:08.323Z"
+        },
+        {
+          "id": 37,
+          "chatbotId": 3,
+          "userId": null,
+          "content": "what happened today>",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-04-28T17:43:55.589Z"
+        },
+        {
+          "id": 38,
+          "chatbotId": 3,
+          "userId": null,
+          "content": "Today, the drywall team is working on sanding and finishing any imperfections in the ceiling. Gerardo and Alex are on site, and pavers are being delivered. Additionally, backfilling and grading of the front yard are in progress, with tree saving and mulch sock installation underway. Gravel installation is scheduled for tomorrow, which will allow the start of paver installation next week, according to Aaron Wilson and Ron Heller on April 28, 2025.",
+          "isUserMessage": false,
+          "citation": "Aaron Wilson and Ron Heller on April 28, 2025",
+          "createdAt": "2025-04-28T17:44:00.222Z"
         }
       ],
       "summaries": [],
@@ -593,8 +638,84 @@
       "summaries": [],
       "emailRecipients": [],
       "asanaProjects": []
+    },
+    {
+      "chatbot": {
+        "id": 17,
+        "name": "Test 2383",
+        "slackChannelId": "C07F3EB2F5F",
+        "asanaProjectId": null,
+        "asanaConnectionId": null,
+        "createdById": 4,
+        "publicToken": "9ad39a8a-7642-4d3a-a929-2527a40ca809",
+        "isActive": true,
+        "requireAuth": false,
+        "createdAt": "2025-04-28T17:42:51.660Z"
+      },
+      "documents": [],
+      "messages": [
+        {
+          "id": 33,
+          "chatbotId": 17,
+          "userId": null,
+          "content": "what happened today",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-04-28T17:43:00.879Z"
+        },
+        {
+          "id": 34,
+          "chatbotId": 17,
+          "userId": null,
+          "content": "I wasn't able to find that information in the project files or messages. Could you provide more context or specify which aspect of the project you're interested in? This will help me assist you better.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-04-28T17:43:02.394Z"
+        }
+      ],
+      "summaries": [],
+      "emailRecipients": [],
+      "asanaProjects": []
+    },
+    {
+      "chatbot": {
+        "id": 18,
+        "name": "Dev 1320",
+        "slackChannelId": "C06S1QZU9N2",
+        "asanaProjectId": null,
+        "asanaConnectionId": null,
+        "createdById": 4,
+        "publicToken": "255a18d9-98b7-4a02-84df-f0183728b389",
+        "isActive": true,
+        "requireAuth": false,
+        "createdAt": "2025-04-28T17:44:36.458Z"
+      },
+      "documents": [],
+      "messages": [
+        {
+          "id": 39,
+          "chatbotId": 18,
+          "userId": null,
+          "content": "what happened today?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-04-28T17:44:49.198Z"
+        },
+        {
+          "id": 40,
+          "chatbotId": 18,
+          "userId": null,
+          "content": "Today, several activities took place on the Dev 1320 homebuilding project:\n\n1. The drywall team is working on sanding and finishing any imperfections in the ceiling, with Gerardo and Alex present on site.\n2. Pavers are being delivered today, and the gravel installation is scheduled for tomorrow.\n3. Arturo is scheduled to install handrails today.\n4. The electrical trim work is set to continue on Saturday and Monday.\n\nThese updates were provided by Aaron Wilson and Ron Heller in the Slack channel today.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-04-28T17:44:52.026Z"
+        }
+      ],
+      "summaries": [],
+      "emailRecipients": [],
+      "asanaProjects": []
     }
   ],
-  "exportedAt": "2025-04-28T17:41:38.428Z",
+  "exportedAt": "2025-04-28T17:55:16.492Z",
   "exportedBy": "SPH Chat Migration Utility"
 }

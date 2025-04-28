@@ -2,6 +2,7 @@ import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import cors from "cors";
+import path from "path";
 import { runMigration } from "./lib/data-migration";
 
 // Configure environment-specific settings
@@ -27,6 +28,12 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cors(corsOptions));
+
+// Log database connection URL at startup
+console.log(
+  "[boot] Using DB →",
+  process.env.DATABASE_URL || process.env.POSTGRES_URL || process.env.REPLIT_DB_URL
+);
 
 app.use((req, res, next) => {
   const start = Date.now();
