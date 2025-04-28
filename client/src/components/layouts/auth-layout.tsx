@@ -1,129 +1,61 @@
-import { ReactNode } from "react";
+import React from "react";
+import { Card, CardContent } from "@/components/ui/card";
 
 interface AuthLayoutProps {
-  children: ReactNode;
+  children: React.ReactNode;
 }
 
 export default function AuthLayout({ children }: AuthLayoutProps) {
   return (
-    <div className="flex min-h-screen flex-col">
-      <div className="flex min-h-screen flex-1 flex-col bg-background lg:grid lg:grid-cols-2">
-        {/* Left Column - Auth Form */}
-        <div className="flex flex-col justify-center px-4 py-12 md:px-6 xl:px-24">
-          <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[450px]">
-            <div className="flex flex-col space-y-2 text-center">
-              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded bg-primary/10">
-                <img 
-                  src="/SPHChat_Icon_PNG.png" 
-                  alt="SPH Chat" 
-                  className="h-10 w-10"
-                  onError={(e) => {
-                    e.currentTarget.onerror = null;
-                    e.currentTarget.style.display = 'none';
-                    e.currentTarget.parentElement!.innerHTML = '<span class="text-xl font-bold text-primary">SPH</span>';
-                  }}
-                />
-              </div>
-              <h1 className="text-2xl font-semibold tracking-tight">
-                Welcome to SPH ChatBot
-              </h1>
-              <p className="text-sm text-muted-foreground">
-                Sign in to your account or create a new one
-              </p>
+    <div className="min-h-screen flex items-center justify-center bg-muted/40 px-4 py-8">
+      <div className="grid lg:grid-cols-2 gap-8 w-full max-w-6xl">
+        {/* Auth Form Card */}
+        <Card className="shadow-lg">
+          <CardContent className="p-8">
+            <div className="flex justify-center mb-8">
+              <img 
+                src="/images/sph-chat-logo.png" 
+                alt="SPH Chat Logo" 
+                className="h-16" 
+              />
             </div>
-            
             {children}
-          </div>
-        </div>
-        
-        {/* Right Column - Hero Section */}
-        <div className="hidden lg:flex bg-muted items-center justify-center p-12">
-          <div className="max-w-md text-center">
-            <div className="mb-8 flex justify-center">
-              <div className="rounded-full bg-background p-8 shadow-lg">
-                <img 
-                  src="/images/sph-chat-logo.png" 
-                  alt="SPH ChatBot" 
-                  className="h-24 w-24"
-                  onError={(e) => {
-                    e.currentTarget.onerror = null;
-                    e.currentTarget.style.display = 'none';
-                    e.currentTarget.parentElement!.innerHTML = '<span class="text-5xl font-bold text-primary">SPH</span>';
-                  }}
-                />
-              </div>
-            </div>
-            <h2 className="text-3xl font-bold tracking-tight">
-              Intelligent Home Building Chatbots
-            </h2>
-            <p className="mt-4 text-lg text-muted-foreground">
-              Create AI-powered chatbots that enhance project management for your homebuilding company. 
-              Connect to Asana projects, upload documents, and provide intelligent responses to client inquiries.
+          </CardContent>
+        </Card>
+
+        {/* Hero Content */}
+        <div className="hidden lg:flex flex-col justify-center p-8 rounded-lg bg-primary text-primary-foreground shadow-lg">
+          <div className="space-y-4">
+            <h1 className="text-3xl font-bold tracking-tight">
+              Welcome to SPH Chat
+            </h1>
+            <p className="text-lg opacity-90">
+              A powerful AI-driven platform empowering homebuilding companies to create dynamic chatbots with project management capabilities.
             </p>
-            <ul className="mt-8 space-y-4 text-left">
+            <ul className="space-y-2 opacity-90">
               <li className="flex items-center">
-                <svg
-                  className="h-5 w-5 text-primary flex-shrink-0"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M5 13l4 4L19 7"
-                  />
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
                 </svg>
-                <span className="ml-2">Integrate with Asana projects</span>
+                Asana project integration
               </li>
               <li className="flex items-center">
-                <svg
-                  className="h-5 w-5 text-primary flex-shrink-0"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M5 13l4 4L19 7"
-                  />
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
                 </svg>
-                <span className="ml-2">Upload project documents</span>
+                Interactive AI-powered chatbots
               </li>
               <li className="flex items-center">
-                <svg
-                  className="h-5 w-5 text-primary flex-shrink-0"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M5 13l4 4L19 7"
-                  />
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
                 </svg>
-                <span className="ml-2">Create smart conversational interfaces</span>
+                Document storage and search
               </li>
               <li className="flex items-center">
-                <svg
-                  className="h-5 w-5 text-primary flex-shrink-0"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M5 13l4 4L19 7"
-                  />
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
                 </svg>
-                <span className="ml-2">Generate weekly project summaries</span>
+                Slack channel sync
               </li>
             </ul>
           </div>

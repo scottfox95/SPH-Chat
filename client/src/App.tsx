@@ -1,8 +1,7 @@
-import { Switch, Route, useLocation } from "wouter";
+import { Switch, Route } from "wouter";
 import { Toaster } from "@/components/ui/toaster";
 import { Suspense, lazy } from "react";
-import { useAuth } from "@/hooks/use-auth";
-import { Loader2 } from "lucide-react";
+import { ProtectedRoute } from "@/lib/protected-route";
 import SidebarLayout from "./components/layouts/sidebar-layout";
 import NotFound from "@/pages/not-found";
 
@@ -17,33 +16,12 @@ const KnowledgeBase = lazy(() => import("@/pages/knowledge-base"));
 const UsersPage = lazy(() => import("@/pages/users-page"));
 const AuthPage = lazy(() => import("@/pages/auth-page"));
 
-// Protected Route component
-function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated, isLoading } = useAuth();
-  const [_, navigate] = useLocation();
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
-  }
-
-  if (!isAuthenticated) {
-    navigate("/auth");
-    return null;
-  }
-
-  return <>{children}</>;
-}
-
-// Protected Sidebar Route
-function ProtectedSidebarRoute({ children }: { children: React.ReactNode }) {
+// Component wrapper for pages that need to be inside SidebarLayout
+function SidebarWrapper({ Component, ...props }: { Component: React.ComponentType<any>, [key: string]: any }) {
   return (
-    <ProtectedRoute>
-      <SidebarLayout>{children}</SidebarLayout>
-    </ProtectedRoute>
+    <SidebarLayout>
+      <Component {...props} />
+    </SidebarLayout>
   );
 }
 
@@ -63,64 +41,73 @@ function Router() {
         </Suspense>
       </Route>
       
-      {/* Protected routes */}
-      <Route path="/">
-        <ProtectedSidebarRoute>
+      {/* Protected routes with sidebar */}
+      <ProtectedRoute 
+        path="/" 
+        component={() => (
           <Suspense fallback={<div>Loading...</div>}>
-            <Dashboard />
+            <SidebarWrapper Component={Dashboard} />
           </Suspense>
-        </ProtectedSidebarRoute>
-      </Route>
+        )} 
+      />
       
-      <Route path="/chatbots">
-        <ProtectedSidebarRoute>
+      <ProtectedRoute 
+        path="/chatbots" 
+        component={() => (
           <Suspense fallback={<div>Loading...</div>}>
-            <Chatbots />
+            <SidebarWrapper Component={Chatbots} />
           </Suspense>
-        </ProtectedSidebarRoute>
-      </Route>
+        )} 
+      />
       
       <Route path="/chatbot/:id">
         {({ id }) => (
-          <ProtectedSidebarRoute>
-            <Suspense fallback={<div>Loading...</div>}>
-              <Chatbot id={parseInt(id)} />
-            </Suspense>
-          </ProtectedSidebarRoute>
+          <ProtectedRoute 
+            path={`/chatbot/${id}`}
+            component={() => (
+              <Suspense fallback={<div>Loading...</div>}>
+                <SidebarWrapper Component={Chatbot} id={parseInt(id)} />
+              </Suspense>
+            )} 
+          />
         )}
       </Route>
       
-      <Route path="/summaries">
-        <ProtectedSidebarRoute>
+      <ProtectedRoute 
+        path="/summaries" 
+        component={() => (
           <Suspense fallback={<div>Loading...</div>}>
-            <Summaries />
+            <SidebarWrapper Component={Summaries} />
           </Suspense>
-        </ProtectedSidebarRoute>
-      </Route>
+        )} 
+      />
       
-      <Route path="/settings">
-        <ProtectedSidebarRoute>
+      <ProtectedRoute 
+        path="/settings" 
+        component={() => (
           <Suspense fallback={<div>Loading...</div>}>
-            <Settings />
+            <SidebarWrapper Component={Settings} />
           </Suspense>
-        </ProtectedSidebarRoute>
-      </Route>
+        )} 
+      />
       
-      <Route path="/knowledge-base">
-        <ProtectedSidebarRoute>
+      <ProtectedRoute 
+        path="/knowledge-base" 
+        component={() => (
           <Suspense fallback={<div>Loading...</div>}>
-            <KnowledgeBase />
+            <SidebarWrapper Component={KnowledgeBase} />
           </Suspense>
-        </ProtectedSidebarRoute>
-      </Route>
+        )} 
+      />
       
-      <Route path="/users">
-        <ProtectedSidebarRoute>
+      <ProtectedRoute 
+        path="/users" 
+        component={() => (
           <Suspense fallback={<div>Loading...</div>}>
-            <UsersPage />
+            <SidebarWrapper Component={UsersPage} />
           </Suspense>
-        </ProtectedSidebarRoute>
-      </Route>
+        )} 
+      />
       
       {/* Fallback to 404 */}
       <Route>
