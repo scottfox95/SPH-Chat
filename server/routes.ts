@@ -253,6 +253,128 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
+  // Project management routes
+  apiRouter.get("/projects", isAuthenticated, async (req, res) => {
+    try {
+      const projects = await storage.getProjects();
+      res.json(projects);
+    } catch (error) {
+      console.error("Error fetching projects:", error);
+      res.status(500).json({ message: "Failed to fetch projects" });
+    }
+  });
+  
+  apiRouter.get("/projects/:id", isAuthenticated, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const project = await storage.getProject(id);
+      
+      if (!project) {
+        return res.status(404).json({ message: "Project not found" });
+      }
+      
+      res.json(project);
+    } catch (error) {
+      console.error("Error fetching project:", error);
+      res.status(500).json({ message: "Failed to fetch project" });
+    }
+  });
+  
+  apiRouter.post("/projects", isAuthenticated, async (req, res) => {
+    try {
+      const { name, description } = req.body;
+      
+      if (!name) {
+        return res.status(400).json({ message: "Project name is required" });
+      }
+      
+      // Ensure we have a valid user before proceeding
+      if (!req.user || !(req.user as Express.User).id) {
+        return res.status(401).json({ 
+          message: "Authentication required",
+          details: "No valid user session found. Please log in again."
+        });
+      }
+      
+      const userId = (req.user as Express.User).id;
+      
+      const project = await storage.createProject({
+        name,
+        description,
+        createdById: userId
+      });
+      
+      res.status(201).json(project);
+    } catch (error) {
+      console.error("Error creating project:", error);
+      res.status(500).json({ message: "Failed to create project" });
+    }
+  });
+  
+  apiRouter.put("/projects/:id", isAuthenticated, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const { name, description } = req.body;
+      
+      const project = await storage.getProject(id);
+      
+      if (!project) {
+        return res.status(404).json({ message: "Project not found" });
+      }
+      
+      // Prepare update data
+      const updateData: Partial<typeof req.body> = {};
+      if (name !== undefined) updateData.name = name;
+      if (description !== undefined) updateData.description = description;
+      
+      const updatedProject = await storage.updateProject(id, updateData);
+      
+      if (!updatedProject) {
+        return res.status(500).json({ message: "Failed to update project" });
+      }
+      
+      res.json(updatedProject);
+    } catch (error) {
+      console.error("Error updating project:", error);
+      res.status(500).json({ message: "Failed to update project" });
+    }
+  });
+  
+  apiRouter.delete("/projects/:id", isAuthenticated, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      
+      const success = await storage.deleteProject(id);
+      
+      if (!success) {
+        return res.status(404).json({ message: "Project not found or could not be deleted" });
+      }
+      
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error deleting project:", error);
+      res.status(500).json({ message: "Failed to delete project" });
+    }
+  });
+  
+  apiRouter.get("/projects/:id/chatbots", isAuthenticated, async (req, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      
+      // Verify project exists
+      const project = await storage.getProject(projectId);
+      if (!project) {
+        return res.status(404).json({ message: "Project not found" });
+      }
+      
+      const chatbots = await storage.getProjectChatbots(projectId);
+      res.json(chatbots);
+    } catch (error) {
+      console.error("Error fetching project chatbots:", error);
+      res.status(500).json({ message: "Failed to fetch project chatbots" });
+    }
+  });
+  
   // Chatbot routes - admin users need access to all chatbots
   apiRouter.get("/chatbots", async (req, res) => {
     const chatbots = await storage.getChatbots();
@@ -276,11 +398,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       console.log("POST /api/chatbots received with body:", JSON.stringify(req.body, null, 2));
       
-      const { name, slackChannelId } = req.body;
+      const { name, slackChannelId, projectId } = req.body;
       
       if (!name || !slackChannelId) {
         console.warn("Missing required fields in request:", req.body);
         return res.status(400).json({ message: "Name and Slack channel ID are required" });
+      }
+      
+      // Validate projectId if provided
+      if (projectId) {
+        try {
+          const project = await storage.getProject(parseInt(projectId));
+          if (!project) {
+            console.warn(`Project with ID ${projectId} not found`);
+            return res.status(400).json({ message: "Specified project does not exist" });
+          }
+        } catch (projectError) {
+          console.warn(`Error validating project ID ${projectId}:`, projectError);
+          return res.status(400).json({ message: "Invalid project ID format" });
+        }
       }
       
       // Try to validate the Slack channel ID, but continue even if validation fails
@@ -368,6 +504,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           createdById: userId,
           isActive: true,
           requireAuth: false,
+          projectId: projectId ? parseInt(projectId) : undefined,
         };
         
         console.log("Chatbot creation data:", JSON.stringify(chatbotData, null, 2));
