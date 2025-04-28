@@ -715,6 +715,71 @@ export class DatabaseStorage implements IStorage {
     return !!result;
   }
   
+  // Project methods
+  async getProjects(): Promise<Project[]> {
+    try {
+      return await db.select().from(projects);
+    } catch (error) {
+      console.error("Failed to get projects:", error);
+      return [];
+    }
+  }
+  
+  async getProject(id: number): Promise<Project | undefined> {
+    try {
+      const [project] = await db.select().from(projects).where(eq(projects.id, id));
+      return project;
+    } catch (error) {
+      console.error(`Failed to get project with id ${id}:`, error);
+      return undefined;
+    }
+  }
+  
+  async createProject(project: InsertProject): Promise<Project> {
+    try {
+      const [newProject] = await db.insert(projects).values({
+        ...project,
+        description: project.description || null
+      }).returning();
+      return newProject;
+    } catch (error) {
+      console.error("Failed to create project:", error);
+      throw error;
+    }
+  }
+  
+  async updateProject(id: number, data: Partial<InsertProject>): Promise<Project | undefined> {
+    try {
+      const [updatedProject] = await db.update(projects)
+        .set(data)
+        .where(eq(projects.id, id))
+        .returning();
+      return updatedProject;
+    } catch (error) {
+      console.error(`Failed to update project with id ${id}:`, error);
+      return undefined;
+    }
+  }
+  
+  async deleteProject(id: number): Promise<boolean> {
+    try {
+      const result = await db.delete(projects).where(eq(projects.id, id)).returning();
+      return result.length > 0;
+    } catch (error) {
+      console.error(`Failed to delete project with id ${id}:`, error);
+      return false;
+    }
+  }
+  
+  async getProjectChatbots(projectId: number): Promise<Chatbot[]> {
+    try {
+      return await db.select().from(chatbots).where(eq(chatbots.projectId, projectId));
+    } catch (error) {
+      console.error(`Failed to get chatbots for project with id ${projectId}:`, error);
+      return [];
+    }
+  }
+  
   // Chatbot methods
   async getChatbots(): Promise<Chatbot[]> {
     try {
@@ -760,7 +825,8 @@ export class DatabaseStorage implements IStorage {
         isActive: chatbot.isActive ?? true,
         requireAuth: chatbot.requireAuth ?? false,
         asanaProjectId: chatbot.asanaProjectId || null,
-        asanaConnectionId: null
+        asanaConnectionId: null,
+        projectId: chatbot.projectId || null
       };
       
       console.log("Final chatbot data for insertion:", JSON.stringify(chatbotData, null, 2));
@@ -780,7 +846,8 @@ export class DatabaseStorage implements IStorage {
             created_by_id, 
             is_active, 
             require_auth,
-            public_token
+            public_token,
+            project_id
           )
           VALUES (
             ${chatbotData.name}, 
@@ -788,7 +855,8 @@ export class DatabaseStorage implements IStorage {
             ${chatbotData.createdById}, 
             ${chatbotData.isActive}, 
             ${chatbotData.requireAuth},
-            ${publicToken}::uuid
+            ${publicToken}::uuid,
+            ${chatbotData.projectId}
           )
           RETURNING *
         `);
@@ -806,7 +874,8 @@ export class DatabaseStorage implements IStorage {
             publicToken: rawChatbot.public_token,
             isActive: rawChatbot.is_active,
             requireAuth: rawChatbot.require_auth,
-            createdAt: rawChatbot.created_at
+            createdAt: rawChatbot.created_at,
+            projectId: rawChatbot.project_id
           };
           console.log("Successfully created chatbot with direct SQL:", chatbot);
           return chatbot;
@@ -843,7 +912,8 @@ export class DatabaseStorage implements IStorage {
               created_by_id, 
               is_active, 
               require_auth,
-              public_token
+              public_token,
+              project_id
             )
             VALUES (
               ${chatbotData.name}, 
@@ -851,7 +921,8 @@ export class DatabaseStorage implements IStorage {
               ${chatbotData.createdById}, 
               ${chatbotData.isActive}, 
               ${chatbotData.requireAuth},
-              ${publicToken}::uuid
+              ${publicToken}::uuid,
+              ${chatbotData.projectId}
             )
           `);
           
