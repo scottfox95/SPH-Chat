@@ -2,6 +2,7 @@ import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import cors from "cors";
+import { runMigration } from "./lib/data-migration";
 
 // Configure environment-specific settings
 const isProduction = process.env.NODE_ENV === 'production';
@@ -58,6 +59,15 @@ app.use((req, res, next) => {
 });
 
 (async () => {
+  // Run data migration utility to ensure development data is preserved in production
+  try {
+    log("Running data migration utility...");
+    await runMigration();
+    log("Data migration completed.");
+  } catch (error) {
+    console.error("Error during data migration:", error);
+  }
+
   const server = await registerRoutes(app);
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
