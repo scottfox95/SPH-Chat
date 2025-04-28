@@ -57,16 +57,27 @@ function ProjectSelector({ chatbotId, currentProjectId }: { chatbotId: number, c
   // Update project assignment mutation
   const updateProjectMutation = useMutation({
     mutationFn: async (projectId: string | null) => {
+      // Convert string projectId to number or null
+      let numericProjectId: number | null = null;
+      if (projectId !== null && projectId !== "none") {
+        numericProjectId = parseInt(projectId, 10);
+      }
+      
       const res = await apiRequest("PUT", `/api/chatbots/${chatbotId}`, {
-        projectId: projectId === "none" ? null : projectId,
+        projectId: numericProjectId,
       });
       return res.json();
     },
     onSuccess: (data) => {
+      // Find project name for better messaging
+      const projectName = data.projectId 
+        ? projects.find((p: any) => p.id === data.projectId)?.name || "selected project"
+        : null;
+        
       toast({
         title: "Project assignment updated",
-        description: data.projectId 
-          ? "Chatbot has been assigned to the selected project." 
+        description: projectName 
+          ? `Chatbot has been assigned to the "${projectName}" project.` 
           : "Chatbot has been removed from project assignment.",
       });
       queryClient.invalidateQueries({ queryKey: [`/api/chatbots/${chatbotId}`] });
