@@ -1,0 +1,62 @@
+❝
+🎯  Goal
+– Eliminate “null value in public_token” error.  
+– Make sure dev and prod talk to the same Postgres, or at least understand which is which.
+
+────────────────────────────────────────────────────────
+STEP 1   Log DB at startup (both envs)
+
+  // server/index.ts   (very top, before app.listen)
+  console.log(
+    "[boot] Using DB →",
+    process.env.DATABASE_URL || process.env.POSTGRES_URL || process.env.REPLIT_DB_URL
+  );
+
+  Redeploy once; copy the URL that prints in Preview and in Deploy logs.
+
+STEP 2   If Preview URL ≠ Deploy URL:
+  ▸ Decide:  
+    a. **Unify** – point Preview to the same Postgres by adding the
+       connection string to Replit Secrets as DATABASE_URL,  
+       *or*  
+    b. **Keep separate** – that’s fine, just be aware.
+
+STEP 3   Fix the schema in production Postgres
+
+  1) Shell into Replit ➜ `psql "$DATABASE_URL"`  
+     (or `"$POSTGRES_URL"` if that’s the variable)
+
+  2) Run:
+
+     -- enable uuid extension if missing
+     create extension if not exists "uuid-ossp";
+
+     -- add default & convert existing rows
+     alter table chatbots
+       alter column public_token drop default,
+       alter column public_token type uuid using
+         (case
+            when length(public_token) = 36 then public_token::uuid
+            else uuid_generate_v4()
+          end),
+       alter column public_token set default uuid_generate_v4();
+
+     -- verify
+     \d+ chatbots
+     select count(*) from chatbots where public_token is null;  -- should be 0
+
+STEP 4   Remove any old app-side token generator (generateShortId etc.)
+         In createChatbot() simply omit public_token so Postgres supplies it,
+         or read it with `RETURNING public_token`.
+
+STEP 5   Commit, build, and click **Deploy**.
+
+STEP 6   Smoke test
+   ▸ Preview: create chatbot → 201 OK → token presents as uuid v4  
+   ▸ Prod (domain): create chatbot → 201 OK → no 500 error
+
+Deliverable
+✔  Logs show same DB URL (or clearly different by choice)  
+✔  public_token column has default uuid_generate_v4()  
+✔  Creating chatbots in prod no longer errors  
+❞
