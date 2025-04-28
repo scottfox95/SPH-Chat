@@ -14,8 +14,7 @@
  */
 
 // Using ES modules since the project is configured with type: "module"
-import { Pool } from '@neondatabase/serverless';
-import ws from 'ws';
+import { Pool } from 'pg';
 
 // Validate environment variables
 if (!process.env.DATABASE_URL) {
@@ -99,10 +98,6 @@ async function testConnection() {
     return false;
   }
 }
-
-// Configure Neon database for websocket connections
-import { neonConfig } from '@neondatabase/serverless';
-neonConfig.webSocketConstructor = ws;
 
 // Run the test immediately - this is an ES module
 testConnection()
