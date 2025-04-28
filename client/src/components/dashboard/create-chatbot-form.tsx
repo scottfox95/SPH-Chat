@@ -38,9 +38,10 @@ type FormValues = z.infer<typeof formSchema>;
 
 interface CreateChatbotFormProps {
   projectId?: string;
+  onSuccess?: () => void;
 }
 
-export default function CreateChatbotForm({ projectId }: CreateChatbotFormProps = {}) {
+export default function CreateChatbotForm({ projectId, onSuccess }: CreateChatbotFormProps = {}) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
   const [_, setLocation] = useLocation();
@@ -87,11 +88,19 @@ export default function CreateChatbotForm({ projectId }: CreateChatbotFormProps 
           description: `${newChatbot.name} chatbot has been created successfully.`,
         });
         
-        // Refresh chatbot list
+        // Refresh chatbot list and project chatbots list if needed
         await queryClient.invalidateQueries({ queryKey: ["/api/chatbots"] });
+        if (data.projectId) {
+          await queryClient.invalidateQueries({ queryKey: [`/api/projects/${data.projectId}/chatbots`] });
+        }
         
-        // Navigate to the new chatbot
-        window.location.href = `/chatbot/${newChatbot.id}`;
+        // If onSuccess callback is provided, use it, otherwise navigate to the chatbot
+        if (onSuccess) {
+          onSuccess();
+        } else {
+          // Navigate to the new chatbot
+          window.location.href = `/chatbot/${newChatbot.id}`;
+        }
       } catch (error) {
         console.error("Failed to create chatbot:", error);
         throw error;

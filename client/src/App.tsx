@@ -22,6 +22,7 @@ const UserManagement = lazy(() => import("@/pages/user-management"));
 const Projects = lazy(() => import("@/pages/projects"));
 const ProjectDetail = lazy(() => import("@/pages/project-detail"));
 const ProjectEdit = lazy(() => import("@/pages/project-edit"));
+const ProjectAddChatbot = lazy(() => import("@/pages/project-add-chatbot"));
 
 function ProtectedSidebarRoute({ component: Component, path }: { component: React.ComponentType<any>, path: string }) {
   const { token, user, isLoading } = useAuth();
@@ -158,6 +159,34 @@ function Router() {
             <SidebarLayout>
               <Suspense fallback={<div>Loading...</div>}>
                 <ProjectEdit />
+              </Suspense>
+            </SidebarLayout>
+          );
+        }}
+      </Route>
+      
+      {/* Project add chatbot route */}
+      <Route path="/projects/:id/new-chatbot">
+        {(params) => {
+          const { token, user, isLoading } = useAuth();
+          
+          if (isLoading) {
+            return (
+              <div className="flex items-center justify-center min-h-screen">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              </div>
+            );
+          }
+          
+          if (!token || !user) {
+            window.location.href = "/auth";
+            return null;
+          }
+          
+          return (
+            <SidebarLayout>
+              <Suspense fallback={<div>Loading...</div>}>
+                <ProjectAddChatbot />
               </Suspense>
             </SidebarLayout>
           );
