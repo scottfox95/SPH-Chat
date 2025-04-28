@@ -479,75 +479,75 @@ export class DatabaseStorage implements IStorage {
   public sessionStore: session.Store;
 
   constructor() {
-    // Set up PostgreSQL session store
-    const PostgresSessionStore = connectPg(session);
-    
-    // Configure session store with consistent options across environments
-    const isProduction = process.env.NODE_ENV === 'production';
-    
-    // Use more robust session store settings
-    this.sessionStore = new PostgresSessionStore({ 
-      pool,
-      createTableIfMissing: false, // We'll create it manually
-      tableName: 'session',
-      // Additional options for production environment
-      ttl: 86400, // Session TTL in seconds (1 day)
-      disableTouch: false, // Keep updating the session expiry on activity
-      errorLog: console.error // Log errors to console
-    });
-    
-    // Log which environment we're running in
-    console.log(`Initializing session store in ${isProduction ? 'production' : 'development'} environment`);
-    
-    // Ensure the session table exists with a manual query
-    // This is a safer approach than using createTableIfMissing
-    (async () => {
+    try {
+      // Use a fallback session store in case the database isn't available
+      const MemoryStore = createMemoryStore(session);
+      const fallbackStore = new MemoryStore({
+        checkPeriod: 86400000, // prune expired entries every 24h
+      });
+      
+      // Set the fallback store first so we have something working
+      this.sessionStore = fallbackStore;
+      
+      // Set up PostgreSQL session store
+      const PostgresSessionStore = connectPg(session);
+      const isProduction = process.env.NODE_ENV === 'production';
+      
+      // Log which environment we're running in
+      console.log(`Initializing session store in ${isProduction ? 'production' : 'development'} environment`);
+      
+      // Now try to use a PostgreSQL session store with robust error handling
       try {
-        // This query is idempotent - it won't fail if the table already exists
-        await pool.query(`
-          CREATE TABLE IF NOT EXISTS "session" (
-            "sid" varchar NOT NULL COLLATE "default",
-            "sess" json NOT NULL,
-            "expire" timestamp(6) NOT NULL,
-            CONSTRAINT "session_pkey" PRIMARY KEY ("sid")
-          );
-        `);
-        
-        // Create index if it doesn't exist (also idempotent)
-        await pool.query(`
-          DO $$
-          BEGIN
-            IF NOT EXISTS (
-              SELECT 1 FROM pg_indexes WHERE indexname = 'IDX_session_expire'
-            ) THEN
-              CREATE INDEX "IDX_session_expire" ON "session" ("expire");
-            END IF;
-          END
-          $$;
-        `);
-        
-        console.log("Session table and indexes initialized successfully");
-        
-        // Test connection to confirm it's working
-        const testResult = await pool.query('SELECT NOW() as time');
-        console.log(`Database connection confirmed at ${testResult.rows[0].time}`);
-      } catch (error) {
-        console.error("Error initializing session table:", error);
-      }
-    })();
-    
-    // Create default admin user if it doesn't exist
-    this.getUserByUsername("admin").then(user => {
-      if (!user) {
-        this.createUser({
-          username: "admin",
-          password: "password",
-          displayName: "John Davis",
-          initial: "JD",
-          role: "admin"
+        // Use more robust session store settings
+        this.sessionStore = new PostgresSessionStore({ 
+          pool,
+          createTableIfMissing: true, // Allow it to create the table if needed
+          tableName: 'session',
+          ttl: 86400, // Session TTL in seconds (1 day)
+          disableTouch: false,
+          errorLog: console.error
         });
+        
+        console.log("PostgreSQL session store initialized successfully");
+      } catch (sessionStoreError) {
+        console.error("Failed to create PostgreSQL session store, using memory store instead:", sessionStoreError);
+        // Keep using the fallback store (already assigned)
       }
-    });
+    } catch (error) {
+      console.error("Critical error in storage constructor:", error);
+      // Create a basic in-memory store as a last resort
+      const MemoryStore = createMemoryStore(session);
+      this.sessionStore = new MemoryStore({
+        checkPeriod: 86400000
+      });
+    }
+    
+    // Try to create a default admin user, but don't let failures stop the app
+    try {
+      // Create default admin user if it doesn't exist (but don't wait for it)
+      this.getUserByUsername("admin")
+        .then(user => {
+          if (!user) {
+            return this.createUser({
+              username: "admin",
+              password: "password", 
+              displayName: "Admin User",
+              initial: "AU",
+              role: "admin"
+            });
+          }
+          return user;
+        })
+        .then(user => {
+          console.log("Admin user is available:", user.username);
+        })
+        .catch(error => {
+          console.error("Error checking/creating admin user:", error);
+        });
+    } catch (error) {
+      console.error("Error in admin user creation logic:", error);
+      // Continue anyway - this is not critical
+    }
   }
   
   // User methods
