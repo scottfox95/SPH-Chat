@@ -41,7 +41,10 @@ export interface IStorage {
   // User methods
   getUser(id: number): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
+  getUsers(): Promise<User[]>;
   createUser(user: InsertUser): Promise<User>;
+  updateUser(id: number, data: Partial<InsertUser>): Promise<User>;
+  deleteUser(id: number): Promise<boolean>;
   
   // Chatbot methods
   getChatbots(): Promise<Chatbot[]>;
@@ -152,6 +155,10 @@ export class MemStorage implements IStorage {
     );
   }
   
+  async getUsers(): Promise<User[]> {
+    return Array.from(this.users.values());
+  }
+
   async createUser(insertUser: InsertUser): Promise<User> {
     const id = this.currentUserId++;
     const user: User = { 
@@ -161,6 +168,25 @@ export class MemStorage implements IStorage {
     };
     this.users.set(id, user);
     return user;
+  }
+  
+  async updateUser(id: number, data: Partial<InsertUser>): Promise<User> {
+    const user = this.users.get(id);
+    if (!user) {
+      throw new Error(`User with id ${id} not found`);
+    }
+    
+    const updatedUser: User = {
+      ...user,
+      ...data,
+    };
+    
+    this.users.set(id, updatedUser);
+    return updatedUser;
+  }
+  
+  async deleteUser(id: number): Promise<boolean> {
+    return this.users.delete(id);
   }
   
   // Chatbot methods
