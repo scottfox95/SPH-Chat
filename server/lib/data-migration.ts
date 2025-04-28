@@ -208,56 +208,30 @@ export async function importData(): Promise<boolean> {
       let chatbotId;
       if (!existingChatbot) {
         try {
-          // First, check if this token already exists to avoid uniqueness violation
-          const tokenCheck = await pool.query(
-            "SELECT id FROM chatbots WHERE public_token = $1",
-            [chatbot.publicToken]
+          // With UUID column type and default value, we don't need to specify the token
+          // Let PostgreSQL generate a UUID automatically
+          const result = await pool.query(
+            `INSERT INTO chatbots (
+              name, slack_channel_id, asana_project_id, created_by_id, 
+              is_active, require_auth, created_at
+            ) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id, public_token`,
+            [
+              chatbot.name,
+              chatbot.slackChannelId,
+              chatbot.asanaProjectId,
+              chatbot.createdById,
+              chatbot.isActive,
+              chatbot.requireAuth,
+              chatbot.createdAt || new Date()
+            ]
           );
           
-          if (tokenCheck.rows.length > 0) {
-            console.log(`Token ${chatbot.publicToken} already exists in production, generating a new token`);
-            
-            // Use a direct SQL query to insert the chatbot with all fields including token
-            const result = await pool.query(
-              `INSERT INTO chatbots (
-                name, slack_channel_id, asana_project_id, created_by_id, 
-                is_active, require_auth, created_at
-              ) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id`,
-              [
-                chatbot.name,
-                chatbot.slackChannelId,
-                chatbot.asanaProjectId,
-                chatbot.createdById,
-                chatbot.isActive,
-                chatbot.requireAuth,
-                chatbot.createdAt || new Date()
-              ]
-            );
-            
-            chatbotId = result.rows[0].id;
-          } else {
-            // Token doesn't exist, we can safely use it
-            // Use a direct SQL query to insert the chatbot with the same token
-            const result = await pool.query(
-              `INSERT INTO chatbots (
-                name, slack_channel_id, asana_project_id, created_by_id, 
-                public_token, is_active, require_auth, created_at
-              ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id`,
-              [
-                chatbot.name,
-                chatbot.slackChannelId,
-                chatbot.asanaProjectId,
-                chatbot.createdById,
-                chatbot.publicToken,
-                chatbot.isActive,
-                chatbot.requireAuth,
-                chatbot.createdAt || new Date()
-              ]
-            );
-            
-            chatbotId = result.rows[0].id;
-            console.log(`Created chatbot with original token: ${chatbot.publicToken}`);
-          }
+          chatbotId = result.rows[0].id;
+          const newPublicToken = result.rows[0].public_token;
+          console.log(`Created chatbot with UUID token: ${newPublicToken}`);
+          
+          // Update the original object's token for reference in later operations
+          chatbot.publicToken = newPublicToken;
           
           console.log(`Created chatbot: ${chatbot.name} (ID: ${chatbotId})`);
         } catch (error) {

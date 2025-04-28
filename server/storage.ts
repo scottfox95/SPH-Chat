@@ -709,9 +709,23 @@ export class DatabaseStorage implements IStorage {
           RETURNING *
         `);
         
-        if (result && result.rows.length > 0) {
-          console.log("Successfully created chatbot with direct SQL:", result.rows[0]);
-          return result.rows[0];
+        if (result && result.rows && result.rows.length > 0) {
+          // Convert the raw result to a properly typed Chatbot object
+          const rawChatbot = result.rows[0];
+          const chatbot: Chatbot = {
+            id: rawChatbot.id,
+            name: rawChatbot.name,
+            slackChannelId: rawChatbot.slack_channel_id,
+            asanaProjectId: rawChatbot.asana_project_id,
+            asanaConnectionId: rawChatbot.asana_connection_id,
+            createdById: rawChatbot.created_by_id,
+            publicToken: rawChatbot.public_token,
+            isActive: rawChatbot.is_active,
+            requireAuth: rawChatbot.require_auth,
+            createdAt: rawChatbot.created_at
+          };
+          console.log("Successfully created chatbot with direct SQL:", chatbot);
+          return chatbot;
         }
         
         // If we don't get a result with RETURNING, try to find the most recently created one by this user
