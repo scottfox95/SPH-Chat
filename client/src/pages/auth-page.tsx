@@ -4,7 +4,6 @@ import { useLocation } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -25,25 +24,14 @@ const loginSchema = z.object({
   password: z.string().min(1, "Password is required"),
 });
 
-const registerSchema = z.object({
-  username: z.string().min(1, "Username is required"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
-  displayName: z.string().min(1, "Display name is required"),
-  initial: z.string().min(1, "Initial is required").max(2, "Initial must be 1-2 characters"),
-  isAdmin: z.boolean().optional().default(false),
-});
-
 type LoginFormValues = z.infer<typeof loginSchema>;
-type RegisterFormValues = z.infer<typeof registerSchema>;
 
 export default function AuthPage() {
   const { user } = useAuth();
   const { toast } = useToast();
   const [, navigate] = useLocation();
-  const [activeTab, setActiveTab] = useState<string>("login");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoginPending, setIsLoginPending] = useState(false);
-  const [isRegisterPending, setIsRegisterPending] = useState(false);
 
   // If user is already logged in, redirect to dashboard
   useEffect(() => {
@@ -57,16 +45,6 @@ export default function AuthPage() {
     defaultValues: {
       username: "",
       password: "",
-    },
-  });
-
-  const registerForm = useForm<RegisterFormValues>({
-    resolver: zodResolver(registerSchema),
-    defaultValues: {
-      username: "",
-      password: "",
-      displayName: "",
-      initial: "",
     },
   });
 
@@ -111,53 +89,6 @@ export default function AuthPage() {
       });
     } finally {
       setIsLoginPending(false);
-    }
-  };
-
-  const onRegisterSubmit = async (values: RegisterFormValues) => {
-    setIsRegisterPending(true);
-    try {
-      // Send registration request directly without using the hook
-      const response = await fetch('/api/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          username: values.username,
-          password: values.password,
-          displayName: values.displayName,
-          initial: values.initial || values.displayName.substring(0, 1),
-          role: values.isAdmin ? "admin" : "user"
-        }),
-        credentials: 'include',
-      });
-      
-      if (response.ok) {
-        const userData = await response.json();
-        console.log("Registration successful, redirecting to dashboard now");
-        
-        // Use the new localStorage auth approach
-        // Generate a simple token (in a real app, this would come from the server)
-        const token = `auth_${Date.now()}_${Math.random().toString(36).substring(2, 15)}`;
-        localStorage.setItem("auth_token", token);
-        localStorage.setItem("auth_user", JSON.stringify(userData));
-        
-        // Force page reload and redirect to ensure session is recognized
-        window.location.href = "/dashboard";
-      } else {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Registration failed');
-      }
-    } catch (error) {
-      console.error("Registration error:", error);
-      toast({
-        title: "Registration failed",
-        description: error instanceof Error ? error.message : "Unknown error occurred",
-        variant: "destructive",
-      });
-    } finally {
-      setIsRegisterPending(false);
     }
   };
 

@@ -14,7 +14,7 @@ const Dashboard = lazy(() => import("@/pages/dashboard"));
 const Chatbots = lazy(() => import("@/pages/chatbots"));
 const Chatbot = lazy(() => import("@/pages/chatbot"));
 const PublicChat = lazy(() => import("@/pages/public-chat"));
-const AuthPage = lazy(() => import("@/pages/auth-page"));
+const AuthPage = lazy(() => import("@/pages/auth-page-new"));
 const Summaries = lazy(() => import("@/pages/summaries"));
 const Settings = lazy(() => import("@/pages/settings"));
 const KnowledgeBase = lazy(() => import("@/pages/knowledge-base"));
