@@ -1,4 +1,5 @@
 import { nanoid } from "nanoid";
+import crypto from "crypto";
 import { 
   users, 
   chatbots, 
@@ -35,7 +36,6 @@ import session from "express-session";
 import connectPg from "connect-pg-simple";
 import { pool } from "./db";
 import createMemoryStore from "memorystore";
-import { generatePublicToken } from "./lib/generatePublicToken";
 
 // Interface for storage methods
 export interface IStorage {
@@ -231,8 +231,8 @@ export class MemStorage implements IStorage {
   
   async createChatbot(chatbot: Omit<InsertChatbot, "publicToken">): Promise<Chatbot> {
     const id = this.currentChatbotId++;
-    // Use the same UUID generator as the database storage
-    const publicToken = await generatePublicToken();
+    // Generate a random UUID for consistency with the PostgreSQL implementation
+    const publicToken = crypto.randomUUID();
     const now = new Date();
     
     const newChatbot: Chatbot = {
@@ -674,17 +674,11 @@ export class DatabaseStorage implements IStorage {
         password: "REDACTED"
       }, null, 2));
       
-      // Generate a UUID token that is guaranteed to be unique
-      const publicToken = await generatePublicToken();
-      
-      console.log("Using public token:", publicToken);
-      
       // Set default values for fields that might be missing
       const chatbotData = {
         name: chatbot.name,
         slackChannelId: chatbot.slackChannelId,
         createdById: chatbot.createdById,
-        publicToken: publicToken,
         isActive: chatbot.isActive ?? true,
         requireAuth: chatbot.requireAuth ?? false,
         asanaProjectId: chatbot.asanaProjectId || null,
@@ -702,7 +696,6 @@ export class DatabaseStorage implements IStorage {
             name, 
             slack_channel_id, 
             created_by_id, 
-            public_token, 
             is_active, 
             require_auth
           )
@@ -710,23 +703,24 @@ export class DatabaseStorage implements IStorage {
             ${chatbotData.name}, 
             ${chatbotData.slackChannelId}, 
             ${chatbotData.createdById}, 
-            ${chatbotData.publicToken}, 
             ${chatbotData.isActive}, 
             ${chatbotData.requireAuth}
           )
           RETURNING *
         `);
         
-        if (result && result.length > 0) {
-          console.log("Successfully created chatbot with direct SQL:", result[0]);
-          return result[0];
+        if (result && result.rows.length > 0) {
+          console.log("Successfully created chatbot with direct SQL:", result.rows[0]);
+          return result.rows[0];
         }
         
-        // If we don't get a result with RETURNING, try to fetch it
-        console.log("Insert succeeded but no returning data, fetching chatbot by token");
+        // If we don't get a result with RETURNING, try to find the most recently created one by this user
+        console.log("Insert succeeded but no returning data, fetching latest chatbot");
         const [createdChatbot] = await db.select()
           .from(chatbots)
-          .where(eq(chatbots.publicToken, publicToken));
+          .where(eq(chatbots.createdById, chatbotData.createdById))
+          .orderBy(desc(chatbots.createdAt))
+          .limit(1);
         
         if (!createdChatbot) {
           throw new Error("Chatbot was created but couldn't be retrieved");
@@ -745,7 +739,6 @@ export class DatabaseStorage implements IStorage {
               name, 
               slack_channel_id, 
               created_by_id, 
-              public_token, 
               is_active, 
               require_auth
             )
@@ -753,7 +746,6 @@ export class DatabaseStorage implements IStorage {
               ${chatbotData.name}, 
               ${chatbotData.slackChannelId}, 
               ${chatbotData.createdById}, 
-              ${chatbotData.publicToken}, 
               ${chatbotData.isActive}, 
               ${chatbotData.requireAuth}
             )
@@ -762,10 +754,12 @@ export class DatabaseStorage implements IStorage {
           // Wait a moment to ensure the database has time to complete the insert
           await new Promise(resolve => setTimeout(resolve, 500));
           
-          // Try to fetch the chatbot we just created
+          // Try to fetch the most recently created chatbot by this user
           const [createdChatbot] = await db.select()
             .from(chatbots)
-            .where(eq(chatbots.publicToken, publicToken));
+            .where(eq(chatbots.createdById, chatbotData.createdById))
+            .orderBy(desc(chatbots.createdAt))
+            .limit(1);
           
           if (!createdChatbot) {
             throw new Error("Chatbot was created but couldn't be retrieved");
