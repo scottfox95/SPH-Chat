@@ -35,17 +35,13 @@ import session from "express-session";
 import connectPg from "connect-pg-simple";
 import { pool } from "./db";
 import createMemoryStore from "memorystore";
-import { generatePublicToken } from "./lib/generatePublicToken";
 
 // Interface for storage methods
 export interface IStorage {
   // User methods
   getUser(id: number): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
-  getUsers(): Promise<User[]>;
   createUser(user: InsertUser): Promise<User>;
-  updateUser(id: number, data: Partial<InsertUser>): Promise<User | undefined>;
-  deleteUser(id: number): Promise<boolean>;
   
   // Chatbot methods
   getChatbots(): Promise<Chatbot[]>;
@@ -156,10 +152,6 @@ export class MemStorage implements IStorage {
     );
   }
   
-  async getUsers(): Promise<User[]> {
-    return Array.from(this.users.values());
-  }
-  
   async createUser(insertUser: InsertUser): Promise<User> {
     const id = this.currentUserId++;
     const user: User = { 
@@ -169,28 +161,6 @@ export class MemStorage implements IStorage {
     };
     this.users.set(id, user);
     return user;
-  }
-  
-  async updateUser(id: number, data: Partial<InsertUser>): Promise<User | undefined> {
-    const user = this.users.get(id);
-    if (!user) return undefined;
-    
-    const updatedUser: User = {
-      ...user,
-      ...data,
-      // Keep the original ID
-      id: user.id
-    };
-    
-    this.users.set(id, updatedUser);
-    return updatedUser;
-  }
-  
-  async deleteUser(id: number): Promise<boolean> {
-    // Don't allow deleting the admin user (id 1)
-    if (id === 1) return false;
-    
-    return this.users.delete(id);
   }
   
   // Chatbot methods
@@ -227,8 +197,7 @@ export class MemStorage implements IStorage {
   
   async createChatbot(chatbot: Omit<InsertChatbot, "publicToken">): Promise<Chatbot> {
     const id = this.currentChatbotId++;
-    // Use the same UUID generator as the database storage
-    const publicToken = await generatePublicToken();
+    const publicToken = nanoid(10);
     const now = new Date();
     
     const newChatbot: Chatbot = {
@@ -481,60 +450,10 @@ export class DatabaseStorage implements IStorage {
   constructor() {
     // Set up PostgreSQL session store
     const PostgresSessionStore = connectPg(session);
-    
-    // Configure session store with consistent options across environments
-    const isProduction = process.env.NODE_ENV === 'production';
-    
-    // Use more robust session store settings
     this.sessionStore = new PostgresSessionStore({ 
-      pool,
-      createTableIfMissing: false, // We'll create it manually
-      tableName: 'session',
-      // Additional options for production environment
-      ttl: 86400, // Session TTL in seconds (1 day)
-      disableTouch: false, // Keep updating the session expiry on activity
-      errorLog: console.error // Log errors to console
+      pool, 
+      createTableIfMissing: true 
     });
-    
-    // Log which environment we're running in
-    console.log(`Initializing session store in ${isProduction ? 'production' : 'development'} environment`);
-    
-    // Ensure the session table exists with a manual query
-    // This is a safer approach than using createTableIfMissing
-    (async () => {
-      try {
-        // This query is idempotent - it won't fail if the table already exists
-        await pool.query(`
-          CREATE TABLE IF NOT EXISTS "session" (
-            "sid" varchar NOT NULL COLLATE "default",
-            "sess" json NOT NULL,
-            "expire" timestamp(6) NOT NULL,
-            CONSTRAINT "session_pkey" PRIMARY KEY ("sid")
-          );
-        `);
-        
-        // Create index if it doesn't exist (also idempotent)
-        await pool.query(`
-          DO $$
-          BEGIN
-            IF NOT EXISTS (
-              SELECT 1 FROM pg_indexes WHERE indexname = 'IDX_session_expire'
-            ) THEN
-              CREATE INDEX "IDX_session_expire" ON "session" ("expire");
-            END IF;
-          END
-          $$;
-        `);
-        
-        console.log("Session table and indexes initialized successfully");
-        
-        // Test connection to confirm it's working
-        const testResult = await pool.query('SELECT NOW() as time');
-        console.log(`Database connection confirmed at ${testResult.rows[0].time}`);
-      } catch (error) {
-        console.error("Error initializing session table:", error);
-      }
-    })();
     
     // Create default admin user if it doesn't exist
     this.getUserByUsername("admin").then(user => {
@@ -561,71 +480,19 @@ export class DatabaseStorage implements IStorage {
     return user;
   }
   
-  async getUsers(): Promise<User[]> {
-    return await db.select().from(users);
-  }
-  
   async createUser(insertUser: InsertUser): Promise<User> {
     const [user] = await db.insert(users).values(insertUser).returning();
     return user;
   }
   
-  async updateUser(id: number, data: Partial<InsertUser>): Promise<User | undefined> {
-    // Hash password if it's being updated
-    if (data.password) {
-      // We need to hash the password before storing it
-      // This is a simplified example. In a real app, use a proper password hashing function
-      try {
-        const crypto = require('crypto');
-        const salt = crypto.randomBytes(16).toString('hex');
-        const hash = crypto.scryptSync(data.password, salt, 64).toString('hex');
-        data.password = `${hash}.${salt}`;
-      } catch (error) {
-        console.error('Error hashing password:', error);
-        // If hashing fails, don't update the password
-        delete data.password;
-      }
-    }
-    
-    const [updatedUser] = await db.update(users)
-      .set(data)
-      .where(eq(users.id, id))
-      .returning();
-    
-    return updatedUser;
-  }
-  
-  async deleteUser(id: number): Promise<boolean> {
-    // Don't allow deleting the admin user (id 1)
-    if (id === 1) return false;
-    
-    const result = await db.delete(users).where(eq(users.id, id));
-    return !!result;
-  }
-  
   // Chatbot methods
   async getChatbots(): Promise<Chatbot[]> {
-    try {
-      console.log("Fetching all chatbots from database");
-      const results = await db.select().from(chatbots);
-      console.log("Fetched chatbots count:", results.length);
-      return results;
-    } catch (error) {
-      console.error("Error fetching chatbots:", error);
-      return [];
-    }
+    return db.select().from(chatbots);
   }
   
   async getChatbot(id: number): Promise<Chatbot | undefined> {
-    try {
-      console.log(`Fetching chatbot with id: ${id}`);
-      const [chatbot] = await db.select().from(chatbots).where(eq(chatbots.id, id));
-      console.log(`Chatbot found:`, chatbot ? "Yes" : "No");
-      return chatbot;
-    } catch (error) {
-      console.error(`Error fetching chatbot with id ${id}:`, error);
-      return undefined;
-    }
+    const [chatbot] = await db.select().from(chatbots).where(eq(chatbots.id, id));
+    return chatbot;
   }
   
   async getChatbotByToken(token: string): Promise<Chatbot | undefined> {
@@ -634,133 +501,16 @@ export class DatabaseStorage implements IStorage {
   }
   
   async createChatbot(chatbot: Omit<InsertChatbot, "publicToken">): Promise<Chatbot> {
-    try {
-      console.log("Creating chatbot with data:", JSON.stringify({
-        ...chatbot,
-        password: "REDACTED"
-      }, null, 2));
-      
-      // Generate a UUID token that is guaranteed to be unique
-      const publicToken = await generatePublicToken();
-      
-      console.log("Using public token:", publicToken);
-      
-      // Set default values for fields that might be missing
-      const chatbotData = {
-        name: chatbot.name,
-        slackChannelId: chatbot.slackChannelId,
-        createdById: chatbot.createdById,
-        publicToken: publicToken,
-        isActive: chatbot.isActive ?? true,
-        requireAuth: chatbot.requireAuth ?? false,
-        asanaProjectId: chatbot.asanaProjectId || null,
-        asanaConnectionId: null
-      };
-      
-      console.log("Final chatbot data for insertion:", JSON.stringify(chatbotData, null, 2));
-      
-      try {
-        // Using raw SQL for the most compatibility across PostgreSQL versions
-        console.log("Attempting direct SQL insert of chatbot");
-        
-        const result = await db.execute(sql`
-          INSERT INTO chatbots (
-            name, 
-            slack_channel_id, 
-            created_by_id, 
-            public_token, 
-            is_active, 
-            require_auth
-          )
-          VALUES (
-            ${chatbotData.name}, 
-            ${chatbotData.slackChannelId}, 
-            ${chatbotData.createdById}, 
-            ${chatbotData.publicToken}, 
-            ${chatbotData.isActive}, 
-            ${chatbotData.requireAuth}
-          )
-          RETURNING *
-        `);
-        
-        if (result && result.length > 0) {
-          console.log("Successfully created chatbot with direct SQL:", result[0]);
-          return result[0];
-        }
-        
-        // If we don't get a result with RETURNING, try to fetch it
-        console.log("Insert succeeded but no returning data, fetching chatbot by token");
-        const [createdChatbot] = await db.select()
-          .from(chatbots)
-          .where(eq(chatbots.publicToken, publicToken));
-        
-        if (!createdChatbot) {
-          throw new Error("Chatbot was created but couldn't be retrieved");
-        }
-        
-        console.log("Successfully retrieved created chatbot:", createdChatbot);
-        return createdChatbot;
-      } catch (insertError) {
-        console.error("Error during chatbot insertion:", insertError);
-        
-        // Last-resort fallback - try plain insert
-        try {
-          console.log("Trying direct SQL insert without returning");
-          await db.execute(sql`
-            INSERT INTO chatbots (
-              name, 
-              slack_channel_id, 
-              created_by_id, 
-              public_token, 
-              is_active, 
-              require_auth
-            )
-            VALUES (
-              ${chatbotData.name}, 
-              ${chatbotData.slackChannelId}, 
-              ${chatbotData.createdById}, 
-              ${chatbotData.publicToken}, 
-              ${chatbotData.isActive}, 
-              ${chatbotData.requireAuth}
-            )
-          `);
-          
-          // Wait a moment to ensure the database has time to complete the insert
-          await new Promise(resolve => setTimeout(resolve, 500));
-          
-          // Try to fetch the chatbot we just created
-          const [createdChatbot] = await db.select()
-            .from(chatbots)
-            .where(eq(chatbots.publicToken, publicToken));
-          
-          if (!createdChatbot) {
-            throw new Error("Chatbot was created but couldn't be retrieved");
-          }
-          
-          console.log("Successfully created and retrieved chatbot with fallback method:", createdChatbot);
-          return createdChatbot;
-        } catch (fallbackError) {
-          console.error("All insertion methods failed:", fallbackError);
-          
-          // Try to provide helpful diagnostic information
-          try {
-            const tableInfo = await db.execute(sql`
-              SELECT column_name, data_type, is_nullable
-              FROM information_schema.columns
-              WHERE table_name = 'chatbots'
-            `);
-            console.error("Chatbots table schema:", tableInfo);
-          } catch (schemaError) {
-            console.error("Failed to get schema info:", schemaError);
-          }
-          
-          throw new Error(`Failed to create chatbot: ${fallbackError instanceof Error ? fallbackError.message : "Unknown error"}`);
-        }
-      }
-    } catch (error) {
-      console.error("Error in createChatbot:", error);
-      throw error;
-    }
+    const publicToken = nanoid(10);
+    
+    const [newChatbot] = await db.insert(chatbots).values({
+      ...chatbot,
+      publicToken,
+      isActive: chatbot.isActive ?? true,
+      requireAuth: chatbot.requireAuth ?? false
+    }).returning();
+    
+    return newChatbot;
   }
   
   async updateChatbot(id: number, data: Partial<InsertChatbot>): Promise<Chatbot | undefined> {

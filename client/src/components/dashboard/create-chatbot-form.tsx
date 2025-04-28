@@ -45,36 +45,26 @@ export default function CreateChatbotForm() {
   const onSubmit = async (data: FormValues) => {
     try {
       setIsSubmitting(true);
-      console.log("Submitting chatbot creation with data:", data);
       
-      try {
-        // Use the standardized apiRequest helper for consistency
-        const response = await apiRequest('POST', '/api/chatbots', data);
-        const newChatbot = await response.json();
-        
-        console.log("Successfully created chatbot:", newChatbot);
-        
-        // Show success message
-        toast({
-          title: "Chatbot created",
-          description: `${newChatbot.name} chatbot has been created successfully.`,
-        });
-        
-        // Refresh chatbot list
-        await queryClient.invalidateQueries({ queryKey: ["/api/chatbots"] });
-        
-        // Navigate to the new chatbot
-        window.location.href = `/chatbot/${newChatbot.id}`;
-      } catch (error) {
-        console.error("Failed to create chatbot:", error);
-        throw error;
-      }
+      const response = await apiRequest("POST", "/api/chatbots", data);
+      const newChatbot = await response.json();
+      
+      // Show success message
+      toast({
+        title: "Chatbot created",
+        description: `${newChatbot.name} chatbot has been created successfully.`,
+      });
+      
+      // Refresh chatbot list
+      await queryClient.invalidateQueries({ queryKey: ["/api/chatbots"] });
+      
+      // Navigate to the new chatbot
+      setLocation(`/chatbot/${newChatbot.id}`);
     } catch (error) {
-      console.error("Chatbot creation failed", error);
-      const errorMessage = error instanceof Error ? error.message : "Unknown error";
+      console.error("Failed to create chatbot", error);
       toast({
         title: "Creation failed",
-        description: `Failed to create the chatbot: ${errorMessage}`,
+        description: "Failed to create the chatbot. Please try again.",
         variant: "destructive",
       });
     } finally {

@@ -1,125 +1,60 @@
-import { createContext, useContext, ReactNode, useState, useEffect } from "react";
+import { createContext, useContext, ReactNode } from "react";
 import { useToast } from "@/hooks/use-toast";
-
-// User type
-interface User {
-  id: number;
-  username: string;
-  displayName: string;
-  initial: string;
-  role: string;
-}
 
 // Auth context type
 type AuthContextType = {
-  token: string | null;
-  user: User | null;
+  isAuthenticated: boolean;
   isLoading: boolean;
-  login: (token: string, userData: User) => void;
-  logout: () => void;
+  user: any | null;
+  login: (username: string, password: string) => Promise<boolean>;
+  logout: () => Promise<void>;
 };
 
-// Create context
+// Default admin user
+const defaultUser = {
+  id: 1,
+  username: "admin",
+  displayName: "Administrator",
+  initial: "A",
+  role: "admin"
+};
+
+// Create context with a pre-authenticated user
 const AuthContext = createContext<AuthContextType>({
-  token: null,
-  user: null,
+  isAuthenticated: true,
   isLoading: false,
-  login: () => {},
-  logout: () => {},
+  user: defaultUser,
+  login: async () => true,
+  logout: async () => {},
 });
 
-// Auth provider component with localStorage-based authentication
+// Simplified Auth provider component for development without authentication
 export function AuthProvider({ children }: { children: ReactNode }) {
   const { toast } = useToast();
-  const [isLoading, setIsLoading] = useState(true);
-  const [token, setToken] = useState<string | null>(() => localStorage.getItem("auth_token"));
-  const [user, setUser] = useState<User | null>(() => {
-    const savedUser = localStorage.getItem("auth_user");
-    return savedUser ? JSON.parse(savedUser) : null;
-  });
 
-  // Load user data on initial render and token changes
-  useEffect(() => {
-    const checkAuth = async () => {
-      if (token) {
-        try {
-          const response = await fetch('/api/user', {
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            credentials: 'include'
-          });
-          
-          if (response.ok) {
-            const userData = await response.json();
-            // Store the user data
-            localStorage.setItem("auth_user", JSON.stringify(userData));
-            setUser(userData);
-          } else {
-            // Token is invalid or expired
-            localStorage.removeItem("auth_token");
-            localStorage.removeItem("auth_user");
-            setToken(null);
-            setUser(null);
-          }
-        } catch (error) {
-          console.error("Auth check error:", error);
-        }
-      }
-      
-      setIsLoading(false);
-    };
-    
-    checkAuth();
-  }, [token]);
-
-  // Login function - stores token and user data
-  const login = (newToken: string, userData: User) => {
-    localStorage.setItem("auth_token", newToken);
-    localStorage.setItem("auth_user", JSON.stringify(userData));
-    setToken(newToken);
-    setUser(userData);
-    
+  // Simplified login function - always succeeds
+  const login = async (username: string, password: string) => {
     toast({
       title: "Login successful",
-      description: `Welcome, ${userData.displayName || userData.username}!`,
+      description: `Welcome, Administrator!`,
     });
-    
-    // Hard navigation to dashboard
-    window.location.href = "/dashboard";
+    return true;
   };
 
-  // Logout function - clears token and user data
+  // Simplified logout function - doesn't actually do anything
   const logout = async () => {
-    try {
-      await fetch('/api/logout', {
-        method: 'POST',
-        credentials: 'include'
-      });
-    } catch (error) {
-      console.error("Logout error:", error);
-    } finally {
-      localStorage.removeItem("auth_token");
-      localStorage.removeItem("auth_user");
-      setToken(null);
-      setUser(null);
-      
-      toast({
-        title: "Logged out",
-        description: "You have been logged out successfully",
-      });
-      
-      // Hard navigation to login page
-      window.location.href = "/auth";
-    }
+    toast({
+      title: "Logged out",
+      description: "You have been logged out successfully",
+    });
   };
 
   return (
     <AuthContext.Provider
       value={{
-        token,
-        user,
-        isLoading,
+        isAuthenticated: true,
+        isLoading: false,
+        user: defaultUser,
         login,
         logout,
       }}

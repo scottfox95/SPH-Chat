@@ -1,4 +1,5 @@
-import express, { type Express, Request, Response, NextFunction } from "express";
+import express, { type Express } from "express";
+import session from "express-session";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { requireAuth, requireAdmin } from "./middleware/auth";
@@ -34,149 +35,66 @@ import { sendSummaryEmail } from "./lib/email";
 import * as fs from "fs";
 import { nanoid } from "nanoid";
 import { format } from "date-fns";
-import { setupAuth } from "./auth";
-import { hashPassword } from "./lib/password-utils";
+import MemoryStore from "memorystore";
+
+const SessionStore = MemoryStore(session);
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Set up authentication
-  const { isAuthenticated } = setupAuth(app);
+  // Set up session middleware
+  app.use(
+    session({
+      secret: process.env.SESSION_SECRET || "homebuildbot-secret",
+      resave: false,
+      saveUninitialized: false,
+      cookie: {
+        maxAge: 1000 * 60 * 60 * 24, // 1 day
+        secure: process.env.NODE_ENV === "production",
+      },
+      store: new SessionStore({
+        checkPeriod: 86400000, // 24 hours
+      }),
+    })
+  );
 
   // API routes
   const apiRouter = express.Router();
   
-  // User management routes
-  apiRouter.get("/users", requireAdmin, async (req, res) => {
+  // Auth routes - simplified for development without authentication
+  apiRouter.post("/auth/login", async (req, res) => {
     try {
-      const users = await storage.getUsers();
-      // Remove password from the response
-      const sanitizedUsers = users.map(({ password, ...user }) => user);
-      res.json(sanitizedUsers);
+      // Return default admin user without checking credentials
+      const defaultUser = {
+        id: 1,
+        username: "admin",
+        displayName: "Administrator",
+        initial: "A",
+        role: "admin"
+      };
+      
+      return res.json(defaultUser);
     } catch (error) {
-      console.error("Error fetching users:", error);
-      res.status(500).json({ message: "Failed to fetch users" });
+      return res.status(500).json({ message: "Internal server error" });
     }
   });
   
-  apiRouter.get("/users/:id", requireAdmin, async (req, res) => {
-    try {
-      const id = parseInt(req.params.id);
-      const user = await storage.getUser(id);
-      
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
-      }
-      
-      // Remove password from response
-      const { password, ...userData } = user;
-      res.json(userData);
-    } catch (error) {
-      console.error("Error fetching user:", error);
-      res.status(500).json({ message: "Failed to fetch user" });
-    }
+  apiRouter.post("/auth/logout", (req, res) => {
+    res.json({ success: true });
   });
   
-  apiRouter.post("/users", requireAdmin, async (req, res) => {
-    try {
-      const { username, password, displayName, initial, role } = req.body;
-      
-      if (!username || !password || !displayName || !initial) {
-        return res.status(400).json({ message: "Missing required fields" });
-      }
-      
-      // Check if username already exists
-      const existingUser = await storage.getUserByUsername(username);
-      if (existingUser) {
-        return res.status(400).json({ message: "Username already exists" });
-      }
-      
-      // Hash the password
-      const hashedPassword = await hashPassword(password);
-      
-      const user = await storage.createUser({
-        username,
-        password: hashedPassword,
-        displayName,
-        initial,
-        role: role || "user"
-      });
-      
-      // Remove password from response
-      const { password: _, ...userData } = user;
-      res.status(201).json(userData);
-    } catch (error) {
-      console.error("Error creating user:", error);
-      res.status(500).json({ message: "Failed to create user" });
-    }
+  apiRouter.get("/auth/me", async (req, res) => {
+    // Always return the default admin user since authentication is removed
+    const defaultUser = {
+      id: 1,
+      username: "admin",
+      displayName: "Administrator",
+      initial: "A",
+      role: "admin"
+    };
+    
+    return res.json(defaultUser);
   });
   
-  apiRouter.put("/users/:id", requireAdmin, async (req, res) => {
-    try {
-      const id = parseInt(req.params.id);
-      const { username, password, displayName, initial, role } = req.body;
-      
-      const user = await storage.getUser(id);
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
-      }
-      
-      // If username is being changed, check if it already exists
-      if (username && username !== user.username) {
-        const existingUser = await storage.getUserByUsername(username);
-        if (existingUser) {
-          return res.status(400).json({ message: "Username already exists" });
-        }
-      }
-      
-      // Prepare update data
-      const updateData: Partial<typeof req.body> = {};
-      if (username) updateData.username = username;
-      if (displayName) updateData.displayName = displayName;
-      if (initial) updateData.initial = initial;
-      if (role) updateData.role = role;
-      
-      // Handle password update separately
-      if (password) {
-        updateData.password = await hashPassword(password);
-      }
-      
-      const updatedUser = await storage.updateUser(id, updateData);
-      
-      if (!updatedUser) {
-        return res.status(500).json({ message: "Failed to update user" });
-      }
-      
-      // Remove password from response
-      const { password: _, ...userData } = updatedUser;
-      res.json(userData);
-    } catch (error) {
-      console.error("Error updating user:", error);
-      res.status(500).json({ message: "Failed to update user" });
-    }
-  });
-  
-  apiRouter.delete("/users/:id", requireAdmin, async (req, res) => {
-    try {
-      const id = parseInt(req.params.id);
-      
-      // Check if it's the admin user (id 1)
-      if (id === 1) {
-        return res.status(403).json({ message: "Cannot delete the admin user" });
-      }
-      
-      const success = await storage.deleteUser(id);
-      
-      if (!success) {
-        return res.status(404).json({ message: "User not found or could not be deleted" });
-      }
-      
-      res.json({ success: true });
-    } catch (error) {
-      console.error("Error deleting user:", error);
-      res.status(500).json({ message: "Failed to delete user" });
-    }
-  });
-  
-  // Chatbot routes - admin users need access to all chatbots
+  // Chatbot routes
   apiRouter.get("/chatbots", async (req, res) => {
     const chatbots = await storage.getChatbots();
     res.json(chatbots);
@@ -192,129 +110,40 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.json(chatbot);
   });
   
-  apiRouter.post("/chatbots", isAuthenticated, async (req, res) => {
-    const isProductionEnv = process.env.NODE_ENV === 'production';
-    console.log(`POST /api/chatbots received in ${process.env.NODE_ENV} environment`);
-    
+  apiRouter.post("/chatbots", async (req, res) => {
     try {
-      console.log("POST /api/chatbots received with body:", JSON.stringify(req.body, null, 2));
-      
       const { name, slackChannelId } = req.body;
       
       if (!name || !slackChannelId) {
-        console.warn("Missing required fields in request:", req.body);
         return res.status(400).json({ message: "Name and Slack channel ID are required" });
       }
       
-      // Try to validate the Slack channel ID, but continue even if validation fails
-      let channelValidation = { valid: true };
-      try {
-        console.log("Attempting to validate Slack channel:", slackChannelId);
-        channelValidation = await validateSlackChannel(slackChannelId);
-        
-        // Log result but don't block creation if validation fails
-        if (!channelValidation.valid) {
-          console.warn(`Slack channel validation failed but continuing: ${channelValidation.error}`);
-        } else {
-          console.log("Slack channel validation succeeded:", channelValidation);
-        }
-      } catch (error) {
-        console.warn("Slack validation error but continuing with chatbot creation:", error);
-      }
+      // Validate the Slack channel ID before creating the chatbot
+      const channelValidation = await validateSlackChannel(slackChannelId);
       
-      // Special handling for production environment
-      let userId = 0;
-      
-      // Ensure we have a valid user before proceeding
-      if (!req.user || !(req.user as Express.User).id) {
-        console.warn("No authenticated user found in request. Session may be invalid.");
-        
-        if (isProductionEnv) {
-          console.log("Production environment: Allowing chatbot creation without authentication");
-          
-          // In production, try to find an admin user to use as creator
-          try {
-            const users = await storage.getUsers();
-            console.log(`Found ${users.length} users in database`);
-            
-            // Try to find admin first, then fall back to any user
-            const adminUser = users.find(u => u.role === 'admin');
-            const firstUser = users.length > 0 ? users[0] : null;
-            
-            if (adminUser) {
-              console.log("Using admin user as creator:", adminUser.id, adminUser.username);
-              userId = adminUser.id;
-            } else if (firstUser) {
-              console.log("Using first available user as creator:", firstUser.id, firstUser.username);
-              userId = firstUser.id;
-            } else {
-              console.error("No users found in database to assign as creator");
-              return res.status(400).json({ 
-                message: "Cannot create chatbot",
-                details: "No users exist in the system to assign as creator"
-              });
-            }
-          } catch (userError) {
-            console.error("Error finding users:", userError);
-            return res.status(500).json({ 
-              message: "Database error", 
-              details: "Could not access user database"
-            });
-          }
-        } else {
-          // In development, still require authentication
-          return res.status(401).json({ 
-            message: "Authentication required",
-            details: "No valid user session found. Please log in again."
-          });
-        }
-      } else {
-        // Normal case - use the authenticated user
-        const user = req.user as Express.User;
-        userId = user.id;
-        console.log("Using authenticated user as creator:", userId);
-      }
-      
-      if (userId === 0) {
+      if (!channelValidation.valid) {
         return res.status(400).json({ 
-          message: "Cannot create chatbot",
-          details: "Could not determine a valid creator for the chatbot"
+          message: "Invalid Slack channel",
+          details: channelValidation.error || "The channel ID is invalid or the bot doesn't have access to it."
         });
       }
       
-      try {
-        console.log("Creating chatbot with user ID:", userId);
-        
-        const chatbotData = {
-          name,
-          slackChannelId,
-          createdById: userId,
-          isActive: true,
-          requireAuth: false,
-        };
-        
-        console.log("Chatbot creation data:", JSON.stringify(chatbotData, null, 2));
-        const chatbot = await storage.createChatbot(chatbotData);
-        
-        console.log("Successfully created chatbot:", JSON.stringify(chatbot, null, 2));
-        res.status(201).json(chatbot);
-      } catch (storageError) {
-        console.error("Database error creating chatbot:", storageError);
-        return res.status(500).json({ 
-          message: "Database error",
-          details: storageError instanceof Error ? storageError.message : "Unknown database error"
-        });
-      }
-    } catch (error) {
-      console.error("Unexpected error creating chatbot:", error);
-      res.status(500).json({ 
-        message: "Failed to create chatbot", 
-        details: error instanceof Error ? error.message : "Unknown error"
+      const chatbot = await storage.createChatbot({
+        name,
+        slackChannelId,
+        createdById: 1, // Default to user ID 1 since authentication is removed
+        isActive: true,
+        requireAuth: false,
       });
+      
+      res.status(201).json(chatbot);
+    } catch (error) {
+      console.error("Error creating chatbot:", error);
+      res.status(500).json({ message: "Failed to create chatbot" });
     }
   });
   
-  apiRouter.put("/chatbots/:id", isAuthenticated, async (req, res) => {
+  apiRouter.put("/chatbots/:id", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       const { name, slackChannelId, asanaProjectId, isActive, requireAuth } = req.body;
@@ -325,30 +154,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "Chatbot not found" });
       }
       
-      // If a new Slack channel ID is provided, try to validate it but don't block updates
+      // If a new Slack channel ID is provided, validate it
       if (slackChannelId && slackChannelId !== chatbot.slackChannelId) {
-        try {
-          const channelValidation = await validateSlackChannel(slackChannelId);
-          
-          // Just log warnings but continue with the update
-          if (!channelValidation.valid) {
-            console.warn(`Slack channel validation failed but continuing with update: ${channelValidation.error}`);
-          }
-        } catch (error) {
-          console.warn("Slack channel validation error but continuing with update:", error);
+        const channelValidation = await validateSlackChannel(slackChannelId);
+        
+        if (!channelValidation.valid) {
+          return res.status(400).json({ 
+            message: "Invalid Slack channel",
+            details: channelValidation.error || "The channel ID is invalid or the bot doesn't have access to it."
+          });
         }
       }
       
-      // If a new Asana project ID is provided, try to validate it but don't block updates
+      // If a new Asana project ID is provided, validate it
       if (asanaProjectId && asanaProjectId !== chatbot.asanaProjectId) {
         try {
           const projectResponse = await getAsanaProjectTasks(asanaProjectId, false);
           
           if (!projectResponse.success) {
-            console.warn(`Asana project validation failed but continuing with update: ${projectResponse.error}`);
+            return res.status(400).json({ 
+              message: "Invalid Asana project ID",
+              details: projectResponse.error || "The project ID is invalid or cannot be accessed with the current Asana PAT."
+            });
           }
         } catch (error) {
-          console.warn("Asana project validation error but continuing with update:", error);
+          return res.status(400).json({ 
+            message: "Invalid Asana project ID",
+            details: "The project ID could not be validated. Please ensure it's a valid Asana project ID."
+          });
         }
       }
       
@@ -369,7 +202,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  apiRouter.delete("/chatbots/:id", isAuthenticated, async (req, res) => {
+  apiRouter.delete("/chatbots/:id", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       
@@ -432,7 +265,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  apiRouter.post("/chatbots/:id/documents", isAuthenticated, upload.single("file"), async (req, res) => {
+  apiRouter.post("/chatbots/:id/documents", upload.single("file"), async (req, res) => {
     try {
       const chatbotId = parseInt(req.params.id);
       
@@ -442,13 +275,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       const { filename, originalname, mimetype } = req.file;
       
-      const user = req.user as Express.User;
       const document = await storage.createDocument({
         chatbotId,
         filename,
         originalName: originalname,
         fileType: mimetype,
-        uploadedById: user.id
+        uploadedById: 1, // Default to user ID 1 since authentication is removed
       });
       
       // Clear document cache for this chatbot
@@ -462,7 +294,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   
   // Asana project routes
-  apiRouter.get("/chatbots/:id/asana-projects", isAuthenticated, async (req, res) => {
+  apiRouter.get("/chatbots/:id/asana-projects", async (req, res) => {
     try {
       const chatbotId = parseInt(req.params.id);
       
@@ -475,7 +307,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  apiRouter.post("/chatbots/:id/asana-projects", isAuthenticated, async (req, res) => {
+  apiRouter.post("/chatbots/:id/asana-projects", async (req, res) => {
     try {
       const chatbotId = parseInt(req.params.id);
       const { asanaProjectId, projectName, projectType } = req.body;
@@ -518,7 +350,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  apiRouter.delete("/asana-projects/:id", isAuthenticated, async (req, res) => {
+  apiRouter.delete("/asana-projects/:id", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       
@@ -535,7 +367,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  apiRouter.delete("/documents/:id", isAuthenticated, async (req, res) => {
+  apiRouter.delete("/documents/:id", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       
@@ -571,7 +403,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   
   // Email recipient routes
-  apiRouter.get("/chatbots/:id/recipients", isAuthenticated, async (req, res) => {
+  apiRouter.get("/chatbots/:id/recipients", async (req, res) => {
     try {
       const chatbotId = parseInt(req.params.id);
       
@@ -584,7 +416,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  apiRouter.post("/chatbots/:id/recipients", isAuthenticated, async (req, res) => {
+  apiRouter.post("/chatbots/:id/recipients", async (req, res) => {
     try {
       const data = addEmailRecipientSchema.parse({
         ...req.body,
@@ -603,7 +435,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  apiRouter.delete("/recipients/:id", isAuthenticated, async (req, res) => {
+  apiRouter.delete("/recipients/:id", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       
@@ -621,39 +453,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   
   // Summary routes
-  apiRouter.get("/summaries", isAuthenticated, async (req, res) => {
-    try {
-      // Get all chatbots first
-      const chatbots = await storage.getChatbots();
-      
-      // Create a map of chatbot IDs to names for reference
-      const chatbotNames = new Map(
-        chatbots.map(chatbot => [chatbot.id, chatbot.name])
-      );
-      
-      // Get all summaries from all chatbots
-      const allSummariesPromises = chatbots.map(chatbot => 
-        storage.getSummaries(chatbot.id)
-      );
-      
-      const allSummariesArrays = await Promise.all(allSummariesPromises);
-      
-      // Flatten the array of arrays and add chatbot name to each summary
-      const summaries = allSummariesArrays
-        .flat()
-        .map(summary => ({
-          ...summary,
-          chatbotName: chatbotNames.get(summary.chatbotId) || "Unknown"
-        }));
-      
-      res.json(summaries);
-    } catch (error) {
-      console.error("Error fetching all summaries:", error);
-      res.status(500).json({ message: "Failed to fetch summaries" });
-    }
-  });
-  
-  apiRouter.get("/chatbots/:id/summaries", isAuthenticated, async (req, res) => {
+  apiRouter.get("/chatbots/:id/summaries", async (req, res) => {
     try {
       const chatbotId = parseInt(req.params.id);
       
@@ -666,7 +466,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  apiRouter.post("/chatbots/:id/generate-summary", isAuthenticated, async (req, res) => {
+  apiRouter.post("/chatbots/:id/generate-summary", async (req, res) => {
     try {
       const chatbotId = parseInt(req.params.id);
       
@@ -862,18 +662,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
         contextSources.push("3. The project's Asana tasks and their status from multiple Asana projects.");
       }
       
-      // Fetch settings to check for a custom system prompt template
-      const appSettings = await storage.getSettings();
-      
-      // Default system prompt template
-      const defaultSystemPromptTemplate = `You are a helpful assistant named SPH ChatBot assigned to the {{chatbotName}} homebuilding project. Your role is to provide project managers and executives with accurate, up-to-date answers about this construction project by referencing the following sources of information:
+      // Get the system prompt
+      const systemPrompt = `You are a helpful assistant named SPH ChatBot assigned to the ${chatbot.name} homebuilding project. Your role is to provide project managers and executives with accurate, up-to-date answers about this construction project by referencing the following sources of information:
 
-{{contextSources}}
+${contextSources.join("\n")}
 
 Your job is to answer questions clearly and concisely. Always cite your source. If your answer comes from:
 - a document: mention the filename and, if available, the page or section.
 - Slack: mention the date and approximate time of the Slack message.
-{{asanaNote}}
+${chatbot.asanaProjectId ? "- Asana: always mention that the information comes from Asana project tasks and include the project name." : ""}
 
 IMPORTANT FOR ASANA TASKS: 
 1. When users ask about "tasks", "Asana", "project status", "overdue", "upcoming", "progress", or other task-related information, ALWAYS prioritize checking the Asana data.
@@ -886,19 +683,10 @@ Respond using complete sentences. If the information is unavailable, say:
 
 You should **never make up information**. You may summarize or synthesize details if the answer is spread across multiple sources.`;
       
-      // Get the system prompt (either from settings or use default)
-      let systemPromptTemplate = appSettings?.responseTemplate || defaultSystemPromptTemplate;
-      
-      // Replace variables in the template
-      let systemPrompt = systemPromptTemplate
-        .replace(/{{chatbotName}}/g, chatbot.name)
-        .replace(/{{contextSources}}/g, contextSources.join("\n"))
-        .replace(/{{asanaNote}}/g, chatbot.asanaProjectId ? "- Asana: always mention that the information comes from Asana project tasks and include the project name." : "");
-      
-      // Save user message - use token-based access, no need for user ID (public interface)
+      // Save user message
       const userMessage = await storage.createMessage({
         chatbotId,
-        userId: null, // No user ID for token-based public access
+        userId: 1, // Default to user ID 1 since authentication is removed
         content: message,
         isUserMessage: true,
         citation: null,
@@ -1142,7 +930,7 @@ You should **never make up information**. You may summarize or synthesize detail
   });
   
   // Settings routes
-  apiRouter.get("/settings", isAuthenticated, async (req, res) => {
+  apiRouter.get("/settings", async (req, res) => {
     try {
       const settings = await storage.getSettings();
       
@@ -1157,7 +945,7 @@ You should **never make up information**. You may summarize or synthesize detail
     }
   });
   
-  apiRouter.put("/settings", isAuthenticated, async (req, res) => {
+  apiRouter.put("/settings", async (req, res) => {
     try {
       const data = updateSettingsSchema.parse(req.body);
       
@@ -1178,7 +966,7 @@ You should **never make up information**. You may summarize or synthesize detail
   });
   
   // Get API token status (not the actual tokens)
-  apiRouter.get("/settings/api-tokens/status", isAuthenticated, async (req, res) => {
+  apiRouter.get("/settings/api-tokens/status", async (req, res) => {
     try {
       // Check each service token
       const services = ['slack', 'openai', 'asana'];
@@ -1200,7 +988,7 @@ You should **never make up information**. You may summarize or synthesize detail
   });
   
   // Update API tokens (stored securely in database)
-  apiRouter.put("/settings/api-tokens", isAuthenticated, async (req, res) => {
+  apiRouter.put("/settings/api-tokens", async (req, res) => {
     try {
       const { type, token } = req.body;
       
@@ -1253,85 +1041,6 @@ You should **never make up information**. You may summarize or synthesize detail
     } catch (error) {
       console.error("Error updating API token:", error);
       res.status(500).json({ message: "Failed to update API token" });
-    }
-  });
-  
-  // System status endpoints
-  apiRouter.get("/system/health", async (req, res) => {
-    res.status(200).json({ 
-      status: "ok", 
-      time: new Date().toISOString(), 
-      environment: process.env.NODE_ENV || 'development' 
-    });
-  });
-  
-  // Basic database health check endpoint
-  apiRouter.get("/system/db-status", async (req, res) => {
-    try {
-      // Import the testDatabaseConnection function
-      const { testDatabaseConnection } = await import('./db');
-      
-      // Check database connection
-      const dbStatus = await testDatabaseConnection();
-      
-      // Include app version and environment info
-      const systemInfo = {
-        version: process.env.npm_package_version || '1.0.0',
-        environment: process.env.NODE_ENV || 'development',
-        timestamp: new Date().toISOString(),
-        database: dbStatus
-      };
-      
-      // Return status based on database connection
-      if (dbStatus.connected) {
-        res.status(200).json(systemInfo);
-      } else {
-        res.status(500).json(systemInfo);
-      }
-    } catch (error) {
-      console.error("Error checking database health:", error);
-      res.status(500).json({
-        status: "error",
-        message: error instanceof Error ? error.message : "Unknown database error",
-        timestamp: new Date().toISOString(),
-      });
-    }
-  });
-  
-  // Comprehensive database verification endpoint
-  apiRouter.get("/system/db-verify", async (req, res) => {
-    try {
-      // Import the verifyDatabaseSetup function
-      const { verifyDatabaseSetup } = await import('./db');
-      
-      // Perform comprehensive database verification
-      const verificationResult = await verifyDatabaseSetup();
-      
-      // Add system info to the result
-      const systemInfo = {
-        appVersion: process.env.npm_package_version || '1.0.0',
-        nodeVersion: process.version,
-        environment: process.env.NODE_ENV || 'development',
-        platform: process.platform,
-        timestamp: new Date().toISOString(),
-        uptime: process.uptime(),
-        verification: verificationResult
-      };
-      
-      // Return appropriate status code based on verification result
-      if (verificationResult.success) {
-        res.status(200).json(systemInfo);
-      } else {
-        // Still return 200 but with success: false to allow the frontend to handle it
-        res.status(200).json(systemInfo);
-      }
-    } catch (error) {
-      console.error("Error verifying database setup:", error);
-      res.status(500).json({
-        status: "error",
-        message: error instanceof Error ? error.message : "Unknown database verification error",
-        timestamp: new Date().toISOString(),
-      });
     }
   });
   

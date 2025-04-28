@@ -1,31 +1,10 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
-import cors from "cors";
-
-// Configure environment-specific settings
-const isProduction = process.env.NODE_ENV === 'production';
-
-// Setup CORS for all environments
-// In production, we need to be specific about allowed origins
-const corsOptions = {
-  credentials: true,
-  origin: isProduction 
-    ? [
-        'https://sphbuddy.info', 
-        'https://www.sphbuddy.info',
-        // Allow localhost for development testing
-        'http://localhost:5000'
-      ] 
-    : true, // Allow any origin in development
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-};
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cors(corsOptions));
 
 app.use((req, res, next) => {
   const start = Date.now();
@@ -75,11 +54,6 @@ app.use((req, res, next) => {
     await setupVite(app, server);
   } else {
     serveStatic(app);
-    
-    // Add explicit handler for root path in production
-    app.get('/', (req, res) => {
-      res.sendFile(path.resolve(import.meta.dirname, "public", "index.html"));
-    });
   }
 
   // ALWAYS serve the app on port 5000

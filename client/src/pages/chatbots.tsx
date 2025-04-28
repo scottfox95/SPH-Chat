@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,102 +12,26 @@ import {
   TableRow 
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { 
-  Dialog, 
-  DialogContent, 
-  DialogHeader, 
-  DialogTitle,
-  DialogDescription,
-  DialogFooter 
-} from "@/components/ui/dialog";
-import { Plus, Search, Share2, MessageSquare, Trash2 } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Plus, Search, Share2, MessageSquare } from "lucide-react";
 import CreateChatbotForm from "@/components/dashboard/create-chatbot-form";
 import ShareModal from "@/components/shared/share-modal";
 import { format } from "date-fns";
-import { useToast } from "@/hooks/use-toast";
-import { apiRequest } from "@/lib/queryClient";
 
 export default function Chatbots() {
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [selectedChatbot, setSelectedChatbot] = useState<any>(null);
   const [shareModalOpen, setShareModalOpen] = useState(false);
-  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-  const [chatbotToDelete, setChatbotToDelete] = useState<any>(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const { toast } = useToast();
   
-  // Fetch chatbots with manual fetch to debug the issue
-  const [chatbots, setChatbots] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<any>(null);
-  
-  // Use direct fetch instead of React Query
-  const fetchChatbots = async () => {
-    try {
-      setIsLoading(true);
-      const response = await fetch('/api/chatbots', {
-        credentials: 'include'
-      });
-      console.log("Fetch response status:", response.status);
-      if (!response.ok) {
-        throw new Error(`API error: ${response.status}`);
-      }
-      const data = await response.json();
-      console.log("Chatbots fetched directly:", data);
-      setChatbots(data || []);
-      setError(null);
-    } catch (err) {
-      console.error("Error fetching chatbots:", err);
-      setError(err);
-      setChatbots([]);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-  
-  useEffect(() => {
-    fetchChatbots();
-  }, []);
-  
-  // Delete chatbot mutation
-  const deleteChatbotMutation = useMutation({
-    mutationFn: async (id: number) => {
-      const res = await apiRequest("DELETE", `/api/chatbots/${id}`, {});
-      return res.json();
-    },
-    onSuccess: () => {
-      toast({
-        title: "Chatbot deleted",
-        description: "The chatbot has been successfully deleted.",
-      });
-      setDeleteModalOpen(false);
-      setChatbotToDelete(null);
-      // Refresh the chatbots list
-      fetchChatbots();
-    },
-    onError: (error: any) => {
-      toast({
-        title: "Failed to delete chatbot",
-        description: error.message || "Please try again.",
-        variant: "destructive",
-      });
-    },
+  // Fetch chatbots
+  const { data: chatbots = [], isLoading } = useQuery({
+    queryKey: ["/api/chatbots"],
   });
   
   const handleShareClick = (chatbot: any) => {
     setSelectedChatbot(chatbot);
     setShareModalOpen(true);
-  };
-  
-  const handleDeleteClick = (chatbot: any) => {
-    setChatbotToDelete(chatbot);
-    setDeleteModalOpen(true);
-  };
-  
-  const confirmDelete = () => {
-    if (chatbotToDelete) {
-      deleteChatbotMutation.mutate(chatbotToDelete.id);
-    }
   };
   
   // Filter chatbots by search query
@@ -199,14 +123,6 @@ export default function Chatbots() {
                             <MessageSquare className="h-4 w-4" />
                           </Button>
                         </Link>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="border-red-200 hover:bg-red-50 hover:text-red-600"
-                          onClick={() => handleDeleteClick(chatbot)}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
                       </div>
                     </TableCell>
                   </TableRow>
@@ -235,37 +151,6 @@ export default function Chatbots() {
           chatbot={selectedChatbot}
         />
       )}
-      
-      {/* Delete Confirmation Modal */}
-      <Dialog open={deleteModalOpen} onOpenChange={setDeleteModalOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Delete Chatbot</DialogTitle>
-            <DialogDescription>
-              Are you sure you want to delete the chatbot 
-              <span className="font-medium"> "{chatbotToDelete?.name}"</span>?
-              This action cannot be undone.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter className="flex items-center justify-between">
-            <Button
-              variant="outline"
-              onClick={() => setDeleteModalOpen(false)}
-              disabled={deleteChatbotMutation.isPending}
-            >
-              Cancel
-            </Button>
-            <Button 
-              variant="destructive"
-              onClick={confirmDelete}
-              disabled={deleteChatbotMutation.isPending}
-              className="ml-2"
-            >
-              {deleteChatbotMutation.isPending ? "Deleting..." : "Delete Chatbot"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </>
   );
 }
