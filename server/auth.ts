@@ -15,21 +15,27 @@ declare global {
 export function setupAuth(app: Express) {
   // Configure session based on environment
   const isProduction = process.env.NODE_ENV === 'production';
+  const isReplitEnv = process.env.REPL_ID && process.env.REPL_OWNER;
   
   // Log environment settings
   console.log(`Configuring authentication for ${isProduction ? 'production' : 'development'} environment`);
+  console.log(`Running in Replit environment: ${isReplitEnv ? 'Yes' : 'No'}`);
   
-  // Use environment-specific session settings
+  // Generate a secure session secret if not provided
+  const sessionSecret = process.env.SESSION_SECRET || "homebuildbot-secret";
+  
+  // Use environment-specific session settings with improved security for production
   const sessionSettings: session.SessionOptions = {
-    secret: process.env.SESSION_SECRET || "homebuildbot-secret",
+    secret: sessionSecret,
     resave: false,
     saveUninitialized: false,
     cookie: {
       maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
-      secure: false, // Must be false for Replit deployments
-      sameSite: 'lax',
+      // Set secure based on environment, but never force secure:true in Replit deployments
+      secure: isProduction && !isReplitEnv,
+      sameSite: isProduction ? 'lax' : 'lax',  // stricter in production
       httpOnly: true, // Better security: client-side JS cannot access cookies
-      path: '/',     // Ensure cookie is valid for all paths
+      path: '/',      // Ensure cookie is valid for all paths
     },
     store: storage.sessionStore,
   };

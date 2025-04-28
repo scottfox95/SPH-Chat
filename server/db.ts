@@ -2,6 +2,7 @@ import { Pool } from 'pg';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import * as schema from "@shared/schema";
 
+// Ensure we have a valid database URL
 if (!process.env.DATABASE_URL) {
   throw new Error(
     "DATABASE_URL must be set. Did you forget to provision a database?",
@@ -11,14 +12,59 @@ if (!process.env.DATABASE_URL) {
 // Environment-specific database connection handling
 console.log(`Initializing database connection in ${process.env.NODE_ENV || 'development'} environment`);
 
+// Construct PostgreSQL connection parameters - support both complete URL and individual params
+let connectionConfig: any;
+
+// Always use Replit's database in production
+const isReplitEnv = process.env.REPL_ID && process.env.REPL_OWNER;
+
+// If we're in the Replit environment, prioritize the Replit-provided DATABASE_URL
+if (isReplitEnv) {
+  connectionConfig = {
+    connectionString: process.env.DATABASE_URL,
+    ssl: false, // Replit PostgreSQL doesn't need SSL
+    // Add connection pool settings to improve stability
+    max: 20, // Maximum number of connections 
+    idleTimeoutMillis: 30000, // Close idle connections after 30 seconds
+    connectionTimeoutMillis: 5000, // Timeout after 5 seconds when connecting
+  };
+  console.log(`Using Replit's PostgreSQL database`);
+}
+// Fallback for non-Replit environments (local development with PG params)
+else if (process.env.PGHOST && process.env.PGDATABASE && process.env.PGUSER && process.env.PGPASSWORD) {
+  connectionConfig = {
+    host: process.env.PGHOST,
+    port: parseInt(process.env.PGPORT || '5432'),
+    database: process.env.PGDATABASE,
+    user: process.env.PGUSER,
+    password: process.env.PGPASSWORD,
+    ssl: {
+      rejectUnauthorized: false // For external databases that may need SSL
+    },
+    // Add connection pool settings to improve stability
+    max: 20, // Maximum number of connections 
+    idleTimeoutMillis: 30000, // Close idle connections after 30 seconds
+    connectionTimeoutMillis: 5000, // Timeout after 5 seconds when connecting
+  };
+  console.log(`Using external PostgreSQL database with host: ${process.env.PGHOST}, database: ${process.env.PGDATABASE}`);
+} 
+// Last resort - use DATABASE_URL
+else {
+  connectionConfig = { 
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+      rejectUnauthorized: false // For external databases that may need SSL
+    },
+    // Add connection pool settings to improve stability
+    max: 20, // Maximum number of connections 
+    idleTimeoutMillis: 30000, // Close idle connections after 30 seconds
+    connectionTimeoutMillis: 5000, // Timeout after 5 seconds when connecting
+  };
+  console.log(`Using DATABASE_URL for PostgreSQL connection`);
+}
+
 // Use the pooled connection for better performance
-export const pool = new Pool({ 
-  connectionString: process.env.DATABASE_URL,
-  // Add connection pool settings to improve stability
-  max: 20, // Maximum number of connections 
-  idleTimeoutMillis: 30000, // Close idle connections after 30 seconds
-  connectionTimeoutMillis: 5000, // Timeout after 5 seconds when connecting
-});
+export const pool = new Pool(connectionConfig);
 
 // Initialize drizzle ORM with our schema
 export const db = drizzle({ client: pool, schema });
