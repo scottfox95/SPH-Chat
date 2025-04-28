@@ -688,8 +688,13 @@ export class DatabaseStorage implements IStorage {
       console.log("Final chatbot data for insertion:", JSON.stringify(chatbotData, null, 2));
       
       try {
+        // Generate UUID explicitly for public_token
+        const crypto = require('crypto');
+        const publicToken = crypto.randomUUID();
+        console.log("Generated explicit UUID for public_token:", publicToken);
+        
         // Using raw SQL for the most compatibility across PostgreSQL versions
-        console.log("Attempting direct SQL insert of chatbot");
+        console.log("Attempting direct SQL insert of chatbot with explicit public_token");
         
         const result = await db.execute(sql`
           INSERT INTO chatbots (
@@ -697,14 +702,16 @@ export class DatabaseStorage implements IStorage {
             slack_channel_id, 
             created_by_id, 
             is_active, 
-            require_auth
+            require_auth,
+            public_token
           )
           VALUES (
             ${chatbotData.name}, 
             ${chatbotData.slackChannelId}, 
             ${chatbotData.createdById}, 
             ${chatbotData.isActive}, 
-            ${chatbotData.requireAuth}
+            ${chatbotData.requireAuth},
+            ${publicToken}::uuid
           )
           RETURNING *
         `);
@@ -747,21 +754,28 @@ export class DatabaseStorage implements IStorage {
         
         // Last-resort fallback - try plain insert
         try {
-          console.log("Trying direct SQL insert without returning");
+          // Generate a new UUID for fallback method
+          const crypto = require('crypto');
+          const publicToken = crypto.randomUUID();
+          console.log("Generated explicit UUID for public_token in fallback method:", publicToken);
+          
+          console.log("Trying direct SQL insert with explicit public_token without returning");
           await db.execute(sql`
             INSERT INTO chatbots (
               name, 
               slack_channel_id, 
               created_by_id, 
               is_active, 
-              require_auth
+              require_auth,
+              public_token
             )
             VALUES (
               ${chatbotData.name}, 
               ${chatbotData.slackChannelId}, 
               ${chatbotData.createdById}, 
               ${chatbotData.isActive}, 
-              ${chatbotData.requireAuth}
+              ${chatbotData.requireAuth},
+              ${publicToken}::uuid
             )
           `);
           
