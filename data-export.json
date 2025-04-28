@@ -58,7 +58,7 @@
         "asanaProjectId": null,
         "asanaConnectionId": null,
         "createdById": 1,
-        "publicToken": "0XhMq2JdVp",
+        "publicToken": "6fb149c3-a7e4-be18-2535-964abe624df7",
         "isActive": true,
         "requireAuth": false,
         "createdAt": "2025-04-22T19:25:03.452Z"
@@ -105,7 +105,7 @@
         "asanaProjectId": "1207101647851774",
         "asanaConnectionId": null,
         "createdById": 1,
-        "publicToken": "rcDo8Grk6K",
+        "publicToken": "edd3092b-3384-b4cf-d02b-7f013c8e3359",
         "isActive": true,
         "requireAuth": false,
         "createdAt": "2025-04-22T19:38:08.601Z"
@@ -304,7 +304,7 @@
         "asanaProjectId": null,
         "asanaConnectionId": null,
         "createdById": 1,
-        "publicToken": "0WJ6JIrkt_",
+        "publicToken": "9fa16c44-b7c0-5fd8-cc5b-bb17c237865f",
         "isActive": true,
         "requireAuth": false,
         "createdAt": "2025-04-24T20:07:57.912Z"
@@ -450,7 +450,7 @@
         "asanaProjectId": null,
         "asanaConnectionId": null,
         "createdById": 3,
-        "publicToken": "f1b31d70-28ea-4b5c-8937-4e9373113afe",
+        "publicToken": "ef7c7529-3d70-a9df-386d-7d9cca9c693b",
         "isActive": true,
         "requireAuth": false,
         "createdAt": "2025-04-25T02:14:07.145Z"
@@ -469,7 +469,7 @@
         "asanaProjectId": null,
         "asanaConnectionId": null,
         "createdById": 4,
-        "publicToken": "nCfOe9p4HBm_",
+        "publicToken": "39fa6d9e-882a-2d35-512c-8ae3cd396e8a",
         "isActive": true,
         "requireAuth": false,
         "createdAt": "2025-04-28T16:54:11.134Z"
@@ -507,7 +507,7 @@
         "asanaProjectId": null,
         "asanaConnectionId": null,
         "createdById": 4,
-        "publicToken": "7laTpNReQAkP",
+        "publicToken": "ae840b06-576b-f708-b797-a732155f65ed",
         "isActive": true,
         "requireAuth": false,
         "createdAt": "2025-04-28T17:15:42.664Z"
@@ -517,8 +517,84 @@
       "summaries": [],
       "emailRecipients": [],
       "asanaProjects": []
+    },
+    {
+      "chatbot": {
+        "id": 13,
+        "name": "Test UUID Generation",
+        "slackChannelId": "C12345",
+        "asanaProjectId": null,
+        "asanaConnectionId": null,
+        "createdById": 1,
+        "publicToken": "da30237d-40a0-4683-858e-5cccb31fa1f0",
+        "isActive": true,
+        "requireAuth": false,
+        "createdAt": "2025-04-28T17:41:11.994Z"
+      },
+      "documents": [],
+      "messages": [],
+      "summaries": [],
+      "emailRecipients": [],
+      "asanaProjects": []
+    },
+    {
+      "chatbot": {
+        "id": 14,
+        "name": "Test UUID 1",
+        "slackChannelId": "C12345",
+        "asanaProjectId": null,
+        "asanaConnectionId": null,
+        "createdById": 1,
+        "publicToken": "03aea749-b4bc-4ca1-b158-c7e1f50a2d9d",
+        "isActive": true,
+        "requireAuth": false,
+        "createdAt": "2025-04-28T17:41:21.152Z"
+      },
+      "documents": [],
+      "messages": [],
+      "summaries": [],
+      "emailRecipients": [],
+      "asanaProjects": []
+    },
+    {
+      "chatbot": {
+        "id": 15,
+        "name": "Test UUID 2",
+        "slackChannelId": "C12345",
+        "asanaProjectId": null,
+        "asanaConnectionId": null,
+        "createdById": 1,
+        "publicToken": "7d68a814-33d4-412a-95cc-20c233e48fef",
+        "isActive": true,
+        "requireAuth": false,
+        "createdAt": "2025-04-28T17:41:21.152Z"
+      },
+      "documents": [],
+      "messages": [],
+      "summaries": [],
+      "emailRecipients": [],
+      "asanaProjects": []
+    },
+    {
+      "chatbot": {
+        "id": 16,
+        "name": "Test UUID 3",
+        "slackChannelId": "C12345",
+        "asanaProjectId": null,
+        "asanaConnectionId": null,
+        "createdById": 1,
+        "publicToken": "d046631c-582b-4f7d-b3af-7dd1829d9493",
+        "isActive": true,
+        "requireAuth": false,
+        "createdAt": "2025-04-28T17:41:21.152Z"
+      },
+      "documents": [],
+      "messages": [],
+      "summaries": [],
+      "emailRecipients": [],
+      "asanaProjects": []
     }
   ],
-  "exportedAt": "2025-04-28T17:37:32.113Z",
+  "exportedAt": "2025-04-28T17:41:38.428Z",
   "exportedBy": "SPH Chat Migration Utility"
 }
