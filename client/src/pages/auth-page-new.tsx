@@ -63,17 +63,17 @@ export default function AuthPage() {
         }),
         credentials: 'include',
       });
-      
+
       if (response.ok) {
         const userData = await response.json();
         console.log("Login successful, redirecting to dashboard now");
-        
+
         // Use the new localStorage auth approach
         // Generate a simple token (in a real app, this would come from the server)
         const token = `auth_${Date.now()}_${Math.random().toString(36).substring(2, 15)}`;
         localStorage.setItem("auth_token", token);
         localStorage.setItem("auth_user", JSON.stringify(userData));
-        
+
         // Force page reload and redirect to ensure session is recognized
         window.location.href = "/dashboard";
       } else {
@@ -111,9 +111,9 @@ export default function AuthPage() {
           <div className="flex justify-center mb-8">
             <div className="flex items-center">
               <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center">
-                <span className="text-white font-semibold text-lg">HB</span>
+                <span className="text-white font-semibold text-lg">SPH</span>
               </div>
-              <span className="ml-3 text-xl font-semibold text-gray-900">HomeBuild</span>
+              <span className="ml-3 text-xl font-semibold text-gray-900">Six Points Homes AI</span>
             </div>
           </div>
 
@@ -202,7 +202,7 @@ export default function AuthPage() {
 
       <div className="hidden md:flex bg-gray-100 flex-col justify-center px-12">
         <div className="max-w-md">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">HomeBuild AI Chatbot Dashboard</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">Six Points Homes AI Chatbot Dashboard</h2>
           <p className="text-gray-600 mb-6">
             Build powerful AI assistants for your construction projects. Integrate with Asana, manage knowledge bases, and analyze project communications effortlessly.
           </p>
