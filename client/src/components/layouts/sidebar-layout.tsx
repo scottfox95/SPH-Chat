@@ -2,7 +2,7 @@ import { useLocation } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
 import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
-import { Home, MessageSquare, ClipboardList, Settings, LogOut, Database, Users } from "lucide-react";
+import { Home, MessageSquare, ClipboardList, Settings, LogOut, Database, Users, FolderTree } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useToast } from "@/hooks/use-toast";
 import { ReactNode, useState, useEffect } from "react";

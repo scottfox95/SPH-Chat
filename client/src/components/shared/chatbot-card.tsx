@@ -2,7 +2,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "wouter";
-import { MessageSquare, Share2, Settings } from "lucide-react";
+import { MessageSquare, Share2, Settings, Folder } from "lucide-react";
 import { format } from "date-fns";
 
 interface ChatbotCardProps {
@@ -23,7 +23,20 @@ interface ChatbotCardProps {
   projectNames?: Record<number, string>;
 }
 
-export default function ChatbotCard({ chatbot, onShare }: ChatbotCardProps) {
+export default function ChatbotCard({ chatbot, onShare, projectNames }: ChatbotCardProps) {
+  // Get project name from either the project object or the projectNames mapping
+  const getProjectName = () => {
+    if (chatbot.project?.name) {
+      return chatbot.project.name;
+    }
+    if (chatbot.projectId && projectNames && projectNames[chatbot.projectId]) {
+      return projectNames[chatbot.projectId];
+    }
+    return null;
+  };
+
+  const projectName = getProjectName();
+
   return (
     <Card className="shadow-sm hover:shadow-md transition-shadow">
       <CardHeader className="pb-2">
@@ -45,6 +58,18 @@ export default function ChatbotCard({ chatbot, onShare }: ChatbotCardProps) {
             <MessageSquare className="h-4 w-4" />
             <span className="truncate">Slack Channel: {chatbot.slackChannelId}</span>
           </div>
+          
+          {projectName && (
+            <div className="flex items-center gap-2 my-2">
+              <Folder className="h-4 w-4 text-[#D2B48C]" />
+              <Link href={`/projects/${chatbot.projectId}`}>
+                <span className="text-[#D2B48C] hover:underline cursor-pointer">
+                  {projectName}
+                </span>
+              </Link>
+            </div>
+          )}
+          
           <div className="text-xs mt-2">
             Public Link: <code className="text-xs bg-gray-100 p-1 rounded">.../{chatbot.publicToken}</code>
           </div>
