@@ -24,26 +24,50 @@ const DATA_EXPORT_PATH = path.join(process.cwd(), 'data-export.json');
  */
 export async function isMigrationNeeded(): Promise<boolean> {
   try {
-    // Check if we're in a Replit production environment
-    const isReplitProduction = process.env.REPL_ID && 
-                               process.env.REPL_OWNER && 
-                               process.env.NODE_ENV === 'production';
+    // Always perform migration in production regardless of current data
+    // This ensures that any chatbots created in development are available in production
+    const isProduction = process.env.NODE_ENV === 'production';
+    console.log(`Checking migration need - Environment: ${process.env.NODE_ENV}, IsProduction: ${isProduction}`);
     
-    if (!isReplitProduction) {
+    if (!isProduction) {
+      console.log("Not in production environment, skipping migration");
       return false; // Only migrate in production
     }
     
     // Check if we have any exported data to import
     if (!fs.existsSync(DATA_EXPORT_PATH)) {
+      console.log(`No export data file found at ${DATA_EXPORT_PATH}`);
       return false; // No exported data to import
     }
     
-    // Check if we already have data in the database
-    const chatbotCount = await getChatbotCount();
-    const userCount = await getUserCount();
-    
-    // Migration is needed if we have exported data and no data in the database
-    return (chatbotCount === 0 || userCount === 0);
+    // Load and validate export data
+    try {
+      const exportDataRaw = fs.readFileSync(DATA_EXPORT_PATH, 'utf8');
+      const exportData = JSON.parse(exportDataRaw);
+      
+      // Check if we have meaningful data in the export
+      if (!exportData.chatbots || exportData.chatbots.length === 0) {
+        console.log("Export data exists but contains no chatbots");
+        return false;
+      }
+      
+      console.log(`Found ${exportData.chatbots.length} chatbots in export data`);
+      
+      // Now count chatbots in the production database
+      const chatbotCount = await getChatbotCount();
+      console.log(`Found ${chatbotCount} chatbots in production database`);
+      
+      // Migration is needed if:
+      // 1. We have no chatbots in production but have them in export data, or
+      // 2. We have fewer chatbots in production than in the export data
+      const needsMigration = chatbotCount < exportData.chatbots.length;
+      console.log(`Migration needed: ${needsMigration}`);
+      return needsMigration;
+      
+    } catch (parseError) {
+      console.error("Error parsing export data:", parseError);
+      return false;
+    }
   } catch (error) {
     console.error("Error checking migration status:", error);
     return false;
@@ -183,17 +207,74 @@ export async function importData(): Promise<boolean> {
       
       let chatbotId;
       if (!existingChatbot) {
-        // Create the chatbot
-        const createdChatbot = await storage.createChatbot({
-          name: chatbot.name,
-          slackChannelId: chatbot.slackChannelId,
-          asanaProjectId: chatbot.asanaProjectId,
-          createdById: chatbot.createdById,
-          isActive: chatbot.isActive,
-          requireAuth: chatbot.requireAuth
-        });
-        chatbotId = createdChatbot.id;
-        console.log(`Created chatbot: ${chatbot.name} (ID: ${chatbotId})`);
+        try {
+          // First, check if this token already exists to avoid uniqueness violation
+          const tokenCheck = await pool.query(
+            "SELECT id FROM chatbots WHERE public_token = $1",
+            [chatbot.publicToken]
+          );
+          
+          if (tokenCheck.rows.length > 0) {
+            console.log(`Token ${chatbot.publicToken} already exists in production, generating a new token`);
+            
+            // Use a direct SQL query to insert the chatbot with all fields including token
+            const result = await pool.query(
+              `INSERT INTO chatbots (
+                name, slack_channel_id, asana_project_id, created_by_id, 
+                is_active, require_auth, created_at
+              ) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id`,
+              [
+                chatbot.name,
+                chatbot.slackChannelId,
+                chatbot.asanaProjectId,
+                chatbot.createdById,
+                chatbot.isActive,
+                chatbot.requireAuth,
+                chatbot.createdAt || new Date()
+              ]
+            );
+            
+            chatbotId = result.rows[0].id;
+          } else {
+            // Token doesn't exist, we can safely use it
+            // Use a direct SQL query to insert the chatbot with the same token
+            const result = await pool.query(
+              `INSERT INTO chatbots (
+                name, slack_channel_id, asana_project_id, created_by_id, 
+                public_token, is_active, require_auth, created_at
+              ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id`,
+              [
+                chatbot.name,
+                chatbot.slackChannelId,
+                chatbot.asanaProjectId,
+                chatbot.createdById,
+                chatbot.publicToken,
+                chatbot.isActive,
+                chatbot.requireAuth,
+                chatbot.createdAt || new Date()
+              ]
+            );
+            
+            chatbotId = result.rows[0].id;
+            console.log(`Created chatbot with original token: ${chatbot.publicToken}`);
+          }
+          
+          console.log(`Created chatbot: ${chatbot.name} (ID: ${chatbotId})`);
+        } catch (error) {
+          console.error(`Error creating chatbot ${chatbot.name}:`, error);
+          
+          // Fall back to standard method which will generate a new token
+          const createdChatbot = await storage.createChatbot({
+            name: chatbot.name,
+            slackChannelId: chatbot.slackChannelId,
+            asanaProjectId: chatbot.asanaProjectId,
+            createdById: chatbot.createdById,
+            isActive: chatbot.isActive,
+            requireAuth: chatbot.requireAuth
+          });
+          chatbotId = createdChatbot.id;
+          console.log(`Created chatbot with fallback method: ${chatbot.name} (ID: ${chatbotId})`);
+        }
       } else {
         chatbotId = existingChatbot.id;
         console.log(`Chatbot already exists: ${chatbot.name} (ID: ${chatbotId})`);

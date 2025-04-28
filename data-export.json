@@ -498,8 +498,27 @@
       "summaries": [],
       "emailRecipients": [],
       "asanaProjects": []
+    },
+    {
+      "chatbot": {
+        "id": 10,
+        "name": "mayfair test 5",
+        "slackChannelId": "C06S1QZU9N2",
+        "asanaProjectId": null,
+        "asanaConnectionId": null,
+        "createdById": 4,
+        "publicToken": "7laTpNReQAkP",
+        "isActive": true,
+        "requireAuth": false,
+        "createdAt": "2025-04-28T17:15:42.664Z"
+      },
+      "documents": [],
+      "messages": [],
+      "summaries": [],
+      "emailRecipients": [],
+      "asanaProjects": []
     }
   ],
-  "exportedAt": "2025-04-28T17:13:22.605Z",
+  "exportedAt": "2025-04-28T17:24:25.149Z",
   "exportedBy": "SPH Chat Migration Utility"
 }
