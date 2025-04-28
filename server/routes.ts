@@ -1,8 +1,7 @@
 import express, { type Express } from "express";
-import session from "express-session";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { requireAuth, requireAdmin } from "./middleware/auth";
+import { setupAuth, isAuthenticated, isAdmin } from "./auth";
 import { upload } from "./middleware/multer";
 import { z } from "zod";
 import { 
@@ -36,8 +35,6 @@ import * as fs from "fs";
 import { nanoid } from "nanoid";
 import { format } from "date-fns";
 import MemoryStore from "memorystore";
-
-import { setupAuth } from './auth';
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Set up authentication (which also sets up session middleware)
