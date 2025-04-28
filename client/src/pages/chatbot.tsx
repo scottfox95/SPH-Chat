@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Share2, Bell, Settings, FileUp, Trash2, Pencil } from "lucide-react";
+import { Share2, Bell, Settings, FileUp, Trash2, Pencil, FolderOpen, XCircle } from "lucide-react";
 import EditableTitle from "@/components/shared/editable-title";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import ChatInterface from "@/components/shared/chat-interface";
@@ -13,6 +13,13 @@ import AsanaProjectsManager from "@/components/dashboard/asana-projects-manager"
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import {
   Table,
@@ -35,6 +42,88 @@ import {
 
 interface ChatbotProps {
   id: number;
+}
+
+// ProjectSelector component
+function ProjectSelector({ chatbotId, currentProjectId }: { chatbotId: number, currentProjectId: number | null }) {
+  const { toast } = useToast();
+  const [isUpdating, setIsUpdating] = useState(false);
+  
+  // Fetch projects for the dropdown
+  const { data: projects = [] } = useQuery({
+    queryKey: ["/api/projects"],
+  });
+  
+  // Update project assignment mutation
+  const updateProjectMutation = useMutation({
+    mutationFn: async (projectId: string | null) => {
+      const res = await apiRequest("PUT", `/api/chatbots/${chatbotId}`, {
+        projectId: projectId === "none" ? null : projectId,
+      });
+      return res.json();
+    },
+    onSuccess: (data) => {
+      toast({
+        title: "Project assignment updated",
+        description: data.projectId 
+          ? "Chatbot has been assigned to the selected project." 
+          : "Chatbot has been removed from project assignment.",
+      });
+      queryClient.invalidateQueries({ queryKey: [`/api/chatbots/${chatbotId}`] });
+      queryClient.invalidateQueries({ queryKey: ["/api/projects"] });
+      if (data.projectId) {
+        queryClient.invalidateQueries({ queryKey: [`/api/projects/${data.projectId}/chatbots`] });
+      }
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Failed to update project assignment",
+        description: error.message || "Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
+  
+  const handleProjectChange = (value: string) => {
+    setIsUpdating(true);
+    updateProjectMutation.mutate(value === "none" ? null : value);
+    setIsUpdating(false);
+  };
+  
+  // Convert current project ID to string for the select component
+  const currentProjectValue = currentProjectId ? currentProjectId.toString() : "none";
+  
+  return (
+    <div className="mt-1">
+      <div className="flex items-center gap-2">
+        <Select 
+          value={currentProjectValue}
+          onValueChange={handleProjectChange}
+          disabled={isUpdating}
+        >
+          <SelectTrigger className="focus-visible:ring-[#D2B48C]">
+            <SelectValue placeholder="Select a project" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="none">
+              <span className="flex items-center gap-2">
+                <XCircle className="h-4 w-4 text-gray-400" />
+                None
+              </span>
+            </SelectItem>
+            {projects.map((project: any) => (
+              <SelectItem key={project.id} value={project.id.toString()}>
+                <span className="flex items-center gap-2">
+                  <FolderOpen className="h-4 w-4 text-[#D2B48C]" />
+                  {project.name}
+                </span>
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+    </div>
+  );
 }
 
 export default function Chatbot({ id }: ChatbotProps) {
@@ -474,6 +563,14 @@ export default function Chatbot({ id }: ChatbotProps) {
                       className="bg-gray-50"
                     />
                   </div>
+                </div>
+                
+                <div>
+                  <Label htmlFor="project-assignment">Project Assignment</Label>
+                  <ProjectSelector chatbotId={chatbot.id} currentProjectId={chatbot.projectId} />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Organize this chatbot within a specific project group
+                  </p>
                 </div>
               </div>
             </TabsContent>
