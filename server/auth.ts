@@ -131,9 +131,62 @@ export function setupAuth(app: Express) {
       res.status(500).json({ message: "Failed to register user" });
     }
   });
+  
+  // Register route (alias for compatibility)
+  app.post("/api/register", async (req, res, next) => {
+    try {
+      const { username, password, displayName, initial, role = "user" } = req.body;
+      
+      // Check if user already exists
+      const existingUser = await storage.getUserByUsername(username);
+      if (existingUser) {
+        return res.status(400).json({ message: "Username already exists" });
+      }
+      
+      // Create user with hashed password
+      const hashedPassword = await hashPassword(password);
+      const user = await storage.createUser({
+        username,
+        password: hashedPassword,
+        displayName,
+        initial,
+        role,
+      });
+      
+      // Log in the user
+      req.login(user, (err) => {
+        if (err) return next(err);
+        // Return user without password
+        const { password, ...userWithoutPassword } = user;
+        res.status(201).json(userWithoutPassword);
+      });
+    } catch (error) {
+      console.error("Error registering user:", error);
+      res.status(500).json({ message: "Failed to register user" });
+    }
+  });
 
   // Login route
   app.post("/api/auth/login", (req, res, next) => {
+    passport.authenticate("local", (err: Error, user: Express.User, info: { message: string }) => {
+      if (err) return next(err);
+      
+      if (!user) {
+        return res.status(401).json({ message: info?.message || "Authentication failed" });
+      }
+      
+      req.login(user, (err) => {
+        if (err) return next(err);
+        
+        // Return user without password
+        const { password, ...userWithoutPassword } = user;
+        res.json(userWithoutPassword);
+      });
+    })(req, res, next);
+  });
+  
+  // Login route (alias for compatibility)
+  app.post("/api/login", (req, res, next) => {
     passport.authenticate("local", (err: Error, user: Express.User, info: { message: string }) => {
       if (err) return next(err);
       
@@ -158,9 +211,28 @@ export function setupAuth(app: Express) {
       res.json({ success: true });
     });
   });
+  
+  // Logout route (alias for compatibility)
+  app.post("/api/logout", (req, res, next) => {
+    req.logout((err) => {
+      if (err) return next(err);
+      res.json({ success: true });
+    });
+  });
 
   // Get current user route
   app.get("/api/auth/me", (req, res) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ message: "Not authenticated" });
+    }
+    
+    // Return user without password
+    const { password, ...userWithoutPassword } = req.user;
+    res.json(userWithoutPassword);
+  });
+  
+  // Get current user route (alias for /api/auth/me for compatibility)
+  app.get("/api/user", (req, res) => {
     if (!req.isAuthenticated()) {
       return res.status(401).json({ message: "Not authenticated" });
     }
