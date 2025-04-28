@@ -33,7 +33,440 @@
       "initial": "DZ"
     }
   ],
-  "chatbots": [],
-  "exportedAt": "2025-04-28T19:16:00.965Z",
+  "chatbots": [
+    {
+      "chatbot": {
+        "id": 1,
+        "name": "1320 mayfair",
+        "slackChannelId": "C06S1QZU9N2",
+        "asanaProjectId": null,
+        "asanaConnectionId": null,
+        "createdById": 1,
+        "projectId": null,
+        "publicToken": "6fb149c3-a7e4-be18-2535-964abe624df7",
+        "isActive": true,
+        "requireAuth": false,
+        "createdAt": "2025-04-22T19:25:03.452Z"
+      },
+      "documents": [
+        {
+          "id": 1,
+          "chatbotId": 1,
+          "filename": "1e8cba6a-dcd7-40d6-88cc-f5e94de51bfe.xlsx",
+          "originalName": "1320 Mayfair Budget.xlsx",
+          "fileType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          "uploadedById": 1,
+          "createdAt": "2025-04-24T20:56:09.185Z"
+        },
+        {
+          "id": 2,
+          "chatbotId": 1,
+          "filename": "80fa2331-09a1-404e-b8e2-c086db52dbad.xlsx",
+          "originalName": "1320 Mayfair Budget.xlsx",
+          "fileType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          "uploadedById": 1,
+          "createdAt": "2025-04-24T20:56:10.091Z"
+        },
+        {
+          "id": 3,
+          "chatbotId": 1,
+          "filename": "4bc75f76-cc9f-4e97-8f0d-ef29aa1b9898.pdf",
+          "originalName": "1320 Mayfair Specs (1).pdf",
+          "fileType": "application/pdf",
+          "uploadedById": 1,
+          "createdAt": "2025-04-24T20:56:14.849Z"
+        }
+      ],
+      "messages": [
+        {
+          "id": 35,
+          "chatbotId": 1,
+          "userId": null,
+          "content": "what happened today",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-04-28T17:43:24.721Z"
+        },
+        {
+          "id": 36,
+          "chatbotId": 1,
+          "userId": null,
+          "content": "I'm having trouble connecting to my knowledge base. Please try again later.",
+          "isUserMessage": false,
+          "citation": "Error",
+          "createdAt": "2025-04-28T17:43:26.674Z"
+        }
+      ],
+      "summaries": [],
+      "emailRecipients": [],
+      "asanaProjects": []
+    },
+    {
+      "chatbot": {
+        "id": 2,
+        "name": "1320 V2",
+        "slackChannelId": "C06S1QZU9N2",
+        "asanaProjectId": "1207101647851774",
+        "asanaConnectionId": null,
+        "createdById": 1,
+        "projectId": null,
+        "publicToken": "edd3092b-3384-b4cf-d02b-7f013c8e3359",
+        "isActive": true,
+        "requireAuth": false,
+        "createdAt": "2025-04-22T19:38:08.601Z"
+      },
+      "documents": [],
+      "messages": [
+        {
+          "id": 1,
+          "chatbotId": 2,
+          "userId": 1,
+          "content": "whats the status on the cabinet design?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-04-22T20:21:43.785Z"
+        },
+        {
+          "id": 2,
+          "chatbotId": 2,
+          "userId": null,
+          "content": "The status of the cabinet design is that Raul's team is working on it, but Raul mentioned he won't be ready until Thursday or Friday. Additionally, Raul needs to finish installing the shelves in the kitchen and bar so that the template for the backsplash can be completed. This information was discussed in Slack messages on April 10, 2025, and April 16, 2025.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-04-22T20:21:45.904Z"
+        },
+        {
+          "id": 3,
+          "chatbotId": 2,
+          "userId": 1,
+          "content": "when were the cabinets approved by Ron Z?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-04-22T20:22:12.849Z"
+        },
+        {
+          "id": 4,
+          "chatbotId": 2,
+          "userId": null,
+          "content": "I wasn't able to find that information in the project files or messages.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-04-22T20:22:13.696Z"
+        },
+        {
+          "id": 5,
+          "chatbotId": 2,
+          "userId": 1,
+          "content": "What tasks have not yet been completed in Asana?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-04-22T20:23:15.384Z"
+        },
+        {
+          "id": 6,
+          "chatbotId": 2,
+          "userId": null,
+          "content": "I wasn't able to find that information in the project files or messages. Please check the Asana project tasks directly to see the current status of tasks and identify which ones have not yet been completed.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-04-22T20:23:16.478Z"
+        },
+        {
+          "id": 7,
+          "chatbotId": 2,
+          "userId": 1,
+          "content": "Can you give me an update on tasks not yet completed in Asana",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-04-22T20:51:56.719Z"
+        },
+        {
+          "id": 8,
+          "chatbotId": 2,
+          "userId": null,
+          "content": "I wasn't able to find that information in the project files or messages. Please check the Asana project tasks directly for the most current status on incomplete tasks.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-04-22T20:51:58.054Z"
+        },
+        {
+          "id": 9,
+          "chatbotId": 2,
+          "userId": 1,
+          "content": "can you provide me any updates from asana?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-04-22T20:54:47.081Z"
+        },
+        {
+          "id": 10,
+          "chatbotId": 2,
+          "userId": null,
+          "content": "I wasn't able to find any specific updates from Asana in the project files or messages you provided. If you need detailed updates from Asana, please ensure that the relevant Asana task information is shared or accessible.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-04-22T20:54:49.026Z"
+        },
+        {
+          "id": 11,
+          "chatbotId": 2,
+          "userId": 1,
+          "content": "What are the current tasks in the Asana project?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-04-22T21:02:21.390Z"
+        },
+        {
+          "id": 12,
+          "chatbotId": 2,
+          "userId": null,
+          "content": "The current tasks in the Asana project \"1320 Mayfair Drive\" that are not yet completed are:\n\n- Sewer Line Inspection\n- Irrigation System\n- Building Final\n- Site Final\n- Demo Site\n\nThese tasks are still pending as per the Asana project tasks.",
+          "isUserMessage": false,
+          "citation": "Asana project \"1320 Mayfair Drive\"",
+          "createdAt": "2025-04-22T21:02:23.483Z"
+        },
+        {
+          "id": 13,
+          "chatbotId": 2,
+          "userId": 1,
+          "content": "when was the building plan submitted?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-04-22T21:04:23.013Z"
+        },
+        {
+          "id": 14,
+          "chatbotId": 2,
+          "userId": null,
+          "content": "The building plan for the 1320 V2 homebuilding project was submitted on July 12, 2024.",
+          "isUserMessage": false,
+          "citation": "Asana project \"1320 Mayfair Drive\"",
+          "createdAt": "2025-04-22T21:04:24.177Z"
+        },
+        {
+          "id": 15,
+          "chatbotId": 2,
+          "userId": 1,
+          "content": "is the camera still on site?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-04-22T21:05:05.856Z"
+        },
+        {
+          "id": 16,
+          "chatbotId": 2,
+          "userId": null,
+          "content": "The camera is no longer on site. A Slack message indicates that the camera was removed and there was a request to relocate it to 2387 Poplar.",
+          "isUserMessage": false,
+          "citation": "Slack message",
+          "createdAt": "2025-04-22T21:05:07.214Z"
+        },
+        {
+          "id": 17,
+          "chatbotId": 2,
+          "userId": 1,
+          "content": "what asana projects do you have access to?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-04-23T20:45:02.833Z"
+        },
+        {
+          "id": 18,
+          "chatbotId": 2,
+          "userId": null,
+          "content": "I have access to the following Asana projects related to the 1320 V2 homebuilding project:\n\n1. **1320 Mayfair Drive** - This project includes tasks related to the construction process, such as inspections, utility connections, and site preparations.\n\n2. ** 1320 Mayfair Drive** - This project focuses on the main construction elements like appliances, windows, doors, roofing, and interior finishes.\n\n3. **[PERMIT] 1320 Mayfair Drive** - This project deals with permitting tasks, including plan approvals, surveys, and inspections.\n\nEach of these projects contains a variety of tasks, some of which are completed, while others are still in progress or not yet started. [Source: Asana project tasks for \"1320 Mayfair Drive\", \"[MAIN] 1320 Mayfair Drive\", and \"[PERMIT] 1320 Mayfair Drive\"].",
+          "isUserMessage": false,
+          "citation": "MAIN",
+          "createdAt": "2025-04-23T20:45:08.268Z"
+        }
+      ],
+      "summaries": [],
+      "emailRecipients": [],
+      "asanaProjects": [
+        {
+          "id": 1,
+          "chatbotId": 2,
+          "asanaProjectId": "1208522335529840",
+          "projectName": "1320 Mayfair Drive",
+          "projectType": "main",
+          "createdAt": "2025-04-23T20:39:29.759Z"
+        },
+        {
+          "id": 2,
+          "chatbotId": 2,
+          "asanaProjectId": "1207101647851774",
+          "projectName": "1320 Mayfair Drive",
+          "projectType": "permit",
+          "createdAt": "2025-04-23T20:44:46.408Z"
+        }
+      ]
+    },
+    {
+      "chatbot": {
+        "id": 3,
+        "name": "1320 Mayfair - Finance Team",
+        "slackChannelId": "C06S1QZU9N2",
+        "asanaProjectId": null,
+        "asanaConnectionId": null,
+        "createdById": 1,
+        "projectId": null,
+        "publicToken": "9fa16c44-b7c0-5fd8-cc5b-bb17c237865f",
+        "isActive": true,
+        "requireAuth": false,
+        "createdAt": "2025-04-24T20:07:57.912Z"
+      },
+      "documents": [
+        {
+          "id": 4,
+          "chatbotId": 3,
+          "filename": "ab0f27f9-76ad-4a03-8d24-f5de06f757d1.xlsx",
+          "originalName": "1320 Mayfair Budget.xlsx",
+          "fileType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          "uploadedById": 1,
+          "createdAt": "2025-04-24T21:05:15.630Z"
+        },
+        {
+          "id": 5,
+          "chatbotId": 3,
+          "filename": "f1fd2305-dcad-481d-a71d-406f23b78ab0.pdf",
+          "originalName": "1320 Mayfair Specs (1).pdf",
+          "fileType": "application/pdf",
+          "uploadedById": 1,
+          "createdAt": "2025-04-24T21:05:21.068Z"
+        }
+      ],
+      "messages": [
+        {
+          "id": 21,
+          "chatbotId": 3,
+          "userId": null,
+          "content": "what asana tasks from the permit project are outstanding?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-04-24T21:16:29.598Z"
+        },
+        {
+          "id": 22,
+          "chatbotId": 3,
+          "userId": null,
+          "content": "The outstanding tasks from the \" 1320 Mayfair Drive\" project in Asana are:\n\n- Sewer Line Inspection\n- Irrigation System\n- Building Final\n- Site Final\n- Demo Site\n\nThese tasks are still pending and have not been marked as completed. There are no overdue or upcoming tasks listed for this project, according to the current Asana data.",
+          "isUserMessage": false,
+          "citation": "PERMIT",
+          "createdAt": "2025-04-24T21:16:36.779Z"
+        },
+        {
+          "id": 23,
+          "chatbotId": 3,
+          "userId": null,
+          "content": "what asana tasks from the permit project are outstanding?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-04-24T21:17:22.389Z"
+        },
+        {
+          "id": 24,
+          "chatbotId": 3,
+          "userId": null,
+          "content": "The outstanding tasks for the \" 1320 Mayfair Drive\" project in Asana are:\n\n- Sewer Line Inspection\n- Irrigation System\n- Building Final\n- Site Final\n- Demo Site\n\nThese tasks are currently not marked as completed, and there are no overdue tasks for this project according to the Asana data.",
+          "isUserMessage": false,
+          "citation": "PERMIT",
+          "createdAt": "2025-04-24T21:17:24.240Z"
+        },
+        {
+          "id": 25,
+          "chatbotId": 3,
+          "userId": null,
+          "content": "whats the latest update from the main project asana ?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-04-24T21:22:23.032Z"
+        },
+        {
+          "id": 26,
+          "chatbotId": 3,
+          "userId": null,
+          "content": "The latest update from the Asana project \" 1320 Mayfair Drive\" shows that there are no overdue or upcoming tasks, and no tasks have been marked as completed. The tasks listed for this project include various aspects such as appliances, windows, front door, garage doors, and more, but they are all currently open and not yet completed. This indicates that the project is still in progress with these tasks awaiting completion. [Source: Asana project \"[MAIN] 1320 Mayfair Drive\"]",
+          "isUserMessage": false,
+          "citation": "MAIN",
+          "createdAt": "2025-04-24T21:22:27.142Z"
+        },
+        {
+          "id": 27,
+          "chatbotId": 3,
+          "userId": null,
+          "content": "what was the update today?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-04-25T01:06:33.045Z"
+        },
+        {
+          "id": 28,
+          "chatbotId": 3,
+          "userId": null,
+          "content": "Today's update includes the following activities:\n\n1. Gravel installation is scheduled for tomorrow, as mentioned by Ron Heller.\n2. Aaron Wilson reported that the material for the sliding door hardware arrived today and will be shipped directly to the office.\n3. Electrical trim work is planned to continue on Saturday and Monday.\n4. Aaron Wilson is following up on a garage door quote and selections.\n5. Countertop templating is scheduled for Friday, including the backsplash.\n\nThese updates were shared by Aaron Wilson and Ron Heller on April 24, 2025.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-04-25T01:06:36.871Z"
+        },
+        {
+          "id": 29,
+          "chatbotId": 3,
+          "userId": 1,
+          "content": "what happened yesterday?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-04-28T15:55:03.535Z"
+        },
+        {
+          "id": 30,
+          "chatbotId": 3,
+          "userId": null,
+          "content": "Yesterday, several activities were happening at the 1320 Mayfair project site. The drywall team was working on sanding and finishing any imperfections in the ceiling, with Gerardo and Alex present on-site. Additionally, pavers were being delivered, and there were preparations for gravel installation scheduled for today. Ron Heller mentioned that the front yard was backfilled and graded, with tree protection and mulch sock being set up. He also noted that gravel installation was planned for today, and the paver installation would start next week. Aaron Wilson confirmed that electrical trim work would continue on Saturday and Monday, and he was following up on the garage door quote and selections. Furthermore, material for the sliding door hardware arrived and was being shipped to the office. Aaron also mentioned that templating for countertops and backsplash was scheduled for Friday. \n\nThis summary is based on messages from Aaron Wilson and Ron Heller on April 28, 2025.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-04-28T15:55:08.323Z"
+        },
+        {
+          "id": 37,
+          "chatbotId": 3,
+          "userId": null,
+          "content": "what happened today>",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-04-28T17:43:55.589Z"
+        },
+        {
+          "id": 38,
+          "chatbotId": 3,
+          "userId": null,
+          "content": "Today, the drywall team is working on sanding and finishing any imperfections in the ceiling. Gerardo and Alex are on site, and pavers are being delivered. Additionally, backfilling and grading of the front yard are in progress, with tree saving and mulch sock installation underway. Gravel installation is scheduled for tomorrow, which will allow the start of paver installation next week, according to Aaron Wilson and Ron Heller on April 28, 2025.",
+          "isUserMessage": false,
+          "citation": "Aaron Wilson and Ron Heller on April 28, 2025",
+          "createdAt": "2025-04-28T17:44:00.222Z"
+        }
+      ],
+      "summaries": [],
+      "emailRecipients": [],
+      "asanaProjects": [
+        {
+          "id": 3,
+          "chatbotId": 3,
+          "asanaProjectId": "1207101647851774",
+          "projectName": "1320 Mayfair Drive",
+          "projectType": "permit",
+          "createdAt": "2025-04-24T21:15:34.607Z"
+        },
+        {
+          "id": 4,
+          "chatbotId": 3,
+          "asanaProjectId": "1208522335529840",
+          "projectName": "1320 Mayfair Drive",
+          "projectType": "main",
+          "createdAt": "2025-04-24T21:16:02.283Z"
+        }
+      ]
+    }
+  ],
+  "exportedAt": "2025-04-28T19:18:52.550Z",
   "exportedBy": "SPH Chat Migration Utility"
 }
