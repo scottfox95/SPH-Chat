@@ -15,6 +15,7 @@ const Settings = lazy(() => import("@/pages/settings"));
 const KnowledgeBase = lazy(() => import("@/pages/knowledge-base"));
 const UsersPage = lazy(() => import("@/pages/users-page"));
 const AuthPage = lazy(() => import("@/pages/auth-page"));
+const AuthDebug = lazy(() => import("@/pages/auth-debug"));
 
 // Component wrapper for pages that need to be inside SidebarLayout
 function SidebarWrapper({ Component, ...props }: { Component: React.ComponentType<any>, [key: string]: any }) {
@@ -38,6 +39,12 @@ function Router() {
       <Route path="/auth">
         <Suspense fallback={<div>Loading...</div>}>
           <AuthPage />
+        </Suspense>
+      </Route>
+      
+      <Route path="/auth-debug">
+        <Suspense fallback={<div>Loading...</div>}>
+          <AuthDebug />
         </Suspense>
       </Route>
       
