@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -9,6 +9,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormDescription,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -16,20 +17,38 @@ import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { queryClient } from "@/lib/queryClient";
 import { useLocation } from "wouter";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useQuery } from "@tanstack/react-query";
 
 // Form schema
 const formSchema = z.object({
   name: z.string().min(1, "Project name is required"),
   slackChannelId: z.string().min(1, "Slack channel ID is required"),
   asanaProjectId: z.string().optional(),
+  projectId: z.string().optional(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
 
-export default function CreateChatbotForm() {
+interface CreateChatbotFormProps {
+  projectId?: string;
+}
+
+export default function CreateChatbotForm({ projectId }: CreateChatbotFormProps = {}) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
   const [_, setLocation] = useLocation();
+  
+  // Fetch projects for the dropdown
+  const { data: projects = [] } = useQuery({
+    queryKey: ["/api/projects"],
+  });
   
   // Form definition
   const form = useForm<FormValues>({
@@ -38,8 +57,16 @@ export default function CreateChatbotForm() {
       name: "",
       slackChannelId: "",
       asanaProjectId: "",
+      projectId: projectId || "",
     },
   });
+  
+  // Update projectId when the prop changes
+  useEffect(() => {
+    if (projectId) {
+      form.setValue("projectId", projectId);
+    }
+  }, [projectId, form]);
   
   // Form submission
   const onSubmit = async (data: FormValues) => {
@@ -137,6 +164,39 @@ export default function CreateChatbotForm() {
               <p className="text-xs text-gray-500">
                 Link this chatbot to an Asana project to include tasks in responses
               </p>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="projectId"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Project Group (Optional)</FormLabel>
+              <Select 
+                onValueChange={field.onChange} 
+                defaultValue={field.value}
+                value={field.value}
+              >
+                <FormControl>
+                  <SelectTrigger className="focus-visible:ring-[#D2B48C]">
+                    <SelectValue placeholder="Select a project group" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="">None</SelectItem>
+                  {projects.map((project: any) => (
+                    <SelectItem key={project.id} value={project.id.toString()}>
+                      {project.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormDescription>
+                Group this chatbot within a specific project for better organization
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}

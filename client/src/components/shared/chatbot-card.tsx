@@ -13,8 +13,14 @@ interface ChatbotCardProps {
     isActive: boolean;
     publicToken: string;
     createdAt: string;
+    projectId?: number | null;
+    project?: {
+      id: number;
+      name: string;
+    } | null;
   };
   onShare: () => void;
+  projectNames?: Record<number, string>;
 }
 
 export default function ChatbotCard({ chatbot, onShare }: ChatbotCardProps) {
