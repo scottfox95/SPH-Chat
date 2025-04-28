@@ -241,6 +241,20 @@ export function setupAuth(app: Express) {
     const { password, ...userWithoutPassword } = req.user;
     res.json(userWithoutPassword);
   });
+  
+  // Debug route
+  app.get("/api/auth-debug", (req, res) => {
+    res.json({
+      isAuthenticated: req.isAuthenticated(),
+      sessionID: req.sessionID,
+      session: req.session,
+      user: req.user ? { 
+        id: req.user.id,
+        username: req.user.username,
+        role: req.user.role
+      } : null
+    });
+  });
 
   // User management routes (admin only)
   // Get all users

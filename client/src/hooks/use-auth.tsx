@@ -64,10 +64,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     queryKey: ['/api/user'],
     queryFn: async () => {
       try {
-        const response = await fetch('/api/user');
+        const response = await fetch('/api/user', {
+          credentials: 'include' // Important for sending cookies
+        });
         if (response.ok) {
           return await response.json();
         }
+        if (response.status === 401) {
+          // Expected when not logged in
+          return null;
+        }
+        console.error('Error fetching user data:', response.statusText);
         return null;
       } catch (error) {
         console.error('Failed to fetch user:', error);
@@ -92,6 +99,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include', // Important for cookies
         body: JSON.stringify(credentials),
       });
       
@@ -123,6 +131,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     mutationFn: async () => {
       const response = await fetch('/api/logout', {
         method: 'POST',
+        credentials: 'include', // Important for cookies
       });
       
       if (!response.ok) {
@@ -153,6 +162,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include', // Important for cookies
         body: JSON.stringify(data),
       });
       
