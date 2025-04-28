@@ -12,56 +12,27 @@ if (!process.env.DATABASE_URL) {
 // Environment-specific database connection handling
 console.log(`Initializing database connection in ${process.env.NODE_ENV || 'development'} environment`);
 
-// Construct PostgreSQL connection parameters - support both complete URL and individual params
-let connectionConfig: any;
+// UNIFIED DATABASE APPROACH: Always use DATABASE_URL for consistency between environments
+// This ensures development and production connect to the same database
+const dbUrl = process.env.DATABASE_URL;
 
-// Always use Replit's database in production
-const isReplitEnv = process.env.REPL_ID && process.env.REPL_OWNER;
+// Log the database connection without exposing credentials
+const maskedDbUrl = dbUrl ? 
+  `${dbUrl.split('://')[0]}://${dbUrl.split('@')[1] || '[masked]'}` : 
+  'Not set';
+console.log(`[UNIFIED DB] Using DATABASE_URL: ${maskedDbUrl}`);
 
-// If we're in the Replit environment, prioritize the Replit-provided DATABASE_URL
-if (isReplitEnv) {
-  connectionConfig = {
-    connectionString: process.env.DATABASE_URL,
-    ssl: false, // Replit PostgreSQL doesn't need SSL
-    // Add connection pool settings to improve stability
-    max: 20, // Maximum number of connections 
-    idleTimeoutMillis: 30000, // Close idle connections after 30 seconds
-    connectionTimeoutMillis: 5000, // Timeout after 5 seconds when connecting
-  };
-  console.log(`Using Replit's PostgreSQL database`);
-}
-// Fallback for non-Replit environments (local development with PG params)
-else if (process.env.PGHOST && process.env.PGDATABASE && process.env.PGUSER && process.env.PGPASSWORD) {
-  connectionConfig = {
-    host: process.env.PGHOST,
-    port: parseInt(process.env.PGPORT || '5432'),
-    database: process.env.PGDATABASE,
-    user: process.env.PGUSER,
-    password: process.env.PGPASSWORD,
-    ssl: {
-      rejectUnauthorized: false // For external databases that may need SSL
-    },
-    // Add connection pool settings to improve stability
-    max: 20, // Maximum number of connections 
-    idleTimeoutMillis: 30000, // Close idle connections after 30 seconds
-    connectionTimeoutMillis: 5000, // Timeout after 5 seconds when connecting
-  };
-  console.log(`Using external PostgreSQL database with host: ${process.env.PGHOST}, database: ${process.env.PGDATABASE}`);
-} 
-// Last resort - use DATABASE_URL
-else {
-  connectionConfig = { 
-    connectionString: process.env.DATABASE_URL,
-    ssl: {
-      rejectUnauthorized: false // For external databases that may need SSL
-    },
-    // Add connection pool settings to improve stability
-    max: 20, // Maximum number of connections 
-    idleTimeoutMillis: 30000, // Close idle connections after 30 seconds
-    connectionTimeoutMillis: 5000, // Timeout after 5 seconds when connecting
-  };
-  console.log(`Using DATABASE_URL for PostgreSQL connection`);
-}
+// Connection pool settings for stability
+const connectionConfig = {
+  connectionString: dbUrl,
+  ssl: {
+    rejectUnauthorized: false // For external databases like Neon that require SSL
+  },
+  // Add connection pool settings to improve stability
+  max: 20, // Maximum number of connections 
+  idleTimeoutMillis: 30000, // Close idle connections after 30 seconds
+  connectionTimeoutMillis: 5000, // Timeout after 5 seconds when connecting
+};
 
 // Use the pooled connection for better performance
 export const pool = new Pool(connectionConfig);
@@ -176,10 +147,18 @@ export async function verifyDatabaseSetup() {
   }
 }
 
-// Log database connection confirmed at startup
-pool.query('SELECT NOW() as time')
+// Log database connection confirmed at startup with more diagnostic info
+pool.query('SELECT NOW() as time, current_database() as db_name, current_user as db_user')
   .then(result => {
-    console.log(`Database connection confirmed at ${result.rows[0].time}`);
+    const { time, db_name, db_user } = result.rows[0];
+    console.log(`=== DATABASE CONNECTION DIAGNOSTICS ===`);
+    console.log(`- Connection confirmed at: ${time}`);
+    console.log(`- Connected to database: ${db_name}`);
+    console.log(`- Connected as user: ${db_user}`);
+    console.log(`- Environment: ${process.env.NODE_ENV || 'development'}`);
+    console.log(`- Connection URL (masked): ${maskedDbUrl}`);
+    console.log(`- Pool status: Total=${pool.totalCount}, Idle=${pool.idleCount}`);
+    console.log(`=======================================`);
   })
   .catch(error => {
     console.error('Failed to connect to database at startup:', error);

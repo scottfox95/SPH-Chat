@@ -42,6 +42,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
   const { isAuthenticated } = setupAuth(app);
   
   // Diagnostic endpoints
+  app.get("/api/system/db-diagnostic", async (req, res) => {
+    // Database connection diagnostic endpoint
+    try {
+      const dbUrl = process.env.DATABASE_URL || 'Not set';
+      // Only show a masked URL for security
+      const maskedUrl = dbUrl !== 'Not set'
+        ? `${dbUrl.split('://')[0]}://${dbUrl.split('@')[1] || '[masked]'}`
+        : 'Not set';
+      
+      // Test connection
+      const connectionTest = await storage.testConnection?.() || { connected: false, error: "Method not available" };
+      
+      return res.json({
+        connected: connectionTest.connected,
+        databaseUrl: maskedUrl,
+        environment: process.env.NODE_ENV || 'unknown',
+        poolStats: storage.getPoolStats?.() || { total: 'unknown', idle: 'unknown' }
+      });
+    } catch (error) {
+      console.error("Error in db diagnostic:", error);
+      return res.status(500).json({
+        connected: false,
+        error: 'Database diagnostic failed',
+        environment: process.env.NODE_ENV || 'unknown'
+      });
+    }
+  });
+
   app.get("/api/system/auth-diagnostic", async (req, res) => {
     // Diagnostic endpoint that works even when auth is broken
     try {

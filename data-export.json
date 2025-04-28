@@ -714,8 +714,64 @@
       "summaries": [],
       "emailRecipients": [],
       "asanaProjects": []
+    },
+    {
+      "chatbot": {
+        "id": 19,
+        "name": "1320 test 8",
+        "slackChannelId": "C06S1QZU9N2",
+        "asanaProjectId": null,
+        "asanaConnectionId": null,
+        "createdById": 9,
+        "publicToken": "69d08d7d-4f6c-44fd-b33c-43876e07e0df",
+        "isActive": true,
+        "requireAuth": false,
+        "createdAt": "2025-04-28T18:02:53.295Z"
+      },
+      "documents": [],
+      "messages": [
+        {
+          "id": 41,
+          "chatbotId": 19,
+          "userId": null,
+          "content": "did anything break today ",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-04-28T18:10:45.906Z"
+        },
+        {
+          "id": 42,
+          "chatbotId": 19,
+          "userId": null,
+          "content": "I wasn't able to find any specific information in the Slack messages provided that indicates something broke today. If there are more details or specific incidents you're aware of, I can help look further.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-04-28T18:10:47.575Z"
+        },
+        {
+          "id": 43,
+          "chatbotId": 19,
+          "userId": null,
+          "content": "was anything delivered today?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-04-28T18:11:32.212Z"
+        },
+        {
+          "id": 44,
+          "chatbotId": 19,
+          "userId": null,
+          "content": "Yes, there was a delivery today. Pavers are being delivered now, according to Aaron Wilson on April 28, 2025.",
+          "isUserMessage": false,
+          "citation": "Aaron Wilson on April 28, 2025",
+          "createdAt": "2025-04-28T18:11:33.325Z"
+        }
+      ],
+      "summaries": [],
+      "emailRecipients": [],
+      "asanaProjects": []
     }
   ],
-  "exportedAt": "2025-04-28T18:01:10.411Z",
+  "exportedAt": "2025-04-28T18:14:52.180Z",
   "exportedBy": "SPH Chat Migration Utility"
 }
