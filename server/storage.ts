@@ -689,7 +689,6 @@ export class DatabaseStorage implements IStorage {
       
       try {
         // Generate UUID explicitly for public_token
-        const crypto = require('crypto');
         const publicToken = crypto.randomUUID();
         console.log("Generated explicit UUID for public_token:", publicToken);
         
@@ -755,7 +754,6 @@ export class DatabaseStorage implements IStorage {
         // Last-resort fallback - try plain insert
         try {
           // Generate a new UUID for fallback method
-          const crypto = require('crypto');
           const publicToken = crypto.randomUUID();
           console.log("Generated explicit UUID for public_token in fallback method:", publicToken);
           
