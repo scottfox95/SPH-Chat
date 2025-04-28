@@ -16,6 +16,7 @@ import crypto from "crypto";
 
 import { 
   users, 
+  projects,
   chatbots, 
   chatbotAsanaProjects,
   documents, 
@@ -26,6 +27,8 @@ import {
   apiTokens,
   type User, 
   type InsertUser,
+  type Project,
+  type InsertProject,
   type Chatbot,
   type InsertChatbot,
   type ChatbotAsanaProject,
@@ -60,6 +63,14 @@ export interface IStorage {
   createUser(user: InsertUser): Promise<User>;
   updateUser(id: number, data: Partial<InsertUser>): Promise<User | undefined>;
   deleteUser(id: number): Promise<boolean>;
+  
+  // Project methods
+  getProjects(): Promise<Project[]>;
+  getProject(id: number): Promise<Project | undefined>;
+  createProject(project: InsertProject): Promise<Project>;
+  updateProject(id: number, data: Partial<InsertProject>): Promise<Project | undefined>;
+  deleteProject(id: number): Promise<boolean>;
+  getProjectChatbots(projectId: number): Promise<Chatbot[]>;
   
   // Chatbot methods
   getChatbots(): Promise<Chatbot[]>;
@@ -112,6 +123,7 @@ export interface IStorage {
 // In-memory storage implementation
 export class MemStorage implements IStorage {
   private users: Map<number, User>;
+  private projects: Map<number, Project>;
   private chatbots: Map<number, Chatbot>;
   private documents: Map<number, Document>;
   private summaries: Map<number, Summary>;
@@ -121,6 +133,7 @@ export class MemStorage implements IStorage {
   private appSettings: Settings | undefined;
   
   private currentUserId: number;
+  private currentProjectId: number;
   private currentChatbotId: number;
   private currentDocumentId: number;
   private currentSummaryId: number;
@@ -132,6 +145,7 @@ export class MemStorage implements IStorage {
   
   constructor() {
     this.users = new Map();
+    this.projects = new Map();
     this.chatbots = new Map();
     this.documents = new Map();
     this.summaries = new Map();
@@ -140,6 +154,7 @@ export class MemStorage implements IStorage {
     this.apiTokens = new Map();
     
     this.currentUserId = 1;
+    this.currentProjectId = 1;
     this.currentChatbotId = 1;
     this.currentDocumentId = 1;
     this.currentSummaryId = 1;
@@ -211,6 +226,54 @@ export class MemStorage implements IStorage {
     return this.users.delete(id);
   }
   
+  // Project methods
+  async getProjects(): Promise<Project[]> {
+    return Array.from(this.projects.values());
+  }
+  
+  async getProject(id: number): Promise<Project | undefined> {
+    return this.projects.get(id);
+  }
+  
+  async createProject(project: InsertProject): Promise<Project> {
+    const id = this.currentProjectId++;
+    const now = new Date();
+    
+    const newProject: Project = {
+      ...project,
+      id,
+      createdAt: now,
+      description: project.description || null
+    };
+    
+    this.projects.set(id, newProject);
+    return newProject;
+  }
+  
+  async updateProject(id: number, data: Partial<InsertProject>): Promise<Project | undefined> {
+    const project = this.projects.get(id);
+    if (!project) return undefined;
+    
+    const updatedProject: Project = {
+      ...project,
+      ...data,
+      id: project.id
+    };
+    
+    this.projects.set(id, updatedProject);
+    return updatedProject;
+  }
+  
+  async deleteProject(id: number): Promise<boolean> {
+    return this.projects.delete(id);
+  }
+  
+  async getProjectChatbots(projectId: number): Promise<Chatbot[]> {
+    return Array.from(this.chatbots.values())
+      .filter(chatbot => chatbot.projectId === projectId)
+      .map(chatbot => this.ensureChatbotFieldBackwardCompatibility(chatbot));
+  }
+  
   // Chatbot methods
   async getChatbots(): Promise<Chatbot[]> {
     const chatbots = Array.from(this.chatbots.values());
@@ -256,6 +319,7 @@ export class MemStorage implements IStorage {
       createdAt: now,
       asanaProjectId: chatbot.asanaProjectId || null,
       asanaConnectionId: null, // Initialize as null for backward compatibility
+      projectId: chatbot.projectId || null, // Initialize as null if not provided
       isActive: chatbot.isActive ?? true,
       requireAuth: chatbot.requireAuth ?? false
     };
