@@ -506,9 +506,31 @@ export class DatabaseStorage implements IStorage {
     return user;
   }
   
+  async getUsers(): Promise<User[]> {
+    return db.select().from(users);
+  }
+
   async createUser(insertUser: InsertUser): Promise<User> {
     const [user] = await db.insert(users).values(insertUser).returning();
     return user;
+  }
+  
+  async updateUser(id: number, data: Partial<InsertUser>): Promise<User> {
+    const [updatedUser] = await db.update(users)
+      .set(data)
+      .where(eq(users.id, id))
+      .returning();
+    
+    if (!updatedUser) {
+      throw new Error(`User with id ${id} not found`);
+    }
+    
+    return updatedUser;
+  }
+  
+  async deleteUser(id: number): Promise<boolean> {
+    const result = await db.delete(users).where(eq(users.id, id));
+    return result.rowCount > 0;
   }
   
   // Chatbot methods

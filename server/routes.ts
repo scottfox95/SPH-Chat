@@ -37,62 +37,14 @@ import { nanoid } from "nanoid";
 import { format } from "date-fns";
 import MemoryStore from "memorystore";
 
-const SessionStore = MemoryStore(session);
+import { setupAuth } from './auth';
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Set up session middleware
-  app.use(
-    session({
-      secret: process.env.SESSION_SECRET || "homebuildbot-secret",
-      resave: false,
-      saveUninitialized: false,
-      cookie: {
-        maxAge: 1000 * 60 * 60 * 24, // 1 day
-        secure: process.env.NODE_ENV === "production",
-      },
-      store: new SessionStore({
-        checkPeriod: 86400000, // 24 hours
-      }),
-    })
-  );
+  // Set up authentication (which also sets up session middleware)
+  setupAuth(app);
 
   // API routes
   const apiRouter = express.Router();
-  
-  // Auth routes - simplified for development without authentication
-  apiRouter.post("/auth/login", async (req, res) => {
-    try {
-      // Return default admin user without checking credentials
-      const defaultUser = {
-        id: 1,
-        username: "admin",
-        displayName: "Administrator",
-        initial: "A",
-        role: "admin"
-      };
-      
-      return res.json(defaultUser);
-    } catch (error) {
-      return res.status(500).json({ message: "Internal server error" });
-    }
-  });
-  
-  apiRouter.post("/auth/logout", (req, res) => {
-    res.json({ success: true });
-  });
-  
-  apiRouter.get("/auth/me", async (req, res) => {
-    // Always return the default admin user since authentication is removed
-    const defaultUser = {
-      id: 1,
-      username: "admin",
-      displayName: "Administrator",
-      initial: "A",
-      role: "admin"
-    };
-    
-    return res.json(defaultUser);
-  });
   
   // Chatbot routes
   apiRouter.get("/chatbots", async (req, res) => {
@@ -128,10 +80,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
       
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "You must be logged in to create a chatbot" });
+      }
+      
       const chatbot = await storage.createChatbot({
         name,
         slackChannelId,
-        createdById: 1, // Default to user ID 1 since authentication is removed
+        createdById: req.user.id, // Use authenticated user's ID
         isActive: true,
         requireAuth: false,
       });
@@ -275,12 +231,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       const { filename, originalname, mimetype } = req.file;
       
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "You must be logged in to upload documents" });
+      }
+      
       const document = await storage.createDocument({
         chatbotId,
         filename,
         originalName: originalname,
         fileType: mimetype,
-        uploadedById: 1, // Default to user ID 1 since authentication is removed
+        uploadedById: req.user.id,
       });
       
       // Clear document cache for this chatbot
