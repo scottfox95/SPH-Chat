@@ -1,5 +1,19 @@
 import { nanoid } from "nanoid";
 import crypto from "crypto";
+
+/**
+ * DATABASE APPROACH: UNIFIED DATABASE
+ * 
+ * This application uses a unified database approach where both development 
+ * and production environments connect to the same database.
+ * 
+ * The connection is always made via DATABASE_URL environment variable,
+ * which provides consistent behavior across environments.
+ * 
+ * This approach eliminates environment-specific database issues like
+ * schema differences or missing records when switching environments.
+ */
+
 import { 
   users, 
   chatbots, 
