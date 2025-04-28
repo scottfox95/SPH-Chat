@@ -58,7 +58,7 @@ export default function CreateChatbotForm({ projectId, onSuccess }: CreateChatbo
       name: "",
       slackChannelId: "",
       asanaProjectId: "",
-      projectId: projectId || "",
+      projectId: projectId || "none",
     },
   });
   
@@ -73,11 +73,19 @@ export default function CreateChatbotForm({ projectId, onSuccess }: CreateChatbo
   const onSubmit = async (data: FormValues) => {
     try {
       setIsSubmitting(true);
-      console.log("Submitting chatbot creation with data:", data);
+      
+      // Process form data before submission
+      const submissionData = {
+        ...data,
+        // Convert "none" to null for projectId
+        projectId: data.projectId === "none" ? null : data.projectId
+      };
+      
+      console.log("Submitting chatbot creation with data:", submissionData);
       
       try {
         // Use the standardized apiRequest helper for consistency
-        const response = await apiRequest('POST', '/api/chatbots', data);
+        const response = await apiRequest('POST', '/api/chatbots', submissionData);
         const newChatbot = await response.json();
         
         console.log("Successfully created chatbot:", newChatbot);
@@ -195,7 +203,7 @@ export default function CreateChatbotForm({ projectId, onSuccess }: CreateChatbo
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="">None</SelectItem>
+                  <SelectItem value="none">None</SelectItem>
                   {projects.map((project: any) => (
                     <SelectItem key={project.id} value={project.id.toString()}>
                       {project.name}

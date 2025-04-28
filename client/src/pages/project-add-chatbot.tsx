@@ -1,66 +1,78 @@
-import { useState, useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 import { useParams, useLocation } from "wouter";
+import { useQuery } from "@tanstack/react-query";
+import { Loader2, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { ArrowLeft, Loader2 } from "lucide-react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
+import { Link } from "wouter";
 import CreateChatbotForm from "@/components/dashboard/create-chatbot-form";
-import { useToast } from "@/hooks/use-toast";
 
 export default function ProjectAddChatbot() {
-  const params = useParams<{ id: string }>();
+  const { id } = useParams<{ id: string }>();
   const [_, setLocation] = useLocation();
-  const [createModalOpen, setCreateModalOpen] = useState(true);
-  const { toast } = useToast();
   
-  const projectId = params.id;
-  
-  // Fetch project details to display project name
-  const { 
-    data: project, 
-    isLoading: isLoadingProject,
-    error: projectError
-  } = useQuery({
-    queryKey: [`/api/projects/${projectId}`],
+  // Fetch project details to display in the header
+  const { data: project = {}, isLoading } = useQuery({
+    queryKey: [`/api/projects/${id}`],
   });
   
-  // Handle modal close - navigate back to project detail
-  const handleCloseModal = () => {
-    setCreateModalOpen(false);
-    setLocation(`/projects/${projectId}`);
+  const handleSuccess = () => {
+    // Navigate back to the project page after successfully creating a chatbot
+    setLocation(`/projects/${id}`);
   };
   
-  // If project not found
-  if (projectError) {
+  if (isLoading) {
     return (
-      <div className="p-8 text-center">
-        <h2 className="text-lg font-medium mb-2">Project not found</h2>
-        <p className="text-gray-500 mb-4">The project you're looking for doesn't exist or you don't have permission to view it.</p>
-        <Button onClick={() => setLocation("/projects")} variant="outline">
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Back to Projects
-        </Button>
+      <div className="flex items-center justify-center h-64">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
   }
   
-  // Show loading state while project data is loading
-  if (isLoadingProject) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <Loader2 className="h-8 w-8 animate-spin text-[#D2B48C]" />
-      </div>
-    );
-  }
-
   return (
-    <Dialog open={createModalOpen} onOpenChange={handleCloseModal}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Add New Chatbot to {project?.name}</DialogTitle>
-        </DialogHeader>
-        <CreateChatbotForm projectId={projectId} onSuccess={handleCloseModal} />
-      </DialogContent>
-    </Dialog>
+    <div className="container mx-auto p-6">
+      <Breadcrumb className="mb-6">
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild>
+              <Link href="/projects">Projects</Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild>
+              <Link href={`/projects/${id}`}>{project.name}</Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbLink>Add Chatbot</BreadcrumbLink>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+      
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-3xl font-bold">Add Chatbot to {project.name}</h1>
+        <Button variant="outline" size="sm" asChild>
+          <Link href={`/projects/${id}`}>
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back to Project
+          </Link>
+        </Button>
+      </div>
+      
+      <Card>
+        <CardHeader>
+          <CardTitle>Create New Chatbot</CardTitle>
+          <CardDescription>
+            Add a new chatbot to the {project.name} project. This will create a new chatbot and automatically link it to this project.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <CreateChatbotForm projectId={id} onSuccess={handleSuccess} />
+        </CardContent>
+      </Card>
+    </div>
   );
 }
