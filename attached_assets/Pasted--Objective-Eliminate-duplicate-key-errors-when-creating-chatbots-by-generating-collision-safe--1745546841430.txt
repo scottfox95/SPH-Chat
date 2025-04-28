@@ -1,0 +1,57 @@
+❝
+🔧 Objective
+Eliminate “duplicate key” errors when creating chatbots by generating collision-safe tokens.
+
+───────────────────────────────────────────
+1.  Add a helper that guarantees uniqueness
+   # server/lib/generatePublicToken.ts
+   import crypto from "crypto";
+   import { sql } from "../storage";      // drizzle/sql helper
+
+   export async function generatePublicToken(): Promise<string> {
+     for (let i = 0; i < 5; i++) {        // 5 tries ≈ 1-in-10¹⁰ chance of failure
+       const token = crypto.randomUUID(); // RFC-4122 v4 UUID, 36-char string
+       const { rows } = await sql`
+         SELECT 1 FROM chatbots WHERE public_token = ${token} LIMIT 1
+       `;
+       if (rows.length === 0) return token;
+     }
+     throw new Error("Could not generate a unique public token after 5 attempts");
+   }
+
+2.  Wire it into chatbot creation
+   • In `server/storage.ts` (or wherever `createChatbot` lives):
+       import { generatePublicToken } from "./lib/generatePublicToken";
+       ...
+       const publicToken = await generatePublicToken();
+       await sql`
+         INSERT INTO chatbots (name, slack_channel_id, asana_project_id,
+                               created_by_id, public_token, require_auth)
+         VALUES (${name}, ${slackChannelId}, ${asanaProjectId},
+                 ${userId}, ${publicToken}, ${requireAuth})
+       `;
+
+3.  (Optional but safer) make Postgres generate the token for you
+   • Create a migration with Drizzle:
+       -- 20240501_add_default_uuid.sql
+       ALTER TABLE chatbots
+         ALTER COLUMN public_token SET DATA TYPE uuid USING public_token::uuid,
+         ALTER COLUMN public_token SET DEFAULT gen_random_uuid();
+   • Keep the UNIQUE constraint.
+   • In `createChatbot` you can now omit `public_token`
+     and read `RETURNING public_token` after the INSERT.
+
+4.  Remove the old short-string generator and any emergency
+    fallback code that still tries to set `public_token` manually.
+
+5.  `npx drizzle-kit push:pg`  (or Prisma migrate)  
+    Commit / redeploy.
+
+6.  Smoke test
+    • Preview ⇒ log in ⇒ create 3 chatbots ⇒ all succeed.  
+    • https://sphbuddy.info ⇒ same test.  
+    • `SELECT public_token, COUNT(*) FROM chatbots GROUP BY 1 HAVING COUNT(*)>1;`
+      should return zero rows.
+
+───────────────────────────────────────────
+❞

@@ -1,11 +1,11 @@
-import { Link, useLocation } from "wouter";
+import { useLocation } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
 import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { Home, MessageSquare, ClipboardList, Settings, LogOut, Database, Users } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useToast } from "@/hooks/use-toast";
-import { ReactNode } from "react";
+import { ReactNode, useState, useEffect } from "react";
 
 interface Chatbot {
   id: number;
@@ -24,10 +24,38 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
   const { user, logout } = useAuth();
   const { toast } = useToast();
   
-  // Get all chatbots for sidebar navigation
-  const { data: chatbots = [] } = useQuery<Chatbot[]>({
-    queryKey: ["/api/chatbots"],
-  });
+  // Get all chatbots for sidebar navigation using direct fetch
+  const [chatbots, setChatbots] = useState<Chatbot[]>([]);
+  const [chatbotsLoading, setChatbotsLoading] = useState(true);
+  const [chatbotsError, setChatbotsError] = useState<any>(null);
+  
+  // Use direct fetch instead of React Query
+  useEffect(() => {
+    async function fetchChatbots() {
+      try {
+        setChatbotsLoading(true);
+        const response = await fetch('/api/chatbots', {
+          credentials: 'include'
+        });
+        console.log("Sidebar fetch response status:", response.status);
+        if (!response.ok) {
+          throw new Error(`API error: ${response.status}`);
+        }
+        const data = await response.json();
+        console.log("Sidebar chatbots fetched directly:", data);
+        setChatbots(data || []);
+        setChatbotsError(null);
+      } catch (err) {
+        console.error("Error fetching sidebar chatbots:", err);
+        setChatbotsError(err);
+        setChatbots([]);
+      } finally {
+        setChatbotsLoading(false);
+      }
+    }
+    
+    fetchChatbots();
+  }, []);
   
   const handleLogout = async () => {
     try {
@@ -69,7 +97,7 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
         {/* Navigation */}
         <nav className="flex-1 overflow-y-auto p-4 space-y-1">
           <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Navigation</div>
-          <Link 
+          <a 
             href="/" 
             className={cn(
               "flex items-center px-3 py-2 text-sm font-medium rounded-xl",
@@ -80,8 +108,8 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
           >
             <Home className="h-5 w-5 mr-2" />
             Dashboard
-          </Link>
-          <Link 
+          </a>
+          <a 
             href="/chatbots"
             className={cn(
               "flex items-center px-3 py-2 text-sm font-medium rounded-xl",
@@ -92,8 +120,8 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
           >
             <MessageSquare className="h-5 w-5 mr-2" />
             All Chatbots
-          </Link>
-          <Link 
+          </a>
+          <a 
             href="/summaries"
             className={cn(
               "flex items-center px-3 py-2 text-sm font-medium rounded-xl",
@@ -104,8 +132,8 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
           >
             <ClipboardList className="h-5 w-5 mr-2" />
             Weekly Summaries
-          </Link>
-          <Link 
+          </a>
+          <a 
             href="/knowledge-base"
             className={cn(
               "flex items-center px-3 py-2 text-sm font-medium rounded-xl",
@@ -116,8 +144,8 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
           >
             <Database className="h-5 w-5 mr-2" />
             Knowledge Base
-          </Link>
-          <Link 
+          </a>
+          <a 
             href="/settings"
             className={cn(
               "flex items-center px-3 py-2 text-sm font-medium rounded-xl",
@@ -128,11 +156,9 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
           >
             <Settings className="h-5 w-5 mr-2" />
             Settings
-          </Link>
-          
-          {/* Only show Users link for admins */}
+          </a>
           {user?.role === "admin" && (
-            <Link 
+            <a 
               href="/users"
               className={cn(
                 "flex items-center px-3 py-2 text-sm font-medium rounded-xl",
@@ -143,7 +169,7 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
             >
               <Users className="h-5 w-5 mr-2" />
               User Management
-            </Link>
+            </a>
           )}
         </nav>
         
@@ -153,7 +179,7 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
             <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Active Projects</div>
             <div className="space-y-2">
               {chatbots.map((chatbot: Chatbot) => (
-                <Link 
+                <a 
                   key={chatbot.id} 
                   href={`/chatbot/${chatbot.id}`}
                   className={cn(
@@ -165,7 +191,7 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
                 >
                   <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
                   {chatbot.name}
-                </Link>
+                </a>
               ))}
             </div>
           </div>

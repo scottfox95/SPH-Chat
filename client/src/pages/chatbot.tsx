@@ -45,10 +45,38 @@ export default function Chatbot({ id }: ChatbotProps) {
   const [asanaProjectId, setAsanaProjectId] = useState("");
   const { toast } = useToast();
 
-  // Fetch chatbot data
-  const { data: chatbot, isLoading: chatbotLoading } = useQuery<any>({
-    queryKey: [`/api/chatbots/${id}`],
-  });
+  // Fetch chatbot data with direct fetch instead of React Query
+  const [chatbot, setChatbot] = useState<any>(null);
+  const [chatbotLoading, setChatbotLoading] = useState(true);
+  const [chatbotError, setChatbotError] = useState<any>(null);
+  
+  // Fetch chatbot directly
+  useEffect(() => {
+    async function fetchChatbot() {
+      try {
+        setChatbotLoading(true);
+        const response = await fetch(`/api/chatbots/${id}`, {
+          credentials: 'include'
+        });
+        console.log(`Fetch chatbot ${id} status:`, response.status);
+        if (!response.ok) {
+          throw new Error(`API error: ${response.status}`);
+        }
+        const data = await response.json();
+        console.log(`Chatbot ${id} fetched directly:`, data);
+        setChatbot(data);
+        setChatbotError(null);
+      } catch (err) {
+        console.error(`Error fetching chatbot ${id}:`, err);
+        setChatbotError(err);
+        setChatbot(null);
+      } finally {
+        setChatbotLoading(false);
+      }
+    }
+    
+    fetchChatbot();
+  }, [id]);
   
   // Set Asana project ID when data loads
   useEffect(() => {
@@ -57,14 +85,32 @@ export default function Chatbot({ id }: ChatbotProps) {
     }
   }, [chatbot]);
 
-  // Fetch documents
+  // Fetch documents - explicit fetch implementation to ensure documents load correctly
   const { data: documents = [], isLoading: documentsLoading } = useQuery<any[]>({
     queryKey: [`/api/chatbots/${id}/documents`],
+    queryFn: async () => {
+      const response = await fetch(`/api/chatbots/${id}/documents`, {
+        credentials: 'include'
+      });
+      if (!response.ok) {
+        throw new Error(`Failed to fetch documents: ${response.status}`);
+      }
+      return response.json();
+    }
   });
 
-  // Fetch email recipients
+  // Fetch email recipients - using same explicit fetch pattern for consistency
   const { data: recipients = [], isLoading: recipientsLoading } = useQuery<any[]>({
     queryKey: [`/api/chatbots/${id}/recipients`],
+    queryFn: async () => {
+      const response = await fetch(`/api/chatbots/${id}/recipients`, {
+        credentials: 'include'
+      });
+      if (!response.ok) {
+        throw new Error(`Failed to fetch recipients: ${response.status}`);
+      }
+      return response.json();
+    }
   });
 
   // Add email recipient mutation

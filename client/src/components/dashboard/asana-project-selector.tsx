@@ -42,11 +42,17 @@ export default function AsanaProjectSelector({ onSelect, currentProjectId }: Asa
     await checkAsanaConnection();
   };
   
-  // Test Asana connection
+  // Test Asana connection with explicit credentials
   const checkAsanaConnection = async () => {
     setLoading(true);
     try {
-      const response = await fetch("/api/system/test-asana");
+      const response = await fetch("/api/system/test-asana", {
+        method: "GET",
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
       const data = await response.json();
       
       if (data.connected && data.workspaces) {
@@ -75,12 +81,18 @@ export default function AsanaProjectSelector({ onSelect, currentProjectId }: Asa
     }
   };
   
-  // Fetch projects from selected workspace
+  // Fetch projects from selected workspace with explicit credentials
   const fetchProjects = async (workspaceId: string) => {
     setLoading(true);
     setProjects([]);
     try {
-      const response = await fetch(`/api/system/asana-projects?workspaceId=${workspaceId}`);
+      const response = await fetch(`/api/system/asana-projects?workspaceId=${workspaceId}`, {
+        method: "GET",
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
       const data = await response.json();
       
       if (data.success && data.projects) {

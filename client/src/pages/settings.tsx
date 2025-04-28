@@ -20,6 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+
 import { useToast } from "@/hooks/use-toast";
 import { 
   Shield, 
@@ -847,6 +848,88 @@ export default function Settings() {
                       <p>Include Source Details: {settings?.includeSourceDetails ? 'Yes' : 'No'}</p>
                       <p>Include User in Source: {settings?.includeUserInSource ? 'Yes' : 'No'}</p>
                       <p>Include Date in Source: {settings?.includeDateInSource ? 'Yes' : 'No'}</p>
+                    </div>
+                  </div>
+
+                  <Separator className="my-4" />
+                  
+                  <div className="space-y-4">
+                    <h3 className="text-sm font-medium">System Prompt Template</h3>
+                    <div className="space-y-2">
+                      <Label htmlFor="system-prompt">Default System Prompt</Label>
+                      <textarea
+                        id="system-prompt"
+                        className="min-h-[200px] w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#D2B48C] focus:border-transparent font-mono"
+                      >{settings?.responseTemplate || ""}</textarea>
+                      <div className="text-xs text-gray-500">
+                        <p>This template will be used as the system prompt for all chatbots. You can use the following variables:</p>
+                        <ul className="list-disc pl-5 mt-1 space-y-1">
+                          <li><code className="bg-gray-100 px-1 rounded">{'{{chatbotName}}'}</code> - The name of the chatbot</li>
+                          <li><code className="bg-gray-100 px-1 rounded">{'{{contextSources}}'}</code> - The list of available context sources</li>
+                        </ul>
+                      </div>
+                      <div className="flex justify-between mt-2">
+                        <Button
+                          variant="outline"
+                          onClick={() => {
+                            // Set the default template in the textarea
+                            const defaultTemplate = `You are a helpful assistant named SPH ChatBot assigned to the {{chatbotName}} homebuilding project. Your role is to provide project managers and executives with accurate, up-to-date answers about this construction project by referencing the following sources of information:
+
+{{contextSources}}
+
+Your job is to answer questions clearly and concisely. Always cite your source. If your answer comes from:
+- a document: mention the filename and, if available, the page or section.
+- Slack: mention the date and approximate time of the Slack message.
+{{asanaNote}}
+
+IMPORTANT FOR ASANA TASKS: 
+1. When users ask about "tasks", "Asana", "project status", "overdue", "upcoming", "progress", or other task-related information, ALWAYS prioritize checking the Asana data.
+2. Pay special attention to content that begins with "ASANA TASK DATA:" in your provided context. This contains valuable task information.
+3. When answering Asana-related questions, directly reference the tasks, including their status, due dates, and assignees if available.
+4. Try to match the user's question with the most relevant task view (all tasks, overdue tasks, upcoming tasks, or completed tasks).
+
+Respond using complete sentences. If the information is unavailable, say:  
+"I wasn't able to find that information in the project files or messages."
+
+You should **never make up information**. You may summarize or synthesize details if the answer is spread across multiple sources.`;
+                            
+                            // Update the textarea
+                            const textarea = document.getElementById('system-prompt') as HTMLTextAreaElement;
+                            if (textarea) {
+                              textarea.value = defaultTemplate;
+                            }
+                          }}
+                          className="text-gray-500"
+                        >
+                          Reset to Default
+                        </Button>
+                        
+                        <Button
+                          onClick={() => {
+                            // Get current value from the textarea
+                            const template = (document.getElementById('system-prompt') as HTMLTextAreaElement)?.value;
+                            
+                            updateSettingsMutation.mutate({
+                              openaiModel: settings?.openaiModel || "gpt-4o",
+                              includeSourceDetails: settings?.includeSourceDetails || false,
+                              includeUserInSource: settings?.includeUserInSource || false,
+                              includeDateInSource: settings?.includeDateInSource || false,
+                              responseTemplate: template
+                            });
+                          }}
+                          disabled={updateSettingsMutation.isPending}
+                          className="bg-[#D2B48C] hover:bg-[#D2B48C]/90"
+                        >
+                          {updateSettingsMutation.isPending ? (
+                            <>
+                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                              Saving...
+                            </>
+                          ) : (
+                            'Save Template'
+                          )}
+                        </Button>
+                      </div>
                     </div>
                   </div>
                   

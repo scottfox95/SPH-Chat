@@ -1,28 +1,61 @@
-import { Switch, Route } from "wouter";
+import { Switch, Route, Redirect, useRoute } from "wouter";
 import { Toaster } from "@/components/ui/toaster";
 import { Suspense, lazy } from "react";
-import { ProtectedRoute } from "@/lib/protected-route";
 import SidebarLayout from "./components/layouts/sidebar-layout";
 import NotFound from "@/pages/not-found";
+import { AuthProvider, useAuth } from "@/hooks/use-auth";
+import { ProtectedRoute } from "@/components/protected-route";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Loader2 } from "lucide-react";
+
+// Create query client
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: 1,
+    },
+  },
+});
 
 // Lazy loaded pages
 const Dashboard = lazy(() => import("@/pages/dashboard"));
 const Chatbots = lazy(() => import("@/pages/chatbots"));
 const Chatbot = lazy(() => import("@/pages/chatbot"));
 const PublicChat = lazy(() => import("@/pages/public-chat"));
+const AuthPage = lazy(() => import("@/pages/auth-page"));
 const Summaries = lazy(() => import("@/pages/summaries"));
 const Settings = lazy(() => import("@/pages/settings"));
 const KnowledgeBase = lazy(() => import("@/pages/knowledge-base"));
-const UsersPage = lazy(() => import("@/pages/users-page"));
-const AuthPage = lazy(() => import("@/pages/auth-page"));
-const AuthDebug = lazy(() => import("@/pages/auth-debug"));
+const UserManagement = lazy(() => import("@/pages/user-management"));
 
-// Component wrapper for pages that need to be inside SidebarLayout
-function SidebarWrapper({ Component, ...props }: { Component: React.ComponentType<any>, [key: string]: any }) {
+function ProtectedSidebarRoute({ component: Component, path }: { component: React.ComponentType<any>, path: string }) {
+  const { token, user, isLoading } = useAuth();
+  
+  if (isLoading) {
+    return (
+      <Route path={path}>
+        <div className="flex items-center justify-center min-h-screen">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      </Route>
+    );
+  }
+  
+  if (!token || !user) {
+    // Use hard redirect for authentication issues
+    window.location.href = "/auth";
+    return null;
+  }
+  
   return (
-    <SidebarLayout>
-      <Component {...props} />
-    </SidebarLayout>
+    <Route path={path}>
+      <SidebarLayout>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Component />
+        </Suspense>
+      </SidebarLayout>
+    </Route>
   );
 }
 
@@ -35,101 +68,65 @@ function Router() {
           <PublicChat />
         </Suspense>
       </Route>
-
+      
       <Route path="/auth">
         <Suspense fallback={<div>Loading...</div>}>
           <AuthPage />
         </Suspense>
       </Route>
       
-      <Route path="/auth-debug">
-        <Suspense fallback={<div>Loading...</div>}>
-          <AuthDebug />
-        </Suspense>
-      </Route>
-      
-      {/* Protected routes with sidebar */}
-      <ProtectedRoute 
-        path="/" 
-        component={() => (
-          <Suspense fallback={<div>Loading...</div>}>
-            <SidebarWrapper Component={Dashboard} />
-          </Suspense>
-        )} 
-      />
-      
-      <ProtectedRoute 
-        path="/chatbots" 
-        component={() => (
-          <Suspense fallback={<div>Loading...</div>}>
-            <SidebarWrapper Component={Chatbots} />
-          </Suspense>
-        )} 
-      />
+      {/* Protected routes */}
+      <ProtectedSidebarRoute path="/" component={Dashboard} />
+      <ProtectedSidebarRoute path="/dashboard" component={Dashboard} />
+      <ProtectedSidebarRoute path="/chatbots" component={Chatbots} />
       
       <Route path="/chatbot/:id">
-        {({ id }) => (
-          <ProtectedRoute 
-            path={`/chatbot/${id}`}
-            component={() => (
+        {(params) => {
+          const { token, user, isLoading } = useAuth();
+          
+          if (isLoading) {
+            return (
+              <div className="flex items-center justify-center min-h-screen">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              </div>
+            );
+          }
+          
+          if (!token || !user) {
+            // Use hard redirect for authentication issues
+            window.location.href = "/auth";
+            return null;
+          }
+          
+          return (
+            <SidebarLayout>
               <Suspense fallback={<div>Loading...</div>}>
-                <SidebarWrapper Component={Chatbot} id={parseInt(id)} />
+                <Chatbot id={parseInt(params.id)} />
               </Suspense>
-            )} 
-          />
-        )}
+            </SidebarLayout>
+          );
+        }}
       </Route>
       
-      <ProtectedRoute 
-        path="/summaries" 
-        component={() => (
-          <Suspense fallback={<div>Loading...</div>}>
-            <SidebarWrapper Component={Summaries} />
-          </Suspense>
-        )} 
-      />
-      
-      <ProtectedRoute 
-        path="/settings" 
-        component={() => (
-          <Suspense fallback={<div>Loading...</div>}>
-            <SidebarWrapper Component={Settings} />
-          </Suspense>
-        )} 
-      />
-      
-      <ProtectedRoute 
-        path="/knowledge-base" 
-        component={() => (
-          <Suspense fallback={<div>Loading...</div>}>
-            <SidebarWrapper Component={KnowledgeBase} />
-          </Suspense>
-        )} 
-      />
-      
-      <ProtectedRoute 
-        path="/users" 
-        component={() => (
-          <Suspense fallback={<div>Loading...</div>}>
-            <SidebarWrapper Component={UsersPage} />
-          </Suspense>
-        )} 
-      />
+      <ProtectedSidebarRoute path="/summaries" component={Summaries} />
+      <ProtectedSidebarRoute path="/settings" component={Settings} />
+      <ProtectedSidebarRoute path="/knowledge-base" component={KnowledgeBase} />
+      <ProtectedSidebarRoute path="/users" component={UserManagement} />
       
       {/* Fallback to 404 */}
-      <Route>
-        <NotFound />
-      </Route>
+      <Route component={NotFound} />
     </Switch>
   );
 }
 
 function App() {
   return (
-    <>
-      <Router />
-      <Toaster />
-    </>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <Router />
+        <Toaster />
+      </AuthProvider>
+    </QueryClientProvider>
   );
 }
 

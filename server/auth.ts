@@ -2,10 +2,9 @@ import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import { Express, Request, Response, NextFunction } from "express";
 import session from "express-session";
-import { scrypt, randomBytes, timingSafeEqual } from "crypto";
-import { promisify } from "util";
 import { storage } from "./storage";
 import { User as SelectUser } from "@shared/schema";
+import { hashPassword, comparePasswords } from "./lib/password-utils";
 
 declare global {
   namespace Express {
@@ -13,373 +12,191 @@ declare global {
   }
 }
 
-const scryptAsync = promisify(scrypt);
-
-/**
- * Hashes a password with a random salt
- */
-async function hashPassword(password: string) {
-  const salt = randomBytes(16).toString("hex");
-  const buf = (await scryptAsync(password, salt, 64)) as Buffer;
-  return `${buf.toString("hex")}.${salt}`;
-}
-
-/**
- * Compares a supplied password with a stored hashed password
- */
-async function comparePasswords(supplied: string, stored: string) {
-  const [hashed, salt] = stored.split(".");
-  const hashedBuf = Buffer.from(hashed, "hex");
-  const suppliedBuf = (await scryptAsync(supplied, salt, 64)) as Buffer;
-  return timingSafeEqual(hashedBuf, suppliedBuf);
-}
-
-/**
- * Sets up auth routes and middleware for the application
- */
 export function setupAuth(app: Express) {
-  // Configure session
-  const sessionSecret = process.env.SESSION_SECRET || randomBytes(32).toString("hex");
+  // Configure session based on environment
+  const isProduction = process.env.NODE_ENV === 'production';
+  // Don't use dot prefix for domain in most cases - this was likely causing issues
+  const domain = isProduction ? 'sphbuddy.info' : undefined;
   
+  // Log environment settings
+  console.log(`Configuring authentication for ${isProduction ? 'production' : 'development'} environment`);
+  if (isProduction) {
+    console.log(`Using domain: ${domain} for cookies`);
+  }
+  
+  // Use environment-specific session settings
   const sessionSettings: session.SessionOptions = {
-    secret: sessionSecret,
+    secret: process.env.SESSION_SECRET || "homebuildbot-secret",
     resave: false,
     saveUninitialized: false,
-    store: storage.sessionStore,
     cookie: {
-      secure: process.env.NODE_ENV === "production",
-      maxAge: 24 * 60 * 60 * 1000, // 24 hours
-    }
+      maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+      secure: isProduction, // Use secure cookies only in production
+      // Most sites need lax in both environments
+      sameSite: 'lax', 
+      domain: domain, // Set domain in production
+      httpOnly: true, // Better security: client-side JS cannot access cookies
+      path: '/',     // Ensure cookie is valid for all paths
+    },
+    store: storage.sessionStore,
+    proxy: true, // Trust the reverse proxy when secure is set
   };
 
-  app.set("trust proxy", 1);
+  // In production we need to trust proxy to handle secure cookies correctly
+  // This is crucial for secure cookies to work behind a load balancer or proxy
+  app.set("trust proxy", isProduction ? 1 : 0);
   app.use(session(sessionSettings));
   app.use(passport.initialize());
   app.use(passport.session());
 
-  // Configure passport local strategy
   passport.use(
     new LocalStrategy(async (username, password, done) => {
       try {
         const user = await storage.getUserByUsername(username);
-        
-        if (!user) {
-          return done(null, false, { message: "Invalid username or password" });
+        if (!user || !(await comparePasswords(password, user.password))) {
+          return done(null, false);
+        } else {
+          return done(null, user);
         }
-        
-        const passwordMatch = await comparePasswords(password, user.password);
-        
-        if (!passwordMatch) {
-          return done(null, false, { message: "Invalid username or password" });
-        }
-        
-        return done(null, user);
       } catch (error) {
         return done(error);
       }
     })
   );
 
-  // Serialize user to the session
-  passport.serializeUser((user, done) => {
-    done(null, user.id);
-  });
-
-  // Deserialize user from the session
+  passport.serializeUser((user, done) => done(null, user.id));
   passport.deserializeUser(async (id: number, done) => {
     try {
       const user = await storage.getUser(id);
-      if (!user) {
-        return done(new Error(`User with id ${id} not found`));
-      }
       done(null, user);
     } catch (error) {
       done(error);
     }
   });
 
-  // Register route
-  app.post("/api/auth/register", async (req, res, next) => {
-    try {
-      const { username, password, displayName, initial, role = "user" } = req.body;
-      
-      // Check if user already exists
-      const existingUser = await storage.getUserByUsername(username);
-      if (existingUser) {
-        return res.status(400).json({ message: "Username already exists" });
-      }
-      
-      // Create user with hashed password
-      const hashedPassword = await hashPassword(password);
-      const user = await storage.createUser({
-        username,
-        password: hashedPassword,
-        displayName,
-        initial,
-        role,
-      });
-      
-      // Log in the user
-      req.login(user, (err) => {
-        if (err) return next(err);
-        // Return user without password
-        const { password, ...userWithoutPassword } = user;
-        res.status(201).json(userWithoutPassword);
-      });
-    } catch (error) {
-      console.error("Error registering user:", error);
-      res.status(500).json({ message: "Failed to register user" });
-    }
-  });
-  
-  // Register route (alias for compatibility)
   app.post("/api/register", async (req, res, next) => {
     try {
-      const { username, password, displayName, initial, role = "user" } = req.body;
-      
-      // Check if user already exists
-      const existingUser = await storage.getUserByUsername(username);
+      const existingUser = await storage.getUserByUsername(req.body.username);
       if (existingUser) {
         return res.status(400).json({ message: "Username already exists" });
       }
-      
-      // Create user with hashed password
-      const hashedPassword = await hashPassword(password);
+
       const user = await storage.createUser({
-        username,
-        password: hashedPassword,
-        displayName,
-        initial,
-        role,
+        ...req.body,
+        password: await hashPassword(req.body.password),
       });
-      
-      // Log in the user
+
       req.login(user, (err) => {
         if (err) return next(err);
-        // Return user without password
-        const { password, ...userWithoutPassword } = user;
-        res.status(201).json(userWithoutPassword);
+        res.status(201).json({
+          id: user.id,
+          username: user.username,
+          displayName: user.displayName,
+          role: user.role,
+          initial: user.initial,
+        });
       });
     } catch (error) {
-      console.error("Error registering user:", error);
-      res.status(500).json({ message: "Failed to register user" });
+      if (error instanceof Error) {
+        res.status(400).json({ message: error.message });
+      } else {
+        res.status(500).json({ message: "Failed to register user" });
+      }
     }
   });
 
-  // Login route
-  app.post("/api/auth/login", (req, res, next) => {
-    passport.authenticate("local", (err: Error, user: Express.User, info: { message: string }) => {
-      if (err) return next(err);
-      
-      if (!user) {
-        return res.status(401).json({ message: info?.message || "Authentication failed" });
-      }
-      
-      req.login(user, (err) => {
-        if (err) return next(err);
-        
-        // Return user without password
-        const { password, ...userWithoutPassword } = user;
-        res.json(userWithoutPassword);
-      });
-    })(req, res, next);
-  });
-  
-  // Login route (alias for compatibility)
   app.post("/api/login", (req, res, next) => {
-    passport.authenticate("local", (err: Error, user: Express.User, info: { message: string }) => {
+    passport.authenticate("local", (err: Error | null, user: Express.User | false, info: { message: string } | undefined) => {
       if (err) return next(err);
-      
       if (!user) {
-        return res.status(401).json({ message: info?.message || "Authentication failed" });
+        return res.status(401).json({ message: "Invalid credentials" });
       }
-      
-      req.login(user, (err) => {
-        if (err) return next(err);
-        
-        // Return user without password
-        const { password, ...userWithoutPassword } = user;
-        res.json(userWithoutPassword);
+      req.login(user, (loginErr: Error) => {
+        if (loginErr) return next(loginErr);
+        res.status(200).json({
+          id: user.id,
+          username: user.username,
+          displayName: user.displayName,
+          role: user.role,
+          initial: user.initial,
+        });
       });
     })(req, res, next);
   });
 
-  // Logout route
-  app.post("/api/auth/logout", (req, res, next) => {
-    req.logout((err) => {
-      if (err) return next(err);
-      res.json({ success: true });
-    });
-  });
-  
-  // Logout route (alias for compatibility)
   app.post("/api/logout", (req, res, next) => {
     req.logout((err) => {
       if (err) return next(err);
-      res.json({ success: true });
+      res.sendStatus(200);
     });
   });
 
-  // Get current user route
-  app.get("/api/auth/me", (req, res) => {
-    if (!req.isAuthenticated()) {
-      return res.status(401).json({ message: "Not authenticated" });
-    }
-    
-    // Return user without password
-    const { password, ...userWithoutPassword } = req.user;
-    res.json(userWithoutPassword);
-  });
-  
-  // Get current user route (alias for /api/auth/me for compatibility)
   app.get("/api/user", (req, res) => {
-    if (!req.isAuthenticated()) {
-      return res.status(401).json({ message: "Not authenticated" });
-    }
-    
-    // Return user without password
-    const { password, ...userWithoutPassword } = req.user;
-    res.json(userWithoutPassword);
-  });
-  
-  // Debug route
-  app.get("/api/auth-debug", (req, res) => {
+    if (!req.isAuthenticated()) return res.status(401).json({ message: "Not authenticated" });
+    const user = req.user;
     res.json({
-      isAuthenticated: req.isAuthenticated(),
-      sessionID: req.sessionID,
-      session: req.session,
-      user: req.user ? { 
-        id: req.user.id,
-        username: req.user.username,
-        role: req.user.role
-      } : null
+      id: user.id,
+      username: user.username,
+      displayName: user.displayName,
+      role: user.role,
+      initial: user.initial,
     });
   });
 
-  // User management routes (admin only)
-  // Get all users
-  app.get("/api/users", isAuthenticated, isAdmin, async (req, res) => {
-    try {
-      const users = await storage.getUsers();
-      
-      // Remove passwords from response
-      const usersWithoutPasswords = users.map(user => {
-        const { password, ...userWithoutPassword } = user;
-        return userWithoutPassword;
-      });
-      
-      res.json(usersWithoutPasswords);
-    } catch (error) {
-      console.error("Error fetching users:", error);
-      res.status(500).json({ message: "Failed to fetch users" });
-    }
+  // Auth status endpoint (for debugging authentication issues)
+  app.get("/api/auth-status", (req, res) => {
+    // Provide basic auth info without exposing sensitive data
+    const isProduction = process.env.NODE_ENV === 'production';
+    const authStatus = {
+      authenticated: req.isAuthenticated(),
+      sessionID: req.sessionID,
+      environment: isProduction ? 'production' : 'development',
+      cookieSettings: {
+        secure: isProduction,
+        sameSite: 'lax',
+        domain: isProduction ? 'sphbuddy.info' : undefined,
+        path: '/',
+      },
+      cors: {
+        enabled: true,
+        origin: isProduction 
+          ? ['https://sphbuddy.info', 'https://www.sphbuddy.info']
+          : 'any',
+        credentials: true
+      },
+      userExists: !!req.user,
+      userId: req.user ? (req.user as Express.User).id : null,
+      timestamp: new Date().toISOString(),
+      // Include raw session cookie info for debugging
+      sessionCookie: req.headers.cookie ? 
+        req.headers.cookie.split(';').find(c => c.trim().startsWith('connect.sid=')) : 
+        null
+    };
+    
+    res.json(authStatus);
   });
-
-  // Create user (admin only)
-  app.post("/api/users", isAuthenticated, isAdmin, async (req, res) => {
-    try {
-      const { username, password, displayName, initial, role = "user" } = req.body;
-      
-      // Check if user already exists
-      const existingUser = await storage.getUserByUsername(username);
-      if (existingUser) {
-        return res.status(400).json({ message: "Username already exists" });
+  
+  // Middleware to check if user is authenticated
+  return {
+    isAuthenticated: (req: Request, res: Response, next: NextFunction) => {
+      // Log authentication checks in development for debugging
+      if (process.env.NODE_ENV !== 'production') {
+        console.log("Auth check - session ID:", req.sessionID);
+        console.log("Auth check - isAuthenticated:", req.isAuthenticated());
+        if (req.user) {
+          console.log("Auth check - user:", `ID: ${(req.user as Express.User).id}, Username: ${(req.user as Express.User).username}`);
+        } else {
+          console.log("Auth check - user: No user");
+        }
       }
       
-      // Create user with hashed password
-      const hashedPassword = await hashPassword(password);
-      const user = await storage.createUser({
-        username,
-        password: hashedPassword,
-        displayName,
-        initial,
-        role,
-      });
+      // Standard authentication check for all environments
+      if (req.isAuthenticated()) {
+        return next();
+      }
       
-      // Return user without password
-      const { password: _, ...userWithoutPassword } = user;
-      res.status(201).json(userWithoutPassword);
-    } catch (error) {
-      console.error("Error creating user:", error);
-      res.status(500).json({ message: "Failed to create user" });
+      // If not authenticated, return 401
+      return res.status(401).json({ message: "Authentication required" });
     }
-  });
-
-  // Update user (admin only)
-  app.put("/api/users/:id", isAuthenticated, isAdmin, async (req, res) => {
-    try {
-      const userId = parseInt(req.params.id);
-      const { displayName, initial, role, password } = req.body;
-      
-      // Check if user exists
-      const user = await storage.getUser(userId);
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
-      }
-      
-      // Prepare update data
-      const updateData: any = { displayName, initial, role };
-      
-      // If password is provided, hash it
-      if (password) {
-        updateData.password = await hashPassword(password);
-      }
-      
-      // Update user
-      const updatedUser = await storage.updateUser(userId, updateData);
-      
-      // Return user without password
-      const { password: _, ...userWithoutPassword } = updatedUser;
-      res.json(userWithoutPassword);
-    } catch (error) {
-      console.error("Error updating user:", error);
-      res.status(500).json({ message: "Failed to update user" });
-    }
-  });
-
-  // Delete user (admin only)
-  app.delete("/api/users/:id", isAuthenticated, isAdmin, async (req, res) => {
-    try {
-      const userId = parseInt(req.params.id);
-      
-      // Prevent admins from deleting themselves
-      if (userId === req.user.id) {
-        return res.status(400).json({ message: "Cannot delete your own account" });
-      }
-      
-      // Check if user exists
-      const user = await storage.getUser(userId);
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
-      }
-      
-      // Delete user
-      const success = await storage.deleteUser(userId);
-      
-      if (!success) {
-        return res.status(500).json({ message: "Failed to delete user" });
-      }
-      
-      res.json({ success: true });
-    } catch (error) {
-      console.error("Error deleting user:", error);
-      res.status(500).json({ message: "Failed to delete user" });
-    }
-  });
-}
-
-// Middleware to check if user is authenticated
-export function isAuthenticated(req: Request, res: Response, next: NextFunction) {
-  if (req.isAuthenticated()) {
-    return next();
-  }
-  res.status(401).json({ message: "Authentication required" });
-}
-
-// Middleware to check if user is an admin
-export function isAdmin(req: Request, res: Response, next: NextFunction) {
-  if (req.user.role === "admin") {
-    return next();
-  }
-  res.status(403).json({ message: "Admin privileges required" });
+  };
 }

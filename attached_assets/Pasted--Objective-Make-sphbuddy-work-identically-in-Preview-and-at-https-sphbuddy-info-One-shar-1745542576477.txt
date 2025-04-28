@@ -1,0 +1,70 @@
+📌 **Objective**
+Make sphbuddy work identically in Preview and at https://sphbuddy.info  
+• One shared Postgres DB (Supabase)  
+• Schema managed by Drizzle CLI migrations  
+• No emergency / bypass code  
+• Normal auth, optional Slack/Asana validation  
+• End-to-end test: log in with `DanielZ / Israel`, create chatbot → 200 OK
+
+────────────────────────────────────────────────
+1. Clean-Up PREVIOUS PATCHES
+   • Delete / revert these files if they exist:
+       server/direct-sql-routes.ts
+       server/emergency-routes.js
+       client/src/lib/queryClient.ts  (only the “emergency*” helpers)
+       db-schema-fix.sql
+   • In server/auth.ts, restore normal auth middleware (remove hard-coded admin user / production bypass).
+   • In server/storage.ts or server/routes.ts, remove the raw-SQL fallbacks we added.
+   • Keep the “secure: process.env.NODE_ENV === 'production'” cookie flag BUT
+         add   `sameSite: 'lax'`
+         and   `proxy: true`   (Express) – don’t set secure=false in prod.
+
+2. CREATE MANAGED POSTGRES (once)
+   • Provision a free Postgres on Supabase.  
+   • Obtain the full connection string (postgres://user:pass@host:port/db?sslmode=require).
+
+3. CONFIGURE ENV VARIABLES
+   • In Replit *Secrets* **and** in the Deploy tab → Environment:
+         DATABASE_URL  =  the Supabase connection string
+         NODE_ENV       =  production   (for deployed build)
+         SLACK_BOT_TOKEN, ASANA_TOKEN   (leave empty for now if you don’t have them)
+   • Remove any hard-coded sqlite / Replit DB refs.
+
+4. DRIZZLE (or Prisma) MIGRATIONS
+   • Update drizzle.config.ts to read `process.env.DATABASE_URL`.
+   • Run locally in Replit shell:
+         npx drizzle-kit generate:pg
+         npx drizzle-kit push:pg
+     This will create the tables on Supabase.
+   • Commit the generated SQL and `_migrations` directory.
+
+5. SERVER CODE
+   • In server/storage.ts set up a single `pgPool = new Pool({ connectionString: process.env.DATABASE_URL, ssl: { rejectUnauthorized: false } })`
+   • All DB helpers should reuse that pool.
+
+6. OPTIONAL INTEGRATIONS
+   • server/lib/slack.ts → if `!process.env.SLACK_BOT_TOKEN`, skip validation and return `true`.
+   • same for Asana.  Log `console.warn` instead of throwing.
+
+7. BUILD & DEPLOY
+   • `npm run build` (or `pnpm …`) – ensure no TS/ESLint errors.
+   • Click **Deploy** in Replit; wait for green check.
+
+8. SMOKE TEST (agent should script this)
+   a) Visit /login on Preview → log in → create chatbot → expect 201.  
+   b) Visit https://sphbuddy.info/login → log in with SAME creds → create chatbot → expect 201.  
+   c) Verify row exists in Supabase with `SELECT * FROM chatbots LIMIT 5;`.
+
+9. AUTOMATED CHECK
+   • Add `scripts/postdeploy.js` that pings `/healthz` and attempts a test chatbot insert; exit 1 on failure so deploy rolls back.
+
+10. DOCUMENT
+   • Update README with:
+       – how to add new env vars
+       – how to run `drizzle-kit generate/push`
+       – how to connect to Supabase for psql.
+
+📣  Deliverable
+   “Deployment succeeded with unified DB. Login + chatbot creation work both locally and at sphbuddy.info.”
+
+────────────────────────────────────────────────

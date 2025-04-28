@@ -42,7 +42,7 @@ export default function AsanaProjectsManager({ chatbotId }: AsanaProjectsManager
   const { toast } = useToast();
   const queryClient = useQueryClient();
   
-  // Fetch linked Asana projects
+  // Fetch linked Asana projects - using explicit fetch to ensure proper data retrieval
   const { 
     data: projects = [], 
     isLoading,
@@ -50,6 +50,15 @@ export default function AsanaProjectsManager({ chatbotId }: AsanaProjectsManager
   } = useQuery<AsanaProject[]>({
     queryKey: [`/api/chatbots/${chatbotId}/asana-projects`],
     staleTime: 30000,
+    queryFn: async () => {
+      const response = await fetch(`/api/chatbots/${chatbotId}/asana-projects`, {
+        credentials: 'include'
+      });
+      if (!response.ok) {
+        throw new Error(`Failed to fetch Asana projects: ${response.status}`);
+      }
+      return response.json();
+    }
   });
   
   // Add a new Asana project
@@ -79,7 +88,7 @@ export default function AsanaProjectsManager({ chatbotId }: AsanaProjectsManager
       setPendingProjectName(null);
       
       // Update the projects list
-      await refetch();
+      queryClient.invalidateQueries({ queryKey: [`/api/chatbots/${chatbotId}/asana-projects`] });
       
       toast({
         title: "Project added",
@@ -107,7 +116,7 @@ export default function AsanaProjectsManager({ chatbotId }: AsanaProjectsManager
       }
       
       // Update the projects list
-      await refetch();
+      queryClient.invalidateQueries({ queryKey: [`/api/chatbots/${chatbotId}/asana-projects`] });
       
       toast({
         title: "Project removed",
