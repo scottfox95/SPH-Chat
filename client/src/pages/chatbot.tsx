@@ -54,6 +54,8 @@ function ProjectSelector({ chatbotId, currentProjectId }: { chatbotId: number, c
     queryKey: ["/api/projects"],
   });
   
+  console.log(`ProjectSelector render - chatbotId: ${chatbotId}, currentProjectId: ${currentProjectId}`);
+  
   // Update project assignment mutation
   const updateProjectMutation = useMutation({
     mutationFn: async (projectId: string | null) => {
@@ -95,10 +97,70 @@ function ProjectSelector({ chatbotId, currentProjectId }: { chatbotId: number, c
     },
   });
   
-  const handleProjectChange = (value: string) => {
-    setIsUpdating(true);
-    updateProjectMutation.mutate(value === "none" ? null : value);
-    setIsUpdating(false);
+  const handleProjectChange = async (value: string) => {
+    console.log(`handleProjectChange - value: ${value}`);
+    try {
+      setIsUpdating(true);
+      
+      // Convert string projectId to number or null
+      let numericProjectId: number | null = null;
+      if (value !== "none") {
+        numericProjectId = parseInt(value, 10);
+      }
+      
+      console.log(`Making PUT request to /api/chatbots/${chatbotId} with projectId:`, numericProjectId);
+      
+      // Make the API call directly instead of using mutation
+      const response = await fetch(`/api/chatbots/${chatbotId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({ projectId: numericProjectId }),
+      });
+      
+      if (!response.ok) {
+        throw new Error(`Failed to update project: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      console.log('Project update success:', data);
+      
+      // Find project name for better messaging
+      const projectName = data.projectId 
+        ? projects.find((p: any) => p.id === data.projectId)?.name || "selected project"
+        : null;
+      
+      toast({
+        title: "Project assignment updated",
+        description: projectName 
+          ? `Chatbot has been assigned to the "${projectName}" project.` 
+          : "Chatbot has been removed from project assignment.",
+      });
+      
+      // Invalidate queries manually
+      queryClient.invalidateQueries({ queryKey: [`/api/chatbots/${chatbotId}`] });
+      queryClient.invalidateQueries({ queryKey: ["/api/chatbots"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/projects"] });
+      
+      if (data.projectId) {
+        queryClient.invalidateQueries({ queryKey: [`/api/projects/${data.projectId}/chatbots`] });
+      }
+      
+      // Reload the page to ensure state is reset properly
+      window.location.reload();
+      
+    } catch (error) {
+      console.error('Project update error:', error);
+      toast({
+        title: "Failed to update project assignment",
+        description: "Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsUpdating(false);
+    }
   };
   
   // Convert current project ID to string for the select component

@@ -304,7 +304,7 @@
     {
       "chatbot": {
         "id": 3,
-        "name": "1320 Mayfair - Finance Team",
+        "name": "1320 Mayfair - Finance Team 1",
         "slackChannelId": "C06S1QZU9N2",
         "asanaProjectId": null,
         "asanaConnectionId": null,
@@ -465,8 +465,47 @@
           "createdAt": "2025-04-24T21:16:02.283Z"
         }
       ]
+    },
+    {
+      "chatbot": {
+        "id": 21,
+        "name": "1320 Mayfair - Finance Team",
+        "slackChannelId": "C06S1QZU9N2",
+        "asanaProjectId": null,
+        "asanaConnectionId": null,
+        "createdById": 4,
+        "projectId": 1,
+        "publicToken": "943c0b81-0342-4392-a22d-1e0ca3665d8f",
+        "isActive": true,
+        "requireAuth": false,
+        "createdAt": "2025-04-28T19:54:19.352Z"
+      },
+      "documents": [],
+      "messages": [
+        {
+          "id": 47,
+          "chatbotId": 21,
+          "userId": null,
+          "content": "what happened today ?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-04-28T19:54:36.569Z"
+        },
+        {
+          "id": 48,
+          "chatbotId": 21,
+          "userId": null,
+          "content": "Today, several activities are happening at the 1320 Mayfair project site:\n\n1. Eric’s HVAC team is on their way to prepare the AC units for the home, according to Aaron Wilson.\n2. The drywall team is working on sanding and finishing any imperfections in the ceiling, with Gerardo and Alex on site, as mentioned by Aaron Wilson.\n3. Pavers are being delivered, as noted by Aaron Wilson.\n4. Ron Heller mentioned that the front yard has been backfilled and graded, with tree, save, and mulch sock being put up. Gravel installation is scheduled for tomorrow.\n\nThese updates provide a snapshot of the ongoing work and deliveries at the site today, according to Aaron Wilson and Ron Heller on April 28, 2025.",
+          "isUserMessage": false,
+          "citation": "Aaron Wilson",
+          "createdAt": "2025-04-28T19:54:39.844Z"
+        }
+      ],
+      "summaries": [],
+      "emailRecipients": [],
+      "asanaProjects": []
     }
   ],
-  "exportedAt": "2025-04-28T19:50:00.333Z",
+  "exportedAt": "2025-04-28T20:06:15.533Z",
   "exportedBy": "SPH Chat Migration Utility"
 }
