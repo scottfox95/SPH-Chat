@@ -89,6 +89,10 @@ export interface IStorage {
   
   // Session store for authentication
   sessionStore: session.Store;
+  
+  // Database status methods
+  getPoolStats?: () => { total: number, idle: number } | undefined;
+  testConnection?: () => Promise<{ connected: boolean, error?: string }>;
 }
 
 // In-memory storage implementation
@@ -477,6 +481,36 @@ export class MemStorage implements IStorage {
 // Database storage implementation
 export class DatabaseStorage implements IStorage {
   public sessionStore: session.Store;
+
+  // Helper method to get pool statistics
+  getPoolStats(): { total: number, idle: number } | undefined {
+    try {
+      if (pool && typeof pool.totalCount === 'number' && typeof pool.idleCount === 'number') {
+        return {
+          total: pool.totalCount,
+          idle: pool.idleCount
+        };
+      }
+      return undefined;
+    } catch (error) {
+      console.error("Error getting pool stats:", error);
+      return undefined;
+    }
+  }
+  
+  // Test the database connection
+  async testConnection(): Promise<{ connected: boolean, error?: string }> {
+    try {
+      const result = await pool.query('SELECT 1 as connection_test');
+      return { connected: true };
+    } catch (error) {
+      console.error("Database connection test failed:", error);
+      return { 
+        connected: false, 
+        error: error instanceof Error ? error.message : String(error)
+      };
+    }
+  }
 
   constructor() {
     try {

@@ -40,6 +40,55 @@ import { hashPassword } from "./lib/password-utils";
 export async function registerRoutes(app: Express): Promise<Server> {
   // Set up authentication
   const { isAuthenticated } = setupAuth(app);
+  
+  // Diagnostic endpoints
+  app.get("/api/system/auth-diagnostic", async (req, res) => {
+    // Diagnostic endpoint that works even when auth is broken
+    try {
+      // Get basic auth info without exposing sensitive data
+      const authStatus = {
+        authenticated: req.isAuthenticated(),
+        sessionID: req.sessionID,
+        environment: process.env.NODE_ENV || 'development',
+        // Get cookie information (safely) for debugging
+        cookieInfo: req.headers.cookie ? {
+          present: true,
+          sessionCookiePresent: req.headers.cookie.includes('connect.sid='),
+          count: req.headers.cookie.split(';').length,
+          names: req.headers.cookie.split(';').map(c => c.trim().split('=')[0])
+        } : { present: false },
+        userInfo: req.user ? {
+          exists: true,
+          id: (req.user as any).id,
+          username: (req.user as any).username,
+          role: (req.user as any).role,
+        } : { exists: false },
+        headers: {
+          host: req.headers.host,
+          origin: req.headers.origin || null,
+          referer: req.headers.referer || null,
+        },
+        sessionStore: {
+          type: storage.sessionStore ? storage.sessionStore.constructor.name : 'Unknown',
+        },
+        databaseInfo: {
+          poolStats: storage.getPoolStats ? storage.getPoolStats() : 'Not available',
+          connectionStatus: storage.testConnection ? 'Available' : 'Not available',
+        },
+        timestamp: new Date().toISOString()
+      };
+      
+      // Return diagnostic info
+      res.json(authStatus);
+    } catch (error) {
+      // Even if there's an error, try to return something useful
+      res.status(500).json({
+        error: true,
+        message: error instanceof Error ? error.message : 'Unknown error',
+        timestamp: new Date().toISOString()
+      });
+    }
+  });
 
   // API routes
   const apiRouter = express.Router();

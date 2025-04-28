@@ -15,14 +15,9 @@ declare global {
 export function setupAuth(app: Express) {
   // Configure session based on environment
   const isProduction = process.env.NODE_ENV === 'production';
-  // Don't use dot prefix for domain in most cases - this was likely causing issues
-  const domain = isProduction ? 'sphbuddy.info' : undefined;
   
   // Log environment settings
   console.log(`Configuring authentication for ${isProduction ? 'production' : 'development'} environment`);
-  if (isProduction) {
-    console.log(`Using domain: ${domain} for cookies`);
-  }
   
   // Use environment-specific session settings
   const sessionSettings: session.SessionOptions = {
@@ -31,20 +26,25 @@ export function setupAuth(app: Express) {
     saveUninitialized: false,
     cookie: {
       maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
-      secure: isProduction, // Use secure cookies only in production
-      // Most sites need lax in both environments
-      sameSite: 'lax', 
-      domain: domain, // Set domain in production
+      secure: false, // Must be false for Replit deployments
+      sameSite: 'lax',
       httpOnly: true, // Better security: client-side JS cannot access cookies
       path: '/',     // Ensure cookie is valid for all paths
     },
     store: storage.sessionStore,
-    proxy: true, // Trust the reverse proxy when secure is set
   };
-
-  // In production we need to trust proxy to handle secure cookies correctly
-  // This is crucial for secure cookies to work behind a load balancer or proxy
-  app.set("trust proxy", isProduction ? 1 : 0);
+  
+  // Trust the first proxy in the chain
+  app.set("trust proxy", 1);
+  
+  console.log("Session settings:", {
+    ...sessionSettings, 
+    cookie: {
+      ...sessionSettings.cookie, 
+      secret: sessionSettings.secret ? "SECRET_HIDDEN" : "MISSING"
+    }
+  });
+  
   app.use(session(sessionSettings));
   app.use(passport.initialize());
   app.use(passport.session());
@@ -152,16 +152,12 @@ export function setupAuth(app: Express) {
       sessionID: req.sessionID,
       environment: isProduction ? 'production' : 'development',
       cookieSettings: {
-        secure: isProduction,
+        secure: false,
         sameSite: 'lax',
-        domain: isProduction ? 'sphbuddy.info' : undefined,
         path: '/',
       },
       cors: {
         enabled: true,
-        origin: isProduction 
-          ? ['https://sphbuddy.info', 'https://www.sphbuddy.info']
-          : 'any',
         credentials: true
       },
       userExists: !!req.user,
@@ -170,7 +166,12 @@ export function setupAuth(app: Express) {
       // Include raw session cookie info for debugging
       sessionCookie: req.headers.cookie ? 
         req.headers.cookie.split(';').find(c => c.trim().startsWith('connect.sid=')) : 
-        null
+        null,
+      // Add database connection info
+      database: {
+        type: 'PostgreSQL (Replit)',
+        poolSize: storage.getPoolStats ? storage.getPoolStats() : undefined
+      }
     };
     
     res.json(authStatus);
