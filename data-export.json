@@ -765,13 +765,50 @@
           "isUserMessage": false,
           "citation": "Aaron Wilson on April 28, 2025",
           "createdAt": "2025-04-28T18:11:33.325Z"
+        },
+        {
+          "id": 45,
+          "chatbotId": 19,
+          "userId": null,
+          "content": "when is the dekton arriving?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-04-28T18:22:55.394Z"
+        },
+        {
+          "id": 46,
+          "chatbotId": 19,
+          "userId": null,
+          "content": "The Dekton is expected to arrive on Wednesday, according to Rashad Sims.",
+          "isUserMessage": false,
+          "citation": "Rashad Sims",
+          "createdAt": "2025-04-28T18:22:56.203Z"
         }
       ],
       "summaries": [],
       "emailRecipients": [],
       "asanaProjects": []
+    },
+    {
+      "chatbot": {
+        "id": 20,
+        "name": "1320 please work",
+        "slackChannelId": "C06S1QZU9N2",
+        "asanaProjectId": null,
+        "asanaConnectionId": null,
+        "createdById": 4,
+        "publicToken": "7d4e9ab6-f17e-4dea-b382-f5e988cea9df",
+        "isActive": true,
+        "requireAuth": false,
+        "createdAt": "2025-04-28T18:24:31.309Z"
+      },
+      "documents": [],
+      "messages": [],
+      "summaries": [],
+      "emailRecipients": [],
+      "asanaProjects": []
     }
   ],
-  "exportedAt": "2025-04-28T18:14:52.180Z",
+  "exportedAt": "2025-04-28T18:40:55.800Z",
   "exportedBy": "SPH Chat Migration Utility"
 }
