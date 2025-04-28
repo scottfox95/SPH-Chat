@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, boolean, timestamp, json } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, boolean, timestamp, json, uuid } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -32,7 +32,7 @@ export const chatbots = pgTable("chatbots", {
   asanaProjectId: text("asana_project_id"), // Keep for backward compatibility
   asanaConnectionId: text("asana_connection_id"), // Keep for backward compatibility
   createdById: integer("created_by_id").notNull().references(() => users.id),
-  publicToken: text("public_token").notNull().unique(),
+  publicToken: uuid("public_token").notNull().unique().defaultRandom(),
   isActive: boolean("is_active").notNull().default(true),
   requireAuth: boolean("require_auth").notNull().default(false),
   createdAt: timestamp("created_at").notNull().defaultNow(),
@@ -121,7 +121,6 @@ export const insertChatbotSchema = createInsertSchema(chatbots).pick({
   slackChannelId: true,
   asanaProjectId: true,
   createdById: true,
-  publicToken: true,
   isActive: true,
   requireAuth: true,
 });
