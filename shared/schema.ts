@@ -24,6 +24,15 @@ export const users = pgTable("users", {
   initial: text("initial").notNull(),
 });
 
+// Projects to group chatbots
+export const projects = pgTable("projects", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  description: text("description"),
+  createdById: integer("created_by_id").notNull().references(() => users.id),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
 // Chatbot model for project-specific bots
 export const chatbots = pgTable("chatbots", {
   id: serial("id").primaryKey(),
@@ -32,6 +41,7 @@ export const chatbots = pgTable("chatbots", {
   asanaProjectId: text("asana_project_id"), // Keep for backward compatibility
   asanaConnectionId: text("asana_connection_id"), // Keep for backward compatibility
   createdById: integer("created_by_id").notNull().references(() => users.id),
+  projectId: integer("project_id").references(() => projects.id),
   publicToken: uuid("public_token").notNull().unique().defaultRandom(),
   isActive: boolean("is_active").notNull().default(true),
   requireAuth: boolean("require_auth").notNull().default(false),
@@ -116,11 +126,18 @@ export const insertUserSchema = createInsertSchema(users).pick({
   role: true,
 });
 
+export const insertProjectSchema = createInsertSchema(projects).pick({
+  name: true,
+  description: true,
+  createdById: true,
+});
+
 export const insertChatbotSchema = createInsertSchema(chatbots).pick({
   name: true,
   slackChannelId: true,
   asanaProjectId: true,
   createdById: true,
+  projectId: true,
   isActive: true,
   requireAuth: true,
 });
@@ -186,6 +203,9 @@ export const updateApiTokenSchema = createInsertSchema(apiTokens).pick({
 // Types
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
+
+export type Project = typeof projects.$inferSelect;
+export type InsertProject = z.infer<typeof insertProjectSchema>;
 
 export type Chatbot = typeof chatbots.$inferSelect;
 export type InsertChatbot = z.infer<typeof insertChatbotSchema>;
