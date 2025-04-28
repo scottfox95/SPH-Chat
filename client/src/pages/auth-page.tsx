@@ -1,43 +1,45 @@
-import { useState } from "react";
-import { useAuth } from "@/hooks/use-auth";
+import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
+import { useAuth } from "@/hooks/use-auth";
+import { Loader2 } from "lucide-react";
 import AuthLayout from "@/components/layouts/auth-layout";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { LoginForm } from "@/components/auth/login-form";
-import { RegisterForm } from "@/components/auth/register-form";
+import LoginForm from "@/components/auth/login-form";
+import RegisterForm from "@/components/auth/register-form";
+
+type AuthView = "login" | "register";
 
 export default function AuthPage() {
-  const { isAuthenticated, isLoading } = useAuth();
+  const [view, setView] = useState<AuthView>("login");
+  const { user, isLoading } = useAuth();
   const [_, navigate] = useLocation();
-  const [activeTab, setActiveTab] = useState("login");
 
   // Redirect to home if already authenticated
-  if (isAuthenticated && !isLoading) {
-    navigate("/");
-    return null;
+  useEffect(() => {
+    if (user && !isLoading) {
+      navigate("/");
+    }
+  }, [user, isLoading, navigate]);
+
+  // Toggle between login and register views
+  const toggleView = () => {
+    setView(view === "login" ? "register" : "login");
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
   }
 
   return (
     <AuthLayout>
-      <Tabs
-        defaultValue="login"
-        value={activeTab}
-        onValueChange={setActiveTab}
-        className="w-full"
-      >
-        <TabsList className="grid w-full grid-cols-2 mb-6">
-          <TabsTrigger value="login">Login</TabsTrigger>
-          <TabsTrigger value="register">Register</TabsTrigger>
-        </TabsList>
-        
-        <TabsContent value="login">
-          <LoginForm onSuccess={() => navigate("/")} onRegisterClick={() => setActiveTab("register")} />
-        </TabsContent>
-        
-        <TabsContent value="register">
-          <RegisterForm onSuccess={() => navigate("/")} onLoginClick={() => setActiveTab("login")} />
-        </TabsContent>
-      </Tabs>
+      {view === "login" ? (
+        <LoginForm onSwitch={toggleView} />
+      ) : (
+        <RegisterForm onSwitch={toggleView} />
+      )}
     </AuthLayout>
   );
 }

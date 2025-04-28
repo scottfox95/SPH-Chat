@@ -48,6 +48,9 @@ export interface IStorage {
   
   // Chatbot methods
   getChatbots(): Promise<Chatbot[]>;
+  
+  // Session store for authentication
+  sessionStore: session.Store;
   getChatbot(id: number): Promise<Chatbot | undefined>;
   getChatbotByToken(token: string): Promise<Chatbot | undefined>;
   createChatbot(chatbot: Omit<InsertChatbot, "publicToken">): Promise<Chatbot>;
@@ -85,9 +88,6 @@ export interface IStorage {
   // API token methods
   getApiToken(service: string): Promise<ApiToken | undefined>;
   saveApiToken(token: InsertApiToken): Promise<ApiToken>;
-  
-  // Session store for authentication
-  sessionStore: session.Store;
 }
 
 // In-memory storage implementation

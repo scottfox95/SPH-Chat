@@ -1,11 +1,10 @@
 import { useState } from "react";
-import { useAuth } from "@/hooks/use-auth";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { Loader2, Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Loader2, Eye, EyeOff } from "lucide-react";
 import {
   Form,
   FormControl,
@@ -13,31 +12,29 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormDescription,
 } from "@/components/ui/form";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useAuth } from "@/hooks/use-auth";
 
-// Form schema
+// Registration form schema
 const registerSchema = z.object({
-  username: z.string().min(3, "Username must be at least 3 characters").max(50, "Username too long"),
+  username: z.string().min(3, "Username must be at least 3 characters"),
   password: z.string().min(6, "Password must be at least 6 characters"),
-  displayName: z.string().min(2, "Display name is required"),
-  initial: z.string().min(1, "Initial is required").max(2, "Maximum 2 characters"),
-  role: z.enum(["user", "admin"]).default("user"),
+  displayName: z.string().min(2, "Display name must be at least 2 characters"),
+  initial: z.string().max(2, "Initials must be at most 2 characters"),
 });
 
 type RegisterFormValues = z.infer<typeof registerSchema>;
 
 interface RegisterFormProps {
-  onSuccess: () => void;
-  onLoginClick: () => void;
+  onSwitch: () => void;
 }
 
-export function RegisterForm({ onSuccess, onLoginClick }: RegisterFormProps) {
-  const { register, isLoading } = useAuth();
+export default function RegisterForm({ onSwitch }: RegisterFormProps) {
+  const { registerMutation } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
 
-  // Form setup
+  // Initialize form
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -45,20 +42,15 @@ export function RegisterForm({ onSuccess, onLoginClick }: RegisterFormProps) {
       password: "",
       displayName: "",
       initial: "",
-      role: "user",
     },
   });
 
-  // Form submission
-  const onSubmit = async (data: RegisterFormValues) => {
-    const success = await register(data);
-    if (success) {
-      onSuccess();
-    }
-  };
-
   // Auto-generate initial when display name changes
-  const onDisplayNameChange = (value: string) => {
+  const handleDisplayNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    form.setValue("displayName", value);
+    
+    // Only auto-generate if user hasn't set it yet or it's empty
     if (!form.getValues("initial")) {
       // Take the first letter of each word in the display name
       const words = value.trim().split(/\s+/);
@@ -70,152 +62,143 @@ export function RegisterForm({ onSuccess, onLoginClick }: RegisterFormProps) {
     }
   };
 
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Create Account</CardTitle>
-        <CardDescription>
-          Register to get started with SPH ChatBot
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="username"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Username</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Choose a username" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+  // Handle form submission
+  const onSubmit = (data: RegisterFormValues) => {
+    // Set default role to "admin" as per requirement (all users have admin access)
+    registerMutation.mutate({
+      ...data,
+      role: "admin",
+    });
+  };
 
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
+  return (
+    <div className="grid gap-6">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <FormField
+            control={form.control}
+            name="username"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Username</FormLabel>
+                <FormControl>
+                  <Input placeholder="Choose a username" {...field} autoComplete="username" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="displayName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Display Name</FormLabel>
+                <FormControl>
+                  <Input 
+                    placeholder="Your full name" 
+                    {...field} 
+                    onChange={handleDisplayNameChange}
+                    autoComplete="name" 
+                  />
+                </FormControl>
+                <FormDescription>This will be shown on your profile</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="initial"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Initials</FormLabel>
+                <FormControl>
+                  <Input 
+                    placeholder="JD" 
+                    {...field} 
+                    maxLength={2}
+                    className="uppercase"
+                  />
+                </FormControl>
+                <FormDescription>Used for your profile avatar</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Password</FormLabel>
+                <FormControl>
                   <div className="relative">
-                    <FormControl>
-                      <Input
-                        type={showPassword ? "text" : "password"}
-                        placeholder="Create a secure password"
-                        {...field}
-                      />
-                    </FormControl>
+                    <Input
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Create a password"
+                      {...field}
+                      autoComplete="new-password"
+                    />
                     <Button
                       type="button"
                       variant="ghost"
                       size="icon"
-                      className="absolute right-0 top-0 h-full"
+                      className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
                       onClick={() => setShowPassword(!showPassword)}
                     >
                       {showPassword ? (
-                        <EyeOff className="h-4 w-4" />
+                        <EyeOff className="h-4 w-4 text-muted-foreground" />
                       ) : (
-                        <Eye className="h-4 w-4" />
+                        <Eye className="h-4 w-4 text-muted-foreground" />
                       )}
                       <span className="sr-only">
                         {showPassword ? "Hide password" : "Show password"}
                       </span>
                     </Button>
                   </div>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-            <FormField
-              control={form.control}
-              name="displayName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Display Name</FormLabel>
-                  <FormControl>
-                    <Input 
-                      placeholder="Your full name" 
-                      {...field} 
-                      onChange={(e) => {
-                        field.onChange(e);
-                        onDisplayNameChange(e.target.value);
-                      }}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="initial"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Initials</FormLabel>
-                  <FormControl>
-                    <Input 
-                      placeholder="Your initials (1-2 characters)" 
-                      maxLength={2}
-                      {...field} 
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="role"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Role</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    value={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a role" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="user">User</SelectItem>
-                      <SelectItem value="admin">Admin</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Creating account...
-                </>
-              ) : (
-                "Register"
-              )}
-            </Button>
-          </form>
-        </Form>
-      </CardContent>
-      <CardFooter className="flex justify-center border-t p-4">
-        <p className="text-sm text-muted-foreground">
-          Already have an account?{" "}
-          <Button variant="link" className="p-0" onClick={onLoginClick}>
-            Log in
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={registerMutation.isPending}
+          >
+            {registerMutation.isPending ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Creating account...
+              </>
+            ) : (
+              "Create account"
+            )}
           </Button>
-        </p>
-      </CardFooter>
-    </Card>
+        </form>
+      </Form>
+
+      <div className="text-center text-sm">
+        Already have an account?{" "}
+        <Button
+          variant="link"
+          className="p-0 font-semibold text-primary"
+          onClick={onSwitch}
+        >
+          Sign in
+        </Button>
+      </div>
+
+      {registerMutation.isError && (
+        <div className="bg-destructive/15 p-3 rounded-md text-sm text-destructive">
+          {registerMutation.error?.message || "Registration failed. Please try again."}
+        </div>
+      )}
+    </div>
   );
 }

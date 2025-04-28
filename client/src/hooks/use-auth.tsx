@@ -31,9 +31,12 @@ type AuthContextType = {
   login: (username: string, password: string) => Promise<boolean>;
   logout: () => Promise<void>;
   register: (data: RegisterData) => Promise<boolean>;
+  loginMutation: ReturnType<typeof useMutation<User, Error, Credentials>>;
+  logoutMutation: ReturnType<typeof useMutation<void, Error, void>>;
+  registerMutation: ReturnType<typeof useMutation<User, Error, RegisterData>>;
 };
 
-// Create auth context
+// Create auth context with default values
 const AuthContext = createContext<AuthContextType>({
   isAuthenticated: false,
   isLoading: true,
@@ -41,6 +44,10 @@ const AuthContext = createContext<AuthContextType>({
   login: async () => false,
   logout: async () => {},
   register: async () => false,
+  // These will be properly initialized in the provider
+  loginMutation: {} as ReturnType<typeof useMutation<User, Error, Credentials>>,
+  logoutMutation: {} as ReturnType<typeof useMutation<void, Error, void>>,
+  registerMutation: {} as ReturnType<typeof useMutation<User, Error, RegisterData>>,
 });
 
 export function AuthProvider({ children }: { children: ReactNode }) {
