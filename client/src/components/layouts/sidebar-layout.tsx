@@ -173,12 +173,12 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
           )}
         </nav>
         
-        {/* Active Projects */}
+        {/* Recent Projects (showing only last 3) */}
         {chatbots && chatbots.length > 0 && (
           <div className="p-4 border-t border-gray-200">
-            <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Active Projects</div>
+            <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Recent Projects</div>
             <div className="space-y-2">
-              {chatbots.map((chatbot: Chatbot) => (
+              {chatbots.slice(-3).map((chatbot: Chatbot) => (
                 <a 
                   key={chatbot.id} 
                   href={`/chatbot/${chatbot.id}`}
