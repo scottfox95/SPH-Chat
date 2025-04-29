@@ -874,7 +874,8 @@ export class DatabaseStorage implements IStorage {
             publicToken: String(rawChatbot.public_token),
             isActive: Boolean(rawChatbot.is_active),
             requireAuth: Boolean(rawChatbot.require_auth),
-            createdAt: new Date(rawChatbot.created_at),
+            createdAt: typeof rawChatbot.created_at === 'string' || typeof rawChatbot.created_at === 'number' ? 
+              new Date(rawChatbot.created_at) : new Date(),
             projectId: rawChatbot.project_id !== null ? Number(rawChatbot.project_id) : null
           };
           console.log("Successfully created chatbot with direct SQL:", chatbot);
