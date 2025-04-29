@@ -240,9 +240,42 @@
           "isUserMessage": false,
           "citation": "the \"Budget",
           "createdAt": "2025-04-29T15:43:29.650Z"
+        },
+        {
+          "id": 73,
+          "chatbotId": 22,
+          "userId": null,
+          "content": "what did aaron wilson get done last week?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-04-29T15:54:25.535Z"
+        },
+        {
+          "id": 74,
+          "chatbotId": 22,
+          "userId": null,
+          "content": "Last week, Aaron Wilson was involved in several activities at the 1320 Mayfair site. On April 28, 2025, he reported that the drywall team was working on sanding and finishing any imperfections in the ceiling. He also mentioned that Gerardo and Alex were on site, and that pavers were being delivered at that time. Additionally, on April 24, 2025, Aaron noted that electrical trim work was scheduled to continue on Saturday and Monday, and he was coordinating with Rick regarding a garage door quote and selections. He also mentioned that he had templating scheduled for Friday for countertops and backsplash, and that Arturo was set to install handrails on April 23, 2025. Furthermore, Aaron was managing the delivery and installation of various materials and coordinating with different teams on site throughout the week, according to Aaron Wilson on April 28, 2025, and April 24, 2025.",
+          "isUserMessage": false,
+          "citation": "Aaron Wilson on April 28, 2025, and April 24, 2025",
+          "createdAt": "2025-04-29T15:54:43.935Z"
         }
       ],
-      "summaries": [],
+      "summaries": [
+        {
+          "id": 2,
+          "chatbotId": 22,
+          "content": "<h2>1320 Mayfair - Finance Team – Weekly Summary • Week 2025-W18 – Week Ending April 29, 2025</h2>\n\n<ol>\n  <li><strong>Key Achievements</strong>\n    <ul>\n      <li>Eric's HVAC team began preparation of AC units.</li>\n      <li>Drywall team completed sanding and ceiling finishing.</li>\n      <li>Pavers were delivered and gravel installation scheduled.</li>\n      <li>Arturo installed handrails.</li>\n      <li>Driveway preparation is in progress.</li>\n      <li>30-yard dumpster final scheduled for pick-up.</li>\n    </ul>\n  </li>\n  <li><strong>Issues or Blockers</strong>\n    <ul>\n      <li>Pending arrival of sliding door materials.</li>\n      <li>Pending ETA on registers.</li>\n      <li>Awaiting exterior 3\" cans for Max.</li>\n    </ul>\n  </li>\n  <li><strong>Upcoming Work</strong>\n    <ul>\n      <li>Electrical trim scheduled for Saturday and Monday.</li>\n      <li>Countertop and backsplash templating scheduled for Friday.</li>\n      <li>Raul to finish template work by end of the week.</li>\n    </ul>\n  </li>\n  <li><strong>Action Items</strong>\n    <ul>\n      <li>Follow up with Rick for garage door quote and selections.</li>\n      <li>Relocate camera to 2387 Poplar.</li>\n      <li>Schedule Raul to add shelves and template next week.</li>\n    </ul>\n  </li>\n</ol>",
+          "week": "2025-W18",
+          "sentAt": "2025-04-29T16:02:08.545Z"
+        },
+        {
+          "id": 1,
+          "chatbotId": 22,
+          "content": "```html\n<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>1320 Mayfair - Finance Team Weekly Summary</title>\n</head>\n<body>\n    <h1>1320 Mayfair - Finance Team Weekly Summary</h1>\n    <h2>Week Ending: [Insert Date]</h2>\n\n    <section>\n        <h3>1) Key Achievements</h3>\n        <ul>\n            <li>Drywall team completed sanding and ceiling imperfections.</li>\n            <li>Eric's HVAC team prepared AC units for the home.</li>\n            <li>Pavers were delivered and driveway prep is in progress.</li>\n            <li>Arturo installed handrails.</li>\n            <li>Templating scheduled for countertops and backsplash on Friday.</li>\n            <li>30-yard final dumpster scheduled for pickup tomorrow.</li>\n        </ul>\n    </section>\n\n    <section>\n        <h3>2) Issues or Blockers</h3>\n        <ul>\n            <li>Pending arrival of sliding door materials and registers.</li>\n            <li>Awaiting arrival of exterior 3\" cans for Max's trim out.</li>\n            <li>Need confirmation on limewash order status.</li>\n            <li>Basement floor platform completion status is unclear.</li>\n        </ul>\n    </section>\n\n    <section>\n        <h3>3) Upcoming Work</h3>\n        <ul>\n            <li>Gravel installation scheduled for tomorrow.</li>\n            <li>Electrical trim to continue on Saturday and Monday.</li>\n            <li>Raul to add shelves for template scheduling next week.</li>\n            <li>Backfill and grading of the front yard to be completed.</li>\n        </ul>\n    </section>\n\n    <section>\n        <h3>4) Action Items</h3>\n        <ul>\n            <li>Follow up with Rick on garage door quote and selections.</li>\n            <li>Confirm ETA for sliding door materials and registers.</li>\n            <li>Schedule Raul to finish template work by the end of the week.</li>\n            <li>Relocate camera to 2387 Poplar.</li>\n        </ul>\n    </section>\n</body>\n</html>\n```",
+          "week": "2025-W18",
+          "sentAt": "2025-04-29T15:56:09.299Z"
+        }
+      ],
       "emailRecipients": [],
       "asanaProjects": [
         {
@@ -264,6 +297,6 @@
       ]
     }
   ],
-  "exportedAt": "2025-04-29T15:52:43.678Z",
+  "exportedAt": "2025-04-29T16:04:39.826Z",
   "exportedBy": "SPH Chat Migration Utility"
 }
