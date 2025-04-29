@@ -222,6 +222,24 @@
           "isUserMessage": false,
           "citation": "Aaron Wilson on April 10, 2025",
           "createdAt": "2025-04-29T15:17:56.182Z"
+        },
+        {
+          "id": 71,
+          "chatbotId": 22,
+          "userId": null,
+          "content": "how much did we spend on exterior doors?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-04-29T15:43:22.401Z"
+        },
+        {
+          "id": 72,
+          "chatbotId": 22,
+          "userId": null,
+          "content": "The actual cost spent on Windows & Exterior Doors, which includes exterior doors, is $63,170.58 according to the \"Budget.xlsx, 1320 Mayfair\" tab.",
+          "isUserMessage": false,
+          "citation": "the \"Budget",
+          "createdAt": "2025-04-29T15:43:29.650Z"
         }
       ],
       "summaries": [],
@@ -246,6 +264,6 @@
       ]
     }
   ],
-  "exportedAt": "2025-04-29T15:28:14.262Z",
+  "exportedAt": "2025-04-29T15:47:51.695Z",
   "exportedBy": "SPH Chat Migration Utility"
 }

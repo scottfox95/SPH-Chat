@@ -144,15 +144,26 @@ export async function getChatbotResponse(
 // Function to generate weekly summary
 export async function generateWeeklySummary(slackMessages: string[], projectName: string) {
   try {
+    // Get the settings
+    const settings = await getSettings();
+    
     // Get the model from settings
-    const model = await getCurrentModel();
+    const model = settings?.openaiModel || "gpt-4o";
+    
+    // Use custom summary prompt if available, otherwise use the default
+    const defaultSummaryPrompt = `You are an expert construction project manager. Create a concise weekly summary of activity for the ${projectName} homebuilding project based on Slack channel messages. Focus on key decisions, progress updates, issues, and upcoming milestones. Format the summary in HTML with sections for: 1) Key Achievements, 2) Issues or Blockers, 3) Upcoming Work, and 4) Action Items. Keep it professional and informative.`;
+    
+    // Use custom prompt from settings if available, replacing {{projectName}} with the actual project name
+    const summaryPrompt = settings?.summaryPrompt 
+      ? settings.summaryPrompt.replace(/{{projectName}}/g, projectName)
+      : defaultSummaryPrompt;
     
     const response = await openai.chat.completions.create({
-      model, // Use model from settings
+      model,
       messages: [
         {
           role: "system",
-          content: `You are an expert construction project manager. Create a concise weekly summary of activity for the ${projectName} homebuilding project based on Slack channel messages. Focus on key decisions, progress updates, issues, and upcoming milestones. Format the summary in HTML with sections for: 1) Key Achievements, 2) Issues or Blockers, 3) Upcoming Work, and 4) Action Items. Keep it professional and informative.`,
+          content: summaryPrompt,
         },
         {
           role: "user",

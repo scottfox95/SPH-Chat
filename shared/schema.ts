@@ -104,6 +104,7 @@ export const settings = pgTable("settings", {
   includeDateInSource: boolean("include_date_in_source").notNull().default(false),
   includeUserInSource: boolean("include_user_in_source").notNull().default(false),
   responseTemplate: text("response_template"),
+  summaryPrompt: text("summary_prompt"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
@@ -181,6 +182,7 @@ export const insertSettingsSchema = createInsertSchema(settings).pick({
   includeDateInSource: true,
   includeUserInSource: true,
   responseTemplate: true,
+  summaryPrompt: true,
 });
 
 export const updateSettingsSchema = createInsertSchema(settings).pick({
@@ -189,6 +191,7 @@ export const updateSettingsSchema = createInsertSchema(settings).pick({
   includeDateInSource: true,
   includeUserInSource: true,
   responseTemplate: true,
+  summaryPrompt: true,
 });
 
 export const insertApiTokenSchema = createInsertSchema(apiTokens).pick({
