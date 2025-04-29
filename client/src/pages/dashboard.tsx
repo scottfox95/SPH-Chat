@@ -8,8 +8,12 @@ import { Plus, MessageSquare, FileText, Mail, Loader2 } from "lucide-react";
 import CreateChatbotForm from "@/components/dashboard/create-chatbot-form";
 import ChatbotCard from "@/components/shared/chatbot-card";
 import ShareModal from "@/components/shared/share-modal";
+import { useAuth } from "@/hooks/use-auth";
 
 export default function Dashboard() {
+  const { user } = useAuth();
+  const isAdmin = user?.role === "admin";
+  
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [selectedChatbot, setSelectedChatbot] = useState<any>(null);
   const [shareModalOpen, setShareModalOpen] = useState(false);
@@ -84,13 +88,15 @@ export default function Dashboard() {
             <h1 className="text-xl font-semibold">Dashboard</h1>
             <p className="text-sm text-gray-500">Manage your SPH ChatBot assistants</p>
           </div>
-          <Button 
-            onClick={() => setCreateModalOpen(true)}
-            className="bg-[#D2B48C] hover:bg-[#D2B48C]/90"
-          >
-            <Plus className="h-4 w-4 mr-2" />
-            New Chatbot
-          </Button>
+          {isAdmin && (
+            <Button 
+              onClick={() => setCreateModalOpen(true)}
+              className="bg-[#D2B48C] hover:bg-[#D2B48C]/90"
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              New Chatbot
+            </Button>
+          )}
         </div>
       </header>
       
@@ -179,15 +185,19 @@ export default function Dashboard() {
                   <MessageSquare className="h-10 w-10 text-gray-400 mb-3" />
                   <h3 className="text-lg font-medium">No active projects</h3>
                   <p className="text-sm text-gray-500 mt-1">
-                    Start by creating a new SPH ChatBot for your project.
+                    {isAdmin 
+                      ? "Start by creating a new SPH ChatBot for your project."
+                      : "No active projects are available for you at this time."}
                   </p>
-                  <Button 
-                    onClick={() => setCreateModalOpen(true)}
-                    className="mt-4 bg-[#D2B48C] hover:bg-[#D2B48C]/90"
-                  >
-                    <Plus className="h-4 w-4 mr-2" />
-                    Create New Chatbot
-                  </Button>
+                  {isAdmin && (
+                    <Button 
+                      onClick={() => setCreateModalOpen(true)}
+                      className="mt-4 bg-[#D2B48C] hover:bg-[#D2B48C]/90"
+                    >
+                      <Plus className="h-4 w-4 mr-2" />
+                      Create New Chatbot
+                    </Button>
+                  )}
                 </CardContent>
               </Card>
             )}
@@ -210,15 +220,19 @@ export default function Dashboard() {
                   <MessageSquare className="h-10 w-10 text-gray-400 mb-3" />
                   <h3 className="text-lg font-medium">No projects found</h3>
                   <p className="text-sm text-gray-500 mt-1">
-                    Create your first SPH ChatBot to get started.
+                    {isAdmin 
+                      ? "Create your first SPH ChatBot to get started."
+                      : "No projects are available for you at this time."}
                   </p>
-                  <Button 
-                    onClick={() => setCreateModalOpen(true)}
-                    className="mt-4 bg-[#D2B48C] hover:bg-[#D2B48C]/90"
-                  >
-                    <Plus className="h-4 w-4 mr-2" />
-                    Create New Chatbot
-                  </Button>
+                  {isAdmin && (
+                    <Button 
+                      onClick={() => setCreateModalOpen(true)}
+                      className="mt-4 bg-[#D2B48C] hover:bg-[#D2B48C]/90"
+                    >
+                      <Plus className="h-4 w-4 mr-2" />
+                      Create New Chatbot
+                    </Button>
+                  )}
                 </CardContent>
               </Card>
             )}
