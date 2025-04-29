@@ -83,6 +83,13 @@ const userFormSchema = z.object({
 
 type UserFormValues = z.infer<typeof userFormSchema>;
 
+// Project assignment form schema
+const projectAssignmentSchema = z.object({
+  projectId: z.string().min(1, "Please select a project"),
+});
+
+type ProjectAssignmentFormValues = z.infer<typeof projectAssignmentSchema>;
+
 export default function UserManagement() {
   const { toast } = useToast();
   const { user } = useAuth();
@@ -90,7 +97,10 @@ export default function UserManagement() {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [isProjectAssignOpen, setIsProjectAssignOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [userProjects, setUserProjects] = useState<UserProject[]>([]);
+  const [assignedProjects, setAssignedProjects] = useState<Project[]>([]);
 
   // Redirect if not an admin
   if (user && user.role !== "admin") {
@@ -100,8 +110,8 @@ export default function UserManagement() {
   // Fetch users
   const {
     data: users,
-    isLoading,
-    error,
+    isLoading: isLoadingUsers,
+    error: usersError,
   } = useQuery<User[]>({
     queryKey: ["/api/users"],
     refetchOnWindowFocus: false,
@@ -115,6 +125,59 @@ export default function UserManagement() {
       return res.json();
     },
   });
+  
+  // Fetch all projects
+  const {
+    data: projects,
+    isLoading: isLoadingProjects,
+    error: projectsError
+  } = useQuery<Project[]>({
+    queryKey: ["/api/projects"],
+    refetchOnWindowFocus: false,
+    queryFn: async () => {
+      const res = await fetch("/api/projects", {
+        credentials: "include",
+      });
+      if (!res.ok) {
+        throw new Error(`Failed to fetch projects: ${res.statusText}`);
+      }
+      return res.json();
+    },
+  });
+  
+  // Fetch user's project assignments when a user is selected
+  const {
+    data: userProjectAssignments,
+    isLoading: isLoadingAssignments,
+    refetch: refetchUserProjects
+  } = useQuery<UserProject[]>({
+    queryKey: ["/api/users", selectedUser?.id, "projects"],
+    enabled: !!selectedUser,
+    queryFn: async () => {
+      if (!selectedUser) return [];
+      const res = await fetch(`/api/users/${selectedUser.id}/projects`, {
+        credentials: "include",
+      });
+      if (!res.ok) {
+        throw new Error(`Failed to fetch user projects: ${res.statusText}`);
+      }
+      return res.json();
+    }
+  });
+  
+  // Update local state when user project assignments change
+  useEffect(() => {
+    if (userProjectAssignments && projects) {
+      setUserProjects(userProjectAssignments);
+      
+      // Map project assignments to actual project objects
+      const projectMap = new Map(projects.map((p: Project) => [p.id, p]));
+      const assignedProjectsList = userProjectAssignments
+        .map((up: UserProject) => projectMap.get(up.projectId))
+        .filter((p): p is Project => !!p);
+      setAssignedProjects(assignedProjectsList);
+    }
+  }, [userProjectAssignments, projects]);
 
   // Create user mutation
   const createUserMutation = useMutation({
@@ -265,6 +328,91 @@ export default function UserManagement() {
     }
   };
 
+  // Create project assignment form
+  const projectAssignmentForm = useForm<ProjectAssignmentFormValues>({
+    resolver: zodResolver(projectAssignmentSchema),
+    defaultValues: {
+      projectId: "",
+    },
+  });
+  
+  // Create mutation for assigning a project to a user
+  const assignProjectMutation = useMutation({
+    mutationFn: async ({ userId, projectId }: { userId: number; projectId: number }) => {
+      const res = await apiRequest("POST", `/api/users/${userId}/projects`, { projectId });
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message || "Failed to assign project");
+      }
+      return await res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/users", selectedUser?.id, "projects"] });
+      toast({
+        title: "Project assigned",
+        description: "The project has been assigned to the user successfully",
+      });
+      // Reset the form
+      projectAssignmentForm.reset();
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+  
+  // Create mutation for removing a project assignment from a user
+  const removeProjectAssignmentMutation = useMutation({
+    mutationFn: async ({ userId, projectId }: { userId: number; projectId: number }) => {
+      const res = await apiRequest("DELETE", `/api/users/${userId}/projects/${projectId}`);
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message || "Failed to remove project assignment");
+      }
+      return await res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/users", selectedUser?.id, "projects"] });
+      toast({
+        title: "Project removed",
+        description: "The project has been removed from the user successfully",
+      });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+  
+  // Handle project assignment form submission
+  const onProjectAssignSubmit = (data: ProjectAssignmentFormValues) => {
+    if (selectedUser && data.projectId) {
+      assignProjectMutation.mutate({ 
+        userId: selectedUser.id, 
+        projectId: parseInt(data.projectId) 
+      });
+    }
+  };
+  
+  // Handle removing a project assignment
+  const handleRemoveProjectAssignment = (projectId: number) => {
+    if (selectedUser) {
+      removeProjectAssignmentMutation.mutate({
+        userId: selectedUser.id,
+        projectId
+      });
+    }
+  };
+
+  const isLoading = isLoadingUsers || isLoadingProjects;
+  const error = usersError || projectsError;
+
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
@@ -277,7 +425,7 @@ export default function UserManagement() {
     return (
       <div className="p-4">
         <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4">
-          <p>Error loading users: {(error as Error).message}</p>
+          <p>Error: {(error as Error).message}</p>
         </div>
       </div>
     );
@@ -445,6 +593,18 @@ export default function UserManagement() {
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end space-x-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          setSelectedUser(user);
+                          setIsProjectAssignOpen(true);
+                          // Fetch user projects when opening the dialog
+                          refetchUserProjects();
+                        }}
+                      >
+                        <Briefcase className="h-4 w-4" />
+                      </Button>
                       <Button
                         variant="outline"
                         size="sm"
@@ -627,6 +787,115 @@ export default function UserManagement() {
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               )}
               Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      
+      {/* Project Assignment Dialog */}
+      <Dialog open={isProjectAssignOpen} onOpenChange={setIsProjectAssignOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Project Assignments</DialogTitle>
+            <DialogDescription>
+              Manage which projects "{selectedUser?.displayName}" has access to.
+            </DialogDescription>
+          </DialogHeader>
+          
+          {/* Add new project assignment */}
+          <div className="mb-5">
+            <h3 className="text-sm font-medium mb-3">Assign New Project</h3>
+            <Form {...projectAssignmentForm}>
+              <form onSubmit={projectAssignmentForm.handleSubmit(onProjectAssignSubmit)} className="flex space-x-2">
+                <div className="flex-grow">
+                  <FormField
+                    control={projectAssignmentForm.control}
+                    name="projectId"
+                    render={({ field }) => (
+                      <FormItem>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select a project" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {projects && projects
+                              .filter(project => !assignedProjects.some(ap => ap.id === project.id))
+                              .map(project => (
+                                <SelectItem key={project.id} value={project.id.toString()}>
+                                  {project.name}
+                                </SelectItem>
+                              ))
+                            }
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <Button
+                  type="submit"
+                  disabled={assignProjectMutation.isPending}
+                >
+                  {assignProjectMutation.isPending ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <PlusCircle className="mr-2 h-4 w-4" />
+                  )}
+                  Assign
+                </Button>
+              </form>
+            </Form>
+          </div>
+          
+          {/* Current project assignments */}
+          <div>
+            <h3 className="text-sm font-medium mb-3">Current Project Assignments</h3>
+            {isLoadingAssignments ? (
+              <div className="py-4 text-center">
+                <Loader2 className="h-6 w-6 animate-spin mx-auto" />
+              </div>
+            ) : assignedProjects.length === 0 ? (
+              <div className="bg-gray-50 rounded-md p-4 text-sm text-gray-600 text-center">
+                User is not assigned to any projects
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {assignedProjects.map(project => (
+                  <div key={project.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-md">
+                    <div>
+                      <div className="font-medium">{project.name}</div>
+                      <div className="text-xs text-gray-500 mt-1">{project.description || "No description"}</div>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleRemoveProjectAssignment(project.id)}
+                      disabled={removeProjectAssignmentMutation.isPending}
+                    >
+                      {removeProjectAssignmentMutation.isPending ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <Trash2 className="h-4 w-4 text-red-500" />
+                      )}
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+          
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setIsProjectAssignOpen(false)}
+            >
+              Close
             </Button>
           </DialogFooter>
         </DialogContent>
