@@ -2,7 +2,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "wouter";
-import { Folder, FileText, MoreHorizontal, FolderPlus } from "lucide-react";
+import { Folder, FileText, MoreHorizontal } from "lucide-react";
 import { format } from "date-fns";
 import {
   DropdownMenu,
@@ -77,17 +77,11 @@ export default function ProjectCard({
           </p>
         </div>
       </CardContent>
-      <CardFooter className="flex justify-between pt-2">
+      <CardFooter className="flex justify-start pt-2">
         <Link href={`/projects/${project.id}`}>
           <Button variant="outline" size="sm">
             <Folder className="h-4 w-4 mr-2" />
             View Project
-          </Button>
-        </Link>
-        <Link href={`/projects/${project.id}/new-chatbot`}>
-          <Button size="sm" className="bg-[#D2B48C] hover:bg-[#D2B48C]/90">
-            <FolderPlus className="h-4 w-4 mr-2" />
-            Add Chatbot
           </Button>
         </Link>
       </CardFooter>
