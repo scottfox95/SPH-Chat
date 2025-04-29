@@ -289,6 +289,104 @@ export class MemStorage implements IStorage {
       .map(chatbot => this.ensureChatbotFieldBackwardCompatibility(chatbot));
   }
   
+  // User-Project assignment methods
+  async getUserProjects(userId: number): Promise<UserProject[]> {
+    return Array.from(this.userProjects.values())
+      .filter(userProject => userProject.userId === userId);
+  }
+  
+  async getProjectUsers(projectId: number): Promise<User[]> {
+    const userProjectAssignments = Array.from(this.userProjects.values())
+      .filter(userProject => userProject.projectId === projectId);
+    
+    const userIds = userProjectAssignments.map(assignment => assignment.userId);
+    const users = Array.from(this.users.values())
+      .filter(user => userIds.includes(user.id));
+    
+    return users;
+  }
+  
+  async assignUserToProject(userId: number, projectId: number): Promise<UserProject> {
+    // Check if user exists
+    const user = await this.getUser(userId);
+    if (!user) {
+      throw new Error(`User with ID ${userId} not found`);
+    }
+    
+    // Check if project exists
+    const project = await this.getProject(projectId);
+    if (!project) {
+      throw new Error(`Project with ID ${projectId} not found`);
+    }
+    
+    // Check if assignment already exists
+    const existingAssignment = Array.from(this.userProjects.values()).find(
+      up => up.userId === userId && up.projectId === projectId
+    );
+    
+    if (existingAssignment) {
+      return existingAssignment;
+    }
+    
+    // Create new assignment
+    const id = this.currentUserProjectId++;
+    const now = new Date();
+    
+    const userProject: UserProject = {
+      id,
+      userId,
+      projectId,
+      createdAt: now
+    };
+    
+    this.userProjects.set(id, userProject);
+    return userProject;
+  }
+  
+  async removeUserFromProject(userId: number, projectId: number): Promise<boolean> {
+    const assignment = Array.from(this.userProjects.entries()).find(
+      ([_, up]) => up.userId === userId && up.projectId === projectId
+    );
+    
+    if (!assignment) {
+      return false;
+    }
+    
+    const [id, _] = assignment;
+    return this.userProjects.delete(id);
+  }
+  
+  async getUserAccessibleProjects(userId: number): Promise<Project[]> {
+    // Admin users can access all projects
+    const user = await this.getUser(userId);
+    if (user?.role === "admin") {
+      return this.getProjects();
+    }
+    
+    // Regular users can only access projects they're assigned to
+    const userProjects = await this.getUserProjects(userId);
+    const projectIds = userProjects.map(up => up.projectId);
+    
+    return Array.from(this.projects.values())
+      .filter(project => projectIds.includes(project.id));
+  }
+  
+  async getUserAccessibleChatbots(userId: number): Promise<Chatbot[]> {
+    // Admin users can access all chatbots
+    const user = await this.getUser(userId);
+    if (user?.role === "admin") {
+      return this.getChatbots();
+    }
+    
+    // Regular users can only access chatbots from projects they're assigned to
+    const userProjects = await this.getUserProjects(userId);
+    const projectIds = userProjects.map(up => up.projectId);
+    
+    return Array.from(this.chatbots.values())
+      .filter(chatbot => chatbot.projectId !== null && projectIds.includes(chatbot.projectId))
+      .map(chatbot => this.ensureChatbotFieldBackwardCompatibility(chatbot));
+  }
+  
   // Chatbot methods
   async getChatbots(): Promise<Chatbot[]> {
     const chatbots = Array.from(this.chatbots.values());
@@ -793,6 +891,135 @@ export class DatabaseStorage implements IStorage {
       return await db.select().from(chatbots).where(eq(chatbots.projectId, projectId));
     } catch (error) {
       console.error(`Failed to get chatbots for project with id ${projectId}:`, error);
+      return [];
+    }
+  }
+  
+  // User-Project assignment methods
+  async getUserProjects(userId: number): Promise<UserProject[]> {
+    try {
+      return await db.select().from(userProjects).where(eq(userProjects.userId, userId));
+    } catch (error) {
+      console.error(`Failed to get user projects for user with id ${userId}:`, error);
+      return [];
+    }
+  }
+  
+  async getProjectUsers(projectId: number): Promise<User[]> {
+    try {
+      // Get all user-project assignments for this project
+      const assignments = await db.select().from(userProjects).where(eq(userProjects.projectId, projectId));
+      
+      if (assignments.length === 0) {
+        return [];
+      }
+      
+      // Get all users that are assigned to this project
+      const userIds = assignments.map(assignment => assignment.userId);
+      return await db.select().from(users).where(sql`${users.id} IN (${userIds.join(',')})`);
+    } catch (error) {
+      console.error(`Failed to get users for project with id ${projectId}:`, error);
+      return [];
+    }
+  }
+  
+  async assignUserToProject(userId: number, projectId: number): Promise<UserProject> {
+    try {
+      // Check if user exists
+      const user = await this.getUser(userId);
+      if (!user) {
+        throw new Error(`User with ID ${userId} not found`);
+      }
+      
+      // Check if project exists
+      const project = await this.getProject(projectId);
+      if (!project) {
+        throw new Error(`Project with ID ${projectId} not found`);
+      }
+      
+      // Check if assignment already exists
+      const existingAssignments = await db.select().from(userProjects).where(
+        and(
+          eq(userProjects.userId, userId),
+          eq(userProjects.projectId, projectId)
+        )
+      );
+      
+      if (existingAssignments.length > 0) {
+        return existingAssignments[0];
+      }
+      
+      // Create new assignment
+      const [assignment] = await db.insert(userProjects).values({
+        userId,
+        projectId
+      }).returning();
+      
+      return assignment;
+    } catch (error) {
+      console.error(`Failed to assign user ${userId} to project ${projectId}:`, error);
+      throw error;
+    }
+  }
+  
+  async removeUserFromProject(userId: number, projectId: number): Promise<boolean> {
+    try {
+      const result = await db.delete(userProjects).where(
+        and(
+          eq(userProjects.userId, userId),
+          eq(userProjects.projectId, projectId)
+        )
+      );
+      
+      return true;
+    } catch (error) {
+      console.error(`Failed to remove user ${userId} from project ${projectId}:`, error);
+      return false;
+    }
+  }
+  
+  async getUserAccessibleProjects(userId: number): Promise<Project[]> {
+    try {
+      // Admin users can access all projects
+      const user = await this.getUser(userId);
+      if (user?.role === "admin") {
+        return this.getProjects();
+      }
+      
+      // Regular users can only access projects they're assigned to
+      const assignments = await db.select().from(userProjects).where(eq(userProjects.userId, userId));
+      
+      if (assignments.length === 0) {
+        return [];
+      }
+      
+      const projectIds = assignments.map(assignment => assignment.projectId);
+      return await db.select().from(projects).where(sql`${projects.id} IN (${projectIds.join(',')})`);
+    } catch (error) {
+      console.error(`Failed to get accessible projects for user with id ${userId}:`, error);
+      return [];
+    }
+  }
+  
+  async getUserAccessibleChatbots(userId: number): Promise<Chatbot[]> {
+    try {
+      // Admin users can access all chatbots
+      const user = await this.getUser(userId);
+      if (user?.role === "admin") {
+        return this.getChatbots();
+      }
+      
+      // Regular users can only access chatbots from projects they're assigned to
+      const assignments = await db.select().from(userProjects).where(eq(userProjects.userId, userId));
+      
+      if (assignments.length === 0) {
+        return [];
+      }
+      
+      const projectIds = assignments.map(assignment => assignment.projectId);
+      return await db.select().from(chatbots).where(sql`${chatbots.projectId} IN (${projectIds.join(',')}) AND ${chatbots.projectId} IS NOT NULL`);
+    } catch (error) {
+      console.error(`Failed to get accessible chatbots for user with id ${userId}:`, error);
       return [];
     }
   }
