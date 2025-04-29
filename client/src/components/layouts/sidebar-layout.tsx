@@ -133,18 +133,20 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
             <ClipboardList className="h-5 w-5 mr-2" />
             Weekly Summaries
           </a>
-          <a 
-            href="/knowledge-base"
-            className={cn(
-              "flex items-center px-3 py-2 text-sm font-medium rounded-xl",
-              location === "/knowledge-base"
-                ? "bg-[#D2B48C] bg-opacity-10 text-[#D2B48C]"
-                : "text-gray-600 hover:bg-gray-100"
-            )}
-          >
-            <Database className="h-5 w-5 mr-2" />
-            Knowledge Base
-          </a>
+          {user?.role === "admin" && (
+            <a 
+              href="/knowledge-base"
+              className={cn(
+                "flex items-center px-3 py-2 text-sm font-medium rounded-xl",
+                location === "/knowledge-base"
+                  ? "bg-[#D2B48C] bg-opacity-10 text-[#D2B48C]"
+                  : "text-gray-600 hover:bg-gray-100"
+              )}
+            >
+              <Database className="h-5 w-5 mr-2" />
+              Knowledge Base
+            </a>
+          )}
           <a 
             href="/projects"
             className={cn(
@@ -157,18 +159,20 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
             <FolderTree className="h-5 w-5 mr-2" />
             Projects
           </a>
-          <a 
-            href="/settings"
-            className={cn(
-              "flex items-center px-3 py-2 text-sm font-medium rounded-xl",
-              location === "/settings"
-                ? "bg-[#D2B48C] bg-opacity-10 text-[#D2B48C]"
-                : "text-gray-600 hover:bg-gray-100"
-            )}
-          >
-            <Settings className="h-5 w-5 mr-2" />
-            Settings
-          </a>
+          {user?.role === "admin" && (
+            <a 
+              href="/settings"
+              className={cn(
+                "flex items-center px-3 py-2 text-sm font-medium rounded-xl",
+                location === "/settings"
+                  ? "bg-[#D2B48C] bg-opacity-10 text-[#D2B48C]"
+                  : "text-gray-600 hover:bg-gray-100"
+              )}
+            >
+              <Settings className="h-5 w-5 mr-2" />
+              Settings
+            </a>
+          )}
           {user?.role === "admin" && (
             <a 
               href="/users"

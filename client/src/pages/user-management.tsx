@@ -3,7 +3,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useAuth } from "@/hooks/use-auth";
-import { Loader2, PlusCircle, Pencil, Trash2 } from "lucide-react";
+import { Loader2, PlusCircle, Pencil, Trash2, Briefcase } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -51,6 +51,23 @@ interface User {
   displayName: string;
   initial: string;
   role: string;
+}
+
+// Define project type
+interface Project {
+  id: number;
+  name: string;
+  description: string | null;
+  createdById: number;
+  createdAt: string;
+}
+
+// Define user-project assignment type
+interface UserProject {
+  id: number;
+  userId: number;
+  projectId: number;
+  createdAt: string;
 }
 
 // Form schema for creating/editing users
