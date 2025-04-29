@@ -1,7 +1,8 @@
 /**
  * Migration script to add system_prompt column to chatbots table
  */
-const { Pool } = require('pg');
+import pg from 'pg';
+const { Pool } = pg;
 
 async function run() {
   // Create a connection to the database
