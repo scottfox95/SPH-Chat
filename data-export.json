@@ -31,6 +31,14 @@
       "displayName": "Taka",
       "role": "user",
       "initial": "TS"
+    },
+    {
+      "id": 11,
+      "username": "Bree",
+      "password": "d305f08d33e3ac98b4bc8ffc375a548eadfe501afcaf67d3e280984685ea3247b1b5af055b1b31ed5e8dbb128ce5079ee77486d0caa9d5d1cc3a2b1dca705b4b.e120237269856cbb8320ab54259c32f6",
+      "displayName": "Bree",
+      "role": "user",
+      "initial": "BR"
     }
   ],
   "chatbots": [
@@ -306,63 +314,6 @@
     },
     {
       "chatbot": {
-        "id": 23,
-        "name": "1320 Mayfair - PM",
-        "slackChannelId": "C06S1QZU9N2",
-        "asanaProjectId": null,
-        "asanaConnectionId": null,
-        "createdById": 4,
-        "projectId": 2,
-        "publicToken": "4cfd9240-5c65-4dcb-a1e2-61747b36afb4",
-        "isActive": true,
-        "requireAuth": false,
-        "createdAt": "2025-04-29T16:41:09.245Z"
-      },
-      "documents": [],
-      "messages": [],
-      "summaries": [
-        {
-          "id": 3,
-          "chatbotId": 23,
-          "content": "<h2>1320 Mayfair - PM – Weekly Summary • Week 2025-W18 – Week Ending April 29, 2025</h2>\n\n<ol>\n  <li><strong>Key Achievements</strong>\n    <ul>\n      <li>Drywall team completed sanding and ceiling imperfections.</li>\n      <li>Pavers were delivered and gravel installation scheduled.</li>\n      <li>HVAC team prepared AC units for the home.</li>\n      <li>Arturo installed handrails.</li>\n      <li>Templating scheduled for countertops and backsplash.</li>\n    </ul>\n  </li>\n  <li><strong>Issues or Blockers</strong>\n    <ul>\n      <li>Pending arrival of sliding door materials and Dekton slabs.</li>\n      <li>ETA on registers remains pending.</li>\n    </ul>\n  </li>\n  <li><strong>Upcoming Work</strong>\n    <ul>\n      <li>Electrical trim to continue on Saturday and Monday.</li>\n      <li>Gravel installation and paver work scheduled for next week.</li>\n      <li>Raul to finish template work before the end of the week.</li>\n      <li>30-yard dumpster final pick-up scheduled for tomorrow.</li>\n    </ul>\n  </li>\n  <li><strong>Action Items</strong>\n    <ul>\n      <li>Follow up with Brendan regarding Dekton slab delivery.</li>\n      <li>Rick to provide garage door quote and selections.</li>\n      <li>Raul to add shelves to schedule templating.</li>\n      <li>Relocate camera to 2387 Poplar.</li>\n    </ul>\n  </li>\n</ol>",
-          "week": "2025-W18",
-          "sentAt": "2025-04-29T16:52:12.880Z"
-        }
-      ],
-      "emailRecipients": [],
-      "asanaProjects": []
-    },
-    {
-      "chatbot": {
-        "id": 24,
-        "name": "160 Black Ankle - PM",
-        "slackChannelId": "C06KA1D1XMW",
-        "asanaProjectId": null,
-        "asanaConnectionId": null,
-        "createdById": 4,
-        "projectId": 2,
-        "publicToken": "794864bd-5c6f-4a60-a3e2-a42795d65132",
-        "isActive": true,
-        "requireAuth": false,
-        "createdAt": "2025-04-29T17:11:20.606Z"
-      },
-      "documents": [],
-      "messages": [],
-      "summaries": [],
-      "emailRecipients": [],
-      "asanaProjects": [
-        {
-          "id": 7,
-          "chatbotId": 24,
-          "asanaProjectId": "1207037289752410",
-          "projectName": "160 Black Ankle ",
-          "projectType": "permit",
-          "createdAt": "2025-04-29T17:16:08.369Z"
-        }
-      ]
-    },
-    {
-      "chatbot": {
         "id": 25,
         "name": "2387 Poplar",
         "slackChannelId": "C07EQM13CM9",
@@ -376,17 +327,44 @@
         "createdAt": "2025-04-29T17:17:36.903Z"
       },
       "documents": [],
-      "messages": [],
+      "messages": [
+        {
+          "id": 99,
+          "chatbotId": 25,
+          "userId": null,
+          "content": "Has sliding doors been ordered here?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-04-29T18:29:52.690Z"
+        },
+        {
+          "id": 100,
+          "chatbotId": 25,
+          "userId": null,
+          "content": "Yes, the sliding doors have been ordered for the 2387 Poplar project. This was confirmed by Taka Shigematsu in a Slack message on March 31, 2025, where it was stated that the \"Window Package, Sliders, & Front Door has been ordered here\" according to Taka Shigematsu on 2025-03-31 16:44 ET.",
+          "isUserMessage": false,
+          "citation": "Taka Shigematsu on 2025-03-31 16:44 ET",
+          "createdAt": "2025-04-29T18:29:55.595Z"
+        }
+      ],
       "summaries": [],
       "emailRecipients": [],
       "asanaProjects": [
         {
-          "id": 8,
+          "id": 9,
+          "chatbotId": 25,
+          "asanaProjectId": "1209669583676663",
+          "projectName": "2387 Poplar Springs",
+          "projectType": "main",
+          "createdAt": "2025-04-29T17:28:50.293Z"
+        },
+        {
+          "id": 10,
           "chatbotId": 25,
           "asanaProjectId": "1208215403488332",
           "projectName": "2387 Poplar Springs",
-          "projectType": "main",
-          "createdAt": "2025-04-29T17:18:16.300Z"
+          "projectType": "permit",
+          "createdAt": "2025-04-29T17:29:02.868Z"
         }
       ]
     },
@@ -428,8 +406,646 @@
       "summaries": [],
       "emailRecipients": [],
       "asanaProjects": []
+    },
+    {
+      "chatbot": {
+        "id": 27,
+        "name": "3582 Avocado (FL)",
+        "slackChannelId": "C082DUW3B8T",
+        "asanaProjectId": null,
+        "asanaConnectionId": null,
+        "createdById": 4,
+        "projectId": 2,
+        "publicToken": "23bb19d4-3e0b-4555-a9c3-ab69f6e12cf5",
+        "isActive": true,
+        "requireAuth": false,
+        "createdAt": "2025-04-29T17:27:30.624Z"
+      },
+      "documents": [],
+      "messages": [
+        {
+          "id": 83,
+          "chatbotId": 27,
+          "userId": null,
+          "content": "are utilities in?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-04-29T17:30:03.685Z"
+        },
+        {
+          "id": 84,
+          "chatbotId": 27,
+          "userId": null,
+          "content": "I wasn’t able to find that information in the available project files or messages.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-04-29T17:30:04.587Z"
+        },
+        {
+          "id": 87,
+          "chatbotId": 27,
+          "userId": null,
+          "content": "any updates for this project on slack?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-04-29T17:31:42.800Z"
+        },
+        {
+          "id": 88,
+          "chatbotId": 27,
+          "userId": null,
+          "content": "The recent updates for the 3582 Avocado (FL) project on Slack include several people joining the channel, indicating increased activity or collaboration. Additionally, Yakir Zaken inquired about the status of utility disconnections and power connections, to which Dennis Trepanier confirmed that utilities were disconnected. The channel was also renamed to \"3582-avocado-ave-florida\" by Daniel Zaken, who provided the address for the new spec home in Miami. \n\nThese updates suggest ongoing preparations and coordination for the project, according to messages from Yakir Zaken, Dennis Trepanier, and Daniel Zaken on Slack.",
+          "isUserMessage": false,
+          "citation": "messages from Yakir Zaken, Dennis Trepanier, and Daniel Zaken on Slack",
+          "createdAt": "2025-04-29T17:31:46.893Z"
+        },
+        {
+          "id": 89,
+          "chatbotId": 27,
+          "userId": null,
+          "content": "were utilities disconnected?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-04-29T17:32:10.882Z"
+        },
+        {
+          "id": 90,
+          "chatbotId": 27,
+          "userId": null,
+          "content": "Yes, all utilities were disconnected according to Dennis Trepanier on Slack.",
+          "isUserMessage": false,
+          "citation": "Dennis Trepanier on Slack",
+          "createdAt": "2025-04-29T17:32:11.630Z"
+        }
+      ],
+      "summaries": [],
+      "emailRecipients": [],
+      "asanaProjects": []
+    },
+    {
+      "chatbot": {
+        "id": 28,
+        "name": "9157 Dickens (FL)",
+        "slackChannelId": "C072ZAZ7EJV",
+        "asanaProjectId": null,
+        "asanaConnectionId": null,
+        "createdById": 4,
+        "projectId": 2,
+        "publicToken": "ea84aa9e-89be-491e-8201-d010c0c39051",
+        "isActive": true,
+        "requireAuth": false,
+        "createdAt": "2025-04-29T17:45:34.510Z"
+      },
+      "documents": [],
+      "messages": [],
+      "summaries": [],
+      "emailRecipients": [],
+      "asanaProjects": [
+        {
+          "id": 11,
+          "chatbotId": 28,
+          "asanaProjectId": "1208115310671287",
+          "projectName": "9157 Dickens Ave",
+          "projectType": "permit",
+          "createdAt": "2025-04-29T17:45:57.527Z"
+        }
+      ]
+    },
+    {
+      "chatbot": {
+        "id": 29,
+        "name": "1253 Mayfair",
+        "slackChannelId": "C07EQPNJNCS",
+        "asanaProjectId": null,
+        "asanaConnectionId": null,
+        "createdById": 4,
+        "projectId": 2,
+        "publicToken": "26bc9f36-6648-4114-a89d-870376531868",
+        "isActive": true,
+        "requireAuth": false,
+        "createdAt": "2025-04-29T18:00:29.502Z"
+      },
+      "documents": [],
+      "messages": [],
+      "summaries": [],
+      "emailRecipients": [],
+      "asanaProjects": [
+        {
+          "id": 13,
+          "chatbotId": 29,
+          "asanaProjectId": "1209863598969009",
+          "projectName": "1253 Mayfair ",
+          "projectType": "main",
+          "createdAt": "2025-04-29T18:01:37.214Z"
+        },
+        {
+          "id": 14,
+          "chatbotId": 29,
+          "asanaProjectId": "1208967799301480",
+          "projectName": "1253 Mayfair Drive",
+          "projectType": "permit",
+          "createdAt": "2025-04-29T18:01:47.073Z"
+        }
+      ]
+    },
+    {
+      "chatbot": {
+        "id": 30,
+        "name": "1293 Sylvian",
+        "slackChannelId": "C05SBGY3AM6",
+        "asanaProjectId": null,
+        "asanaConnectionId": null,
+        "createdById": 4,
+        "projectId": 2,
+        "publicToken": "4d63a9a8-83a8-4662-bc7b-54df91d6bd32",
+        "isActive": true,
+        "requireAuth": false,
+        "createdAt": "2025-04-29T18:04:03.241Z"
+      },
+      "documents": [],
+      "messages": [],
+      "summaries": [],
+      "emailRecipients": [],
+      "asanaProjects": [
+        {
+          "id": 15,
+          "chatbotId": 30,
+          "asanaProjectId": "1206970826732717",
+          "projectName": "1293 Sylvan - Matthew & John",
+          "projectType": "main",
+          "createdAt": "2025-04-29T18:04:38.766Z"
+        },
+        {
+          "id": 16,
+          "chatbotId": 30,
+          "asanaProjectId": "1206240887021457",
+          "projectName": "1293 Sylvan Circle",
+          "projectType": "permit",
+          "createdAt": "2025-04-29T18:04:46.789Z"
+        }
+      ]
+    },
+    {
+      "chatbot": {
+        "id": 31,
+        "name": "1857 Wildwood",
+        "slackChannelId": "C05TX1A5H32",
+        "asanaProjectId": null,
+        "asanaConnectionId": null,
+        "createdById": 4,
+        "projectId": 2,
+        "publicToken": "2ce24ee1-e69c-480d-b71f-7b1fc5c86ead",
+        "isActive": true,
+        "requireAuth": false,
+        "createdAt": "2025-04-29T18:05:14.824Z"
+      },
+      "documents": [],
+      "messages": [],
+      "summaries": [],
+      "emailRecipients": [],
+      "asanaProjects": []
+    },
+    {
+      "chatbot": {
+        "id": 32,
+        "name": "195 Pebble",
+        "slackChannelId": "C06DZG3N6SX",
+        "asanaProjectId": null,
+        "asanaConnectionId": null,
+        "createdById": 4,
+        "projectId": 2,
+        "publicToken": "991b6af5-7cf9-41d1-9d93-c6d52fc3f094",
+        "isActive": true,
+        "requireAuth": false,
+        "createdAt": "2025-04-29T18:06:13.742Z"
+      },
+      "documents": [],
+      "messages": [],
+      "summaries": [],
+      "emailRecipients": [],
+      "asanaProjects": [
+        {
+          "id": 17,
+          "chatbotId": 32,
+          "asanaProjectId": "1209732085367546",
+          "projectName": "195 Pebble Trail",
+          "projectType": "main",
+          "createdAt": "2025-04-29T18:06:37.357Z"
+        },
+        {
+          "id": 18,
+          "chatbotId": 32,
+          "asanaProjectId": "1206705756919919",
+          "projectName": "195 Pebble Trail",
+          "projectType": "permit",
+          "createdAt": "2025-04-29T18:06:44.342Z"
+        }
+      ]
+    },
+    {
+      "chatbot": {
+        "id": 24,
+        "name": "160 Black Ankle",
+        "slackChannelId": "C06KA1D1XMW",
+        "asanaProjectId": null,
+        "asanaConnectionId": null,
+        "createdById": 4,
+        "projectId": 2,
+        "publicToken": "794864bd-5c6f-4a60-a3e2-a42795d65132",
+        "isActive": true,
+        "requireAuth": false,
+        "createdAt": "2025-04-29T17:11:20.606Z"
+      },
+      "documents": [],
+      "messages": [
+        {
+          "id": 85,
+          "chatbotId": 24,
+          "userId": null,
+          "content": "was there a delivery today?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-04-29T17:31:10.510Z"
+        },
+        {
+          "id": 86,
+          "chatbotId": 24,
+          "userId": null,
+          "content": "There was a delivery scheduled for today, April 29th, between 12:00 and 17:00. This was a rescheduled delivery from April 28th, as the original appointment could not be met. The delivery is from SAIA, INC, and requires a signature upon arrival, according to Adebaldo Goncalves on April 28, 2025.",
+          "isUserMessage": false,
+          "citation": "Adebaldo Goncalves on April 28, 2025",
+          "createdAt": "2025-04-29T17:31:12.291Z"
+        }
+      ],
+      "summaries": [],
+      "emailRecipients": [],
+      "asanaProjects": [
+        {
+          "id": 7,
+          "chatbotId": 24,
+          "asanaProjectId": "1207037289752410",
+          "projectName": "160 Black Ankle ",
+          "projectType": "permit",
+          "createdAt": "2025-04-29T17:16:08.369Z"
+        }
+      ]
+    },
+    {
+      "chatbot": {
+        "id": 23,
+        "name": "1320 Mayfair",
+        "slackChannelId": "C06S1QZU9N2",
+        "asanaProjectId": null,
+        "asanaConnectionId": null,
+        "createdById": 4,
+        "projectId": 2,
+        "publicToken": "4cfd9240-5c65-4dcb-a1e2-61747b36afb4",
+        "isActive": true,
+        "requireAuth": false,
+        "createdAt": "2025-04-29T16:41:09.245Z"
+      },
+      "documents": [],
+      "messages": [],
+      "summaries": [
+        {
+          "id": 3,
+          "chatbotId": 23,
+          "content": "<h2>1320 Mayfair - PM – Weekly Summary • Week 2025-W18 – Week Ending April 29, 2025</h2>\n\n<ol>\n  <li><strong>Key Achievements</strong>\n    <ul>\n      <li>Drywall team completed sanding and ceiling imperfections.</li>\n      <li>Pavers were delivered and gravel installation scheduled.</li>\n      <li>HVAC team prepared AC units for the home.</li>\n      <li>Arturo installed handrails.</li>\n      <li>Templating scheduled for countertops and backsplash.</li>\n    </ul>\n  </li>\n  <li><strong>Issues or Blockers</strong>\n    <ul>\n      <li>Pending arrival of sliding door materials and Dekton slabs.</li>\n      <li>ETA on registers remains pending.</li>\n    </ul>\n  </li>\n  <li><strong>Upcoming Work</strong>\n    <ul>\n      <li>Electrical trim to continue on Saturday and Monday.</li>\n      <li>Gravel installation and paver work scheduled for next week.</li>\n      <li>Raul to finish template work before the end of the week.</li>\n      <li>30-yard dumpster final pick-up scheduled for tomorrow.</li>\n    </ul>\n  </li>\n  <li><strong>Action Items</strong>\n    <ul>\n      <li>Follow up with Brendan regarding Dekton slab delivery.</li>\n      <li>Rick to provide garage door quote and selections.</li>\n      <li>Raul to add shelves to schedule templating.</li>\n      <li>Relocate camera to 2387 Poplar.</li>\n    </ul>\n  </li>\n</ol>",
+          "week": "2025-W18",
+          "sentAt": "2025-04-29T16:52:12.880Z"
+        }
+      ],
+      "emailRecipients": [],
+      "asanaProjects": []
+    },
+    {
+      "chatbot": {
+        "id": 33,
+        "name": "2383 Poplar",
+        "slackChannelId": "C07F3EB2F5F",
+        "asanaProjectId": null,
+        "asanaConnectionId": null,
+        "createdById": 4,
+        "projectId": 2,
+        "publicToken": "10e3175d-aa53-4dea-b86c-9dbe07820a19",
+        "isActive": true,
+        "requireAuth": false,
+        "createdAt": "2025-04-29T18:07:57.520Z"
+      },
+      "documents": [],
+      "messages": [],
+      "summaries": [],
+      "emailRecipients": [],
+      "asanaProjects": [
+        {
+          "id": 19,
+          "chatbotId": 33,
+          "asanaProjectId": "1208215403489453",
+          "projectName": "2383 Poplar Springs",
+          "projectType": "permit",
+          "createdAt": "2025-04-29T18:08:21.466Z"
+        },
+        {
+          "id": 21,
+          "chatbotId": 33,
+          "asanaProjectId": "1209669583676645",
+          "projectName": "2383 Poplar Springs",
+          "projectType": "main",
+          "createdAt": "2025-04-29T18:08:32.802Z"
+        }
+      ]
+    },
+    {
+      "chatbot": {
+        "id": 34,
+        "name": "2393 Poplar",
+        "slackChannelId": "C07ET96KKKN",
+        "asanaProjectId": null,
+        "asanaConnectionId": null,
+        "createdById": 4,
+        "projectId": 2,
+        "publicToken": "53d7ba50-be33-4631-b807-0327c1b4e0e3",
+        "isActive": true,
+        "requireAuth": false,
+        "createdAt": "2025-04-29T18:09:16.169Z"
+      },
+      "documents": [],
+      "messages": [],
+      "summaries": [],
+      "emailRecipients": [],
+      "asanaProjects": [
+        {
+          "id": 22,
+          "chatbotId": 34,
+          "asanaProjectId": "1208045527919441",
+          "projectName": "2393 Poplar Springs",
+          "projectType": "permit",
+          "createdAt": "2025-04-29T18:09:44.360Z"
+        },
+        {
+          "id": 23,
+          "chatbotId": 34,
+          "asanaProjectId": "1209669585125214",
+          "projectName": "2393 Poplar Springs",
+          "projectType": "main",
+          "createdAt": "2025-04-29T18:09:51.208Z"
+        }
+      ]
+    },
+    {
+      "chatbot": {
+        "id": 35,
+        "name": "4846 Adams",
+        "slackChannelId": "C06AQ1JGN3C",
+        "asanaProjectId": null,
+        "asanaConnectionId": null,
+        "createdById": 4,
+        "projectId": 2,
+        "publicToken": "ab4bf845-aa54-41b9-b307-d2e699ea0c53",
+        "isActive": true,
+        "requireAuth": false,
+        "createdAt": "2025-04-29T18:13:17.185Z"
+      },
+      "documents": [],
+      "messages": [
+        {
+          "id": 97,
+          "chatbotId": 35,
+          "userId": null,
+          "content": "what are the interior paint colors here ",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-04-29T18:28:11.338Z"
+        },
+        {
+          "id": 98,
+          "chatbotId": 35,
+          "userId": null,
+          "content": "I wasn't able to find information about the interior paint colors in the available project files or messages.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-04-29T18:28:12.737Z"
+        }
+      ],
+      "summaries": [],
+      "emailRecipients": [],
+      "asanaProjects": [
+        {
+          "id": 24,
+          "chatbotId": 35,
+          "asanaProjectId": "1208249009003279",
+          "projectName": "4846 Adams Rd",
+          "projectType": "main",
+          "createdAt": "2025-04-29T18:13:40.986Z"
+        },
+        {
+          "id": 25,
+          "chatbotId": 35,
+          "asanaProjectId": "1206288340019391",
+          "projectName": "4846 Adams Drive",
+          "projectType": "permit",
+          "createdAt": "2025-04-29T18:13:50.502Z"
+        }
+      ]
+    },
+    {
+      "chatbot": {
+        "id": 36,
+        "name": "580 Elmwood",
+        "slackChannelId": "C06KA0R8CRE",
+        "asanaProjectId": null,
+        "asanaConnectionId": null,
+        "createdById": 4,
+        "projectId": 2,
+        "publicToken": "e2f34d85-0f8e-42e3-aa89-e7d49f032b13",
+        "isActive": true,
+        "requireAuth": false,
+        "createdAt": "2025-04-29T18:14:34.203Z"
+      },
+      "documents": [],
+      "messages": [
+        {
+          "id": 91,
+          "chatbotId": 36,
+          "userId": null,
+          "content": "is the brick paintable for this project?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-04-29T18:15:32.529Z"
+        },
+        {
+          "id": 92,
+          "chatbotId": 36,
+          "userId": null,
+          "content": "Yes, the brick for this project is paintable, as confirmed by Yakir Zaken on April 29, 2025, at 5:50:16 PM.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-04-29T18:15:34.918Z"
+        }
+      ],
+      "summaries": [
+        {
+          "id": 4,
+          "chatbotId": 36,
+          "content": "<h2>580 Elmwood – Weekly Summary • Week 2025-W18 – Week Ending April 29, 2025</h2>\n\n<ol>\n  <li><strong>Key Achievements</strong>\n    <ul>\n      <li>Windows and rear door installed successfully.</li>\n      <li>Concrete recess for door frame completed.</li>\n      <li>A&amp;G fixed damaged areas of Tyvek replacement.</li>\n      <li>Edgar and Omar installed insulation fire blocking and Tyvek crew addressed exterior penetrations.</li>\n    </ul>\n  </li>\n  <li><strong>Issues or Blockers</strong>\n    <ul>\n      <li>Need confirmation on siding order status.</li>\n      <li>Front door installation pending; requires concrete cutting.</li>\n      <li>Electrician start date is unclear.</li>\n    </ul>\n  </li>\n  <li><strong>Upcoming Work</strong>\n    <ul>\n      <li>Bradley to perform Tyvek inspection.</li>\n      <li>Front door installation and rough electric work scheduled.</li>\n      <li>Bath fans to be ordered and delivered by Wednesday.</li>\n    </ul>\n  </li>\n  <li><strong>Action Items</strong>\n    <ul>\n      <li><strong>Todd</strong>: Adjust plans for additional 3 feet due to footing change.</li>\n      <li><strong>Taka</strong>: Confirm siding elevation and order status with BFS.</li>\n      <li><strong>Jim</strong>: Coordinate front door and insulation completion.</li>\n      <li><strong>Rashad</strong>: Order seven bath fans as specified.</li>\n    </ul>\n  </li>\n</ol>",
+          "week": "2025-W18",
+          "sentAt": "2025-04-29T18:24:38.272Z"
+        }
+      ],
+      "emailRecipients": [],
+      "asanaProjects": [
+        {
+          "id": 26,
+          "chatbotId": 36,
+          "asanaProjectId": "1208883644854911",
+          "projectName": "580 Elmwood",
+          "projectType": "main",
+          "createdAt": "2025-04-29T18:14:56.673Z"
+        },
+        {
+          "id": 27,
+          "chatbotId": 36,
+          "asanaProjectId": "1207037286757434",
+          "projectName": "580 Elmwood",
+          "projectType": "permit",
+          "createdAt": "2025-04-29T18:15:06.278Z"
+        }
+      ]
+    },
+    {
+      "chatbot": {
+        "id": 37,
+        "name": "6265 Ferry",
+        "slackChannelId": "C055VV38R7D",
+        "asanaProjectId": null,
+        "asanaConnectionId": null,
+        "createdById": 4,
+        "projectId": 2,
+        "publicToken": "508b5412-8822-4b23-ade1-da92027f09b6",
+        "isActive": true,
+        "requireAuth": false,
+        "createdAt": "2025-04-29T18:16:17.118Z"
+      },
+      "documents": [],
+      "messages": [
+        {
+          "id": 93,
+          "chatbotId": 37,
+          "userId": null,
+          "content": "is the tile in progress?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-04-29T18:18:06.811Z"
+        },
+        {
+          "id": 94,
+          "chatbotId": 37,
+          "userId": null,
+          "content": "The tile work is currently in progress, specifically the master tile, according to a message from Aaron Wilson on April 29, 2025, at 3:39:56 PM.",
+          "isUserMessage": false,
+          "citation": "a message from Aaron Wilson on April 29, 2025, at 3:39:56 PM",
+          "createdAt": "2025-04-29T18:18:08.982Z"
+        }
+      ],
+      "summaries": [],
+      "emailRecipients": [],
+      "asanaProjects": [
+        {
+          "id": 28,
+          "chatbotId": 37,
+          "asanaProjectId": "1203091632732712",
+          "projectName": "6265 Ferry Dr - Dave & Dana Patton",
+          "projectType": "main",
+          "createdAt": "2025-04-29T18:17:19.762Z"
+        },
+        {
+          "id": 29,
+          "chatbotId": 37,
+          "asanaProjectId": "1204502061814450",
+          "projectName": "6265 Ferry",
+          "projectType": "permit",
+          "createdAt": "2025-04-29T18:17:27.080Z"
+        }
+      ]
+    },
+    {
+      "chatbot": {
+        "id": 38,
+        "name": "630 Carriage",
+        "slackChannelId": "C04RBMLGJGY",
+        "asanaProjectId": null,
+        "asanaConnectionId": null,
+        "createdById": 4,
+        "projectId": 2,
+        "publicToken": "6049face-8fc3-4078-b6b2-4c1cc66742c7",
+        "isActive": true,
+        "requireAuth": false,
+        "createdAt": "2025-04-29T18:18:33.692Z"
+      },
+      "documents": [],
+      "messages": [],
+      "summaries": [],
+      "emailRecipients": [],
+      "asanaProjects": [
+        {
+          "id": 30,
+          "chatbotId": 38,
+          "asanaProjectId": "1204228669347320",
+          "projectName": "630 Carriage- Custom",
+          "projectType": "permit",
+          "createdAt": "2025-04-29T18:18:53.077Z"
+        }
+      ]
+    },
+    {
+      "chatbot": {
+        "id": 39,
+        "name": "911 S Shore (FL)",
+        "slackChannelId": "C07F70BTDK9",
+        "asanaProjectId": null,
+        "asanaConnectionId": null,
+        "createdById": 4,
+        "projectId": 2,
+        "publicToken": "a8d2bb9e-e3f6-499d-9b7b-b6cb88e5669a",
+        "isActive": true,
+        "requireAuth": false,
+        "createdAt": "2025-04-29T18:19:52.895Z"
+      },
+      "documents": [],
+      "messages": [
+        {
+          "id": 95,
+          "chatbotId": 39,
+          "userId": null,
+          "content": "can you give me an update of what happened this week?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-04-29T18:21:33.967Z"
+        },
+        {
+          "id": 96,
+          "chatbotId": 39,
+          "userId": null,
+          "content": "I wasn’t able to find any specific updates for this week in the available project files or messages. The most recent Slack message is from April 29, 2025, but it only indicates a new member joining the channel and doesn't provide any project updates. If you have more specific questions or need information on a particular aspect of the project, please let me know!",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-04-29T18:21:35.964Z"
+        }
+      ],
+      "summaries": [],
+      "emailRecipients": [],
+      "asanaProjects": [
+        {
+          "id": 31,
+          "chatbotId": 39,
+          "asanaProjectId": "1208115310512069",
+          "projectName": "911 South Shore",
+          "projectType": "permit",
+          "createdAt": "2025-04-29T18:20:09.809Z"
+        }
+      ]
     }
   ],
-  "exportedAt": "2025-04-29T17:27:26.586Z",
+  "exportedAt": "2025-04-29T18:36:49.647Z",
   "exportedBy": "SPH Chat Migration Utility"
 }
