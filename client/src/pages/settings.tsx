@@ -20,6 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import AsanaProjectsList from "@/components/settings/asana-projects-list";
 
 import { useToast } from "@/hooks/use-toast";
 import { 
@@ -358,6 +359,15 @@ export default function Settings() {
 
       <main className="flex-1 overflow-auto p-6">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Asana Projects List Section */}
+          <div className="lg:col-span-3">
+            <h2 className="text-lg font-semibold mb-4">External Integrations</h2>
+          </div>
+          
+          {/* Asana Projects Directory */}
+          <div className="lg:col-span-3">
+            <AsanaProjectsList />
+          </div>
           {/* API Tokens */}
           <Card className="lg:col-span-2">
             <CardHeader>
