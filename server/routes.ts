@@ -1253,7 +1253,8 @@ You should **never make up information**. You may summarize or synthesize detail
         message,
         documents,
         [...slackMessages, ...asanaTasks],
-        systemPrompt
+        systemPrompt,
+        chatbot.outputFormat
       );
       
       // Save AI response
