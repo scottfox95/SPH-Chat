@@ -482,6 +482,7 @@ export class MemStorage implements IStorage {
         includeDateInSource: false,
         includeUserInSource: false,
         responseTemplate: null,
+        summaryPrompt: null,
         createdAt: now,
         updatedAt: now
       };
@@ -501,6 +502,7 @@ export class MemStorage implements IStorage {
         includeDateInSource: data.includeDateInSource ?? false,
         includeUserInSource: data.includeUserInSource ?? false,
         responseTemplate: data.responseTemplate ?? null,
+        summaryPrompt: data.summaryPrompt ?? null,
         createdAt: now,
         updatedAt: now
       };
@@ -1109,6 +1111,7 @@ export class DatabaseStorage implements IStorage {
           includeDateInSource: data.includeDateInSource ?? false,
           includeUserInSource: data.includeUserInSource ?? false,
           responseTemplate: data.responseTemplate ?? null,
+          summaryPrompt: data.summaryPrompt ?? null,
           updatedAt: now
         })
         .returning();
