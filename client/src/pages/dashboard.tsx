@@ -4,7 +4,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, MessageSquare, FileText, Mail, Loader2 } from "lucide-react";
+import { Plus, MessageSquare, FileText, Mail, Loader2, Search } from "lucide-react";
+import { Input } from "@/components/ui/input";
 import CreateChatbotForm from "@/components/dashboard/create-chatbot-form";
 import ChatbotCard from "@/components/shared/chatbot-card";
 import ShareModal from "@/components/shared/share-modal";
@@ -15,8 +16,9 @@ export default function Dashboard() {
   const isAdmin = user?.role === "admin";
   
   const [createModalOpen, setCreateModalOpen] = useState(false);
-  const [selectedChatbot, setSelectedChatbot] = useState<any>(null);
+  const [selectedChatbot, setSelectedChatbot] = useState<Chatbot | null>(null);
   const [shareModalOpen, setShareModalOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   
   // Direct state for counts to avoid any React Query caching issues
   const [chatbotCount, setChatbotCount] = useState(0);
@@ -70,12 +72,27 @@ export default function Dashboard() {
     fetchData();
   }, []);
   
+  // Define the type for chatbots
+  interface Chatbot {
+    id: number;
+    name: string;
+    isActive: boolean;
+    publicToken: string;
+    requireAuth: boolean;
+    createdAt: string;
+    slackChannelId: string | null;
+    asanaProjectId: string | null;
+    asanaConnectionId: string | null;
+    createdById: number;
+    projectId: number;
+  }
+  
   // Fetch chatbots for the cards display
-  const { data: chatbots = [] } = useQuery({
+  const { data: chatbots = [] as Chatbot[] } = useQuery<Chatbot[]>({
     queryKey: ["/api/chatbots"],
   });
   
-  const handleShareClick = (chatbot: any) => {
+  const handleShareClick = (chatbot: Chatbot) => {
     setSelectedChatbot(chatbot);
     setShareModalOpen(true);
   };
@@ -155,7 +172,7 @@ export default function Dashboard() {
         </div>
         
         <Tabs defaultValue="active" className="space-y-4">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between mb-4">
             <TabsList>
               <TabsTrigger value="active" className="data-[state=active]:bg-[#D2B48C] data-[state=active]:text-white">
                 Active Projects
@@ -164,14 +181,30 @@ export default function Dashboard() {
                 All Projects
               </TabsTrigger>
             </TabsList>
+            
+            <div className="relative w-full max-w-sm">
+              <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-500" />
+              <Input
+                placeholder="Search chatbots by name..."
+                className="pl-8"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
           </div>
           
           <TabsContent value="active" className="space-y-4">
-            {chatbots.filter((bot: any) => bot.isActive).length > 0 ? (
+            {chatbots && chatbots.filter((bot: Chatbot) => 
+              bot.isActive && 
+              bot.name.toLowerCase().includes(searchQuery.toLowerCase())
+            ).length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {chatbots
-                  .filter((bot: any) => bot.isActive)
-                  .map((chatbot: any) => (
+                  .filter((bot: Chatbot) => 
+                    bot.isActive && 
+                    bot.name.toLowerCase().includes(searchQuery.toLowerCase())
+                  )
+                  .map((chatbot: Chatbot) => (
                     <ChatbotCard 
                       key={chatbot.id} 
                       chatbot={chatbot} 
@@ -204,15 +237,21 @@ export default function Dashboard() {
           </TabsContent>
           
           <TabsContent value="all" className="space-y-4">
-            {chatbots.length > 0 ? (
+            {chatbots && chatbots.filter((bot: any) => 
+              bot.name.toLowerCase().includes(searchQuery.toLowerCase())
+            ).length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {chatbots.map((chatbot: any) => (
-                  <ChatbotCard 
-                    key={chatbot.id} 
-                    chatbot={chatbot} 
-                    onShare={() => handleShareClick(chatbot)}
-                  />
-                ))}
+                {chatbots
+                  .filter((bot: any) => 
+                    bot.name.toLowerCase().includes(searchQuery.toLowerCase())
+                  )
+                  .map((chatbot: any) => (
+                    <ChatbotCard 
+                      key={chatbot.id} 
+                      chatbot={chatbot} 
+                      onShare={() => handleShareClick(chatbot)}
+                    />
+                  ))}
               </div>
             ) : (
               <Card>
