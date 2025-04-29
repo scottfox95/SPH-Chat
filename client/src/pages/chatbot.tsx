@@ -3,6 +3,7 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Share2, Bell, Settings, FileUp, Trash2, Pencil, FolderOpen, XCircle } from "lucide-react";
+import { useAuth } from "@/hooks/use-auth";
 import EditableTitle from "@/components/shared/editable-title";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import ChatInterface from "@/components/shared/chat-interface";
@@ -206,6 +207,8 @@ export default function Chatbot({ id }: ChatbotProps) {
   const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null);
   const [asanaProjectId, setAsanaProjectId] = useState("");
   const { toast } = useToast();
+  const { user } = useAuth();
+  const isAdmin = user?.role === "admin";
 
   // Fetch chatbot data with direct fetch instead of React Query
   const [chatbot, setChatbot] = useState<any>(null);
@@ -546,131 +549,169 @@ export default function Chatbot({ id }: ChatbotProps) {
             chatbotName={chatbot.name}
           />
         </div>
-
-        <div className="w-80 border-l border-gray-200 bg-white overflow-y-auto">
-          <Tabs defaultValue="settings" className="p-4">
-            <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="settings" className="data-[state=active]:bg-[#D2B48C] data-[state=active]:text-white">
-                Settings
-              </TabsTrigger>
-              <TabsTrigger value="documents" className="data-[state=active]:bg-[#D2B48C] data-[state=active]:text-white">
-                Documents
-              </TabsTrigger>
-              <TabsTrigger value="emails" className="data-[state=active]:bg-[#D2B48C] data-[state=active]:text-white">
-                Emails
-              </TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="settings" className="pt-4 space-y-4">
-              <div className="space-y-4">
-                <div>
-                  <Label htmlFor="chatbot-name">Chatbot Name</Label>
-                  <div className="flex items-center justify-between mt-1 border rounded p-2 hover:bg-gray-50">
-                    <div className="font-medium text-sm">{chatbot.name}</div>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => {
-                        const newName = prompt("Enter new chatbot name:", chatbot.name);
-                        if (newName && newName !== chatbot.name) {
-                          updateNameMutation.mutate(newName);
-                        }
-                      }}
-                      className="text-xs"
-                    >
-                      <Pencil className="h-3 w-3 mr-1" /> Edit
-                    </Button>
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between">
+        
+        {isAdmin && (
+          <div className="w-80 border-l border-gray-200 bg-white overflow-y-auto">
+            <Tabs defaultValue="settings" className="p-4">
+              <TabsList className="grid w-full grid-cols-3">
+                <TabsTrigger value="settings" className="data-[state=active]:bg-[#D2B48C] data-[state=active]:text-white">
+                  Settings
+                </TabsTrigger>
+                <TabsTrigger value="documents" className="data-[state=active]:bg-[#D2B48C] data-[state=active]:text-white">
+                  Documents
+                </TabsTrigger>
+                <TabsTrigger value="emails" className="data-[state=active]:bg-[#D2B48C] data-[state=active]:text-white">
+                  Emails
+                </TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="settings" className="pt-4 space-y-4">
+                <div className="space-y-4">
                   <div>
-                    <Label htmlFor="active-status">Active Status</Label>
-                    <p className="text-xs text-gray-500">Enable or disable this chatbot</p>
+                    <Label htmlFor="chatbot-name">Chatbot Name</Label>
+                    <div className="flex items-center justify-between mt-1 border rounded p-2 hover:bg-gray-50">
+                      <div className="font-medium text-sm">{chatbot.name}</div>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          const newName = prompt("Enter new chatbot name:", chatbot.name);
+                          if (newName && newName !== chatbot.name) {
+                            updateNameMutation.mutate(newName);
+                          }
+                        }}
+                        className="text-xs"
+                      >
+                        <Pencil className="h-3 w-3 mr-1" /> Edit
+                      </Button>
+                    </div>
                   </div>
-                  <Switch
-                    id="active-status"
-                    checked={chatbot.isActive}
-                    onCheckedChange={handleToggleActive}
-                    className="data-[state=checked]:bg-[#D2B48C]"
-                  />
-                </div>
-                
-                <div>
-                  <Label htmlFor="slack-channel">Slack Channel ID</Label>
-                  <Input
-                    id="slack-channel"
-                    value={chatbot.slackChannelId}
-                    readOnly
-                    className="mt-1 bg-gray-50"
-                  />
-                </div>
-                
-                <div>
-                  <Label htmlFor="asana-projects">Asana Projects</Label>
-                  <div className="mt-2">
-                    <AsanaProjectsManager chatbotId={chatbot.id} />
+
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <Label htmlFor="active-status">Active Status</Label>
+                      <p className="text-xs text-gray-500">Enable or disable this chatbot</p>
+                    </div>
+                    <Switch
+                      id="active-status"
+                      checked={chatbot.isActive}
+                      onCheckedChange={handleToggleActive}
+                      className="data-[state=checked]:bg-[#D2B48C]"
+                    />
                   </div>
-                  <p className="text-xs text-gray-500 mt-1">
-                    Link this chatbot to multiple Asana projects with different project types
-                  </p>
                   
-                  {/* Legacy Single Project Support */}
-                  {chatbot.asanaProjectId && (
-                    <div className="mt-3 border-t pt-3">
-                      <p className="text-xs font-medium text-gray-700">Legacy Project ID</p>
-                      <div className="text-xs text-gray-500 mt-1">
-                        This chatbot is also linked to a legacy single project: {chatbot.asanaProjectId}
+                  <div>
+                    <Label htmlFor="slack-channel">Slack Channel ID</Label>
+                    <Input
+                      id="slack-channel"
+                      value={chatbot.slackChannelId}
+                      readOnly
+                      className="mt-1 bg-gray-50"
+                    />
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="asana-projects">Asana Projects</Label>
+                    <div className="mt-2">
+                      <AsanaProjectsManager chatbotId={chatbot.id} />
+                    </div>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Link this chatbot to multiple Asana projects with different project types
+                    </p>
+                    
+                    {/* Legacy Single Project Support */}
+                    {chatbot.asanaProjectId && (
+                      <div className="mt-3 border-t pt-3">
+                        <p className="text-xs font-medium text-gray-700">Legacy Project ID</p>
+                        <div className="text-xs text-gray-500 mt-1">
+                          This chatbot is also linked to a legacy single project: {chatbot.asanaProjectId}
+                        </div>
                       </div>
+                    )}
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="public-token">Public Token</Label>
+                    <div className="flex items-center mt-1">
+                      <Input
+                        id="public-token"
+                        value={chatbot.publicToken}
+                        readOnly
+                        className="bg-gray-50"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="project-assignment">Project Assignment</Label>
+                    <ProjectSelector chatbotId={chatbot.id} currentProjectId={chatbot.projectId} />
+                    <p className="text-xs text-gray-500 mt-1">
+                      Organize this chatbot within a specific project group
+                    </p>
+                  </div>
+                </div>
+              </TabsContent>
+              
+              <TabsContent value="documents" className="pt-4">
+                <UploadDocuments chatbotId={chatbot.id} />
+                
+                <div className="mt-4">
+                  <h3 className="text-sm font-medium mb-2">Uploaded Documents</h3>
+                  {documentsLoading ? (
+                    <p className="text-sm text-gray-500">Loading documents...</p>
+                  ) : documents.length === 0 ? (
+                    <p className="text-sm text-gray-500">No documents uploaded yet.</p>
+                  ) : (
+                    <div className="space-y-2 max-h-64 overflow-y-auto">
+                      {documents.map((doc: any) => (
+                        <div key={doc.id} className="border rounded-lg p-2 flex justify-between items-center">
+                          <div className="truncate flex-1">
+                            <p className="text-xs font-medium truncate">{doc.originalName}</p>
+                            <p className="text-xs text-gray-500">
+                              {new Date(doc.createdAt).toLocaleDateString()}
+                            </p>
+                          </div>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setConfirmDeleteId(doc.id)}
+                            className="text-gray-500 hover:text-red-500"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      ))}
                     </div>
                   )}
                 </div>
-                
-                <div>
-                  <Label htmlFor="public-token">Public Token</Label>
-                  <div className="flex items-center mt-1">
-                    <Input
-                      id="public-token"
-                      value={chatbot.publicToken}
-                      readOnly
-                      className="bg-gray-50"
-                    />
-                  </div>
-                </div>
-                
-                <div>
-                  <Label htmlFor="project-assignment">Project Assignment</Label>
-                  <ProjectSelector chatbotId={chatbot.id} currentProjectId={chatbot.projectId} />
-                  <p className="text-xs text-gray-500 mt-1">
-                    Organize this chatbot within a specific project group
-                  </p>
-                </div>
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="documents" className="pt-4">
-              <UploadDocuments chatbotId={chatbot.id} />
+              </TabsContent>
               
-              <div className="mt-4">
-                <h3 className="text-sm font-medium mb-2">Uploaded Documents</h3>
-                {documentsLoading ? (
-                  <p className="text-sm text-gray-500">Loading documents...</p>
-                ) : documents.length === 0 ? (
-                  <p className="text-sm text-gray-500">No documents uploaded yet.</p>
+              <TabsContent value="emails" className="pt-4">
+                <div className="mb-4 flex justify-between items-center">
+                  <h3 className="text-sm font-medium">Summary Recipients</h3>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setEmailModalOpen(true)}
+                    className="text-[#D2B48C]"
+                  >
+                    Add Email
+                  </Button>
+                </div>
+                
+                {recipientsLoading ? (
+                  <p className="text-sm text-gray-500">Loading recipients...</p>
+                ) : recipients.length === 0 ? (
+                  <p className="text-sm text-gray-500">No recipients added yet.</p>
                 ) : (
                   <div className="space-y-2 max-h-64 overflow-y-auto">
-                    {documents.map((doc: any) => (
-                      <div key={doc.id} className="border rounded-lg p-2 flex justify-between items-center">
-                        <div className="truncate flex-1">
-                          <p className="text-xs font-medium truncate">{doc.originalName}</p>
-                          <p className="text-xs text-gray-500">
-                            {new Date(doc.createdAt).toLocaleDateString()}
-                          </p>
-                        </div>
+                    {recipients.map((recipient: any) => (
+                      <div key={recipient.id} className="border rounded-lg p-2 flex justify-between items-center">
+                        <p className="text-xs">{recipient.email}</p>
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => setConfirmDeleteId(doc.id)}
+                          onClick={() => handleDeleteRecipient(recipient.id)}
                           className="text-gray-500 hover:text-red-500"
                         >
                           <Trash2 className="h-4 w-4" />
@@ -679,46 +720,10 @@ export default function Chatbot({ id }: ChatbotProps) {
                     ))}
                   </div>
                 )}
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="emails" className="pt-4">
-              <div className="mb-4 flex justify-between items-center">
-                <h3 className="text-sm font-medium">Summary Recipients</h3>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setEmailModalOpen(true)}
-                  className="text-[#D2B48C]"
-                >
-                  Add Email
-                </Button>
-              </div>
-              
-              {recipientsLoading ? (
-                <p className="text-sm text-gray-500">Loading recipients...</p>
-              ) : recipients.length === 0 ? (
-                <p className="text-sm text-gray-500">No recipients added yet.</p>
-              ) : (
-                <div className="space-y-2 max-h-64 overflow-y-auto">
-                  {recipients.map((recipient: any) => (
-                    <div key={recipient.id} className="border rounded-lg p-2 flex justify-between items-center">
-                      <p className="text-xs">{recipient.email}</p>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleDeleteRecipient(recipient.id)}
-                        className="text-gray-500 hover:text-red-500"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </TabsContent>
-          </Tabs>
-        </div>
+              </TabsContent>
+            </Tabs>
+          </div>
+        )}
       </div>
 
       {/* Share Modal */}
