@@ -118,6 +118,14 @@ export const apiTokens = pgTable("api_tokens", {
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
+// User-Project assignments to control access
+export const userProjects = pgTable("user_projects", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull().references(() => users.id, { onDelete: 'cascade' }),
+  projectId: integer("project_id").notNull().references(() => projects.id, { onDelete: 'cascade' }),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
 // Schema validations
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
@@ -203,9 +211,17 @@ export const updateApiTokenSchema = createInsertSchema(apiTokens).pick({
   tokenHash: true,
 });
 
+export const insertUserProjectSchema = createInsertSchema(userProjects).pick({
+  userId: true,
+  projectId: true,
+});
+
 // Types
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
+
+export type UserProject = typeof userProjects.$inferSelect;
+export type InsertUserProject = z.infer<typeof insertUserProjectSchema>;
 
 export type Project = typeof projects.$inferSelect;
 export type InsertProject = z.infer<typeof insertProjectSchema>;

@@ -25,6 +25,7 @@ import {
   messages,
   settings,
   apiTokens,
+  userProjects,
   type User, 
   type InsertUser,
   type Project,
@@ -45,7 +46,9 @@ import {
   type UpdateSettings,
   type ApiToken,
   type InsertApiToken,
-  type UpdateApiToken
+  type UpdateApiToken,
+  type UserProject,
+  type InsertUserProject
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, and, isNull, sql } from "drizzle-orm";
@@ -71,6 +74,14 @@ export interface IStorage {
   updateProject(id: number, data: Partial<InsertProject>): Promise<Project | undefined>;
   deleteProject(id: number): Promise<boolean>;
   getProjectChatbots(projectId: number): Promise<Chatbot[]>;
+  
+  // User-Project assignment methods
+  getUserProjects(userId: number): Promise<UserProject[]>;
+  getProjectUsers(projectId: number): Promise<User[]>;
+  assignUserToProject(userId: number, projectId: number): Promise<UserProject>;
+  removeUserFromProject(userId: number, projectId: number): Promise<boolean>;
+  getUserAccessibleProjects(userId: number): Promise<Project[]>;
+  getUserAccessibleChatbots(userId: number): Promise<Chatbot[]>;
   
   // Chatbot methods
   getChatbots(): Promise<Chatbot[]>;
@@ -130,6 +141,7 @@ export class MemStorage implements IStorage {
   private emailRecipients: Map<number, EmailRecipient>;
   private messages: Map<number, Message>;
   private apiTokens: Map<string, ApiToken>; // API tokens by service name
+  private userProjects: Map<number, UserProject>; // User-Project assignments
   private appSettings: Settings | undefined;
   
   private currentUserId: number;
@@ -140,6 +152,7 @@ export class MemStorage implements IStorage {
   private currentEmailRecipientId: number;
   private currentMessageId: number;
   private currentApiTokenId: number;
+  private currentUserProjectId: number;
   
   public sessionStore: session.Store;
   
@@ -152,6 +165,7 @@ export class MemStorage implements IStorage {
     this.emailRecipients = new Map();
     this.messages = new Map();
     this.apiTokens = new Map();
+    this.userProjects = new Map();
     
     this.currentUserId = 1;
     this.currentProjectId = 1;
@@ -161,6 +175,7 @@ export class MemStorage implements IStorage {
     this.currentEmailRecipientId = 1;
     this.currentMessageId = 1;
     this.currentApiTokenId = 1;
+    this.currentUserProjectId = 1;
     
     // Set up memory session store
     const MemoryStore = createMemoryStore(session);
