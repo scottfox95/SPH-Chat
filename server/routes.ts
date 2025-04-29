@@ -1208,8 +1208,8 @@ You should **never make up information**. You may summarize or synthesize detail
         result.tokenInfo = {
           user: authTestResult.user,
           team: authTestResult.team,
-          botId: authTestResult.bot_id,
-          userId: authTestResult.user_id
+          bot: authTestResult.bot_id,
+          scopes: [] // Will be populated if available
         };
       } catch (authError) {
         console.error("Error getting token info:", authError);
@@ -1287,7 +1287,7 @@ You should **never make up information**. You may summarize or synthesize detail
       console.error("Error listing Slack channels:", error);
       res.status(500).json({ 
         error: "Failed to list Slack channels",
-        details: error.message || "Unknown error"
+        details: error instanceof Error ? error.message : "Unknown error"
       });
     }
   });
@@ -1308,7 +1308,7 @@ You should **never make up information**. You may summarize or synthesize detail
       res.status(500).json({ 
         success: false,
         error: "Failed to list Asana projects",
-        details: error.message || "Unknown error"
+        details: error instanceof Error ? error.message : "Unknown error"
       });
     }
   });
@@ -1330,7 +1330,7 @@ You should **never make up information**. You may summarize or synthesize detail
       res.status(500).json({ 
         success: false,
         error: "Failed to fetch Asana tasks",
-        details: error.message || "Unknown error"
+        details: error instanceof Error ? error.message : "Unknown error"
       });
     }
   });
@@ -1351,7 +1351,7 @@ You should **never make up information**. You may summarize or synthesize detail
       res.status(500).json({ 
         success: false,
         error: "Failed to fetch Asana task details",
-        details: error.message || "Unknown error"
+        details: error instanceof Error ? error.message : "Unknown error"
       });
     }
   });

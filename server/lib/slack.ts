@@ -253,10 +253,43 @@ export async function sendSlackMessage(channelId: string, text: string) {
 }
 
 /**
- * Test connection to Slack API
- * @returns Object with connection status and details
+ * Type for Slack connection test result
  */
-export async function testSlackConnection() {
+export interface SlackConnectionTestResult {
+  connected: boolean;
+  botName?: string;
+  teamName?: string;
+  url?: string;
+  userId?: string;
+  teamId?: string;
+  error?: string;
+  // Optional properties for scope testing
+  hasUsersReadScope?: boolean;
+  usersSample?: Array<{
+    id?: string;
+    name?: string;
+    real_name?: string;
+    is_bot?: boolean;
+  }>;
+  usersReadError?: string;
+  usersReadErrorDetails?: {
+    needed?: string;
+    provided?: string;
+  };
+  tokenInfo?: {
+    user?: string;
+    team?: string;
+    bot?: string;
+    scopes?: string[];
+    exp?: string;
+  };
+}
+
+/**
+ * Test connection to Slack API
+ * @returns Typed object with connection status and details
+ */
+export async function testSlackConnection(): Promise<SlackConnectionTestResult> {
   try {
     // Test auth.test which verifies the token
     const authTest = await slack.auth.test();
