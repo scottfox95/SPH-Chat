@@ -101,8 +101,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
           type: storage.sessionStore ? storage.sessionStore.constructor.name : 'Unknown',
         },
         databaseInfo: {
-          poolStats: storage.getPoolStats ? storage.getPoolStats() : 'Not available',
-          connectionStatus: storage.testConnection ? 'Available' : 'Not available',
+          poolStats: typeof storage.getPoolStats === 'function' ? storage.getPoolStats() : 'Not available',
+          connectionStatus: typeof storage.testConnection === 'function' ? 'Available' : 'Not available',
         },
         timestamp: new Date().toISOString()
       };
@@ -411,14 +411,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       // Try to validate the Slack channel ID, but continue even if validation fails
-      let channelValidation = { valid: true };
+      let channelValidation: { valid: boolean; error?: string; name?: string; isPrivate?: boolean } = { valid: true };
       try {
         console.log("Attempting to validate Slack channel:", slackChannelId);
         channelValidation = await validateSlackChannel(slackChannelId);
         
         // Log result but don't block creation if validation fails
         if (!channelValidation.valid) {
-          console.warn(`Slack channel validation failed but continuing: ${channelValidation.error}`);
+          console.warn(`Slack channel validation failed but continuing: ${channelValidation.error || 'Unknown error'}`);
         } else {
           console.log("Slack channel validation succeeded:", channelValidation);
         }

@@ -168,6 +168,42 @@
           "isUserMessage": false,
           "citation": "MAIN",
           "createdAt": "2025-04-28T21:03:23.989Z"
+        },
+        {
+          "id": 65,
+          "chatbotId": 22,
+          "userId": null,
+          "content": "has the sliding door material arrived?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-04-29T15:04:27.011Z"
+        },
+        {
+          "id": 66,
+          "chatbotId": 22,
+          "userId": null,
+          "content": "The sliding door material has arrived. According to a Slack message from Aaron Wilson, the material for the sliding door hardware arrived to Brendan and is being shipped directly to the office. This was confirmed on April 21, 2025, at 1:15 PM.",
+          "isUserMessage": false,
+          "citation": "a Slack message from Aaron Wilson, the material for the sliding door hardware arrived to Brendan and is being shipped directly to the office",
+          "createdAt": "2025-04-29T15:04:34.348Z"
+        },
+        {
+          "id": 67,
+          "chatbotId": 22,
+          "userId": null,
+          "content": "Can you check if theres any more recent updates on that?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-04-29T15:05:39.987Z"
+        },
+        {
+          "id": 68,
+          "chatbotId": 22,
+          "userId": null,
+          "content": "I wasn't able to find any recent updates specifically related to the context you provided from the documents. However, I can provide some general updates from the Slack messages and Asana tasks related to the 1320 Mayfair project:\n\n1. **Slack Updates:**\n   - The drywall team is working on sanding and finishing imperfections in the ceiling, and the pavers are currently being delivered, according to Aaron Wilson on April 28, 2025.\n   - Electrical trim work is ongoing, with Max scheduled to continue on Saturday and Monday, as mentioned by Aaron Wilson.\n\n2. **Asana Task Updates:**\n   - There are no overdue or upcoming tasks found for the project \" 1320 Mayfair Drive\".\n   - For the project \"[MAIN] 1320 Mayfair Drive\", several tasks have been completed, such as the approval of plans, asbestos remediation, and various inspections. However, tasks like \"Sewer Line Inspection\", \"Irrigation System\", \"Building Final\", and \"Site Final\" are still pending.\n\nIf you need more specific information or updates, please let me know!",
+          "isUserMessage": false,
+          "citation": "PERMIT",
+          "createdAt": "2025-04-29T15:05:48.981Z"
         }
       ],
       "summaries": [],
@@ -192,6 +228,6 @@
       ]
     }
   ],
-  "exportedAt": "2025-04-29T14:58:44.081Z",
+  "exportedAt": "2025-04-29T15:11:50.329Z",
   "exportedBy": "SPH Chat Migration Utility"
 }

@@ -865,17 +865,17 @@ export class DatabaseStorage implements IStorage {
           // Convert the raw result to a properly typed Chatbot object
           const rawChatbot = result.rows[0];
           const chatbot: Chatbot = {
-            id: rawChatbot.id,
-            name: rawChatbot.name,
-            slackChannelId: rawChatbot.slack_channel_id,
-            asanaProjectId: rawChatbot.asana_project_id,
-            asanaConnectionId: rawChatbot.asana_connection_id,
-            createdById: rawChatbot.created_by_id,
-            publicToken: rawChatbot.public_token,
-            isActive: rawChatbot.is_active,
-            requireAuth: rawChatbot.require_auth,
-            createdAt: rawChatbot.created_at,
-            projectId: rawChatbot.project_id
+            id: Number(rawChatbot.id),
+            name: String(rawChatbot.name),
+            slackChannelId: String(rawChatbot.slack_channel_id),
+            asanaProjectId: rawChatbot.asana_project_id ? String(rawChatbot.asana_project_id) : null,
+            asanaConnectionId: rawChatbot.asana_connection_id ? String(rawChatbot.asana_connection_id) : null,
+            createdById: Number(rawChatbot.created_by_id),
+            publicToken: String(rawChatbot.public_token),
+            isActive: Boolean(rawChatbot.is_active),
+            requireAuth: Boolean(rawChatbot.require_auth),
+            createdAt: new Date(rawChatbot.created_at),
+            projectId: rawChatbot.project_id !== null ? Number(rawChatbot.project_id) : null
           };
           console.log("Successfully created chatbot with direct SQL:", chatbot);
           return chatbot;

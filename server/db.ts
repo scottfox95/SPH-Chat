@@ -22,16 +22,17 @@ const maskedDbUrl = dbUrl ?
   'Not set';
 console.log(`[UNIFIED DB] Using DATABASE_URL: ${maskedDbUrl}`);
 
-// Connection pool settings for stability
+// Connection pool settings for stability with Neon Serverless PostgreSQL
 const connectionConfig = {
   connectionString: dbUrl,
   ssl: {
     rejectUnauthorized: false // For external databases like Neon that require SSL
   },
-  // Add connection pool settings to improve stability
-  max: 20, // Maximum number of connections 
+  // Basic pool settings for Neon Serverless
+  max: 3, // Low number of connections for Neon's connection limits
   idleTimeoutMillis: 30000, // Close idle connections after 30 seconds
-  connectionTimeoutMillis: 5000, // Timeout after 5 seconds when connecting
+  connectionTimeoutMillis: 10000, // Longer timeout for initial connection (10 seconds)
+  allowExitOnIdle: true, // Allow graceful shutdown
 };
 
 // Use the pooled connection for better performance
@@ -40,15 +41,34 @@ export const pool = new Pool(connectionConfig);
 // Initialize drizzle ORM with our schema
 export const db = drizzle({ client: pool, schema });
 
-// Log successful connection
+// Enhanced connection management
 pool.on('connect', () => {
   console.log('Connected to PostgreSQL database');
 });
 
-// Log connection errors
+// Log connection errors and handle reconnection
 pool.on('error', (err) => {
   console.error('Unexpected PostgreSQL database error:', err);
+  
+  // Only attempt reconnect for connection-related errors
+  if (err.message.includes('connection') || err.message.includes('timeout')) {
+    console.log('Connection error detected, automatic reconnection will be attempted');
+  }
 });
+
+// Only log connection status once at startup rather than periodically
+// to avoid potential issues with Neon serverless connections
+console.log(`Initial database pool status: Total=${pool.totalCount}, Idle=${pool.idleCount}`);
+
+// Add a gentle health check function that can be called when needed instead of periodic monitoring
+export function getDatabasePoolStatus() {
+  return {
+    total: pool.totalCount,
+    idle: pool.idleCount,
+    waiting: pool.waitingCount || 0,
+    timestamp: new Date().toISOString()
+  };
+}
 
 // Export connection test function for health checks
 export async function testDatabaseConnection() {
