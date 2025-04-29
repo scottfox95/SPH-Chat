@@ -204,6 +204,24 @@
           "isUserMessage": false,
           "citation": "PERMIT",
           "createdAt": "2025-04-29T15:05:48.981Z"
+        },
+        {
+          "id": 69,
+          "chatbotId": 22,
+          "userId": null,
+          "content": "what is set to be done next week?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-04-29T15:17:51.692Z"
+        },
+        {
+          "id": 70,
+          "chatbotId": 22,
+          "userId": null,
+          "content": "For the upcoming week, the following activities are planned for the 1320 Mayfair project:\n\n1. **Electrical Trim**: Max is scheduled to start the electrical trim next week.\n2. **Gas and Furnace Connections**: Eric is scheduled to install gas and furnace connections on Tuesday.\n3. **Floor Reveals**: Joel Matul is set to start floor reveals on Monday, using extra materials from Sylvan.\n\nThese tasks are part of the ongoing construction activities and are expected to progress as scheduled according to Aaron Wilson on April 10, 2025.",
+          "isUserMessage": false,
+          "citation": "Aaron Wilson on April 10, 2025",
+          "createdAt": "2025-04-29T15:17:56.182Z"
         }
       ],
       "summaries": [],
@@ -228,6 +246,6 @@
       ]
     }
   ],
-  "exportedAt": "2025-04-29T15:15:59.875Z",
+  "exportedAt": "2025-04-29T15:28:14.262Z",
   "exportedBy": "SPH Chat Migration Utility"
 }
