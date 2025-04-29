@@ -55,6 +55,7 @@
         "isActive": true,
         "requireAuth": false,
         "systemPrompt": null,
+        "outputFormat": null,
         "createdAt": "2025-04-28T20:51:52.262Z"
       },
       "documents": [
@@ -326,6 +327,7 @@
         "isActive": true,
         "requireAuth": false,
         "systemPrompt": null,
+        "outputFormat": null,
         "createdAt": "2025-04-29T17:17:36.903Z"
       },
       "documents": [],
@@ -383,6 +385,7 @@
         "isActive": true,
         "requireAuth": false,
         "systemPrompt": null,
+        "outputFormat": null,
         "createdAt": "2025-04-29T17:21:29.963Z"
       },
       "documents": [],
@@ -423,6 +426,7 @@
         "isActive": true,
         "requireAuth": false,
         "systemPrompt": null,
+        "outputFormat": null,
         "createdAt": "2025-04-29T17:27:30.624Z"
       },
       "documents": [],
@@ -499,6 +503,7 @@
         "isActive": true,
         "requireAuth": false,
         "systemPrompt": null,
+        "outputFormat": null,
         "createdAt": "2025-04-29T17:45:34.510Z"
       },
       "documents": [],
@@ -529,6 +534,7 @@
         "isActive": true,
         "requireAuth": false,
         "systemPrompt": null,
+        "outputFormat": null,
         "createdAt": "2025-04-29T18:00:29.502Z"
       },
       "documents": [],
@@ -586,6 +592,7 @@
         "isActive": true,
         "requireAuth": false,
         "systemPrompt": null,
+        "outputFormat": null,
         "createdAt": "2025-04-29T18:04:03.241Z"
       },
       "documents": [],
@@ -624,6 +631,7 @@
         "isActive": true,
         "requireAuth": false,
         "systemPrompt": null,
+        "outputFormat": null,
         "createdAt": "2025-04-29T18:05:14.824Z"
       },
       "documents": [],
@@ -645,6 +653,7 @@
         "isActive": true,
         "requireAuth": false,
         "systemPrompt": null,
+        "outputFormat": null,
         "createdAt": "2025-04-29T18:06:13.742Z"
       },
       "documents": [],
@@ -683,6 +692,7 @@
         "isActive": true,
         "requireAuth": false,
         "systemPrompt": null,
+        "outputFormat": null,
         "createdAt": "2025-04-29T17:11:20.606Z"
       },
       "documents": [],
@@ -732,6 +742,7 @@
         "isActive": true,
         "requireAuth": false,
         "systemPrompt": null,
+        "outputFormat": null,
         "createdAt": "2025-04-29T16:41:09.245Z"
       },
       "documents": [],
@@ -761,6 +772,7 @@
         "isActive": true,
         "requireAuth": false,
         "systemPrompt": null,
+        "outputFormat": null,
         "createdAt": "2025-04-29T18:07:57.520Z"
       },
       "documents": [],
@@ -799,6 +811,7 @@
         "isActive": true,
         "requireAuth": false,
         "systemPrompt": null,
+        "outputFormat": null,
         "createdAt": "2025-04-29T18:09:16.169Z"
       },
       "documents": [],
@@ -837,6 +850,7 @@
         "isActive": true,
         "requireAuth": false,
         "systemPrompt": null,
+        "outputFormat": null,
         "createdAt": "2025-04-29T18:13:17.185Z"
       },
       "documents": [],
@@ -894,6 +908,7 @@
         "isActive": true,
         "requireAuth": false,
         "systemPrompt": null,
+        "outputFormat": null,
         "createdAt": "2025-04-29T18:14:34.203Z"
       },
       "documents": [],
@@ -959,6 +974,7 @@
         "isActive": true,
         "requireAuth": false,
         "systemPrompt": null,
+        "outputFormat": null,
         "createdAt": "2025-04-29T18:16:17.118Z"
       },
       "documents": [],
@@ -1016,6 +1032,7 @@
         "isActive": true,
         "requireAuth": false,
         "systemPrompt": null,
+        "outputFormat": null,
         "createdAt": "2025-04-29T18:18:33.692Z"
       },
       "documents": [],
@@ -1046,6 +1063,7 @@
         "isActive": true,
         "requireAuth": false,
         "systemPrompt": null,
+        "outputFormat": null,
         "createdAt": "2025-04-29T18:19:52.895Z"
       },
       "documents": [],
@@ -1081,8 +1099,67 @@
           "createdAt": "2025-04-29T18:20:09.809Z"
         }
       ]
+    },
+    {
+      "chatbot": {
+        "id": 40,
+        "name": "Spark Expense Agent",
+        "slackChannelId": "GJK8M26EM",
+        "asanaProjectId": null,
+        "asanaConnectionId": null,
+        "createdById": 4,
+        "projectId": 1,
+        "publicToken": "f40fc9b5-1c18-4b4e-86ff-aca69efdbc38",
+        "isActive": true,
+        "requireAuth": false,
+        "systemPrompt": "You are “Six Points Card ChargeBot”, a finance assistant for Six Points Homes.\n\n────────────────────────────────────────\nSOURCE OF TRUTH\n• You receive only the Slack messages from channel #six-points-card (supplied via MCP Server).  \n• Ignore any other context unless explicitly provided.\n\nGOAL\nScan the supplied Slack messages, identify every Spark-card charge (or refund), and output a clean list of expenses.\n\n────────────────────────────────────────\nOUTPUT FORMAT\n1. First line (one sentence) →  \n   See below charges from messages between {{startDate}} and {{endDate}}:\n\n   • {{startDate}} = the earliest message date in the batch, e.g. “Monday April 14 2025”.  \n   • {{endDate}}   = today’s date or the last message date, e.g. “April 29 2025”.\n\n2. Then list **one charge per line** (newline-separated, no extra punctuation):\n\n   [Vendor] [dollar amount like “$1,234.56”] [description] for [Project Name]\n\n   • Always include **commas** as thousands separators (e.g., $1,133.39 / $12,450.00).  \n   • Refunds: prepend **REFUND** and show the amount as a negative value  \n     Example →  REFUND Lumens $-274.75 material for Six Points General\n\n────────────────────────────────────────\nPARSING & NORMALISATION RULES\n• If an employee omits the description, write **Material**.  \n• If multiple items are listed, summarise briefly (e.g., “Electric Trim, bulbs”).  \n• Detect vendor nicknames and map to full names:  \n\n  ─ Home Depot ← HD, HDepot, Home D  \n  ─ Lowe’s ← Lowes, lwes  \n  ─ Sherwin Williams ← Sherwin, SH, SW  \n  ─ Sunset Paint ← Sunset  \n  ─ Atlanta Landscaping Material ← ALM, Atlanta Landscaping  \n  ─ Brazilian Wood Depot ← Brazilian Wood, BW, Brazilian  \n  ─ Floor and Decor ← FND, FD, Floor Decor  \n  ─ Stovall ← Stovall  \n\n  If the text shows only the vendor (e.g., “SH $46”) assume the material is obvious  \n  → Sherwin Williams $46.00 paint for [Project].\n\n────────────────────────────────────────\nPROJECT NAME RESOLUTION\n• Use the lookup list below to map shorthand:  \n  – “2383” → 2383 Poplar (unique)  \n  – “16 bonnie” → 16 Bonnie  \n• Do **NOT** guess when the name is ambiguous (“Poplar” alone is ambiguous).  \n  In that case use **UNKNOWN**.  \n• If the message contains “General Expense” (any case) the project is **Six Points General**.\n\n────────────────────────────────────────\nPROJECT LOOK-UP LIST\n4846 Adams  \n160 Black Ankle  \nGeneral Expense  \n3023 Parkridge  \n2367 Cortez  \n125 Cromwell  \n2688 Drew Valley  \n6249 Ferry  \n1768 8th St  \n1223 Mayfair  \n2476 Drew Valley  \n1318 Hopkins  \n2363 Nesbitt  \n4845 Northway  \n1644 Richwood  \n2354 Poplar  \n1269 Mayfair  \n2646 Cove  \n1231 Mayfair  \n1028 Citadel  \n3197 Saybrook  \n3871 Powers Ferry  \n2540 Drew Valley  \n2461 Thompson  \n630 Carriage  \n195 Pebble  \n2387 Poplar  \n2393 Poplar  \n3141 Woodrow  \n3187 Saybrook  \n2975 Westminster Circle  \n2981 Westminster  \n911 S Shore  \n9157 Dickens  \n3582 Avocado\n\n────────────────────────────────────────\nVALIDATION\n• Each charge must end with a newline character (`\\n`). No blank lines.  \n• Every line must contain: Vendor  Amount  Description  “for”  Project.  \n• Do **not** append summaries, metadata, or markdown code fences.  \n• If no charges are found reply exactly:  \n  No Spark-card charges were posted in #six-points-card during the specified period.",
+        "outputFormat": null,
+        "createdAt": "2025-04-29T19:06:53.606Z"
+      },
+      "documents": [],
+      "messages": [
+        {
+          "id": 103,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "Display charges over the last week ",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-04-29T19:45:00.530Z"
+        },
+        {
+          "id": 104,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "See below charges from messages between Monday April 14 2025 and April 29 2025:\nLowe’s $142.06 Material for 16 Bonnie\nHome Depot $410.73 Mortar for 1320 Mayfair\nLowe’s $168.91 Framing Materials for 2383 Poplar\nLowe’s $120.00 Electric Trim, bulbs for UNKNOWN\nLowe’s $1133.39 Framing Materials for UNKNOWN\nHome Depot $110.00 Rough Materials for UNKNOWN\nLowe’s $30.96 Waterproof material for UNKNOWN\nHome Depot $112.22 Pool coping wood forms for 1269 Mayfair\nREFUND Home Depot $-163.26 Wet saw blades for 1269 Mayfair\nHome Depot $119.20 Mineral tiles for 16 Bonnie\nLowe’s $78.63 Interior paint material for 1320 Mayfair\nLowe’s $75.90 Trim and Door Materials for 4846 Adams\nSherwin Williams $46.00 Paint for UNKNOWN\nHome Depot $123.74 Fence material for UNKNOWN\nFloor and Decor $65.75 Grout for UNKNOWN\nHome Depot $161.46 Concrete for 4846 Adams\nHome Depot $187.30 Irrigation parts for 16 Bonnie\nBobcat $87.82 Grease and parts for Six Points General\nHome Depot $163.26 Stone cutting blade for 1269 Mayfair\nHome Depot $333.00 Concrete and pad materials for 4846 Adams\nLowe’s $100.00 Grout and Caulk for UNKNOWN\nHome Depot $46.88 Framing Materials for UNKNOWN\nHome Depot $87.00 Paint Materials for UNKNOWN\nHome Depot $104.00 Brick Materials for UNKNOWN\nHome Depot $661.28 Plastic strips for UNKNOWN\nLowe’s $51.72 Wheat straw for UNKNOWN\nHome Depot $106.76 Wheat straw for UNKNOWN\nHome Depot $182.76 Pool plywood and 2x4 material for UNKNOWN\nAtlanta Landscaping Material $464.74 89 stone for 16 Bonnie\nHome Depot $218.13 Mason mix for 16 Bonnie\nLowe’s $34.44 Grout bucket and tool for 16 Bonnie\nFloor and Decor $111.50 Colored grout for 16 Bonnie\nHome Depot $218.13 Material for UNKNOWN\nShell $45.46 Diesel for 16 Bonnie\nLowe’s $70.18 Plumbing parts for 1320 Mayfair\nLowe’s $172.36 Additional spikes for 1320 Mayfair\nHome Depot $84.77 Paint and prep materials for 16 Bonnie\nSunset Paint $86.40 Dryfall Paint for UNKNOWN\nLowe’s $88.00 Cabinet and electric material for UNKNOWN\nFloor and Decor $226.00 Tile pencil materials for UNKNOWN\nStovall $6,733.12 Pervious paver material for 16 Bonnie\nHome Depot $224.52 Rope for UNKNOWN\nLowe’s $447.16 2x4 wood for UNKNOWN\nHome Depot $700.00 Wood Framing Materials for UNKNOWN\nHome Depot $800.00 Framing Materials for UNKNOWN\nLowe’s $124.00 Grout/thinnest for 4846 Adams\nLowe’s $115.00 Framing materials for UNKNOWN\nLowe’s $30.88 Lumber Materials for UNKNOWN\nLowe’s $187.27 Lumber Materials for UNKNOWN\nHome Depot $31.00 Hammer and nails for UNKNOWN\nStovall $1,743.17 Paver cap edging for 16 Bonnie\nLowe’s $30.88 Landscape Materials for 16 Bonnie\nSherwin Williams $133.00 Paint Materials for UNKNOWN\nHome Depot $477.00 Fence materials for UNKNOWN\nLowe’s $50.00 Door locks and screws for 1320 Mayfair\nLowe’s $462.38 Interior paint material for 1320 Mayfair\nLowe’s $60.86 Interior paint material for 16 Bonnie\nLowe’s $209.50 Wood for UNKNOWN\nLowe’s $97.00 Framing materials for UNKNOWN\nDoraville Transfer Station $288.71 Landscape debris dump trailer for UNKNOWN\nSite One $12.71 Plant needed for UNKNOWN\nWalmart $22.70 Office material for UNKNOWN\nGA Wholesale Nursery $676.06 Pine straw and mulch for UNKNOWN\nSite One $2,265.51 Landscape shrubs for UNKNOWN\nShell $84.96 Diesel for UNKNOWN\nBP $110.00 Diesel for UNKNOWN\nDiscount Tire $807.46 Dump trailer tires for UNKNOWN\nHome Depot $723.61 Mortar mix and thinset for 16 Bonnie\nAtlanta Landscaping Material $61.68 Drainage fittings for 1320 Mayfair\nStovall $964.60 Pervious pavers for UNKNOWN\nLowe’s $96.85 OSB for UNKNOWN\nTexaco $80.23 Diesel for UNKNOWN\nLowe’s $365.16 Wood for UNKNOWN\nDoraville Transfer $136.70 Landscape debris for UNKNOWN\nSite One $113.46 Landscape parts for UNKNOWN\nSherwin Williams $193.94 Exterior Paint for UNKNOWN\nHome Depot $1,724.00 Skylights for UNKNOWN\nDoraville Transfer Station $136.70 Landscape waste for UNKNOWN\nSherwin Williams $533.30 Paint materials for UNKNOWN\nSherwin Williams $163.30 Paint materials for UNKNOWN\nLowe’s $154.73 Driveway forms for UNKNOWN\nDoraville Transfer Station $218.72 Debris dump for UNKNOWN\nMNI Nursery $1,861.43 Landscape trees for UNKNOWN\nSunset Paints $281.76 Paint for UNKNOWN\nSherwin Williams $112.43 Primer Paint Material for UNKNOWN\nSherwin Williams $143.28 Paint Supplies for UNKNOWN\nSherwin Williams $1,288.00 Paint Interior for UNKNOWN\nSherwin Williams $243.00 Exterior paint and stain for UNKNOWN\nSherwin Williams $43.48 Paint pickup for UNKNOWN\nLowe’s $282.05 Lumber Materials for UNKNOWN\nStovall $8,514.45 Pervious pavers for UNKNOWN\nLowe’s $330.09 Wood for UNKNOWN\nHome Depot $208.00 Rental for UNKNOWN\nHome Depot $356.15 Conduit fittings and wire for 1320 Mayfair\n\nThis information is compiled from messages by Ron Heller, Yakir Zaken, Aaron Wilson, and others between April 14, 2025, and April 29, 2025.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-04-29T19:45:31.659Z"
+        },
+        {
+          "id": 105,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "Give me all charges this week",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-04-29T19:50:32.765Z"
+        },
+        {
+          "id": 106,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "See below charges from messages between Monday April 14 2025 and April 29 2025:\n\nLowe’s $142.06 Material for 16 Bonnie\nHome Depot $410.73 mortar for patio pavers for UNKNOWN\nLowe’s $168.91 Framing Materials for 2383 Poplar\nLowe’s $120.00 Electric trim materials light bulbs, and caps for UNKNOWN\nLowe’s $1,133.39 framing materials for 195 Pebble\nHome Depot $110.00 Rough Materials for UNKNOWN\nHome Depot $112.22 pool coping wood forms for 1269 Mayfair\nREFUND Home Depot $-163.26 wet saw blades for marble for 1269 Mayfair\nHome Depot $161.46 concert for ac pad for 4846 Adams\nHome Depot $187.30 irrigation parts for 16 Bonnie\nBobcat $87.82 grease and parts for Six Points General\nHome Depot $163.26 stone cutting blade for marble for 1269 Mayfair\nHome Depot $333.00 Concrete and pad materials for 4846 Adams\nLowe’s $100.00 Grout and Caulk for UNKNOWN\nSherwin Williams $46.00 paint for 4845 Northway\nHome Depot $123.74 Fence material for UNKNOWN\nFloor and Decor $65.75 Grout for 6265 Ferry\nHome Depot $661.28 plastic strips for rain guard ipe for UNKNOWN\nHome Depot $214.49 pool plastic roll for 4846 Adams\nLowe’s $51.72 wheat straw for ga power grading for 4846 Adams\nHome Depot $106.76 wheat straw for ga power and water line grading for 4846 Adams\nHome Depot $182.76 pool plywood and 2x4 material for 4846 Adams\nAtlanta Landscaping Material $464.74 89 stone for pavers for 16 Bonnie\nHome Depot $218.13 mason mix for patio tile for 16 Bonnie\nLowe’s $34.44 grout bucket and tool for 16 Bonnie\nFloor and Decor $111.50 colored grout for patio tile for 16 Bonnie\nHome Depot $218.13 Material for UNKNOWN\nShell $45.46 diesel for bobcat for 16 Bonnie\nLowe’s $70.18 plumbing parts and additional spikes for wall for 1320 Mayfair\nLowe’s $172.36 plumbing parts and additional spikes for wall for 1320 Mayfair\n\naccording to Ron Heller, Yakir Zaken, and Aaron Wilson on April 29 2025.",
+          "isUserMessage": false,
+          "citation": "Ron Heller, Yakir Zaken, and Aaron Wilson on April 29 2025",
+          "createdAt": "2025-04-29T19:50:56.092Z"
+        }
+      ],
+      "summaries": [],
+      "emailRecipients": [],
+      "asanaProjects": []
     }
   ],
-  "exportedAt": "2025-04-29T18:55:18.684Z",
+  "exportedAt": "2025-04-29T19:57:09.165Z",
   "exportedBy": "SPH Chat Migration Utility"
 }
