@@ -114,6 +114,60 @@
           "isUserMessage": false,
           "citation": "Aaron Wilson and Ron Heller on April 28, 2025",
           "createdAt": "2025-04-28T20:58:25.947Z"
+        },
+        {
+          "id": 59,
+          "chatbotId": 22,
+          "userId": null,
+          "content": "When is the project expected to finish?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-04-28T21:01:57.818Z"
+        },
+        {
+          "id": 60,
+          "chatbotId": 22,
+          "userId": null,
+          "content": "I wasn't able to find specific information about the expected completion date for the 1320 Mayfair project in the available documents or messages. If you have more specific details or another source to check, please let me know.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-04-28T21:02:02.703Z"
+        },
+        {
+          "id": 61,
+          "chatbotId": 22,
+          "userId": null,
+          "content": "How much budget is remaining for landscaping?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-04-28T21:02:21.862Z"
+        },
+        {
+          "id": 62,
+          "chatbotId": 22,
+          "userId": null,
+          "content": "The budget for landscaping on the 1320 Mayfair project was initially set at $15,600. The actual cost incurred so far is $1,852.32, leaving a remaining budget of $13,747.68 for landscaping. This indicates that the landscaping budget is currently underutilized by this amount, according to the \"1320 Mayfair Budget.xlsx\" document.",
+          "isUserMessage": false,
+          "citation": "the \"1320 Mayfair Budget",
+          "createdAt": "2025-04-28T21:02:33.168Z"
+        },
+        {
+          "id": 63,
+          "chatbotId": 22,
+          "userId": null,
+          "content": "what was the most recent inspection?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-04-28T21:02:50.425Z"
+        },
+        {
+          "id": 64,
+          "chatbotId": 22,
+          "userId": null,
+          "content": "The most recent inspection listed in the Asana task data for the project \" 1320 Mayfair Drive\" is the \"Gas Line Inspection,\" which is marked as completed. The tasks for \"Sewer Line Inspection,\" \"Irrigation System,\" \"Building Final,\" \"Site Final,\" and \"Demo Site\" are still pending and not yet completed. Therefore, the \"Gas Line Inspection\" is the latest completed inspection according to the Asana project data.",
+          "isUserMessage": false,
+          "citation": "MAIN",
+          "createdAt": "2025-04-28T21:03:23.989Z"
         }
       ],
       "summaries": [],
@@ -138,6 +192,6 @@
       ]
     }
   ],
-  "exportedAt": "2025-04-28T20:59:03.839Z",
+  "exportedAt": "2025-04-29T14:49:58.118Z",
   "exportedBy": "SPH Chat Migration Utility"
 }
