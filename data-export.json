@@ -319,12 +319,39 @@
         "createdAt": "2025-04-29T16:41:09.245Z"
       },
       "documents": [],
-      "messages": [],
-      "summaries": [],
+      "messages": [
+        {
+          "id": 75,
+          "chatbotId": 23,
+          "userId": null,
+          "content": "what happened last week?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-04-29T16:51:02.515Z"
+        },
+        {
+          "id": 76,
+          "chatbotId": 23,
+          "userId": null,
+          "content": "Last week at the 1320 Mayfair project, several activities took place:\n\n1. The drywall team was working on sanding and finishing imperfections in the ceiling, with Gerardo and Alex on site for this task. Pavers were delivered, and Ron Heller mentioned that gravel installation was scheduled for the following day. Additionally, Eric's HVAC team was preparing AC units for the home, and electrical trim work was scheduled to continue over the weekend and into Monday.\n\n2. Aaron Wilson reported that the material for sliding door hardware arrived and was being shipped to the office. He also mentioned that the drywall crew was on site, and the gas connection to the home was completed, although further work on AC, furnace, and thermostat prep was needed.\n\n3. Rashad Sims was coordinating countertop templating, which was scheduled for Friday, and was following up on material expected to arrive at the warehouse.\n\n4. Bree Ramsdell was coordinating with Joel’s team for punch-out tasks and noted that electricians were on site.\n\n5. Other tasks included the installation of handrails, driveway preparation, and touch-up painting by Chino's team.\n\nThese updates provide a snapshot of the ongoing construction and coordination efforts at the site, according to Aaron Wilson, Ron Heller, Rashad Sims, and Bree Ramsdell in Slack messages from April 21 to April 28, 2025.",
+          "isUserMessage": false,
+          "citation": "Aaron Wilson, Ron Heller, Rashad Sims, and Bree Ramsdell in Slack messages from April 21 to April 28, 2025",
+          "createdAt": "2025-04-29T16:51:16.093Z"
+        }
+      ],
+      "summaries": [
+        {
+          "id": 3,
+          "chatbotId": 23,
+          "content": "<h2>1320 Mayfair - PM – Weekly Summary • Week 2025-W18 – Week Ending April 29, 2025</h2>\n\n<ol>\n  <li><strong>Key Achievements</strong>\n    <ul>\n      <li>Drywall team completed sanding and ceiling imperfections.</li>\n      <li>Pavers were delivered and gravel installation scheduled.</li>\n      <li>HVAC team prepared AC units for the home.</li>\n      <li>Arturo installed handrails.</li>\n      <li>Templating scheduled for countertops and backsplash.</li>\n    </ul>\n  </li>\n  <li><strong>Issues or Blockers</strong>\n    <ul>\n      <li>Pending arrival of sliding door materials and Dekton slabs.</li>\n      <li>ETA on registers remains pending.</li>\n    </ul>\n  </li>\n  <li><strong>Upcoming Work</strong>\n    <ul>\n      <li>Electrical trim to continue on Saturday and Monday.</li>\n      <li>Gravel installation and paver work scheduled for next week.</li>\n      <li>Raul to finish template work before the end of the week.</li>\n      <li>30-yard dumpster final pick-up scheduled for tomorrow.</li>\n    </ul>\n  </li>\n  <li><strong>Action Items</strong>\n    <ul>\n      <li>Follow up with Brendan regarding Dekton slab delivery.</li>\n      <li>Rick to provide garage door quote and selections.</li>\n      <li>Raul to add shelves to schedule templating.</li>\n      <li>Relocate camera to 2387 Poplar.</li>\n    </ul>\n  </li>\n</ol>",
+          "week": "2025-W18",
+          "sentAt": "2025-04-29T16:52:12.880Z"
+        }
+      ],
       "emailRecipients": [],
       "asanaProjects": []
     }
   ],
-  "exportedAt": "2025-04-29T16:49:48.313Z",
+  "exportedAt": "2025-04-29T16:54:45.557Z",
   "exportedBy": "SPH Chat Migration Utility"
 }
