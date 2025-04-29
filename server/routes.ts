@@ -1410,12 +1410,13 @@ You should **never make up information**. You may summarize or synthesize detail
   apiRouter.get("/system/asana-projects", async (req, res) => {
     try {
       const workspaceId = req.query.workspaceId as string;
+      const offset = req.query.offset as string | undefined;
       
       if (!workspaceId) {
         return res.status(400).json({ message: "Workspace ID is required" });
       }
       
-      const result = await getAsanaProjects(workspaceId);
+      const result = await getAsanaProjects(workspaceId, offset);
       res.json(result);
     } catch (error) {
       console.error("Error listing Asana projects:", error);
@@ -1503,6 +1504,60 @@ You should **never make up information**. You may summarize or synthesize detail
       }
       console.error("Error updating settings:", error);
       res.status(500).json({ message: "Failed to update settings" });
+    }
+  });
+  
+  // Get all Asana projects (with pagination support)
+  apiRouter.get("/system/all-asana-projects", isAuthenticated, async (req, res) => {
+    try {
+      const workspaceId = req.query.workspaceId as string;
+      
+      if (!workspaceId) {
+        return res.status(400).json({ message: "Workspace ID is required" });
+      }
+      
+      // Fetch all projects using pagination
+      let allProjects: { id: string; name: string }[] = [];
+      let offset: string | undefined = undefined;
+      let hasMore = true;
+      
+      while (hasMore) {
+        const result = await getAsanaProjects(workspaceId, offset);
+        
+        if (!result.success) {
+          return res.status(400).json({ 
+            success: false, 
+            error: result.error || "Failed to fetch Asana projects" 
+          });
+        }
+        
+        if (result.projects && result.projects.length > 0) {
+          allProjects = [...allProjects, ...result.projects];
+        }
+        
+        // Check if there are more pages
+        if (result.next_page && result.next_page.offset) {
+          offset = result.next_page.offset;
+        } else {
+          hasMore = false;
+        }
+      }
+      
+      // Sort projects alphabetically by name
+      allProjects.sort((a, b) => a.name.localeCompare(b.name));
+      
+      res.json({
+        success: true,
+        projectCount: allProjects.length,
+        projects: allProjects
+      });
+    } catch (error) {
+      console.error("Error fetching all Asana projects:", error);
+      res.status(500).json({ 
+        success: false,
+        error: "Failed to fetch all Asana projects",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
     }
   });
   

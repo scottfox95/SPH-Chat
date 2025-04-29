@@ -81,12 +81,13 @@ export default function AsanaProjectSelector({ onSelect, currentProjectId }: Asa
     }
   };
   
-  // Fetch projects from selected workspace with explicit credentials
+  // Fetch all projects from selected workspace with explicit credentials
   const fetchProjects = async (workspaceId: string) => {
     setLoading(true);
     setProjects([]);
     try {
-      const response = await fetch(`/api/system/asana-projects?workspaceId=${workspaceId}`, {
+      // Use the new endpoint that fetches all projects with pagination
+      const response = await fetch(`/api/system/all-asana-projects?workspaceId=${workspaceId}`, {
         method: "GET",
         credentials: 'include',
         headers: {
@@ -97,6 +98,13 @@ export default function AsanaProjectSelector({ onSelect, currentProjectId }: Asa
       
       if (data.success && data.projects) {
         setProjects(data.projects);
+        
+        if (data.projectCount > 0) {
+          toast({
+            title: "Projects loaded",
+            description: `Loaded ${data.projectCount} Asana projects`
+          });
+        }
       } else {
         toast({
           title: "Failed to fetch projects",

@@ -421,9 +421,10 @@ export async function getAsanaTaskDetails(taskId: string): Promise<{
  * @param workspaceId The ID of the workspace to fetch projects from
  * @returns Array of project objects
  */
-export async function getAsanaProjects(workspaceId: string): Promise<{
+export async function getAsanaProjects(workspaceId: string, offset?: string): Promise<{
   success: boolean;
   projects?: { id: string; name: string }[];
+  next_page?: { offset: string };
   error?: string;
 }> {
   try {
@@ -460,12 +461,14 @@ export async function getAsanaProjects(workspaceId: string): Promise<{
       headers["Authorization"] = `Bearer ${token}`;
     }
 
-    const response = await fetch(
-      `${ASANA_API_BASE}/projects?workspace=${workspaceId}&limit=100`,
-      {
-        headers,
-      }
-    );
+    // Build URL with pagination
+    let url = `${ASANA_API_BASE}/projects?workspace=${workspaceId}&limit=100`;
+    if (offset) {
+      url += `&offset=${offset}`;
+    }
+
+    console.log(`Fetching Asana projects with URL: ${url}`);
+    const response = await fetch(url, { headers });
 
     if (response.status !== 200) {
       const errorData = await response.json();
@@ -483,9 +486,13 @@ export async function getAsanaProjects(workspaceId: string): Promise<{
       name: project.name
     }));
 
+    // Check for pagination info
+    const next_page = data.next_page ? { offset: data.next_page.offset } : undefined;
+
     return {
       success: true,
-      projects
+      projects,
+      next_page
     };
   } catch (error: any) {
     console.error("Error fetching Asana projects:", error);

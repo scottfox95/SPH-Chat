@@ -319,26 +319,7 @@
         "createdAt": "2025-04-29T16:41:09.245Z"
       },
       "documents": [],
-      "messages": [
-        {
-          "id": 75,
-          "chatbotId": 23,
-          "userId": null,
-          "content": "what happened last week?",
-          "isUserMessage": true,
-          "citation": null,
-          "createdAt": "2025-04-29T16:51:02.515Z"
-        },
-        {
-          "id": 76,
-          "chatbotId": 23,
-          "userId": null,
-          "content": "Last week at the 1320 Mayfair project, several activities took place:\n\n1. The drywall team was working on sanding and finishing imperfections in the ceiling, with Gerardo and Alex on site for this task. Pavers were delivered, and Ron Heller mentioned that gravel installation was scheduled for the following day. Additionally, Eric's HVAC team was preparing AC units for the home, and electrical trim work was scheduled to continue over the weekend and into Monday.\n\n2. Aaron Wilson reported that the material for sliding door hardware arrived and was being shipped to the office. He also mentioned that the drywall crew was on site, and the gas connection to the home was completed, although further work on AC, furnace, and thermostat prep was needed.\n\n3. Rashad Sims was coordinating countertop templating, which was scheduled for Friday, and was following up on material expected to arrive at the warehouse.\n\n4. Bree Ramsdell was coordinating with Joel’s team for punch-out tasks and noted that electricians were on site.\n\n5. Other tasks included the installation of handrails, driveway preparation, and touch-up painting by Chino's team.\n\nThese updates provide a snapshot of the ongoing construction and coordination efforts at the site, according to Aaron Wilson, Ron Heller, Rashad Sims, and Bree Ramsdell in Slack messages from April 21 to April 28, 2025.",
-          "isUserMessage": false,
-          "citation": "Aaron Wilson, Ron Heller, Rashad Sims, and Bree Ramsdell in Slack messages from April 21 to April 28, 2025",
-          "createdAt": "2025-04-29T16:51:16.093Z"
-        }
-      ],
+      "messages": [],
       "summaries": [
         {
           "id": 3,
@@ -350,8 +331,105 @@
       ],
       "emailRecipients": [],
       "asanaProjects": []
+    },
+    {
+      "chatbot": {
+        "id": 24,
+        "name": "160 Black Ankle - PM",
+        "slackChannelId": "C06KA1D1XMW",
+        "asanaProjectId": null,
+        "asanaConnectionId": null,
+        "createdById": 4,
+        "projectId": 2,
+        "publicToken": "794864bd-5c6f-4a60-a3e2-a42795d65132",
+        "isActive": true,
+        "requireAuth": false,
+        "createdAt": "2025-04-29T17:11:20.606Z"
+      },
+      "documents": [],
+      "messages": [],
+      "summaries": [],
+      "emailRecipients": [],
+      "asanaProjects": [
+        {
+          "id": 7,
+          "chatbotId": 24,
+          "asanaProjectId": "1207037289752410",
+          "projectName": "160 Black Ankle ",
+          "projectType": "permit",
+          "createdAt": "2025-04-29T17:16:08.369Z"
+        }
+      ]
+    },
+    {
+      "chatbot": {
+        "id": 25,
+        "name": "2387 Poplar",
+        "slackChannelId": "C07EQM13CM9",
+        "asanaProjectId": null,
+        "asanaConnectionId": null,
+        "createdById": 4,
+        "projectId": 2,
+        "publicToken": "3cc6f198-9a53-49b9-b060-69746aa3ce20",
+        "isActive": true,
+        "requireAuth": false,
+        "createdAt": "2025-04-29T17:17:36.903Z"
+      },
+      "documents": [],
+      "messages": [],
+      "summaries": [],
+      "emailRecipients": [],
+      "asanaProjects": [
+        {
+          "id": 8,
+          "chatbotId": 25,
+          "asanaProjectId": "1208215403488332",
+          "projectName": "2387 Poplar Springs",
+          "projectType": "main",
+          "createdAt": "2025-04-29T17:18:16.300Z"
+        }
+      ]
+    },
+    {
+      "chatbot": {
+        "id": 26,
+        "name": "3187 Saybrook",
+        "slackChannelId": "C07GGE18FT7",
+        "asanaProjectId": null,
+        "asanaConnectionId": null,
+        "createdById": 4,
+        "projectId": 2,
+        "publicToken": "c7658ba4-a4b3-4694-86e2-f9151d5accdb",
+        "isActive": true,
+        "requireAuth": false,
+        "createdAt": "2025-04-29T17:21:29.963Z"
+      },
+      "documents": [],
+      "messages": [
+        {
+          "id": 81,
+          "chatbotId": 26,
+          "userId": null,
+          "content": "has asbestos inspection happened yet?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-04-29T17:21:47.768Z"
+        },
+        {
+          "id": 82,
+          "chatbotId": 26,
+          "userId": null,
+          "content": "I wasn’t able to find that information in the available project files or messages.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-04-29T17:21:48.462Z"
+        }
+      ],
+      "summaries": [],
+      "emailRecipients": [],
+      "asanaProjects": []
     }
   ],
-  "exportedAt": "2025-04-29T16:54:45.557Z",
+  "exportedAt": "2025-04-29T17:26:16.807Z",
   "exportedBy": "SPH Chat Migration Utility"
 }
