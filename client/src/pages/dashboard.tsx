@@ -72,7 +72,7 @@ export default function Dashboard() {
     fetchData();
   }, []);
   
-  // Define the type for chatbots
+  // Define the type for chatbots from API
   interface Chatbot {
     id: number;
     name: string;
@@ -84,7 +84,26 @@ export default function Dashboard() {
     asanaProjectId: string | null;
     asanaConnectionId: string | null;
     createdById: number;
-    projectId: number;
+    projectId: number | null;
+    project?: {
+      id: number;
+      name: string;
+    } | null;
+  }
+  
+  // Define the type expected by ChatbotCard
+  interface ChatbotCardType {
+    id: number;
+    name: string;
+    isActive: boolean;
+    publicToken: string;
+    slackChannelId: string;
+    createdAt: string;
+    projectId?: number | null;
+    project?: {
+      id: number;
+      name: string;
+    } | null;
   }
   
   // Fetch chatbots for the cards display
@@ -92,6 +111,14 @@ export default function Dashboard() {
     queryKey: ["/api/chatbots"],
   });
   
+  // Function to safely transform Chatbot to ChatbotCardType
+  const transformChatbot = (chatbot: Chatbot): ChatbotCardType => {
+    return {
+      ...chatbot,
+      slackChannelId: chatbot.slackChannelId || 'Not Set' // Ensure slackChannelId is never null
+    };
+  };
+
   const handleShareClick = (chatbot: Chatbot) => {
     setSelectedChatbot(chatbot);
     setShareModalOpen(true);
@@ -207,7 +234,7 @@ export default function Dashboard() {
                   .map((chatbot: Chatbot) => (
                     <ChatbotCard 
                       key={chatbot.id} 
-                      chatbot={chatbot} 
+                      chatbot={transformChatbot(chatbot)} 
                       onShare={() => handleShareClick(chatbot)}
                     />
                   ))}
@@ -237,18 +264,18 @@ export default function Dashboard() {
           </TabsContent>
           
           <TabsContent value="all" className="space-y-4">
-            {chatbots && chatbots.filter((bot: any) => 
+            {chatbots && chatbots.filter((bot: Chatbot) => 
               bot.name.toLowerCase().includes(searchQuery.toLowerCase())
             ).length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {chatbots
-                  .filter((bot: any) => 
+                  .filter((bot: Chatbot) => 
                     bot.name.toLowerCase().includes(searchQuery.toLowerCase())
                   )
-                  .map((chatbot: any) => (
+                  .map((chatbot: Chatbot) => (
                     <ChatbotCard 
                       key={chatbot.id} 
-                      chatbot={chatbot} 
+                      chatbot={transformChatbot(chatbot)} 
                       onShare={() => handleShareClick(chatbot)}
                     />
                   ))}
@@ -294,7 +321,7 @@ export default function Dashboard() {
         <ShareModal
           isOpen={shareModalOpen}
           onClose={() => setShareModalOpen(false)}
-          chatbot={selectedChatbot}
+          chatbot={transformChatbot(selectedChatbot)}
         />
       )}
     </>
