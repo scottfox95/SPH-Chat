@@ -29,7 +29,8 @@ export async function getChatbotResponse(
   prompt: string,
   documents: string[],
   slackMessages: any[],
-  systemPrompt: string
+  systemPrompt: string,
+  outputFormat?: string | null
 ) {
   try {
     // Get application settings to determine source attribution behavior
@@ -85,21 +86,32 @@ export async function getChatbotResponse(
       enhancedSystemPrompt += " Format source attribution at the end of your response like this: 'according to [NAME] on [DATE]' or similar natural phrasing. Never skip this attribution part even if the information seems unimportant.";
     }
 
+    // Append output format instructions if provided
+    const messages = [
+      {
+        role: "system" as const,
+        content: enhancedSystemPrompt,
+      },
+      {
+        role: "user" as const,
+        content: `I need information about the following: ${prompt}\n\nHere's all the context I have:\n${context}`,
+      }
+    ];
+
+    // Add a dedicated formatting message if outputFormat is specified
+    if (outputFormat) {
+      messages.push({
+        role: "system" as const,
+        content: `IMPORTANT - OUTPUT FORMAT: Your response MUST follow this exact format:\n${outputFormat}\nDo not deviate from this format in any way.`
+      });
+    }
+
     // Get the model from settings
     const model = await getCurrentModel();
     
     const response = await openai.chat.completions.create({
       model, // Use model from settings
-      messages: [
-        {
-          role: "system",
-          content: enhancedSystemPrompt,
-        },
-        {
-          role: "user",
-          content: `I need information about the following: ${prompt}\n\nHere's all the context I have:\n${context}`,
-        },
-      ],
+      messages,
       temperature: 0.3,
     });
 
