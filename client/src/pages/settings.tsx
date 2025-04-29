@@ -145,7 +145,8 @@ export default function Settings() {
       includeSourceDetails?: boolean,
       includeDateInSource?: boolean, 
       includeUserInSource?: boolean,
-      responseTemplate?: string 
+      responseTemplate?: string,
+      summaryPrompt?: string 
     }) => {
       const response = await apiRequest('PUT', '/api/settings', data);
       return response.json();
@@ -927,6 +928,70 @@ You should **never make up information**. You may summarize or synthesize detail
                             </>
                           ) : (
                             'Save Template'
+                          )}
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <Separator className="my-4" />
+                  
+                  <div className="space-y-4">
+                    <h3 className="text-sm font-medium">Weekly Summary Prompt</h3>
+                    <div className="space-y-2">
+                      <Label htmlFor="summary-prompt">Weekly Summary Generation Prompt</Label>
+                      <textarea
+                        id="summary-prompt"
+                        className="min-h-[200px] w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#D2B48C] focus:border-transparent font-mono"
+                      >{settings?.summaryPrompt || ""}</textarea>
+                      <div className="text-xs text-gray-500">
+                        <p>This prompt will be used to generate weekly summaries from Slack messages. You can use the following variables:</p>
+                        <ul className="list-disc pl-5 mt-1 space-y-1">
+                          <li><code className="bg-gray-100 px-1 rounded">{'{{projectName}}'}</code> - The name of the project</li>
+                        </ul>
+                      </div>
+                      <div className="flex justify-between mt-2">
+                        <Button
+                          variant="outline"
+                          onClick={() => {
+                            // Set the default template in the textarea
+                            const defaultTemplate = `You are an expert construction project manager. Create a concise weekly summary of activity for the {{projectName}} homebuilding project based on Slack channel messages. Focus on key decisions, progress updates, issues, and upcoming milestones. Format the summary in HTML with sections for: 1) Key Achievements, 2) Issues or Blockers, 3) Upcoming Work, and 4) Action Items. Keep it professional and informative.`;
+                            
+                            // Update the textarea
+                            const textarea = document.getElementById('summary-prompt') as HTMLTextAreaElement;
+                            if (textarea) {
+                              textarea.value = defaultTemplate;
+                            }
+                          }}
+                          className="text-gray-500"
+                        >
+                          Reset to Default
+                        </Button>
+                        
+                        <Button
+                          onClick={() => {
+                            // Get current value from the textarea
+                            const summaryPrompt = (document.getElementById('summary-prompt') as HTMLTextAreaElement)?.value;
+                            
+                            updateSettingsMutation.mutate({
+                              openaiModel: settings?.openaiModel || "gpt-4o",
+                              includeSourceDetails: settings?.includeSourceDetails || false,
+                              includeUserInSource: settings?.includeUserInSource || false,
+                              includeDateInSource: settings?.includeDateInSource || false,
+                              responseTemplate: settings?.responseTemplate || null,
+                              summaryPrompt: summaryPrompt
+                            });
+                          }}
+                          disabled={updateSettingsMutation.isPending}
+                          className="bg-[#D2B48C] hover:bg-[#D2B48C]/90"
+                        >
+                          {updateSettingsMutation.isPending ? (
+                            <>
+                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                              Saving...
+                            </>
+                          ) : (
+                            'Save Prompt'
                           )}
                         </Button>
                       </div>
