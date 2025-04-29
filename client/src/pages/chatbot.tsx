@@ -471,6 +471,32 @@ export default function Chatbot({ id }: ChatbotProps) {
       });
     },
   });
+  
+  // Update output format mutation
+  const updateOutputFormatMutation = useMutation({
+    mutationFn: async (outputFormat: string) => {
+      const res = await apiRequest("PUT", `/api/chatbots/${id}`, {
+        outputFormat: outputFormat || null, // Convert empty string to null
+      });
+      return res.json();
+    },
+    onSuccess: (data) => {
+      toast({
+        title: "Output format updated",
+        description: data.outputFormat
+          ? "Chatbot now uses a custom output format."
+          : "Chatbot now uses free-form responses.",
+      });
+      queryClient.invalidateQueries({ queryKey: [`/api/chatbots/${id}`] });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Failed to update output format",
+        description: error.message || "Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
 
   const handleAddEmail = (e: React.FormEvent) => {
     e.preventDefault();
@@ -705,6 +731,37 @@ export default function Chatbot({ id }: ChatbotProps) {
                       <code className="bg-gray-100 px-1 rounded text-xs">{'{{chatbotName}}'}</code> - The name of the chatbot
                       <br />
                       <code className="bg-gray-100 px-1 rounded text-xs">{'{{contextSources}}'}</code> - The list of available context sources
+                    </p>
+                  </div>
+                  
+                  <Separator className="my-4" />
+                  
+                  <div>
+                    <Label htmlFor="output-format">Output Format</Label>
+                    <textarea
+                      id="output-format"
+                      className="min-h-[120px] w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#D2B48C] focus:border-transparent font-mono mt-1"
+                      placeholder="Specify an exact output format structure that the AI should follow. Leave empty for free-form responses."
+                      defaultValue={chatbot.outputFormat || ""}
+                      onChange={(e) => {
+                        // Debounced update could be implemented here if needed
+                      }}
+                      onBlur={(e) => {
+                        const value = e.target.value.trim();
+                        // Only update if the value has changed
+                        if (value !== chatbot.outputFormat) {
+                          updateOutputFormatMutation.mutate(value);
+                        }
+                      }}
+                    />
+                    <p className="text-xs text-gray-500 mt-1">
+                      Define a specific output format that responses must follow. This helps ensure consistent formatting of AI responses.
+                      <br />
+                      Example format for expense listings:
+                      <br />
+                      <code className="bg-gray-100 px-1 rounded text-xs whitespace-pre">Vendor $Amount description for Project.</code>
+                      <br />
+                      This is separate from the system prompt and will override any formatting instructions there.
                     </p>
                   </div>
                 </div>
