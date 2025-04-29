@@ -759,7 +759,9 @@ export default function Chatbot({ id }: ChatbotProps) {
                       <br />
                       Example format for expense listings:
                       <br />
-                      <code className="bg-gray-100 px-1 rounded text-xs whitespace-pre">Vendor $Amount description for Project.</code>
+                      <code className="bg-gray-100 px-1 rounded text-xs whitespace-pre">Lowe's $142.06 Material for UNKNOWN Home Depot
+Home Depot $410.73 Mortar for patio pavers for 1320 Mayfair
+Lowe's $51.79 Interior paint for UNKNOWN</code>
                       <br />
                       This is separate from the system prompt and will override any formatting instructions there.
                     </p>

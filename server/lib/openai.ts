@@ -102,7 +102,7 @@ export async function getChatbotResponse(
     if (outputFormat) {
       messages.push({
         role: "system" as const,
-        content: `IMPORTANT - OUTPUT FORMAT: Your response MUST follow this exact format:\n${outputFormat}\nDo not deviate from this format in any way.`
+        content: `IMPORTANT - OUTPUT FORMAT: Your response MUST follow this exact format:\n${outputFormat}\n\nYou MUST put each expense entry on its own line with a line break (\\n) between entries. Each line must follow the format exactly. Do not deviate from this format in any way.`
       });
     }
 

@@ -197,7 +197,7 @@ export default function ChatInterface({
             </div>
             <div className="flex-1">
               <div className="bg-white rounded-xl rounded-tl-sm p-4 shadow-sm max-w-3xl">
-                <p className="text-sm">
+                <p className="text-sm whitespace-pre-line">
                   Hello! I'm SPH ChatBot for {chatbotName}. I can answer questions about this project based on documents and Slack messages. How can I help you today?
                 </p>
               </div>
@@ -238,7 +238,7 @@ export default function ChatInterface({
                   ? "bg-[#D2B48C] bg-opacity-10 rounded-tr-sm"
                   : "bg-white shadow-sm rounded-tl-sm"
               )}>
-                <p className="text-sm">{message.content}</p>
+                <p className="text-sm whitespace-pre-line">{message.content}</p>
                 
                 {/* Citation */}
                 {message.citation && !message.isUserMessage && (
@@ -276,7 +276,7 @@ export default function ChatInterface({
             </div>
             <div className="flex-1">
               <div className="bg-white rounded-xl rounded-tl-sm p-4 shadow-sm max-w-3xl">
-                <p className="text-sm">Thinking...</p>
+                <p className="text-sm whitespace-pre-line">Thinking...</p>
               </div>
             </div>
           </div>
