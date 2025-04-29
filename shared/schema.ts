@@ -45,6 +45,7 @@ export const chatbots = pgTable("chatbots", {
   publicToken: uuid("public_token").notNull().unique().defaultRandom(),
   isActive: boolean("is_active").notNull().default(true),
   requireAuth: boolean("require_auth").notNull().default(false),
+  systemPrompt: text("system_prompt"), // Custom system prompt for this chatbot (null = use app-wide prompt)
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
@@ -149,6 +150,7 @@ export const insertChatbotSchema = createInsertSchema(chatbots).pick({
   projectId: true,
   isActive: true,
   requireAuth: true,
+  systemPrompt: true,
 });
 
 export const insertDocumentSchema = createInsertSchema(documents).pick({

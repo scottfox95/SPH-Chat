@@ -634,7 +634,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   apiRouter.put("/chatbots/:id", isAuthenticated, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
-      const { name, slackChannelId, asanaProjectId, isActive, requireAuth, projectId } = req.body;
+      const { name, slackChannelId, asanaProjectId, isActive, requireAuth, projectId, systemPrompt } = req.body;
       
       console.log(`Updating chatbot ${id} with data:`, req.body);
       
