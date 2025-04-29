@@ -23,6 +23,14 @@
       "displayName": "Daniel Zaken",
       "role": "admin",
       "initial": "DZ"
+    },
+    {
+      "id": 10,
+      "username": "Taka",
+      "password": "3176dbadca87f53d5acbf2e60c209872a1ed6770affda878f28edf3ac1c8be0800b91ea313a48e57b264425b4c1c6829559da1a81abfe32d8ea471674b455534.28ec9026bb8cd7b877c0353ad72937bd",
+      "displayName": "Taka",
+      "role": "user",
+      "initial": "TS"
     }
   ],
   "chatbots": [
@@ -295,8 +303,28 @@
           "createdAt": "2025-04-28T20:55:19.672Z"
         }
       ]
+    },
+    {
+      "chatbot": {
+        "id": 23,
+        "name": "1320 Mayfair - PM",
+        "slackChannelId": "C06S1QZU9N2",
+        "asanaProjectId": null,
+        "asanaConnectionId": null,
+        "createdById": 4,
+        "projectId": 2,
+        "publicToken": "4cfd9240-5c65-4dcb-a1e2-61747b36afb4",
+        "isActive": true,
+        "requireAuth": false,
+        "createdAt": "2025-04-29T16:41:09.245Z"
+      },
+      "documents": [],
+      "messages": [],
+      "summaries": [],
+      "emailRecipients": [],
+      "asanaProjects": []
     }
   ],
-  "exportedAt": "2025-04-29T16:36:19.691Z",
+  "exportedAt": "2025-04-29T16:46:47.653Z",
   "exportedBy": "SPH Chat Migration Utility"
 }
