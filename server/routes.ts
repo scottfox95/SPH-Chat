@@ -249,6 +249,70 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
+  // User-Project assignment routes
+  apiRouter.get("/users/:userId/projects", requireAdmin, asyncHandler(async (req, res) => {
+    const userId = parseInt(req.params.userId);
+    const userProjects = await storage.getUserProjects(userId);
+    res.json(userProjects);
+  }));
+  
+  apiRouter.post("/users/:userId/projects", requireAdmin, asyncHandler(async (req, res) => {
+    const userId = parseInt(req.params.userId);
+    const { projectId } = req.body;
+    
+    if (!projectId) {
+      return res.status(400).json({ message: "Project ID is required" });
+    }
+    
+    // Check if user exists
+    const user = await storage.getUser(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    
+    // Check if project exists
+    const project = await storage.getProject(projectId);
+    if (!project) {
+      return res.status(404).json({ message: "Project not found" });
+    }
+    
+    // Check if assignment already exists
+    const userProjects = await storage.getUserProjects(userId);
+    const existingAssignment = userProjects.find(up => up.projectId === projectId);
+    
+    if (existingAssignment) {
+      return res.status(400).json({ message: "User is already assigned to this project" });
+    }
+    
+    const userProject = await storage.assignUserToProject(userId, projectId);
+    res.status(201).json(userProject);
+  }));
+  
+  apiRouter.delete("/users/:userId/projects/:projectId", requireAdmin, asyncHandler(async (req, res) => {
+    const userId = parseInt(req.params.userId);
+    const projectId = parseInt(req.params.projectId);
+    
+    // Check if user exists
+    const user = await storage.getUser(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    
+    // Check if project exists
+    const project = await storage.getProject(projectId);
+    if (!project) {
+      return res.status(404).json({ message: "Project not found" });
+    }
+    
+    const success = await storage.removeUserFromProject(userId, projectId);
+    
+    if (!success) {
+      return res.status(404).json({ message: "Assignment not found or could not be deleted" });
+    }
+    
+    res.json({ success: true });
+  }));
+  
   // Project management routes
   apiRouter.get("/projects", isAuthenticated, asyncHandler(async (req, res) => {
     // Get projects based on user access level
