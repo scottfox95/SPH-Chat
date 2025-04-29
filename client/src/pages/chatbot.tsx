@@ -14,6 +14,7 @@ import AsanaProjectsManager from "@/components/dashboard/asana-projects-manager"
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { Separator } from "@/components/ui/separator";
 import { 
   Select,
   SelectContent,
@@ -439,6 +440,32 @@ export default function Chatbot({ id }: ChatbotProps) {
     onError: (error: any) => {
       toast({
         title: "Failed to update Asana project",
+        description: error.message || "Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
+  
+  // Update system prompt mutation
+  const updateSystemPromptMutation = useMutation({
+    mutationFn: async (systemPrompt: string) => {
+      const res = await apiRequest("PUT", `/api/chatbots/${id}`, {
+        systemPrompt: systemPrompt || null, // Convert empty string to null
+      });
+      return res.json();
+    },
+    onSuccess: (data) => {
+      toast({
+        title: "System prompt updated",
+        description: data.systemPrompt
+          ? "Chatbot now uses a custom system prompt."
+          : "Chatbot now uses the app-wide system prompt.",
+      });
+      queryClient.invalidateQueries({ queryKey: [`/api/chatbots/${id}`] });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Failed to update system prompt",
         description: error.message || "Please try again.",
         variant: "destructive",
       });
