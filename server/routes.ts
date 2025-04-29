@@ -1216,8 +1216,21 @@ Respond using complete sentences. If the information is unavailable, say:
 
 You should **never make up information**. You may summarize or synthesize details if the answer is spread across multiple sources.`;
       
-      // Get the system prompt (either from settings or use default)
-      let systemPromptTemplate = appSettings?.responseTemplate || defaultSystemPromptTemplate;
+      // Determine which system prompt to use
+      // 1. Use chatbot-specific prompt if available
+      // 2. Fall back to app-wide prompt from settings if available
+      // 3. Use default prompt as last resort
+      let systemPromptTemplate;
+      
+      if (chatbot.systemPrompt) {
+        // Use chatbot-specific system prompt
+        console.log(`Using custom system prompt for chatbot ${chatbotId}`);
+        systemPromptTemplate = chatbot.systemPrompt;
+      } else {
+        // Fall back to app-wide prompt or default
+        console.log(`Using app-wide system prompt for chatbot ${chatbotId}`);
+        systemPromptTemplate = appSettings?.responseTemplate || defaultSystemPromptTemplate;
+      }
       
       // Replace variables in the template
       let systemPrompt = systemPromptTemplate

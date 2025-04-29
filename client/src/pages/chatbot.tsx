@@ -649,6 +649,37 @@ export default function Chatbot({ id }: ChatbotProps) {
                       Organize this chatbot within a specific project group
                     </p>
                   </div>
+
+                  <Separator className="my-4" />
+                  
+                  <div>
+                    <Label htmlFor="system-prompt">Custom System Prompt</Label>
+                    <textarea
+                      id="system-prompt"
+                      className="min-h-[150px] w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#D2B48C] focus:border-transparent font-mono mt-1"
+                      placeholder="Enter a custom system prompt for this chatbot. Leave empty to use the app-wide system prompt."
+                      defaultValue={chatbot.systemPrompt || ""}
+                      onChange={(e) => {
+                        // Debounced update could be implemented here if needed
+                      }}
+                      onBlur={(e) => {
+                        const value = e.target.value.trim();
+                        // Only update if the value has changed
+                        if (value !== chatbot.systemPrompt) {
+                          updateSystemPromptMutation.mutate(value);
+                        }
+                      }}
+                    />
+                    <p className="text-xs text-gray-500 mt-1">
+                      Define a custom system prompt for this specific chatbot. If left empty, the app-wide system prompt will be used.
+                      <br />
+                      You can use the following variables:
+                      <br />
+                      <code className="bg-gray-100 px-1 rounded text-xs">{'{{chatbotName}}'}</code> - The name of the chatbot
+                      <br />
+                      <code className="bg-gray-100 px-1 rounded text-xs">{'{{contextSources}}'}</code> - The list of available context sources
+                    </p>
+                  </div>
                 </div>
               </TabsContent>
               
