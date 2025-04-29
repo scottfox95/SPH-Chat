@@ -251,17 +251,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // Project management routes
   apiRouter.get("/projects", isAuthenticated, asyncHandler(async (req, res) => {
-    const projects = await storage.getProjects();
+    // Get projects based on user access level
+    const userId = (req.user as Express.User).id;
+    const projects = await storage.getUserAccessibleProjects(userId);
     res.json(projects);
   }));
   
   apiRouter.get("/projects/:id", isAuthenticated, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
+      const userId = (req.user as Express.User).id;
+      
+      // Check if user has admin role
+      const user = await storage.getUser(userId);
+      const isAdmin = user?.role === "admin";
+      
+      // Get the project
       const project = await storage.getProject(id);
       
       if (!project) {
         return res.status(404).json({ message: "Project not found" });
+      }
+      
+      // If not admin, check if user is assigned to this project
+      if (!isAdmin) {
+        const accessibleProjects = await storage.getUserAccessibleProjects(userId);
+        const hasAccess = accessibleProjects.some(p => p.id === id);
+        
+        if (!hasAccess) {
+          return res.status(403).json({ message: "You don't have permission to access this project" });
+        }
       }
       
       res.json(project);
@@ -366,20 +385,49 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  // Chatbot routes - admin users need access to all chatbots
-  apiRouter.get("/chatbots", async (req, res) => {
-    const chatbots = await storage.getChatbots();
-    res.json(chatbots);
+  // Chatbot routes - filter chatbots based on user permissions
+  apiRouter.get("/chatbots", isAuthenticated, async (req, res) => {
+    try {
+      const userId = (req.user as Express.User).id;
+      const chatbots = await storage.getUserAccessibleChatbots(userId);
+      res.json(chatbots);
+    } catch (error) {
+      console.error("Error fetching chatbots:", error);
+      res.status(500).json({ message: "Failed to fetch chatbots" });
+    }
   });
   
-  apiRouter.get("/chatbots/:id", async (req, res) => {
-    const chatbot = await storage.getChatbot(parseInt(req.params.id));
-    
-    if (!chatbot) {
-      return res.status(404).json({ message: "Chatbot not found" });
+  apiRouter.get("/chatbots/:id", isAuthenticated, async (req, res) => {
+    try {
+      const chatbotId = parseInt(req.params.id);
+      const userId = (req.user as Express.User).id;
+      
+      // Check if user has admin role
+      const user = await storage.getUser(userId);
+      const isAdmin = user?.role === "admin";
+      
+      // Get the chatbot
+      const chatbot = await storage.getChatbot(chatbotId);
+      
+      if (!chatbot) {
+        return res.status(404).json({ message: "Chatbot not found" });
+      }
+      
+      // If not admin, check if user has access to this chatbot
+      if (!isAdmin && chatbot.projectId) {
+        const accessibleChatbots = await storage.getUserAccessibleChatbots(userId);
+        const hasAccess = accessibleChatbots.some(c => c.id === chatbotId);
+        
+        if (!hasAccess) {
+          return res.status(403).json({ message: "You don't have permission to access this chatbot" });
+        }
+      }
+      
+      res.json(chatbot);
+    } catch (error) {
+      console.error("Error fetching chatbot:", error);
+      res.status(500).json({ message: "Failed to fetch chatbot" });
     }
-    
-    res.json(chatbot);
   });
   
   apiRouter.post("/chatbots", isAuthenticated, async (req, res) => {
@@ -838,15 +886,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Summary routes
   apiRouter.get("/summaries", isAuthenticated, async (req, res) => {
     try {
-      // Get all chatbots first
-      const chatbots = await storage.getChatbots();
+      const userId = (req.user as Express.User).id;
+      
+      // Get only chatbots the user has access to
+      const chatbots = await storage.getUserAccessibleChatbots(userId);
       
       // Create a map of chatbot IDs to names for reference
       const chatbotNames = new Map(
         chatbots.map(chatbot => [chatbot.id, chatbot.name])
       );
       
-      // Get all summaries from all chatbots
+      // Get all summaries from accessible chatbots
       const allSummariesPromises = chatbots.map(chatbot => 
         storage.getSummaries(chatbot.id)
       );
@@ -863,7 +913,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       res.json(summaries);
     } catch (error) {
-      console.error("Error fetching all summaries:", error);
+      console.error("Error fetching summaries:", error);
       res.status(500).json({ message: "Failed to fetch summaries" });
     }
   });
