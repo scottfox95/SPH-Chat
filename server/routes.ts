@@ -36,6 +36,7 @@ import { nanoid } from "nanoid";
 import { format } from "date-fns";
 import { setupAuth } from "./auth";
 import { hashPassword } from "./lib/password-utils";
+import { asyncHandler } from "./lib/api-utils";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Set up authentication
@@ -122,17 +123,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
   const apiRouter = express.Router();
   
   // User management routes
-  apiRouter.get("/users", requireAdmin, async (req, res) => {
-    try {
-      const users = await storage.getUsers();
-      // Remove password from the response
-      const sanitizedUsers = users.map(({ password, ...user }) => user);
-      res.json(sanitizedUsers);
-    } catch (error) {
-      console.error("Error fetching users:", error);
-      res.status(500).json({ message: "Failed to fetch users" });
-    }
-  });
+  apiRouter.get("/users", requireAdmin, asyncHandler(async (req, res) => {
+    const users = await storage.getUsers();
+    // Remove password from the response
+    const sanitizedUsers = users.map(({ password, ...user }) => user);
+    res.json(sanitizedUsers);
+  }));
   
   apiRouter.get("/users/:id", requireAdmin, async (req, res) => {
     try {
@@ -254,15 +250,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   
   // Project management routes
-  apiRouter.get("/projects", isAuthenticated, async (req, res) => {
-    try {
-      const projects = await storage.getProjects();
-      res.json(projects);
-    } catch (error) {
-      console.error("Error fetching projects:", error);
-      res.status(500).json({ message: "Failed to fetch projects" });
-    }
-  });
+  apiRouter.get("/projects", isAuthenticated, asyncHandler(async (req, res) => {
+    const projects = await storage.getProjects();
+    res.json(projects);
+  }));
   
   apiRouter.get("/projects/:id", isAuthenticated, async (req, res) => {
     try {
