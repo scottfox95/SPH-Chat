@@ -26,6 +26,8 @@ import {
   settings,
   apiTokens,
   userProjects,
+  projectSummaries,
+  projectEmailRecipients,
   type User, 
   type InsertUser,
   type Project,
@@ -48,7 +50,11 @@ import {
   type InsertApiToken,
   type UpdateApiToken,
   type UserProject,
-  type InsertUserProject
+  type InsertUserProject,
+  type ProjectSummary,
+  type InsertProjectSummary,
+  type ProjectEmailRecipient,
+  type InsertProjectEmailRecipient
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, and, isNull, sql } from "drizzle-orm";
@@ -105,10 +111,19 @@ export interface IStorage {
   getSummaries(chatbotId: number): Promise<Summary[]>;
   createSummary(summary: InsertSummary): Promise<Summary>;
   
+  // Project Summary methods
+  getProjectSummaries(projectId: number): Promise<ProjectSummary[]>;
+  createProjectSummary(summary: InsertProjectSummary): Promise<ProjectSummary>;
+  
   // Email recipient methods
   getEmailRecipients(chatbotId: number): Promise<EmailRecipient[]>;
   createEmailRecipient(recipient: InsertEmailRecipient): Promise<EmailRecipient>;
   deleteEmailRecipient(id: number): Promise<boolean>;
+  
+  // Project Email recipient methods
+  getProjectEmailRecipients(projectId: number): Promise<ProjectEmailRecipient[]>;
+  createProjectEmailRecipient(recipient: InsertProjectEmailRecipient): Promise<ProjectEmailRecipient>;
+  deleteProjectEmailRecipient(id: number): Promise<boolean>;
   
   // Message methods
   getMessages(chatbotId: number, limit?: number): Promise<Message[]>;
@@ -138,7 +153,9 @@ export class MemStorage implements IStorage {
   private chatbots: Map<number, Chatbot>;
   private documents: Map<number, Document>;
   private summaries: Map<number, Summary>;
+  private projectSummaries: Map<number, ProjectSummary>;
   private emailRecipients: Map<number, EmailRecipient>;
+  private projectEmailRecipients: Map<number, ProjectEmailRecipient>;
   private messages: Map<number, Message>;
   private apiTokens: Map<string, ApiToken>; // API tokens by service name
   private userProjects: Map<number, UserProject>; // User-Project assignments
@@ -149,7 +166,9 @@ export class MemStorage implements IStorage {
   private currentChatbotId: number;
   private currentDocumentId: number;
   private currentSummaryId: number;
+  private currentProjectSummaryId: number;
   private currentEmailRecipientId: number;
+  private currentProjectEmailRecipientId: number;
   private currentMessageId: number;
   private currentApiTokenId: number;
   private currentUserProjectId: number;
@@ -162,7 +181,9 @@ export class MemStorage implements IStorage {
     this.chatbots = new Map();
     this.documents = new Map();
     this.summaries = new Map();
+    this.projectSummaries = new Map();
     this.emailRecipients = new Map();
+    this.projectEmailRecipients = new Map();
     this.messages = new Map();
     this.apiTokens = new Map();
     this.userProjects = new Map();
@@ -172,7 +193,9 @@ export class MemStorage implements IStorage {
     this.currentChatbotId = 1;
     this.currentDocumentId = 1;
     this.currentSummaryId = 1;
+    this.currentProjectSummaryId = 1;
     this.currentEmailRecipientId = 1;
+    this.currentProjectEmailRecipientId = 1;
     this.currentMessageId = 1;
     this.currentApiTokenId = 1;
     this.currentUserProjectId = 1;
@@ -523,6 +546,27 @@ export class MemStorage implements IStorage {
     return newSummary;
   }
   
+  // Project Summary methods
+  async getProjectSummaries(projectId: number): Promise<ProjectSummary[]> {
+    return Array.from(this.projectSummaries.values())
+      .filter((summary) => summary.projectId === projectId)
+      .sort((a, b) => b.sentAt.getTime() - a.sentAt.getTime()); // Most recent first
+  }
+  
+  async createProjectSummary(summary: InsertProjectSummary): Promise<ProjectSummary> {
+    const id = this.currentProjectSummaryId++;
+    const now = new Date();
+    
+    const newProjectSummary: ProjectSummary = {
+      ...summary,
+      id,
+      sentAt: now
+    };
+    
+    this.projectSummaries.set(id, newProjectSummary);
+    return newProjectSummary;
+  }
+  
   // Email recipient methods
   async getEmailRecipients(chatbotId: number): Promise<EmailRecipient[]> {
     return Array.from(this.emailRecipients.values()).filter(
@@ -544,6 +588,29 @@ export class MemStorage implements IStorage {
   
   async deleteEmailRecipient(id: number): Promise<boolean> {
     return this.emailRecipients.delete(id);
+  }
+  
+  // Project Email recipient methods
+  async getProjectEmailRecipients(projectId: number): Promise<ProjectEmailRecipient[]> {
+    return Array.from(this.projectEmailRecipients.values()).filter(
+      (recipient) => recipient.projectId === projectId
+    );
+  }
+  
+  async createProjectEmailRecipient(recipient: InsertProjectEmailRecipient): Promise<ProjectEmailRecipient> {
+    const id = this.currentProjectEmailRecipientId++;
+    
+    const newRecipient: ProjectEmailRecipient = {
+      ...recipient,
+      id
+    };
+    
+    this.projectEmailRecipients.set(id, newRecipient);
+    return newRecipient;
+  }
+  
+  async deleteProjectEmailRecipient(id: number): Promise<boolean> {
+    return this.projectEmailRecipients.delete(id);
   }
   
   // Message methods
