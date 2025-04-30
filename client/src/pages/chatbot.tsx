@@ -554,10 +554,10 @@ export default function Chatbot({ id }: ChatbotProps) {
 
   return (
     <>
-      <header className="bg-white border-b border-gray-200 py-4 px-6 flex items-center justify-between">
+      <header className="bg-white border-b border-gray-200 py-2 sm:py-4 px-3 sm:px-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-xl font-semibold">{chatbot.name}</h1>
+            <h1 className="text-lg sm:text-xl font-semibold truncate max-w-[250px] sm:max-w-md">{chatbot.name}</h1>
             <Button
               variant="ghost"
               size="icon"
@@ -567,35 +567,37 @@ export default function Chatbot({ id }: ChatbotProps) {
                   updateNameMutation.mutate(newName);
                 }
               }}
-              className="h-7 w-7 hover:bg-gray-100"
+              className="h-6 w-6 sm:h-7 sm:w-7 hover:bg-gray-100"
             >
-              <Pencil className="h-4 w-4 text-gray-600" />
+              <Pencil className="h-3 w-3 sm:h-4 sm:w-4 text-gray-600" />
             </Button>
           </div>
-          <p className="text-sm text-gray-500">SPH ChatBot Assistant</p>
+          <p className="text-xs sm:text-sm text-gray-500">SPH ChatBot Assistant</p>
         </div>
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center gap-2 sm:space-x-4">
           <Button 
             variant="outline" 
             size="sm"
             onClick={() => handleGenerateSummary()}
             disabled={generateSummaryMutation.isPending}
+            className="text-xs sm:text-sm px-2 sm:px-3"
           >
-            <Bell className="h-4 w-4 mr-2" />
-            Generate Summary
+            <Bell className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+            <span className="hidden xs:inline">Generate Summary</span>
+            <span className="xs:hidden">Summary</span>
           </Button>
           <Button 
             onClick={() => setShareModalOpen(true)}
-            className="bg-[#D2B48C] hover:bg-[#D2B48C]/90"
+            className="bg-[#D2B48C] hover:bg-[#D2B48C]/90 text-xs sm:text-sm px-2 sm:px-3"
             size="sm"
           >
-            <Share2 className="h-4 w-4 mr-2" />
+            <Share2 className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
             Share
           </Button>
         </div>
       </header>
 
-      <div className="flex-1 flex overflow-hidden">
+      <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
         <div className="flex-1 flex flex-col overflow-hidden">
           <ChatInterface
             chatbotId={chatbot.id}
@@ -604,16 +606,16 @@ export default function Chatbot({ id }: ChatbotProps) {
         </div>
         
         {isAdmin && (
-          <div className="w-80 border-l border-gray-200 bg-white overflow-y-auto">
-            <Tabs defaultValue="settings" className="p-4">
+          <div className="md:w-80 border-t md:border-t-0 md:border-l border-gray-200 bg-white overflow-y-auto">
+            <Tabs defaultValue="settings" className="p-3 sm:p-4">
               <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="settings" className="data-[state=active]:bg-[#D2B48C] data-[state=active]:text-white">
+                <TabsTrigger value="settings" className="text-xs sm:text-sm data-[state=active]:bg-[#D2B48C] data-[state=active]:text-white">
                   Settings
                 </TabsTrigger>
-                <TabsTrigger value="documents" className="data-[state=active]:bg-[#D2B48C] data-[state=active]:text-white">
+                <TabsTrigger value="documents" className="text-xs sm:text-sm data-[state=active]:bg-[#D2B48C] data-[state=active]:text-white">
                   Documents
                 </TabsTrigger>
-                <TabsTrigger value="emails" className="data-[state=active]:bg-[#D2B48C] data-[state=active]:text-white">
+                <TabsTrigger value="emails" className="text-xs sm:text-sm data-[state=active]:bg-[#D2B48C] data-[state=active]:text-white">
                   Emails
                 </TabsTrigger>
               </TabsList>
