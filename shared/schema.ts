@@ -140,6 +140,7 @@ export const projectSummaries = pgTable("project_summaries", {
   projectId: integer("project_id").notNull().references(() => projects.id, { onDelete: 'cascade' }),
   content: text("content").notNull(),
   week: text("week").notNull(),
+  slackChannelId: text("slack_channel_id"), // Optional Slack channel ID for sending project summaries
   sentAt: timestamp("sent_at").notNull().defaultNow(),
 });
 
@@ -247,6 +248,7 @@ export const insertProjectSummarySchema = createInsertSchema(projectSummaries).p
   projectId: true,
   content: true,
   week: true,
+  slackChannelId: true,
 });
 
 // Project email recipients insert schema

@@ -9,6 +9,7 @@ import {
   chatMessageSchema, 
   addEmailRecipientSchema, 
   addAsanaProjectSchema,
+  addProjectEmailRecipientSchema,
   updateSettingsSchema,
   OPENAI_MODELS
 } from "@shared/schema";
