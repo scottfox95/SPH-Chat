@@ -228,17 +228,27 @@ Your task is to create a unified, master weekly summary for the entire "${projec
 - Synthesizes information across all channels/chatbots
 - Eliminates redundancies
 - Highlights the most important developments
-- Provides a clear, executive-level overview of the entire project's status
+- Provides a clear overview of the entire project's status
 
-Format your response in markdown with the following sections:
-1. **Executive Summary**: A 2-3 sentence overview of the project's current status
-2. **Key Developments**: The most significant progress points across all areas
-3. **Critical Issues**: Any blockers or problems that need immediate attention
-4. **Timeline Status**: Assessment of whether the project is on schedule
-5. **Action Items**: Prioritized list of actions needed across the project
-6. **Looking Ahead**: Key milestones and work planned for next week
+Format your response in HTML with EXACTLY the same sections and format as the individual chatbot summaries:
 
-Be concise but comprehensive. Use bullet points for clarity. This summary will be sent to project stakeholders and executives.`;
+1. Key Achievements
+   - Use bullet points for each achievement
+   - Include the most important accomplishments across all project areas
+
+2. Issues or Blockers
+   - Use bullet points for each issue
+   - List any problems that need attention
+
+3. Upcoming Work
+   - Use bullet points for planned tasks
+   - Include the important upcoming tasks for the next week
+
+4. Action Items
+   - Use bullet points for specific actions needed
+   - List prioritized action items with clear owners when available
+
+The summary MUST follow this EXACT format with numbered headings and bullet points. Keep your response professional and well-structured with proper HTML formatting. This summary will be sent to project stakeholders and executives.`;
 
     // Make the API call to generate the combined summary
     const response = await openai.chat.completions.create({

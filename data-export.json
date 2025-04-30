@@ -369,7 +369,15 @@
           "createdAt": "2025-04-29T20:19:29.092Z"
         }
       ],
-      "summaries": [],
+      "summaries": [
+        {
+          "id": 7,
+          "chatbotId": 25,
+          "content": "<h2>2387 Poplar – Weekly Summary • Week 2025-W18 – Week Ending April 29, 2025</h2>\n\n<ol>\n  <li><strong>Key Achievements</strong>\n    <ul>\n      <li>Foundation wall passed inspection.</li>\n      <li>Foundation survey was approved.</li>\n      <li>Wall rebar was stubbed up, and plates installation began.</li>\n    </ul>\n  </li>\n  <li><strong>Issues or Blockers</strong>\n    <em>No items this week.</em>\n  </li>\n  <li><strong>Upcoming Work</strong>\n    <ul>\n      <li>Concrete pour scheduled for Wednesday.</li>\n      <li>Foundation wall inspection scheduled for Tuesday.</li>\n      <li>Waterproofing setup and 14-day wait before backfilling.</li>\n      <li>Underslab plumbing scheduled for next Friday.</li>\n    </ul>\n  </li>\n  <li><strong>Action Items</strong>\n    <ul>\n      <li><strong>UBKJU7ZTJ:</strong> Schedule foundation wall inspection for Tuesday.</li>\n      <li><strong>U02L1M0MQ3C:</strong> Follow up with UF9BV3TU0 regarding the 1320 Mayfair cam.</li>\n    </ul>\n  </li>\n</ol>",
+          "week": "2025-W18",
+          "sentAt": "2025-04-30T18:25:04.021Z"
+        }
+      ],
       "emailRecipients": [],
       "asanaProjects": [
         {
@@ -427,7 +435,15 @@
           "createdAt": "2025-04-29T17:21:48.462Z"
         }
       ],
-      "summaries": [],
+      "summaries": [
+        {
+          "id": 8,
+          "chatbotId": 26,
+          "content": "<h2>3187 Saybrook – Weekly Summary • Week 2023-W43 – Week Ending October 23, 2023</h2>\n\n<ol>\n  <li><strong>Key Achievements</strong>\n    <em>No items this week.</em>\n  </li>\n  <li><strong>Issues or Blockers</strong>\n    <em>No items this week.</em>\n  </li>\n  <li><strong>Upcoming Work</strong>\n    <em>No items this week.</em>\n  </li>\n  <li><strong>Action Items</strong>\n    <em>No items this week.</em>\n  </li>\n</ol>",
+          "week": "2025-W18",
+          "sentAt": "2025-04-30T18:25:05.645Z"
+        }
+      ],
       "emailRecipients": [],
       "asanaProjects": []
     },
@@ -504,7 +520,15 @@
           "createdAt": "2025-04-29T17:32:11.630Z"
         }
       ],
-      "summaries": [],
+      "summaries": [
+        {
+          "id": 9,
+          "chatbotId": 27,
+          "content": "<h2>3582 Avocado (FL) – Weekly Summary • Week 2023-W43 – Week Ending October 26, 2023</h2>\n\n<ol>\n  <li><strong>Key Achievements</strong>\n    <em>No items this week.</em>\n  </li>\n  <li><strong>Issues or Blockers</strong>\n    <em>No items this week.</em>\n  </li>\n  <li><strong>Upcoming Work</strong>\n    <em>No items this week.</em>\n  </li>\n  <li><strong>Action Items</strong>\n    <em>No items this week.</em>\n  </li>\n</ol>",
+          "week": "2025-W18",
+          "sentAt": "2025-04-30T18:25:07.511Z"
+        }
+      ],
       "emailRecipients": [],
       "asanaProjects": []
     },
@@ -526,7 +550,15 @@
       },
       "documents": [],
       "messages": [],
-      "summaries": [],
+      "summaries": [
+        {
+          "id": 10,
+          "chatbotId": 28,
+          "content": "<h2>9157 Dickens (FL) – Weekly Summary • Week 2023-W43 – Week Ending October 25, 2023</h2>\n\n<ol>\n  <li><strong>Key Achievements</strong>\n    <em>No items this week.</em>\n  </li>\n  <li><strong>Issues or Blockers</strong>\n    <em>No items this week.</em>\n  </li>\n  <li><strong>Upcoming Work</strong>\n    <em>No items this week.</em>\n  </li>\n  <li><strong>Action Items</strong>\n    <em>No items this week.</em>\n  </li>\n</ol>",
+          "week": "2025-W18",
+          "sentAt": "2025-04-30T18:25:09.078Z"
+        }
+      ],
       "emailRecipients": [],
       "asanaProjects": [
         {
@@ -623,7 +655,15 @@
       },
       "documents": [],
       "messages": [],
-      "summaries": [],
+      "summaries": [
+        {
+          "id": 11,
+          "chatbotId": 30,
+          "content": "<h2>1293 Sylvian – Weekly Summary • Week 2025-W18 – Week Ending April 29, 2025</h2>\n\n<ol>\n  <li><strong>Key Achievements</strong>\n    <ul>\n      <li>Entry Foyer lift power and wire installed; lift scheduled for April 29, 2025 delivery.</li>\n      <li>1-inch water meter installed; issues with Google fiber line resolved.</li>\n      <li>Driveway grading and curb raising completed with concrete pour.</li>\n      <li>Approval received for garage doors to match Yakir's design.</li>\n    </ul>\n  </li>\n  <li><strong>Issues or Blockers</strong>\n    <ul>\n      <li>Trash accumulation reported by neighbors; cleanup needed around the property.</li>\n      <li>Brookhaven ROW permit required for future water meter installations.</li>\n    </ul>\n  </li>\n  <li><strong>Upcoming Work</strong>\n    <ul>\n      <li>Chandelier lift scheduled for May 7-8.</li>\n      <li>Concrete delivery scheduled for Monday.</li>\n      <li>Installation of insulation prior to lift installation.</li>\n    </ul>\n  </li>\n  <li><strong>Action Items</strong>\n    <ul>\n      <li>Gerardo to clean debris and trash around the site.</li>\n      <li>Jaime to arrange for a dump truck for driveway grading.</li>\n      <li>Bravas to install j-box at the lower cabinet in the Den.</li>\n      <li>Shade company to relocate shade wires to the garage wall.</li>\n    </ul>\n  </li>\n</ol>",
+          "week": "2025-W18",
+          "sentAt": "2025-04-30T18:25:13.784Z"
+        }
+      ],
       "emailRecipients": [],
       "asanaProjects": [
         {
@@ -662,7 +702,15 @@
       },
       "documents": [],
       "messages": [],
-      "summaries": [],
+      "summaries": [
+        {
+          "id": 12,
+          "chatbotId": 31,
+          "content": "<h2>1857 Wildwood – Weekly Summary • Week 2025-W18 – Week Ending April 29, 2025</h2>\n\n<ol>\n  <li><strong>Key Achievements</strong>\n    <ul>\n      <li>Electric work completed by Carlos.</li>\n      <li>Elias completed various punchlist items including touch-ups and window gap fixes.</li>\n      <li>Gerardo and Alex made progress on basement tasks and utility closet work.</li>\n    </ul>\n  </li>\n  <li><strong>Issues or Blockers</strong>\n    <ul>\n      <li>Missing screw in freezer and gutter guard; Jason is addressing the latter.</li>\n      <li>Master bedroom door fraying and front door issues to be addressed by Raul next week.</li>\n      <li>Elias has not completed the final coat on the fireplace.</li>\n      <li>Utility closet outlet not working and requires attention.</li>\n    </ul>\n  </li>\n  <li><strong>Upcoming Work</strong>\n    <ul>\n      <li>Christian scheduled to finish punchlist items on Wednesday and Saturday.</li>\n      <li>Joel Yanes scheduled for work tomorrow.</li>\n      <li>Replacement of windows in master bedroom, garage, and secondary bedroom.</li>\n      <li>Fireplace final coat to be completed by Elias.</li>\n    </ul>\n  </li>\n  <li><strong>Action Items</strong>\n    <ul>\n      <li>Raul to fix front door next week.</li>\n      <li>Elias to complete final coat on fireplace and additional touch-ups.</li>\n      <li>Christian to adjust fridge panel and add bar bottom panel.</li>\n      <li>Jason to address missing screw in gutter guard.</li>\n      <li>Gerardo and Alex to finish plastic and tape work in basement.</li>\n    </ul>\n  </li>\n</ol>",
+          "week": "2025-W18",
+          "sentAt": "2025-04-30T18:25:22.637Z"
+        }
+      ],
       "emailRecipients": [],
       "asanaProjects": []
     },
@@ -684,7 +732,15 @@
       },
       "documents": [],
       "messages": [],
-      "summaries": [],
+      "summaries": [
+        {
+          "id": 13,
+          "chatbotId": 32,
+          "content": "<h2>195 Pebble – Weekly Summary • Week 2025-W18 – Week Ending April 29, 2025</h2>\n\n<ol>\n  <li><strong>Key Achievements</strong>\n    <ul>\n      <li>Roof trusses installed and temporary stairs set up.</li>\n      <li>Second floor system installed; floor system attached to I-beam as per engineer's recommendation.</li>\n    </ul>\n  </li>\n  <li><strong>Issues or Blockers</strong>\n    <ul>\n      <li>Delay due to waiting on lumber drop for second floor and LVL headers for sliders and patio.</li>\n      <li>Kitchen window not centered according to cabinet plans; requires adjustment.</li>\n    </ul>\n  </li>\n  <li><strong>Upcoming Work</strong>\n    <ul>\n      <li>Coordinate lumber drop and installation for second floor and LVL headers.</li>\n    </ul>\n  </li>\n  <li><strong>Action Items</strong>\n    <ul>\n      <li>Order in-wall toilet for master bath water closet.</li>\n      <li>Request 30-yard dumpster delivery.</li>\n      <li>Decide on bath fans for all houses and place order.</li>\n      <li>Ensure window openings address both architectural and cabinet plans.</li>\n    </ul>\n  </li>\n</ol>",
+          "week": "2025-W18",
+          "sentAt": "2025-04-30T18:25:26.641Z"
+        }
+      ],
       "emailRecipients": [],
       "asanaProjects": [
         {
@@ -742,7 +798,15 @@
           "createdAt": "2025-04-29T17:31:12.291Z"
         }
       ],
-      "summaries": [],
+      "summaries": [
+        {
+          "id": 14,
+          "chatbotId": 24,
+          "content": "<h2>160 Black Ankle – Weekly Summary • Week 2025-W18 – Week Ending April 29, 2025</h2>\n<ol>\n  <li><strong>Key Achievements</strong>\n    <ul>\n      <li>Ceiling wood installation scheduled to finish by Friday.</li>\n      <li>Freddy started work on the bathrooms.</li>\n      <li>Joel continued painting work.</li>\n    </ul>\n  </li>\n  <li><strong>Issues or Blockers</strong>\n    <ul>\n      <li>Delivery of materials rescheduled to April 29, 2025, due to missed appointment.</li>\n      <li>Deck handrail glass delivery requires a box truck for transfer due to access issues.</li>\n    </ul>\n  </li>\n  <li><strong>Upcoming Work</strong>\n    <ul>\n      <li>Transfer of deck handrail glass scheduled for Monday, April 28th.</li>\n    </ul>\n  </li>\n  <li><strong>Action Items</strong>\n    <ul>\n      <li>Confirm new delivery appointment for April 29, 2025.</li>\n      <li>Ensure Alex is available with the box truck for glass transfer.</li>\n      <li>Coordinate Geraldo and Alex to assist with tile transport in Blue Ridge.</li>\n    </ul>\n  </li>\n</ol>",
+          "week": "2025-W18",
+          "sentAt": "2025-04-30T18:25:31.114Z"
+        }
+      ],
       "emailRecipients": [],
       "asanaProjects": [
         {
@@ -803,7 +867,15 @@
       },
       "documents": [],
       "messages": [],
-      "summaries": [],
+      "summaries": [
+        {
+          "id": 15,
+          "chatbotId": 33,
+          "content": "<h2>2383 Poplar – Weekly Summary • Week 2025-W18 – Week Ending April 29, 2025</h2>\n\n<ol>\n  <li><strong>Key Achievements</strong>\n    <ul>\n      <li>Garage and basement slab poured.</li>\n      <li>Lumber scheduled for delivery on Monday.</li>\n    </ul>\n  </li>\n  <li><strong>Issues or Blockers</strong>\n    <em>No items this week.</em>\n  </li>\n  <li><strong>Upcoming Work</strong>\n    <ul>\n      <li>Lumber drop scheduled for Monday.</li>\n    </ul>\n  </li>\n  <li><strong>Action Items</strong>\n    <em>No items this week.</em>\n  </li>\n</ol>",
+          "week": "2025-W18",
+          "sentAt": "2025-04-30T18:25:33.424Z"
+        }
+      ],
       "emailRecipients": [],
       "asanaProjects": [
         {
@@ -842,7 +914,15 @@
       },
       "documents": [],
       "messages": [],
-      "summaries": [],
+      "summaries": [
+        {
+          "id": 16,
+          "chatbotId": 34,
+          "content": "<h2>2393 Poplar – Weekly Summary • Week 2025-W18 – Week Ending April 29, 2025</h2>\n\n<ol>\n  <li><strong>Key Achievements</strong>\n    <ul>\n      <li>Slabs for the basement, first floor, and garage were poured successfully.</li>\n    </ul>\n  </li>\n  <li><strong>Issues or Blockers</strong>\n    <em>No items this week.</em>\n  </li>\n  <li><strong>Upcoming Work</strong>\n    <ul>\n      <li>Lumber delivery scheduled for mid next week.</li>\n      <li>Framing to begin with 2383 after lumber arrives.</li>\n    </ul>\n  </li>\n  <li><strong>Action Items</strong>\n    <ul>\n      <li>Coordinate with Pepe for upcoming work schedule.</li>\n    </ul>\n  </li>\n</ol>",
+          "week": "2025-W18",
+          "sentAt": "2025-04-30T18:25:35.835Z"
+        }
+      ],
       "emailRecipients": [],
       "asanaProjects": [
         {
@@ -900,7 +980,15 @@
           "createdAt": "2025-04-29T18:28:12.737Z"
         }
       ],
-      "summaries": [],
+      "summaries": [
+        {
+          "id": 17,
+          "chatbotId": 35,
+          "content": "<h2>4846 Adams – Weekly Summary • Week 2025-W18 – Week Ending April 29, 2025</h2>\n\n<ol>\n  <li><strong>Key Achievements</strong>\n    <ul>\n      <li>Shower glass measurements scheduled for Friday.</li>\n      <li>Floors to be installed in 2 weeks.</li>\n      <li>Joel scheduled for touch-ups and painting preparation.</li>\n      <li>Freddy's team working on master tile installation.</li>\n      <li>Behrouz scheduled for AC unit installation, excluding registers.</li>\n      <li>Pato wrapping up the accent wall.</li>\n    </ul>\n  </li>\n  <li><strong>Issues or Blockers</strong>\n    <ul>\n      <li>Dumpster incident involving a tree; Peachtree Waste to be billed.</li>\n      <li>AC units awaited for HVAC completion.</li>\n      <li>Can light holes misaligned, requiring correction.</li>\n    </ul>\n  </li>\n  <li><strong>Upcoming Work</strong>\n    <ul>\n      <li>HVAC team to start prep on Saturday.</li>\n      <li>Freddy to continue tile work.</li>\n      <li>Pato scheduled for Friday.</li>\n    </ul>\n  </li>\n  <li><strong>Action Items</strong>\n    <ul>\n      <li>Order and place a dumpster at the top of the driveway.</li>\n      <li>Correct alignment of can light holes.</li>\n      <li>Ensure timely delivery and installation of AC units.</li>\n    </ul>\n  </li>\n</ol>",
+          "week": "2025-W18",
+          "sentAt": "2025-04-30T18:25:44.991Z"
+        }
+      ],
       "emailRecipients": [],
       "asanaProjects": [
         {
@@ -1071,7 +1159,15 @@
       },
       "documents": [],
       "messages": [],
-      "summaries": [],
+      "summaries": [
+        {
+          "id": 18,
+          "chatbotId": 38,
+          "content": "<h2>630 Carriage – Weekly Summary • Week 2025-W17 – Week Ending April 29, 2025</h2>\n\n<ol>\n  <li><strong>Key Achievements</strong>\n    <ul>\n      <li>The sliding door installation was completed successfully.</li>\n      <li>The mudroom area work was completed.</li>\n      <li>The middle casement window in the dining room was replaced.</li>\n    </ul>\n  </li>\n  <li><strong>Issues or Blockers</strong>\n    <ul>\n      <li>Incorrectly sized dining room casement windows were delivered and need reordering.</li>\n    </ul>\n  </li>\n  <li><strong>Upcoming Work</strong>\n    <ul>\n      <li>Awaiting the report from the Jim Windows Installer team for further details on window sizing issues.</li>\n    </ul>\n  </li>\n  <li><strong>Action Items</strong>\n    <ul>\n      <li>Coordinate with Jim Windows to resolve window sizing issues and reorder the correct sizes.</li>\n      <li>Follow up on the report from the Jim Windows Installer team for exact measurement details.</li>\n    </ul>\n  </li>\n</ol>",
+          "week": "2025-W18",
+          "sentAt": "2025-04-30T18:25:49.438Z"
+        }
+      ],
       "emailRecipients": [],
       "asanaProjects": [
         {
@@ -1121,7 +1217,15 @@
           "createdAt": "2025-04-29T18:21:35.964Z"
         }
       ],
-      "summaries": [],
+      "summaries": [
+        {
+          "id": 19,
+          "chatbotId": 39,
+          "content": "<h2>911 S Shore (FL) – Weekly Summary • Week 2023-W52 – Week Ending December 31, 2023</h2>\n\n<ol>\n  <li><strong>Key Achievements</strong>\n    <em>No items this week.</em>\n  </li>\n  <li><strong>Issues or Blockers</strong>\n    <em>No items this week.</em>\n  </li>\n  <li><strong>Upcoming Work</strong>\n    <em>No items this week.</em>\n  </li>\n  <li><strong>Action Items</strong>\n    <em>No items this week.</em>\n  </li>\n</ol>",
+          "week": "2025-W18",
+          "sentAt": "2025-04-30T18:25:51.381Z"
+        }
+      ],
       "emailRecipients": [],
       "asanaProjects": [
         {
@@ -1293,6 +1397,6 @@
       "asanaProjects": []
     }
   ],
-  "exportedAt": "2025-04-30T18:17:37.482Z",
+  "exportedAt": "2025-04-30T18:31:27.015Z",
   "exportedBy": "SPH Chat Migration Utility"
 }
