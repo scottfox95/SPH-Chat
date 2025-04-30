@@ -14,6 +14,12 @@ export const OPENAI_MODELS = [
   "gpt-3.5-turbo-16k"
 ];
 
+// Summary Types
+export const SUMMARY_TYPES = {
+  CHATBOT: "chatbot",
+  PROJECT: "project"
+};
+
 // Basic user model for authentication
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
@@ -128,6 +134,22 @@ export const userProjects = pgTable("user_projects", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
+// Project-level weekly summary reports
+export const projectSummaries = pgTable("project_summaries", {
+  id: serial("id").primaryKey(),
+  projectId: integer("project_id").notNull().references(() => projects.id, { onDelete: 'cascade' }),
+  content: text("content").notNull(),
+  week: text("week").notNull(),
+  sentAt: timestamp("sent_at").notNull().defaultNow(),
+});
+
+// Project-level email recipients for summaries
+export const projectEmailRecipients = pgTable("project_email_recipients", {
+  id: serial("id").primaryKey(),
+  projectId: integer("project_id").notNull().references(() => projects.id, { onDelete: 'cascade' }),
+  email: text("email").notNull(),
+});
+
 // Schema validations
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
@@ -220,6 +242,19 @@ export const insertUserProjectSchema = createInsertSchema(userProjects).pick({
   projectId: true,
 });
 
+// Project summaries insert schema
+export const insertProjectSummarySchema = createInsertSchema(projectSummaries).pick({
+  projectId: true,
+  content: true,
+  week: true,
+});
+
+// Project email recipients insert schema
+export const insertProjectEmailRecipientSchema = createInsertSchema(projectEmailRecipients).pick({
+  projectId: true,
+  email: true,
+});
+
 // Types
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
@@ -252,6 +287,12 @@ export type UpdateSettings = z.infer<typeof updateSettingsSchema>;
 export type ApiToken = typeof apiTokens.$inferSelect;
 export type InsertApiToken = z.infer<typeof insertApiTokenSchema>;
 export type UpdateApiToken = z.infer<typeof updateApiTokenSchema>;
+
+export type ProjectSummary = typeof projectSummaries.$inferSelect;
+export type InsertProjectSummary = z.infer<typeof insertProjectSummarySchema>;
+
+export type ProjectEmailRecipient = typeof projectEmailRecipients.$inferSelect;
+export type InsertProjectEmailRecipient = z.infer<typeof insertProjectEmailRecipientSchema>;
 
 // Add schema for chatbot-asana project relation
 export const insertChatbotAsanaProjectSchema = createInsertSchema(chatbotAsanaProjects).pick({
@@ -287,4 +328,9 @@ export const addAsanaProjectSchema = z.object({
   asanaProjectId: z.string().min(1, "Asana project ID is required"),
   projectName: z.string().min(1, "Project name is required"),
   projectType: z.string().default("main"),
+});
+
+export const addProjectEmailRecipientSchema = z.object({
+  projectId: z.number(),
+  email: z.string().email("Invalid email format"),
 });

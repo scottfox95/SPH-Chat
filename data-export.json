@@ -576,7 +576,15 @@
           "createdAt": "2025-04-29T18:43:12.813Z"
         }
       ],
-      "summaries": [],
+      "summaries": [
+        {
+          "id": 6,
+          "chatbotId": 29,
+          "content": "<h2>1253 Mayfair – Weekly Summary • Week 2025-W18 – Week Ending April 29, 2025</h2>\n\n<ol>\n  <li><strong>Key Achievements</strong>\n    <ul>\n      <li>Seminole completed box forms and is ready for the plumber.</li>\n      <li>Metal plates have been received.</li>\n      <li>Window and exterior door adjustments have been made and sent for plan updates.</li>\n    </ul>\n  </li>\n  <li><strong>Issues or Blockers</strong>\n    <ul>\n      <li>T-pole inspection failed due to no grounding rod installed.</li>\n      <li>Waiting on CAD drawings for doors and an estimate from Home Depot for windows.</li>\n    </ul>\n  </li>\n  <li><strong>Upcoming Work</strong>\n    <ul>\n      <li>Plumber scheduled for Wednesday, followed by an inspection.</li>\n      <li>Slab expected to be completed by the end of next week.</li>\n    </ul>\n  </li>\n  <li><strong>Action Items</strong>\n    <ul>\n      <li>Ron to finalize kitchen cabinet plans for slab layout.</li>\n      <li>Schedule a new T-pole inspection after addressing grounding rod issue.</li>\n    </ul>\n  </li>\n</ol>",
+          "week": "2025-W18",
+          "sentAt": "2025-04-30T17:40:03.057Z"
+        }
+      ],
       "emailRecipients": [],
       "asanaProjects": [
         {
@@ -1016,7 +1024,15 @@
           "createdAt": "2025-04-29T18:18:08.982Z"
         }
       ],
-      "summaries": [],
+      "summaries": [
+        {
+          "id": 5,
+          "chatbotId": 37,
+          "content": "<h2>6265 Ferry – Weekly Summary • Week 2025-W17 – Week Ending April 29, 2025</h2>\n\n<ol>\n  <li><strong>Key Achievements</strong>\n    <ul>\n      <li>Drywall team completed work in the powder room.</li>\n      <li>Garage doors were installed.</li>\n      <li>Master tile and wallpaper installation in progress.</li>\n      <li>Plumbing trim is 70% complete.</li>\n      <li>Countertops were installed at 6265 Ferry Dr.</li>\n    </ul>\n  </li>\n  <li><strong>Issues or Blockers</strong>\n    <ul>\n      <li>Fireplace wall is too bowed for installation; requires drywall correction.</li>\n      <li>Back door lock does not fully latch.</li>\n      <li>Kitchen Island pendants were installed incorrectly and need to be centered.</li>\n      <li>Discoloration issues with tile due to potential wrong thinset usage.</li>\n      <li>Operational motor for the garage needs replacement.</li>\n    </ul>\n  </li>\n  <li><strong>Upcoming Work</strong>\n    <ul>\n      <li>Drywall team scheduled for Monday to fix fireplace wall.</li>\n      <li>Plumbing trim to start on Tuesday.</li>\n      <li>Gas lantern installation meeting on Monday.</li>\n      <li>Wallpaper installation for the powder room scheduled for Wednesday or Thursday.</li>\n      <li>Fireplace installation planned for May 1.</li>\n    </ul>\n  </li>\n  <li><strong>Action Items</strong>\n    <ul>\n      <li>Joel to cover all countertops.</li>\n      <li>Order a smaller toilet for the master bathroom.</li>\n      <li>Freddy to review and potentially replace discolored tiles.</li>\n      <li>Raul to ensure cabinets align with original design specifications.</li>\n      <li>Behrouz to be scheduled for gas lantern installation.</li>\n    </ul>\n  </li>\n</ol>",
+          "week": "2025-W18",
+          "sentAt": "2025-04-30T17:31:55.209Z"
+        }
+      ],
       "emailRecipients": [],
       "asanaProjects": [
         {
@@ -1277,6 +1293,6 @@
       "asanaProjects": []
     }
   ],
-  "exportedAt": "2025-04-30T17:28:11.981Z",
+  "exportedAt": "2025-04-30T17:55:09.952Z",
   "exportedBy": "SPH Chat Migration Utility"
 }
