@@ -32,7 +32,7 @@ import {
 } from "./lib/asana";
 import { processDocument } from "./lib/document-processor";
 import { getChatbotContext, clearDocumentCache } from "./lib/vector-storage";
-import { sendSummaryEmail } from "./lib/email";
+import { sendSummaryEmail, sendProjectSummaryEmail } from "./lib/email";
 import * as fs from "fs";
 import { nanoid } from "nanoid";
 import { format } from "date-fns";
@@ -1795,6 +1795,7 @@ You should **never make up information**. You may summarize or synthesize detail
       // Prepare data from all chatbots in the project
       const chatbotSummaries = [];
       const allProjectMessages = [];
+      let slackSent = false;
       
       // Generate individual summaries for each chatbot if they don't exist
       for (const chatbot of chatbots) {
@@ -1877,8 +1878,8 @@ You should **never make up information**. You may summarize or synthesize detail
       let emailResult = { success: false, message: "No email recipients configured" };
       
       if (projectEmailRecipients.length > 0) {
-        // Implement email sending here if needed
-        // This would be similar to the existing sendSummaryEmail function
+        const subject = `Weekly Project Summary: ${project.name} - Week of ${format(new Date(), 'MMMM d, yyyy')}`;
+        emailResult = await sendProjectSummaryEmail(projectId, subject, projectSummaryContent);
       }
       
       res.json({
