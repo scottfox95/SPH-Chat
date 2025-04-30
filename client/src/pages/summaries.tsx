@@ -468,7 +468,7 @@ export default function Summaries() {
           <div className="space-y-4">
             {view === "projects" && (
               <div>
-                <FormLabel>Slack Channel ID (optional)</FormLabel>
+                <label className="text-sm font-medium">Slack Channel ID (optional)</label>
                 <Input
                   placeholder="C01A2BC3DEF"
                   value={slackChannelInput}
