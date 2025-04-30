@@ -128,7 +128,7 @@ export default function ChatInterface({
     <div className="flex-1 overflow-hidden flex flex-col bg-gray-50">
       {/* Confirmation Dialog */}
       <AlertDialog open={clearDialogOpen} onOpenChange={setClearDialogOpen}>
-        <AlertDialogContent>
+        <AlertDialogContent className="max-w-[95vw] sm:max-w-lg">
           <AlertDialogHeader>
             <AlertDialogTitle>Clear Chat History</AlertDialogTitle>
             <AlertDialogDescription>
@@ -136,7 +136,7 @@ export default function ChatInterface({
               This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter>
+          <AlertDialogFooter className="flex-col sm:flex-row gap-2">
             <AlertDialogCancel disabled={isClearingHistory}>Cancel</AlertDialogCancel>
             <AlertDialogAction 
               onClick={handleClearChat}
@@ -160,28 +160,28 @@ export default function ChatInterface({
       </AlertDialog>
       
       {/* Chat header */}
-      <div className="flex justify-between items-center p-3 bg-white border-b border-gray-200">
-        <h3 className="text-lg font-semibold text-gray-800">{chatbotName}</h3>
+      <div className="flex justify-between items-center p-2 sm:p-3 bg-white border-b border-gray-200">
+        <h3 className="text-base sm:text-lg font-semibold text-gray-800 truncate">{chatbotName}</h3>
         {messages.length > 0 && (
           <Button
             variant="outline"
             size="sm"
             onClick={() => setClearDialogOpen(true)}
             disabled={isClearingHistory}
-            className="text-gray-600 hover:text-red-600 border-gray-300"
+            className="text-gray-600 hover:text-red-600 border-gray-300 whitespace-nowrap"
           >
-            <Trash2 className="h-4 w-4 mr-2" /> 
-            Clear History
+            <Trash2 className="h-4 w-4 mr-1 sm:mr-2" /> 
+            <span className="hidden xs:inline">Clear History</span>
           </Button>
         )}
       </div>
       
       {/* Chat Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4" style={{ scrollBehavior: "smooth" }}>
+      <div className="flex-1 overflow-y-auto py-3 px-2 sm:p-4 space-y-3 sm:space-y-4" style={{ scrollBehavior: "smooth" }}>
         {/* Welcome Message if no messages */}
         {messages.length === 0 && (
           <div className="flex items-start">
-            <div className="w-8 h-8 rounded-xl overflow-hidden mr-3 flex-shrink-0">
+            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl overflow-hidden mr-2 sm:mr-3 flex-shrink-0">
               <img 
                 src="/SPHChat_Icon_PNG.png" 
                 alt="SPH Chat" 
@@ -196,7 +196,7 @@ export default function ChatInterface({
               />
             </div>
             <div className="flex-1">
-              <div className="bg-white rounded-xl rounded-tl-sm p-4 shadow-sm max-w-3xl">
+              <div className="bg-white rounded-xl rounded-tl-sm p-3 sm:p-4 shadow-sm max-w-full sm:max-w-3xl">
                 <p className="text-sm whitespace-pre-line">
                   Hello! I'm SPH ChatBot for {chatbotName}. I can answer questions about this project based on documents and Slack messages. How can I help you today?
                 </p>
@@ -215,7 +215,7 @@ export default function ChatInterface({
             )}
           >
             {!message.isUserMessage && (
-              <div className="w-8 h-8 rounded-xl overflow-hidden mr-3 flex-shrink-0">
+              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl overflow-hidden mr-2 sm:mr-3 flex-shrink-0">
                 <img 
                   src="/SPHChat_Icon_PNG.png" 
                   alt="SPH Chat" 
@@ -231,26 +231,26 @@ export default function ChatInterface({
               </div>
             )}
             
-            <div className={cn("flex-1", message.isUserMessage && "flex justify-end")}>
+            <div className={cn("flex-1 max-w-[85%] sm:max-w-[75%]", message.isUserMessage && "flex justify-end")}>
               <div className={cn(
-                "rounded-xl p-4 max-w-3xl",
+                "rounded-xl p-3 sm:p-4 w-full",
                 message.isUserMessage 
                   ? "bg-[#D2B48C] bg-opacity-10 rounded-tr-sm"
                   : "bg-white shadow-sm rounded-tl-sm"
               )}>
-                <p className="text-sm whitespace-pre-line">{message.content}</p>
+                <p className="text-sm whitespace-pre-line break-words">{message.content}</p>
                 
                 {/* Citation */}
                 {message.citation && !message.isUserMessage && (
                   <div className="mt-2 p-2 text-xs bg-[#D2B48C] bg-opacity-15 border-l-3 border-[#D2B48C] rounded-lg">
-                    <div className="font-medium text-gray-600">Source: {message.citation}</div>
+                    <div className="font-medium text-gray-600 break-words">Source: {message.citation}</div>
                   </div>
                 )}
               </div>
             </div>
             
             {message.isUserMessage && (
-              <div className="w-8 h-8 rounded-full bg-[#A0522D] text-white flex items-center justify-center font-medium ml-3 flex-shrink-0">
+              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#A0522D] text-white flex items-center justify-center font-medium ml-2 sm:ml-3 flex-shrink-0">
                 {user?.initial || "U"}
               </div>
             )}
@@ -260,7 +260,7 @@ export default function ChatInterface({
         {/* Loading indicator */}
         {isLoading && (
           <div className="flex items-start">
-            <div className="w-8 h-8 rounded-xl overflow-hidden mr-3 flex-shrink-0 animate-pulse">
+            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl overflow-hidden mr-2 sm:mr-3 flex-shrink-0 animate-pulse">
               <img 
                 src="/SPHChat_Icon_PNG.png" 
                 alt="SPH Chat" 
@@ -274,8 +274,8 @@ export default function ChatInterface({
                 }}
               />
             </div>
-            <div className="flex-1">
-              <div className="bg-white rounded-xl rounded-tl-sm p-4 shadow-sm max-w-3xl">
+            <div className="flex-1 max-w-[85%] sm:max-w-[75%]">
+              <div className="bg-white rounded-xl rounded-tl-sm p-3 sm:p-4 shadow-sm w-full">
                 <p className="text-sm whitespace-pre-line">Thinking...</p>
               </div>
             </div>
@@ -287,26 +287,27 @@ export default function ChatInterface({
       </div>
       
       {/* Message Input */}
-      <div className="p-4 bg-white border-t border-gray-200">
+      <div className="p-2 sm:p-4 bg-white border-t border-gray-200">
         <div className="flex items-center">
           <div className="flex-1 relative">
             <Input
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
-              placeholder="Ask a question about this project..."
-              className="pr-10 focus:ring-2 focus:ring-[#D2B48C]"
+              placeholder="Ask a question..."
+              className="pr-10 text-sm focus:ring-2 focus:ring-[#D2B48C]"
             />
             <button className="absolute right-2 top-2 text-gray-400 hover:text-gray-600">
-              <Paperclip className="h-5 w-5" />
+              <Paperclip className="h-4 w-4 sm:h-5 sm:w-5" />
             </button>
           </div>
           <Button 
             onClick={handleSendMessage} 
             disabled={isLoading || !input.trim()} 
-            className="ml-2 bg-[#D2B48C] hover:bg-[#D2B48C]/90"
+            className="ml-2 bg-[#D2B48C] hover:bg-[#D2B48C]/90 p-2 sm:p-3"
+            size="sm"
           >
-            <Send className="h-5 w-5" />
+            <Send className="h-4 w-4 sm:h-5 sm:w-5" />
           </Button>
         </div>
       </div>

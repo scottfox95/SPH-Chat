@@ -82,31 +82,31 @@ export default function PublicChat() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
-      <header className="bg-white border-b border-gray-200 p-4 flex items-center justify-between">
-        <div className="flex items-center">
-          <div className="w-8 h-8 rounded-xl bg-[#D2B48C] flex items-center justify-center">
-            <span className="text-white font-semibold">SPH</span>
+      <header className="bg-white border-b border-gray-200 p-2 sm:p-4 flex items-center justify-between">
+        <div className="flex items-center flex-shrink-0">
+          <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-[#D2B48C] flex items-center justify-center">
+            <span className="text-white font-semibold text-xs sm:text-sm">SPH</span>
           </div>
-          <div className="ml-3">
-            <h1 className="text-lg font-semibold">{chatbotName}</h1>
-            <p className="text-xs text-gray-500">SPH ChatBot Assistant</p>
+          <div className="ml-2 sm:ml-3">
+            <h1 className="text-base sm:text-lg font-semibold truncate max-w-[150px] sm:max-w-xs">{chatbotName}</h1>
+            <p className="text-xs text-gray-500 hidden xs:block">SPH ChatBot Assistant</p>
           </div>
         </div>
         <Button
           variant="outline"
           size="sm"
-          className="ml-auto text-gray-600"
+          className="ml-1 text-gray-600 whitespace-nowrap"
           onClick={handleCopyLink}
         >
           {copied ? (
             <>
-              <Check className="h-4 w-4 mr-2" />
-              Copied
+              <Check className="h-4 w-4 xs:mr-1 sm:mr-2" />
+              <span className="hidden xs:inline">Copied</span>
             </>
           ) : (
             <>
-              <Copy className="h-4 w-4 mr-2" />
-              Copy Link
+              <Copy className="h-4 w-4 xs:mr-1 sm:mr-2" />
+              <span className="hidden xs:inline">Copy Link</span>
             </>
           )}
         </Button>
@@ -120,7 +120,7 @@ export default function PublicChat() {
         />
       </div>
 
-      <footer className="bg-white border-t border-gray-200 p-3 text-center text-xs text-gray-500">
+      <footer className="bg-white border-t border-gray-200 p-2 sm:p-3 text-center text-xs text-gray-500">
         Powered by SPH ChatBot · AI Assistant for Construction Projects
       </footer>
     </div>
