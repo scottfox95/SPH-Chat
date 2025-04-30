@@ -81,15 +81,12 @@ export default function Summaries() {
         ? `/api/chatbots/${selectedEntity}/recipients`
         : `/api/projects/${selectedEntity}/recipients`;
       
-      return apiRequest(endpoint, {
-        method: "POST",
-        data: {
-          email,
-          [view === "chatbots" ? "chatbotId" : "projectId"]: parseInt(selectedEntity),
-        },
+      return apiRequest("POST", endpoint, {
+        email,
+        [view === "chatbots" ? "chatbotId" : "projectId"]: parseInt(selectedEntity),
       });
     },
-    onSuccess: () => {
+    onSuccess: async (response) => {
       toast({
         title: "Recipient added",
         description: "Email recipient has been added successfully",
@@ -118,11 +115,9 @@ export default function Summaries() {
         ? `/api/recipients/${id}`
         : `/api/project-recipients/${id}`;
       
-      return apiRequest(endpoint, {
-        method: "DELETE",
-      });
+      return apiRequest("DELETE", endpoint);
     },
-    onSuccess: () => {
+    onSuccess: async (response) => {
       toast({
         title: "Recipient removed",
         description: "Email recipient has been removed successfully",
@@ -153,12 +148,10 @@ export default function Summaries() {
         ? { slackChannelId: slackChannelInput.trim() } 
         : {};
       
-      return apiRequest(endpoint, {
-        method: "POST",
-        data: payload,
-      });
+      return apiRequest("POST", endpoint, payload);
     },
-    onSuccess: (data) => {
+    onSuccess: async (response) => {
+      const data = await response.json();
       toast({
         title: "Summary generated",
         description: `Weekly summary has been generated ${data.slackSent ? " and sent to Slack" : ""}${data.emailSent ? " and emailed to recipients" : ""}`,
