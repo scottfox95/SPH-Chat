@@ -12,13 +12,14 @@ import {
   updateSettingsSchema,
   OPENAI_MODELS
 } from "@shared/schema";
-import { getChatbotResponse, generateWeeklySummary, testOpenAIConnection } from "./lib/openai";
+import { getChatbotResponse, generateWeeklySummary, generateProjectSummary, testOpenAIConnection } from "./lib/openai";
 import { 
   getFormattedSlackMessages, 
   getWeeklySlackMessages, 
   testSlackConnection, 
   validateSlackChannel,
   listAccessibleChannels,
+  sendProjectSummaryToSlack,
   slack // Import the slack client directly for testing
 } from "./lib/slack";
 import {
@@ -949,6 +950,56 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
+  // Project Email recipient routes
+  apiRouter.get("/projects/:id/recipients", isAuthenticated, async (req, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      
+      const recipients = await storage.getProjectEmailRecipients(projectId);
+      
+      res.json(recipients);
+    } catch (error) {
+      console.error("Error fetching project recipients:", error);
+      res.status(500).json({ message: "Failed to fetch project recipients" });
+    }
+  });
+  
+  apiRouter.post("/projects/:id/recipients", isAuthenticated, async (req, res) => {
+    try {
+      const data = addProjectEmailRecipientSchema.parse({
+        ...req.body,
+        projectId: parseInt(req.params.id),
+      });
+      
+      const recipient = await storage.createProjectEmailRecipient(data);
+      
+      res.status(201).json(recipient);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: error.errors[0].message });
+      }
+      console.error("Error adding project recipient:", error);
+      res.status(500).json({ message: "Failed to add project recipient" });
+    }
+  });
+  
+  apiRouter.delete("/project-recipients/:id", isAuthenticated, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      
+      const success = await storage.deleteProjectEmailRecipient(id);
+      
+      if (!success) {
+        return res.status(404).json({ message: "Project recipient not found" });
+      }
+      
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error deleting project recipient:", error);
+      res.status(500).json({ message: "Failed to delete project recipient" });
+    }
+  });
+  
   // Summary routes
   apiRouter.get("/summaries", isAuthenticated, async (req, res) => {
     try {
@@ -1695,6 +1746,150 @@ You should **never make up information**. You may summarize or synthesize detail
         message: error instanceof Error ? error.message : "Unknown database error",
         timestamp: new Date().toISOString(),
       });
+    }
+  });
+  
+  // Project summary routes
+  apiRouter.get("/projects/:id/summaries", isAuthenticated, async (req, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      
+      // Get the project summaries
+      const summaries = await storage.getProjectSummaries(projectId);
+      
+      // Get the project name for reference
+      const project = await storage.getProject(projectId);
+      const projectName = project ? project.name : "Unknown Project";
+      
+      // Add project name to each summary
+      const summariesWithProjectName = summaries.map(summary => ({
+        ...summary,
+        projectName
+      }));
+      
+      res.json(summariesWithProjectName);
+    } catch (error) {
+      console.error("Error fetching project summaries:", error);
+      res.status(500).json({ message: "Failed to fetch project summaries" });
+    }
+  });
+  
+  apiRouter.post("/projects/:id/generate-summary", isAuthenticated, async (req, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      const { slackChannelId } = req.body;
+      
+      // Verify the project exists
+      const project = await storage.getProject(projectId);
+      if (!project) {
+        return res.status(404).json({ message: "Project not found" });
+      }
+      
+      // Get all chatbots for this project
+      const chatbots = await storage.getProjectChatbots(projectId);
+      if (chatbots.length === 0) {
+        return res.status(400).json({ message: "No chatbots found for this project" });
+      }
+      
+      // Prepare data from all chatbots in the project
+      const chatbotSummaries = [];
+      const allProjectMessages = [];
+      
+      // Generate individual summaries for each chatbot if they don't exist
+      for (const chatbot of chatbots) {
+        // Get messages for this chatbot
+        const slackMessages = await getWeeklySlackMessages(chatbot.slackChannelId);
+        
+        // Store messages for the overall summary
+        allProjectMessages.push({
+          chatbotName: chatbot.name,
+          messages: slackMessages.map(msg => `${msg.user}: ${msg.text}`)
+        });
+        
+        // Check if we already have a summary for this week for this chatbot
+        const existingSummaries = await storage.getSummaries(chatbot.id);
+        const currentWeek = format(new Date(), "yyyy-'W'ww");
+        
+        let chatbotSummaryContent;
+        
+        // Use existing summary if available for this week
+        const existingSummary = existingSummaries.find(s => s.week === currentWeek);
+        if (existingSummary) {
+          chatbotSummaryContent = existingSummary.content;
+        } else if (slackMessages.length > 0) {
+          // Generate a new summary if we have messages
+          const formattedMessages = slackMessages.map(msg => `${msg.user}: ${msg.text}`);
+          chatbotSummaryContent = await generateWeeklySummary(formattedMessages, chatbot.name);
+          
+          // Save the individual chatbot summary
+          await storage.createSummary({
+            chatbotId: chatbot.id,
+            content: chatbotSummaryContent,
+            week: currentWeek,
+          });
+        } else {
+          // Skip chatbots with no messages
+          continue;
+        }
+        
+        chatbotSummaries.push({
+          chatbotName: chatbot.name,
+          content: chatbotSummaryContent
+        });
+      }
+      
+      if (chatbotSummaries.length === 0) {
+        return res.status(400).json({ message: "No summaries could be generated for any chatbots in this project" });
+      }
+      
+      // Generate the combined project summary
+      const projectSummaryContent = await generateProjectSummary(
+        project.name,
+        chatbotSummaries,
+        allProjectMessages
+      );
+      
+      // Create week identifier
+      const week = format(new Date(), "yyyy-'W'ww");
+      
+      // Save the project summary
+      const projectSummary = await storage.createProjectSummary({
+        projectId,
+        content: projectSummaryContent,
+        week,
+        slackChannelId: slackChannelId || null
+      });
+      
+      // Send to Slack if a channel ID was provided
+      let slackResult = null;
+      if (slackChannelId) {
+        slackResult = await sendProjectSummaryToSlack(
+          slackChannelId,
+          project.name,
+          projectSummaryContent,
+          chatbots.length
+        );
+      }
+      
+      // Send email to project recipients if configured
+      const projectEmailRecipients = await storage.getProjectEmailRecipients(projectId);
+      let emailResult = { success: false, message: "No email recipients configured" };
+      
+      if (projectEmailRecipients.length > 0) {
+        // Implement email sending here if needed
+        // This would be similar to the existing sendSummaryEmail function
+      }
+      
+      res.json({
+        summary: projectSummary,
+        summariesCount: chatbotSummaries.length,
+        slackSent: !!slackResult,
+        emailSent: emailResult.success,
+        emailDetails: emailResult,
+      });
+    } catch (error) {
+      console.error("Error generating project summary:", error);
+      res.status(500).json({ message: "Failed to generate project summary" });
     }
   });
   
