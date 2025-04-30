@@ -192,6 +192,77 @@ export async function generateWeeklySummary(slackMessages: string[], projectName
   }
 }
 
+// Function to generate a combined project summary from multiple chatbot summaries
+export async function generateProjectSummary(
+  projectName: string, 
+  chatbotSummaries: Array<{ chatbotName: string, content: string }>,
+  allProjectMessages: Array<{ chatbotName: string, messages: string[] }>
+) {
+  try {
+    // Get the settings
+    const settings = await getSettings();
+    
+    // Get the model from settings
+    const model = settings?.openaiModel || "gpt-4o";
+    
+    // Prepare the combined summary information
+    const chatbotSummarySection = chatbotSummaries.map(summary => 
+      `==== SUMMARY FROM ${summary.chatbotName} ====\n${summary.content}\n`
+    ).join("\n\n");
+    
+    // Format all messages by chatbot for additional context
+    const formattedMessages = allProjectMessages
+      .filter(item => item.messages && item.messages.length > 0)
+      .map(item => 
+        `==== MESSAGES FROM ${item.chatbotName} ====\n${item.messages.join("\n")}\n`
+      ).join("\n\n");
+    
+    // Custom prompt specifically for the project-level summary
+    const projectSummaryPrompt = `You are an expert construction project manager responsible for creating a comprehensive weekly project summary. 
+
+I'll provide you with:
+1. Individual summaries from different chatbots/channels within the same project
+2. The raw messages from these channels
+
+Your task is to create a unified, master weekly summary for the entire "${projectName}" project that:
+- Synthesizes information across all channels/chatbots
+- Eliminates redundancies
+- Highlights the most important developments
+- Provides a clear, executive-level overview of the entire project's status
+
+Format your response in markdown with the following sections:
+1. **Executive Summary**: A 2-3 sentence overview of the project's current status
+2. **Key Developments**: The most significant progress points across all areas
+3. **Critical Issues**: Any blockers or problems that need immediate attention
+4. **Timeline Status**: Assessment of whether the project is on schedule
+5. **Action Items**: Prioritized list of actions needed across the project
+6. **Looking Ahead**: Key milestones and work planned for next week
+
+Be concise but comprehensive. Use bullet points for clarity. This summary will be sent to project stakeholders and executives.`;
+
+    // Make the API call to generate the combined summary
+    const response = await openai.chat.completions.create({
+      model,
+      messages: [
+        {
+          role: "system",
+          content: projectSummaryPrompt,
+        },
+        {
+          role: "user",
+          content: `Here are the individual summaries from different aspects of the ${projectName} project:\n\n${chatbotSummarySection}\n\nHere are the raw messages from the past week for additional context if needed:\n\n${formattedMessages}`,
+        },
+      ],
+      temperature: 0.3, // Lower temperature for more consistent results
+    });
+
+    return response.choices[0].message.content || "Unable to generate project summary.";
+  } catch (error) {
+    console.error("OpenAI API error generating project summary:", error);
+    return `Error generating master project summary for ${projectName}. Please try again later.`;
+  }
+}
+
 /**
  * Test connection to OpenAI API
  * @returns Object with connection status and model details

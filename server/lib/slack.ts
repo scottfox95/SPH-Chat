@@ -356,3 +356,74 @@ export async function listAccessibleChannels() {
     throw error;
   }
 }
+
+/**
+ * Sends a formatted project summary to a Slack channel
+ * @param channelId The ID of the channel to send the summary to
+ * @param projectName The name of the project
+ * @param summaryContent The generated summary content
+ * @param chatbotCount Optional number of chatbots included in the summary
+ * @returns Response from the Slack API or null if sending failed
+ */
+export async function sendProjectSummaryToSlack(
+  channelId: string, 
+  projectName: string, 
+  summaryContent: string, 
+  chatbotCount?: number
+) {
+  // If no Slack token is configured, return null
+  if (!process.env.SLACK_BOT_TOKEN) {
+    console.warn("Skipping Slack project summary sending as no token is configured");
+    return null;
+  }
+  
+  try {
+    // Create a formatted message with blocks for better presentation
+    const message: ChatPostMessageArguments = {
+      channel: channelId,
+      text: `Weekly Summary for ${projectName}`, // Fallback text
+      blocks: [
+        {
+          type: "header",
+          text: {
+            type: "plain_text",
+            text: `📊 Weekly Summary: ${projectName}`,
+            emoji: true
+          }
+        },
+        {
+          type: "section",
+          text: {
+            type: "mrkdwn",
+            text: `This summary includes activity from ${chatbotCount || 'multiple'} chatbot${chatbotCount === 1 ? '' : 's'} within this project.`
+          }
+        },
+        {
+          type: "divider"
+        },
+        {
+          type: "section",
+          text: {
+            type: "mrkdwn",
+            text: summaryContent
+          }
+        },
+        {
+          type: "context",
+          elements: [
+            {
+              type: "mrkdwn",
+              text: `Generated on ${new Date().toLocaleString()}`
+            }
+          ]
+        }
+      ]
+    };
+    
+    const result = await slack.chat.postMessage(message);
+    return result;
+  } catch (error) {
+    console.error("Error sending project summary to Slack:", error);
+    return null;
+  }
+}

@@ -1348,6 +1348,32 @@ export class DatabaseStorage implements IStorage {
     return newSummary;
   }
   
+  // Project Summary methods
+  async getProjectSummaries(projectId: number): Promise<ProjectSummary[]> {
+    try {
+      return db.select()
+        .from(projectSummaries)
+        .where(eq(projectSummaries.projectId, projectId))
+        .orderBy(desc(projectSummaries.sentAt)); // Most recent first
+    } catch (error) {
+      console.error(`Failed to get project summaries for project with id ${projectId}:`, error);
+      return [];
+    }
+  }
+  
+  async createProjectSummary(summary: InsertProjectSummary): Promise<ProjectSummary> {
+    try {
+      const [newSummary] = await db.insert(projectSummaries)
+        .values(summary)
+        .returning();
+      
+      return newSummary;
+    } catch (error) {
+      console.error("Failed to create project summary:", error);
+      throw error;
+    }
+  }
+  
   // Email recipient methods
   async getEmailRecipients(chatbotId: number): Promise<EmailRecipient[]> {
     return db.select()
@@ -1366,6 +1392,41 @@ export class DatabaseStorage implements IStorage {
   async deleteEmailRecipient(id: number): Promise<boolean> {
     const result = await db.delete(emailRecipients).where(eq(emailRecipients.id, id));
     return !!result;
+  }
+  
+  // Project Email recipient methods
+  async getProjectEmailRecipients(projectId: number): Promise<ProjectEmailRecipient[]> {
+    try {
+      return db.select()
+        .from(projectEmailRecipients)
+        .where(eq(projectEmailRecipients.projectId, projectId));
+    } catch (error) {
+      console.error(`Failed to get project email recipients for project with id ${projectId}:`, error);
+      return [];
+    }
+  }
+  
+  async createProjectEmailRecipient(recipient: InsertProjectEmailRecipient): Promise<ProjectEmailRecipient> {
+    try {
+      const [newRecipient] = await db.insert(projectEmailRecipients)
+        .values(recipient)
+        .returning();
+      
+      return newRecipient;
+    } catch (error) {
+      console.error("Failed to create project email recipient:", error);
+      throw error;
+    }
+  }
+  
+  async deleteProjectEmailRecipient(id: number): Promise<boolean> {
+    try {
+      const result = await db.delete(projectEmailRecipients).where(eq(projectEmailRecipients.id, id));
+      return !!result;
+    } catch (error) {
+      console.error(`Failed to delete project email recipient with id ${id}:`, error);
+      return false;
+    }
   }
   
   // Message methods
