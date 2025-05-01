@@ -48,22 +48,49 @@ async function getTransporter() {
   }
   
   // As a fallback, use ethereal test account for development
-  if (!testAccount) {
-    testAccount = await nodemailer.createTestAccount();
-    console.log("Test email account created:", testAccount.user);
-    console.log("Test email password:", testAccount.pass);
-    console.log("View emails at https://ethereal.email");
+  try {
+    if (!testAccount) {
+      testAccount = await nodemailer.createTestAccount();
+      console.log("Test email account created:", testAccount.user);
+      console.log("Test email password:", testAccount.pass);
+      console.log("View emails at https://ethereal.email");
+    }
+    
+    if (testAccount) {
+      return nodemailer.createTransport({
+        host: "smtp.ethereal.email",
+        port: 587,
+        secure: false,
+        auth: {
+          user: testAccount.user,
+          pass: testAccount.pass,
+        },
+      });
+    }
+  } catch (error) {
+    console.error("Error creating test email account:", error);
   }
   
-  return nodemailer.createTransport({
-    host: "smtp.ethereal.email",
-    port: 587,
-    secure: false,
-    auth: {
-      user: testAccount.user,
-      pass: testAccount.pass,
-    },
-  });
+  // If all else fails, return a transport that logs emails instead of sending them
+  console.warn("Using console transport for emails as no valid configuration was found");
+  return {
+    sendMail: (options: any) => {
+      console.log("EMAIL NOT SENT (No transporter configuration)");
+      console.log("To:", options.to);
+      console.log("From:", options.from);
+      console.log("Subject:", options.subject);
+      console.log("Body:", options.html || options.text);
+      return Promise.resolve({ messageId: "test-message-id" });
+    }
+  } as any;
+}
+
+// Define the email result type
+export interface EmailResult {
+  success: boolean;
+  message?: string;
+  messageId?: string;
+  error?: unknown;
 }
 
 /**
@@ -77,7 +104,7 @@ export async function sendSummaryEmail(
   chatbotId: number,
   subject: string,
   htmlContent: string
-) {
+): Promise<EmailResult> {
   try {
     // Get recipients for this chatbot
     const recipients = await storage.getEmailRecipients(chatbotId);

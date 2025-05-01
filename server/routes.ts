@@ -1683,12 +1683,15 @@ You should **never make up information**. You may summarize or synthesize detail
         if (result.success) {
           res.json({
             connected: true,
-            message: "Test email sent successfully"
+            message: "Test email sent successfully",
+            messageId: result.messageId
           });
         } else {
           res.json({
             connected: false,
-            error: result.message || "Failed to send test email"
+            error: typeof result.error === 'object' ? 
+              (result.error instanceof Error ? result.error.message : "Unknown error") : 
+              (result.message || "Failed to send test email")
           });
         }
       } catch (emailError) {
