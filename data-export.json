@@ -890,7 +890,13 @@
           "sentAt": "2025-04-29T18:24:38.272Z"
         }
       ],
-      "emailRecipients": [],
+      "emailRecipients": [
+        {
+          "id": 1,
+          "chatbotId": 36,
+          "email": "scott@sixpointshomes.com"
+        }
+      ],
       "asanaProjects": [
         {
           "id": 26,
@@ -1286,6 +1292,6 @@
       "asanaProjects": []
     }
   ],
-  "exportedAt": "2025-05-01T16:31:36.246Z",
+  "exportedAt": "2025-05-01T16:48:43.086Z",
   "exportedBy": "SPH Chat Migration Utility"
 }

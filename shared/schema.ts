@@ -113,6 +113,13 @@ export const settings = pgTable("settings", {
   includeUserInSource: boolean("include_user_in_source").notNull().default(false),
   responseTemplate: text("response_template"),
   summaryPrompt: text("summary_prompt"),
+  // Email settings
+  smtpEnabled: boolean("smtp_enabled").default(false),
+  smtpHost: text("smtp_host"),
+  smtpPort: text("smtp_port").default("587"),
+  smtpUser: text("smtp_user"),
+  smtpPass: text("smtp_pass"),
+  smtpFrom: text("smtp_from"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
