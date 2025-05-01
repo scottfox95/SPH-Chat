@@ -56,6 +56,7 @@ export default function Settings() {
     smtpPass: "",
     smtpFrom: "",
   });
+  const [testEmailAddress, setTestEmailAddress] = useState("");
   
   // Connection testing states
   const [testingEmail, setTestingEmail] = useState(false);
@@ -297,8 +298,13 @@ export default function Settings() {
         smtpFrom: emailSettings.smtpFrom || null
       });
       
-      // Then test the connection
-      const response = await fetch("/api/system/test-email");
+      // Then test the connection, adding the test email address if provided
+      let url = "/api/system/test-email";
+      if (testEmailAddress) {
+        url += `?email=${encodeURIComponent(testEmailAddress)}`;
+      }
+      
+      const response = await fetch(url);
       const data = await response.json();
       
       setEmailStatus(data);

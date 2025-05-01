@@ -1640,6 +1640,9 @@ You should **never make up information**. You may summarize or synthesize detail
   // Test email connection
   apiRouter.get("/system/test-email", isAuthenticated, async (req, res) => {
     try {
+      // Get optional test email from query param
+      const testToEmail = req.query.email as string || '';
+      
       // Get the settings to check if SMTP is configured
       const settings = await storage.getSettings();
       
@@ -1650,19 +1653,23 @@ You should **never make up information**. You may summarize or synthesize detail
         });
       }
       
-      // Get user to send test email to
-      const userId = (req.user as Express.User).id;
-      const user = await storage.getUser(userId);
+      // Get user to send test email to if no test email provided
+      let userEmail = testToEmail;
       
-      if (!user) {
-        return res.json({
-          connected: false,
-          error: "User not found"
-        });
+      if (!userEmail) {
+        const userId = (req.user as Express.User).id;
+        const user = await storage.getUser(userId);
+        
+        if (!user) {
+          return res.json({
+            connected: false,
+            error: "User not found and no test email provided. Add ?email=test@example.com to test."
+          });
+        }
+        
+        // Get the username as email or use a fallback
+        userEmail = user.username.includes('@') ? user.username : `${user.username}@example.com`;
       }
-      
-      // Get the username as email or use a fallback
-      const userEmail = user.username.includes('@') ? user.username : `${user.username}@example.com`;
       
       const fromAddress = settings.smtpFrom || '"SPH ChatBot" <homebuilder@example.com>';
       
@@ -1681,11 +1688,11 @@ You should **never make up information**. You may summarize or synthesize detail
           </div>
         `;
         
-        // Import the required modules
-        const { getTransporter } = await import('./lib/email');
+        // Import the module directly to avoid ESM issues
+        const emailModule = await import('./lib/email');
         
         // Get the transporter
-        const transporter = await getTransporter();
+        const transporter = await emailModule.getTransporter();
         
         // Send the email directly 
         const info = await transporter.sendMail({
