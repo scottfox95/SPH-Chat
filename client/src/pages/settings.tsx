@@ -824,13 +824,45 @@ export default function Settings() {
                 <p className="text-xs text-gray-500">The email address that will appear in the "From" field</p>
               </div>
             </CardContent>
-            <CardFooter>
+            <CardFooter className="flex justify-between gap-4">
+              <div>
+                <Button 
+                  onClick={handleSaveEmailSettings}
+                  disabled={!emailSettings.enabled}
+                  className="bg-[#D2B48C] hover:bg-[#D2B48C]/90"
+                >
+                  Save Email Settings
+                </Button>
+                {emailStatus !== null && (
+                  <span className={`ml-4 text-sm ${emailStatus.connected ? 'text-green-600' : 'text-red-600'}`}>
+                    {emailStatus.connected ? (
+                      <CheckCircle className="w-4 h-4 inline mr-1" />
+                    ) : (
+                      <XCircle className="w-4 h-4 inline mr-1" />
+                    )}
+                    {emailStatus.connected ? 'Connected' : 'Failed'}
+                  </span>
+                )}
+                {emailStatus?.error && (
+                  <p className="text-xs text-red-600 mt-2">
+                    Error: {emailStatus.error}
+                  </p>
+                )}
+              </div>
+              
               <Button 
-                onClick={handleSaveEmailSettings}
-                disabled={!emailSettings.enabled}
-                className="bg-[#D2B48C] hover:bg-[#D2B48C]/90"
+                variant="outline" 
+                onClick={testEmailConnection}
+                disabled={testingEmail || !emailSettings.enabled || !emailSettings.smtpHost || !emailSettings.smtpUser || !emailSettings.smtpPass}
               >
-                Save Email Settings
+                {testingEmail ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Testing...
+                  </>
+                ) : (
+                  'Test Connection'
+                )}
               </Button>
             </CardFooter>
           </Card>

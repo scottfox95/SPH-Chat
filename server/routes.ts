@@ -1661,7 +1661,7 @@ You should **never make up information**. You may summarize or synthesize detail
       
       // Get settings from database for From address
       const settings = await storage.getSettings();
-      const fromAddress = settings.smtpFrom || '"SPH ChatBot" <homebuilder@example.com>';
+      const fromAddress = settings?.smtpFrom || '"SPH ChatBot" <homebuilder@example.com>';
       
       // Send a test email
       try {
