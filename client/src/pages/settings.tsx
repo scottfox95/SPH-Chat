@@ -58,6 +58,13 @@ export default function Settings() {
   });
   
   // Connection testing states
+  const [testingEmail, setTestingEmail] = useState(false);
+  const [emailStatus, setEmailStatus] = useState<null | {
+    connected: boolean;
+    message?: string;
+    error?: string;
+  }>(null);
+  
   const [testingSlack, setTestingSlack] = useState(false);
   const [slackStatus, setSlackStatus] = useState<null | {
     connected: boolean;
@@ -99,7 +106,7 @@ export default function Settings() {
     queryFn: () => fetch('/api/settings').then(res => res.json())
   });
   
-  // Load stored credentials (in a real app, these would be loaded from a secure store)
+  // Load stored credentials and settings
   useEffect(() => {
     // API keys would normally not be exposed to the client 
     // This is just for demo purposes
@@ -130,6 +137,20 @@ export default function Settings() {
     
     checkSecrets();
   }, []);
+  
+  // Load stored email settings when app settings are retrieved
+  useEffect(() => {
+    if (settings) {
+      setEmailSettings({
+        enabled: settings.smtpEnabled || false,
+        smtpHost: settings.smtpHost || "",
+        smtpPort: settings.smtpPort || "587",
+        smtpUser: settings.smtpUser || "",
+        smtpPass: settings.smtpPass || "",
+        smtpFrom: settings.smtpFrom || "",
+      });
+    }
+  }, [settings]);
 
   // Fetch Slack channels
   const { 
@@ -258,6 +279,56 @@ export default function Settings() {
       smtpPass: emailSettings.smtpPass || null,
       smtpFrom: emailSettings.smtpFrom || null
     });
+  };
+  
+  // Test email connection
+  const testEmailConnection = async () => {
+    setTestingEmail(true);
+    setEmailStatus(null);
+    
+    try {
+      // First save the settings, then test the connection
+      await updateEmailSettingsMutation.mutateAsync({
+        smtpEnabled: emailSettings.enabled,
+        smtpHost: emailSettings.smtpHost || null,
+        smtpPort: emailSettings.smtpPort || "587",
+        smtpUser: emailSettings.smtpUser || null,
+        smtpPass: emailSettings.smtpPass || null,
+        smtpFrom: emailSettings.smtpFrom || null
+      });
+      
+      // Then test the connection
+      const response = await fetch("/api/system/test-email");
+      const data = await response.json();
+      
+      setEmailStatus(data);
+      
+      if (data.connected) {
+        toast({
+          title: "Email connection successful",
+          description: data.message || "Test email sent successfully",
+        });
+      } else {
+        toast({
+          title: "Email connection failed",
+          description: data.error || "Unknown error",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      setEmailStatus({
+        connected: false,
+        error: "Network error checking email connection",
+      });
+      
+      toast({
+        title: "Email connection check failed",
+        description: "Could not connect to the server",
+        variant: "destructive",
+      });
+    } finally {
+      setTestingEmail(false);
+    }
   };
   
   // Test Slack connection

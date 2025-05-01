@@ -1,42 +1,69 @@
 import nodemailer from "nodemailer";
 import { storage } from "../storage";
 
-// Configure email transporter
-// For development, we'll use a ethereal test account
-let transporter: nodemailer.Transporter;
+// We'll create the transporter dynamically for each email
+// to ensure we always have the latest settings
+let testAccount: { user: string, pass: string } | null = null;
 
-async function createTestAccount() {
-  const testAccount = await nodemailer.createTestAccount();
+// Helper function to get or create an email transporter
+async function getTransporter() {
+  // First, check if SMTP is configured in environment variables
+  // This is populated by the settings API when settings are updated
+  if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
+    console.log("Using configured SMTP server:", process.env.SMTP_HOST);
+    return nodemailer.createTransport({
+      host: process.env.SMTP_HOST,
+      port: parseInt(process.env.SMTP_PORT || "587"),
+      secure: process.env.SMTP_SECURE === "true",
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+      },
+    });
+  }
   
-  transporter = nodemailer.createTransport({
+  // Next, check the database for settings
+  // (Though they should have been loaded into env vars)
+  const settings = await storage.getSettings();
+  if (settings.smtpEnabled && settings.smtpHost && settings.smtpUser && settings.smtpPass) {
+    console.log("Using SMTP settings from database:", settings.smtpHost);
+    // Update environment variables for future use
+    process.env.SMTP_HOST = settings.smtpHost;
+    process.env.SMTP_PORT = settings.smtpPort || "587";
+    process.env.SMTP_USER = settings.smtpUser;
+    process.env.SMTP_PASS = settings.smtpPass;
+    if (settings.smtpFrom) {
+      process.env.SMTP_FROM = settings.smtpFrom;
+    }
+    
+    return nodemailer.createTransport({
+      host: settings.smtpHost,
+      port: parseInt(settings.smtpPort || "587"),
+      secure: false, // Use TLS, not SSL
+      auth: {
+        user: settings.smtpUser,
+        pass: settings.smtpPass,
+      },
+    });
+  }
+  
+  // As a fallback, use ethereal test account for development
+  if (!testAccount) {
+    testAccount = await nodemailer.createTestAccount();
+    console.log("Test email account created:", testAccount.user);
+    console.log("Test email password:", testAccount.pass);
+    console.log("View emails at https://ethereal.email");
+  }
+  
+  return nodemailer.createTransport({
     host: "smtp.ethereal.email",
     port: 587,
-    secure: false, // true for 465, false for other ports
+    secure: false,
     auth: {
       user: testAccount.user,
       pass: testAccount.pass,
     },
   });
-  
-  console.log("Test email account created:", testAccount.user);
-  console.log("Test email password:", testAccount.pass);
-  console.log("View emails at https://ethereal.email");
-}
-
-// Use environment variables in production
-if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
-  transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: parseInt(process.env.SMTP_PORT || "587"),
-    secure: process.env.SMTP_SECURE === "true",
-    auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS,
-    },
-  });
-} else {
-  // Create test account for development
-  createTestAccount();
 }
 
 /**
@@ -66,9 +93,18 @@ export async function sendSummaryEmail(
       return { success: false, message: "Chatbot not found" };
     }
     
+    // Get a transporter with the latest settings
+    const transporter = await getTransporter();
+    
+    // Get the "from" address from settings or environment variables
+    const settings = await storage.getSettings();
+    const fromAddress = process.env.SMTP_FROM || 
+                        settings?.smtpFrom || 
+                        '"SPH ChatBot" <homebuilder@example.com>';
+    
     // Send email to all recipients
     const info = await transporter.sendMail({
-      from: process.env.SMTP_FROM || '"SPH ChatBot" <homebuilder@example.com>',
+      from: fromAddress,
       to: recipients.map((r) => r.email).join(", "),
       subject: subject || `Weekly Summary: ${chatbot.name}`,
       html: htmlContent,
@@ -111,9 +147,18 @@ export async function sendProjectSummaryEmail(
       return { success: false, message: "Project not found" };
     }
     
+    // Get a transporter with the latest settings
+    const transporter = await getTransporter();
+    
+    // Get the "from" address from settings or environment variables
+    const settings = await storage.getSettings();
+    const fromAddress = process.env.SMTP_FROM || 
+                        settings?.smtpFrom || 
+                        '"SPH Project Summary" <projects@example.com>';
+    
     // Send email to all project recipients
     const info = await transporter.sendMail({
-      from: process.env.SMTP_FROM || '"SPH Project Summary" <projects@example.com>',
+      from: fromAddress,
       to: recipients.map((r) => r.email).join(", "),
       subject: subject || `Weekly Project Summary: ${project.name}`,
       html: htmlContent,

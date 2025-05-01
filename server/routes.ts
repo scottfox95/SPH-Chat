@@ -1637,6 +1637,76 @@ You should **never make up information**. You may summarize or synthesize detail
     }
   });
   
+  // Test email connection
+  apiRouter.get("/system/test-email", isAuthenticated, async (req, res) => {
+    try {
+      // Check if SMTP settings are configured
+      if (!process.env.SMTP_HOST || !process.env.SMTP_USER || !process.env.SMTP_PASS) {
+        return res.json({
+          connected: false,
+          error: "SMTP settings are not configured"
+        });
+      }
+      
+      // Get user email to send test email to
+      const userId = (req.user as Express.User).id;
+      const user = await storage.getUser(userId);
+      
+      if (!user) {
+        return res.json({
+          connected: false,
+          error: "User not found"
+        });
+      }
+      
+      // Get settings from database for From address
+      const settings = await storage.getSettings();
+      const fromAddress = settings.smtpFrom || '"SPH ChatBot" <homebuilder@example.com>';
+      
+      // Send a test email
+      try {
+        // Create a simple HTML email
+        const testEmail = `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 5px;">
+            <h2 style="color: #D2B48C;">Email Setup Test</h2>
+            <p>This is a test email from your SPH ChatBot application.</p>
+            <p>The email configuration is working correctly!</p>
+            <p>You can now use email notifications for weekly summaries.</p>
+            <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee; color: #666; font-size: 12px;">
+              <p>This is an automated message. Please do not reply to this email.</p>
+            </div>
+          </div>
+        `;
+        
+        const result = await sendSummaryEmail(1, "SPH ChatBot - Email Test", testEmail);
+        
+        if (result.success) {
+          res.json({
+            connected: true,
+            message: "Test email sent successfully"
+          });
+        } else {
+          res.json({
+            connected: false,
+            error: result.message || "Failed to send test email"
+          });
+        }
+      } catch (emailError) {
+        console.error("Error sending test email:", emailError);
+        res.json({
+          connected: false,
+          error: "Error sending test email: " + (emailError instanceof Error ? emailError.message : "Unknown error")
+        });
+      }
+    } catch (error) {
+      console.error("Error testing email connection:", error);
+      res.json({
+        connected: false,
+        error: "Error testing email connection: " + (error instanceof Error ? error.message : "Unknown error")
+      });
+    }
+  });
+  
   // Get all Asana projects (with pagination support)
   apiRouter.get("/system/all-asana-projects", isAuthenticated, async (req, res) => {
     try {
