@@ -856,20 +856,34 @@ export default function Settings() {
                 )}
               </div>
               
-              <Button 
-                variant="outline" 
-                onClick={testEmailConnection}
-                disabled={testingEmail || !emailSettings.enabled || !emailSettings.smtpHost || !emailSettings.smtpUser || !emailSettings.smtpPass}
-              >
-                {testingEmail ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Testing...
-                  </>
-                ) : (
-                  'Test Connection'
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center space-x-2">
+                  <Input
+                    placeholder="Optional test email address"
+                    value={testEmailAddress}
+                    onChange={(e) => setTestEmailAddress(e.target.value)}
+                    disabled={testingEmail || !emailSettings.enabled}
+                    className="w-64 focus-visible:ring-[#D2B48C]"
+                  />
+                  <Button 
+                    variant="outline" 
+                    onClick={testEmailConnection}
+                    disabled={testingEmail || !emailSettings.enabled || !emailSettings.smtpHost || !emailSettings.smtpUser || !emailSettings.smtpPass}
+                  >
+                    {testingEmail ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Testing...
+                      </>
+                    ) : (
+                      'Test Connection'
+                    )}
+                  </Button>
+                </div>
+                {!testEmailAddress && (
+                  <p className="text-xs text-gray-500">Leave empty to use your account email.</p>
                 )}
-              </Button>
+              </div>
             </CardFooter>
           </Card>
 

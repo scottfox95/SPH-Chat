@@ -6,7 +6,7 @@ import { storage } from "../storage";
 let testAccount: { user: string, pass: string } | null = null;
 
 // Helper function to get or create an email transporter
-async function getTransporter() {
+export async function getTransporter() {
   // First, check if SMTP is configured in environment variables
   // This is populated by the settings API when settings are updated
   if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
