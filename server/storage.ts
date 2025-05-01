@@ -1482,6 +1482,13 @@ export class DatabaseStorage implements IStorage {
           includeUserInSource: data.includeUserInSource ?? false,
           responseTemplate: data.responseTemplate ?? null,
           summaryPrompt: data.summaryPrompt ?? null,
+          // Add SMTP settings fields
+          smtpEnabled: data.smtpEnabled ?? false,
+          smtpHost: data.smtpHost ?? null,
+          smtpPort: data.smtpPort ?? "587",
+          smtpUser: data.smtpUser ?? null,
+          smtpPass: data.smtpPass ?? null,
+          smtpFrom: data.smtpFrom ?? null,
           updatedAt: now
         })
         .returning();
