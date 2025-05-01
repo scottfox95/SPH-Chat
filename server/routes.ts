@@ -1640,15 +1640,17 @@ You should **never make up information**. You may summarize or synthesize detail
   // Test email connection
   apiRouter.get("/system/test-email", isAuthenticated, async (req, res) => {
     try {
-      // Check if SMTP settings are configured
-      if (!process.env.SMTP_HOST || !process.env.SMTP_USER || !process.env.SMTP_PASS) {
+      // Get the settings to check if SMTP is configured
+      const settings = await storage.getSettings();
+      
+      if (!settings?.smtpEnabled || !settings?.smtpHost || !settings?.smtpUser || !settings?.smtpPass) {
         return res.json({
           connected: false,
-          error: "SMTP settings are not configured"
+          error: "SMTP settings are not configured or not enabled"
         });
       }
       
-      // Get user email to send test email to
+      // Get user to send test email to
       const userId = (req.user as Express.User).id;
       const user = await storage.getUser(userId);
       
@@ -1659,11 +1661,12 @@ You should **never make up information**. You may summarize or synthesize detail
         });
       }
       
-      // Get settings from database for From address
-      const settings = await storage.getSettings();
-      const fromAddress = settings?.smtpFrom || '"SPH ChatBot" <homebuilder@example.com>';
+      // Get the username as email or use a fallback
+      const userEmail = user.username.includes('@') ? user.username : `${user.username}@example.com`;
       
-      // Send a test email
+      const fromAddress = settings.smtpFrom || '"SPH ChatBot" <homebuilder@example.com>';
+      
+      // Send a test email using nodemailer directly instead of sendSummaryEmail
       try {
         // Create a simple HTML email
         const testEmail = `
@@ -1678,22 +1681,26 @@ You should **never make up information**. You may summarize or synthesize detail
           </div>
         `;
         
-        const result = await sendSummaryEmail(1, "SPH ChatBot - Email Test", testEmail);
+        // Import the required modules
+        const { getTransporter } = await import('./lib/email');
         
-        if (result.success) {
-          res.json({
-            connected: true,
-            message: "Test email sent successfully",
-            messageId: result.messageId
-          });
-        } else {
-          res.json({
-            connected: false,
-            error: typeof result.error === 'object' ? 
-              (result.error instanceof Error ? result.error.message : "Unknown error") : 
-              (result.message || "Failed to send test email")
-          });
-        }
+        // Get the transporter
+        const transporter = await getTransporter();
+        
+        // Send the email directly 
+        const info = await transporter.sendMail({
+          from: fromAddress,
+          to: userEmail,
+          subject: "SPH ChatBot - Email Test",
+          html: testEmail,
+        });
+        
+        console.log("Test email sent:", info.messageId);
+        res.json({
+          connected: true,
+          message: `Test email sent successfully to ${userEmail}`,
+          messageId: info.messageId
+        });
       } catch (emailError) {
         console.error("Error sending test email:", emailError);
         res.json({
