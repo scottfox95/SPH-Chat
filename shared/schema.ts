@@ -234,6 +234,22 @@ export const updateSettingsSchema = createInsertSchema(settings).pick({
   includeUserInSource: true,
   responseTemplate: true,
   summaryPrompt: true,
+  smtpEnabled: true,
+  smtpHost: true,
+  smtpPort: true,
+  smtpUser: true,
+  smtpPass: true,
+  smtpFrom: true,
+});
+
+// Specific schema for email settings updates
+export const emailSettingsSchema = z.object({
+  smtpEnabled: z.boolean(),
+  smtpHost: z.string().nullable(),
+  smtpPort: z.string().nullable(),
+  smtpUser: z.string().nullable(),
+  smtpPass: z.string().nullable(),
+  smtpFrom: z.string().nullable(),
 });
 
 export const insertApiTokenSchema = createInsertSchema(apiTokens).pick({

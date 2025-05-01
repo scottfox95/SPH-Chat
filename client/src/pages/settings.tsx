@@ -54,6 +54,7 @@ export default function Settings() {
     smtpPort: "587",
     smtpUser: "",
     smtpPass: "",
+    smtpFrom: "",
   });
   
   // Connection testing states
@@ -221,11 +222,41 @@ export default function Settings() {
     setAsanaStatus(null);
   };
 
+  const updateEmailSettingsMutation = useMutation({
+    mutationFn: async (data: { 
+      smtpEnabled: boolean, 
+      smtpHost: string | null, 
+      smtpPort: string | null, 
+      smtpUser: string | null, 
+      smtpPass: string | null,
+      smtpFrom: string | null
+    }) => {
+      const response = await apiRequest('PUT', '/api/settings/email', data);
+      return response.json();
+    },
+    onSuccess: () => {
+      toast({
+        title: "Email settings saved",
+        description: "Email settings have been updated successfully.",
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Failed to save email settings",
+        description: error.message || "An error occurred",
+        variant: "destructive",
+      });
+    }
+  });
+
   const handleSaveEmailSettings = () => {
-    // In a real app, this would save to the server
-    toast({
-      title: "Email settings saved",
-      description: "Email settings have been updated successfully.",
+    updateEmailSettingsMutation.mutate({
+      smtpEnabled: emailSettings.enabled,
+      smtpHost: emailSettings.smtpHost || null,
+      smtpPort: emailSettings.smtpPort || "587",
+      smtpUser: emailSettings.smtpUser || null,
+      smtpPass: emailSettings.smtpPass || null,
+      smtpFrom: emailSettings.smtpFrom || null
     });
   };
   
@@ -707,6 +738,19 @@ export default function Settings() {
                     className="focus-visible:ring-[#D2B48C]"
                   />
                 </div>
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="smtp-from">From Address</Label>
+                <Input
+                  id="smtp-from"
+                  value={emailSettings.smtpFrom}
+                  onChange={(e) => setEmailSettings({ ...emailSettings, smtpFrom: e.target.value })}
+                  placeholder='"SPH Notifications" <notifications@example.com>'
+                  disabled={!emailSettings.enabled}
+                  className="focus-visible:ring-[#D2B48C]"
+                />
+                <p className="text-xs text-gray-500">The email address that will appear in the "From" field</p>
               </div>
             </CardContent>
             <CardFooter>

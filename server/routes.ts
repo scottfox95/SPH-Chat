@@ -11,6 +11,7 @@ import {
   addAsanaProjectSchema,
   addProjectEmailRecipientSchema,
   updateSettingsSchema,
+  emailSettingsSchema,
   OPENAI_MODELS
 } from "@shared/schema";
 import { getChatbotResponse, generateWeeklySummary, generateProjectSummary, testOpenAIConnection } from "./lib/openai";
@@ -1572,6 +1573,67 @@ You should **never make up information**. You may summarize or synthesize detail
       }
       console.error("Error updating settings:", error);
       res.status(500).json({ message: "Failed to update settings" });
+    }
+  });
+  
+  // Email settings specific endpoint
+  apiRouter.put("/settings/email", isAuthenticated, async (req, res) => {
+    try {
+      const data = emailSettingsSchema.parse(req.body);
+      
+      // Get current settings first
+      const currentSettings = await storage.getSettings();
+      
+      // Update only email settings
+      const settings = await storage.updateSettings({
+        ...currentSettings,
+        smtpEnabled: data.smtpEnabled,
+        smtpHost: data.smtpHost,
+        smtpPort: data.smtpPort,
+        smtpUser: data.smtpUser,
+        smtpPass: data.smtpPass,
+        smtpFrom: data.smtpFrom
+      });
+      
+      // Update environment variables so they take effect immediately
+      // without requiring a server restart
+      if (data.smtpEnabled && data.smtpHost && data.smtpUser && data.smtpPass) {
+        process.env.SMTP_HOST = data.smtpHost;
+        process.env.SMTP_PORT = data.smtpPort || "587";
+        process.env.SMTP_USER = data.smtpUser;
+        process.env.SMTP_PASS = data.smtpPass;
+        if (data.smtpFrom) {
+          process.env.SMTP_FROM = data.smtpFrom;
+        }
+        
+        // Log successful config
+        console.log("Email settings updated. SMTP config:", {
+          host: data.smtpHost,
+          port: data.smtpPort,
+          user: data.smtpUser,
+          from: data.smtpFrom
+        });
+      } else if (!data.smtpEnabled) {
+        // Clear env vars if email is disabled
+        delete process.env.SMTP_HOST;
+        delete process.env.SMTP_PORT;
+        delete process.env.SMTP_USER;
+        delete process.env.SMTP_PASS;
+        delete process.env.SMTP_FROM;
+        
+        console.log("Email settings disabled");
+      }
+      
+      res.json({
+        success: true,
+        message: "Email settings updated successfully"
+      });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: error.errors[0].message });
+      }
+      console.error("Error updating email settings:", error);
+      res.status(500).json({ message: "Failed to update email settings" });
     }
   });
   
