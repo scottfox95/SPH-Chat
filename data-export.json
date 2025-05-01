@@ -39,6 +39,14 @@
       "displayName": "Bree",
       "role": "user",
       "initial": "BR"
+    },
+    {
+      "id": 12,
+      "username": "Yaron",
+      "password": "60e90bccf54586e73c4151741e83d57ebddd626e27767293582f8574d117d87e7f0e3b614f48b3dae53594d6f81946b252ec427f115dfd9efd09ec20db41041f.c490e051245f80e812eea9333ff2e565",
+      "displayName": "Yaron",
+      "role": "user",
+      "initial": "YRN"
     }
   ],
   "chatbots": [
@@ -80,202 +88,22 @@
       ],
       "messages": [
         {
-          "id": 53,
+          "id": 129,
           "chatbotId": 22,
           "userId": null,
-          "content": "What did we budget for demolition?",
+          "content": "What’s the budgeted cost for rough electrical material",
           "isUserMessage": true,
           "citation": null,
-          "createdAt": "2025-04-28T20:54:48.612Z"
+          "createdAt": "2025-04-30T19:33:08.062Z"
         },
         {
-          "id": 54,
+          "id": 130,
           "chatbotId": 22,
           "userId": null,
-          "content": "The budget for demolition, site work, and grading for the 1320 Mayfair project was set at $35,600 according to the construction budget document titled \"1320 Mayfair Budget.xlsx\" on the \"1320 Mayfair\" Excel sheet.",
-          "isUserMessage": false,
-          "citation": "the construction budget document titled \"1320 Mayfair Budget",
-          "createdAt": "2025-04-28T20:54:51.950Z"
-        },
-        {
-          "id": 55,
-          "chatbotId": 22,
-          "userId": null,
-          "content": "What permits are not yet completed?",
-          "isUserMessage": true,
-          "citation": null,
-          "createdAt": "2025-04-28T20:55:34.663Z"
-        },
-        {
-          "id": 56,
-          "chatbotId": 22,
-          "userId": null,
-          "content": "The permits that are not yet completed for the 1320 Mayfair Drive project are the \"Sewer Line Inspection,\" \"Irrigation System,\" \"Building Final,\" \"Site Final,\" and \"Demo Site\" tasks. These tasks are listed as pending in the Asana project \" 1320 Mayfair Drive\" according to the task data provided.",
-          "isUserMessage": false,
-          "citation": "MAIN",
-          "createdAt": "2025-04-28T20:55:38.853Z"
-        },
-        {
-          "id": 57,
-          "chatbotId": 22,
-          "userId": null,
-          "content": "What happened yesterday?",
-          "isUserMessage": true,
-          "citation": null,
-          "createdAt": "2025-04-28T20:58:18.360Z"
-        },
-        {
-          "id": 58,
-          "chatbotId": 22,
-          "userId": null,
-          "content": "Yesterday, several activities were reported on the 1320 Mayfair project. The drywall team was working on sanding and finishing any imperfections in the ceiling. Gerardo and Alex were on site, and pavers were being delivered. Additionally, backfill and grading of the front yard were completed, and preparations were made for installing tree save and mulch sock. Gravel installation was scheduled for today, according to Aaron Wilson and Ron Heller on April 28, 2025.",
-          "isUserMessage": false,
-          "citation": "Aaron Wilson and Ron Heller on April 28, 2025",
-          "createdAt": "2025-04-28T20:58:25.947Z"
-        },
-        {
-          "id": 59,
-          "chatbotId": 22,
-          "userId": null,
-          "content": "When is the project expected to finish?",
-          "isUserMessage": true,
-          "citation": null,
-          "createdAt": "2025-04-28T21:01:57.818Z"
-        },
-        {
-          "id": 60,
-          "chatbotId": 22,
-          "userId": null,
-          "content": "I wasn't able to find specific information about the expected completion date for the 1320 Mayfair project in the available documents or messages. If you have more specific details or another source to check, please let me know.",
+          "content": "The budgeted cost for rough electrical material is $22,000. \n\nSource: “Budget.xlsx, 1320 Mayfair tab”",
           "isUserMessage": false,
           "citation": "No specific source available",
-          "createdAt": "2025-04-28T21:02:02.703Z"
-        },
-        {
-          "id": 61,
-          "chatbotId": 22,
-          "userId": null,
-          "content": "How much budget is remaining for landscaping?",
-          "isUserMessage": true,
-          "citation": null,
-          "createdAt": "2025-04-28T21:02:21.862Z"
-        },
-        {
-          "id": 62,
-          "chatbotId": 22,
-          "userId": null,
-          "content": "The budget for landscaping on the 1320 Mayfair project was initially set at $15,600. The actual cost incurred so far is $1,852.32, leaving a remaining budget of $13,747.68 for landscaping. This indicates that the landscaping budget is currently underutilized by this amount, according to the \"1320 Mayfair Budget.xlsx\" document.",
-          "isUserMessage": false,
-          "citation": "the \"1320 Mayfair Budget",
-          "createdAt": "2025-04-28T21:02:33.168Z"
-        },
-        {
-          "id": 63,
-          "chatbotId": 22,
-          "userId": null,
-          "content": "what was the most recent inspection?",
-          "isUserMessage": true,
-          "citation": null,
-          "createdAt": "2025-04-28T21:02:50.425Z"
-        },
-        {
-          "id": 64,
-          "chatbotId": 22,
-          "userId": null,
-          "content": "The most recent inspection listed in the Asana task data for the project \" 1320 Mayfair Drive\" is the \"Gas Line Inspection,\" which is marked as completed. The tasks for \"Sewer Line Inspection,\" \"Irrigation System,\" \"Building Final,\" \"Site Final,\" and \"Demo Site\" are still pending and not yet completed. Therefore, the \"Gas Line Inspection\" is the latest completed inspection according to the Asana project data.",
-          "isUserMessage": false,
-          "citation": "MAIN",
-          "createdAt": "2025-04-28T21:03:23.989Z"
-        },
-        {
-          "id": 65,
-          "chatbotId": 22,
-          "userId": null,
-          "content": "has the sliding door material arrived?",
-          "isUserMessage": true,
-          "citation": null,
-          "createdAt": "2025-04-29T15:04:27.011Z"
-        },
-        {
-          "id": 66,
-          "chatbotId": 22,
-          "userId": null,
-          "content": "The sliding door material has arrived. According to a Slack message from Aaron Wilson, the material for the sliding door hardware arrived to Brendan and is being shipped directly to the office. This was confirmed on April 21, 2025, at 1:15 PM.",
-          "isUserMessage": false,
-          "citation": "a Slack message from Aaron Wilson, the material for the sliding door hardware arrived to Brendan and is being shipped directly to the office",
-          "createdAt": "2025-04-29T15:04:34.348Z"
-        },
-        {
-          "id": 67,
-          "chatbotId": 22,
-          "userId": null,
-          "content": "Can you check if theres any more recent updates on that?",
-          "isUserMessage": true,
-          "citation": null,
-          "createdAt": "2025-04-29T15:05:39.987Z"
-        },
-        {
-          "id": 68,
-          "chatbotId": 22,
-          "userId": null,
-          "content": "I wasn't able to find any recent updates specifically related to the context you provided from the documents. However, I can provide some general updates from the Slack messages and Asana tasks related to the 1320 Mayfair project:\n\n1. **Slack Updates:**\n   - The drywall team is working on sanding and finishing imperfections in the ceiling, and the pavers are currently being delivered, according to Aaron Wilson on April 28, 2025.\n   - Electrical trim work is ongoing, with Max scheduled to continue on Saturday and Monday, as mentioned by Aaron Wilson.\n\n2. **Asana Task Updates:**\n   - There are no overdue or upcoming tasks found for the project \" 1320 Mayfair Drive\".\n   - For the project \"[MAIN] 1320 Mayfair Drive\", several tasks have been completed, such as the approval of plans, asbestos remediation, and various inspections. However, tasks like \"Sewer Line Inspection\", \"Irrigation System\", \"Building Final\", and \"Site Final\" are still pending.\n\nIf you need more specific information or updates, please let me know!",
-          "isUserMessage": false,
-          "citation": "PERMIT",
-          "createdAt": "2025-04-29T15:05:48.981Z"
-        },
-        {
-          "id": 69,
-          "chatbotId": 22,
-          "userId": null,
-          "content": "what is set to be done next week?",
-          "isUserMessage": true,
-          "citation": null,
-          "createdAt": "2025-04-29T15:17:51.692Z"
-        },
-        {
-          "id": 70,
-          "chatbotId": 22,
-          "userId": null,
-          "content": "For the upcoming week, the following activities are planned for the 1320 Mayfair project:\n\n1. **Electrical Trim**: Max is scheduled to start the electrical trim next week.\n2. **Gas and Furnace Connections**: Eric is scheduled to install gas and furnace connections on Tuesday.\n3. **Floor Reveals**: Joel Matul is set to start floor reveals on Monday, using extra materials from Sylvan.\n\nThese tasks are part of the ongoing construction activities and are expected to progress as scheduled according to Aaron Wilson on April 10, 2025.",
-          "isUserMessage": false,
-          "citation": "Aaron Wilson on April 10, 2025",
-          "createdAt": "2025-04-29T15:17:56.182Z"
-        },
-        {
-          "id": 71,
-          "chatbotId": 22,
-          "userId": null,
-          "content": "how much did we spend on exterior doors?",
-          "isUserMessage": true,
-          "citation": null,
-          "createdAt": "2025-04-29T15:43:22.401Z"
-        },
-        {
-          "id": 72,
-          "chatbotId": 22,
-          "userId": null,
-          "content": "The actual cost spent on Windows & Exterior Doors, which includes exterior doors, is $63,170.58 according to the \"Budget.xlsx, 1320 Mayfair\" tab.",
-          "isUserMessage": false,
-          "citation": "the \"Budget",
-          "createdAt": "2025-04-29T15:43:29.650Z"
-        },
-        {
-          "id": 73,
-          "chatbotId": 22,
-          "userId": null,
-          "content": "what did aaron wilson get done last week?",
-          "isUserMessage": true,
-          "citation": null,
-          "createdAt": "2025-04-29T15:54:25.535Z"
-        },
-        {
-          "id": 74,
-          "chatbotId": 22,
-          "userId": null,
-          "content": "Last week, Aaron Wilson was involved in several activities at the 1320 Mayfair site. On April 28, 2025, he reported that the drywall team was working on sanding and finishing any imperfections in the ceiling. He also mentioned that Gerardo and Alex were on site, and that pavers were being delivered at that time. Additionally, on April 24, 2025, Aaron noted that electrical trim work was scheduled to continue on Saturday and Monday, and he was coordinating with Rick regarding a garage door quote and selections. He also mentioned that he had templating scheduled for Friday for countertops and backsplash, and that Arturo was set to install handrails on April 23, 2025. Furthermore, Aaron was managing the delivery and installation of various materials and coordinating with different teams on site throughout the week, according to Aaron Wilson on April 28, 2025, and April 24, 2025.",
-          "isUserMessage": false,
-          "citation": "Aaron Wilson on April 28, 2025, and April 24, 2025",
-          "createdAt": "2025-04-29T15:54:43.935Z"
+          "createdAt": "2025-04-30T19:33:11.659Z"
         }
       ],
       "summaries": [
@@ -656,6 +484,13 @@
       "documents": [],
       "messages": [],
       "summaries": [
+        {
+          "id": 20,
+          "chatbotId": 30,
+          "content": "<h2>1293 Sylvian – Weekly Summary • Week 2025-W18 – Week Ending April 29, 2025</h2>\n\n<ol>\n  <li><strong>Key Achievements</strong>\n    <ul>\n      <li>Jaime completed grading the driveway and raised the curb with a concrete pour.</li>\n      <li>1-inch water meter installed, resolving permit issues with Brookhaven officials.</li>\n      <li>Entry foyer lift power and wire installed; lift scheduled for April 29, 2025.</li>\n      <li>Various electrical and structural adjustments made based on final rough review notes.</li>\n    </ul>\n  </li>\n  <li><strong>Issues or Blockers</strong>\n    <ul>\n      <li>Debris and trash reported on the road and around the property, requiring cleanup.</li>\n      <li>Google fiber line hit during water meter installation.</li>\n    </ul>\n  </li>\n  <li><strong>Upcoming Work</strong>\n    <ul>\n      <li>Concrete delivery scheduled for Monday.</li>\n      <li>Chandelier lift update scheduled for May 7-8.</li>\n    </ul>\n  </li>\n  <li><strong>Action Items</strong>\n    <ul>\n      <li>Gerardo to clean up debris and trash around the site.</li>\n      <li>Verify and confirm step light quantities and locations with Jeffrey.</li>\n      <li>Ensure compliance with Brookhaven ROW permit requirements for future installations.</li>\n    </ul>\n  </li>\n</ol>",
+          "week": "2025-W18",
+          "sentAt": "2025-05-01T14:57:49.380Z"
+        },
         {
           "id": 11,
           "chatbotId": 30,
@@ -1390,6 +1225,60 @@
           "isUserMessage": false,
           "citation": "No specific source available",
           "createdAt": "2025-04-30T15:03:05.754Z"
+        },
+        {
+          "id": 131,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "$4,743.50",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-01T15:16:48.548Z"
+        },
+        {
+          "id": 132,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "Stovall $4,743.50 driveway pervious pavers 960 sf for 1320 Mayfair",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-01T15:16:49.701Z"
+        },
+        {
+          "id": 133,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "$94.33",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-01T15:17:09.506Z"
+        },
+        {
+          "id": 134,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "No expense matching $94.33 (±$5) was found in the last 7 days.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-01T15:17:11.017Z"
+        },
+        {
+          "id": 135,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "$119.96",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-01T16:16:43.948Z"
+        },
+        {
+          "id": 136,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "No expense matching $119.96 (±$5) was found in the last 7 days.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-01T16:16:45.166Z"
         }
       ],
       "summaries": [],
@@ -1397,6 +1286,6 @@
       "asanaProjects": []
     }
   ],
-  "exportedAt": "2025-04-30T19:24:39.956Z",
+  "exportedAt": "2025-05-01T16:31:36.246Z",
   "exportedBy": "SPH Chat Migration Utility"
 }
