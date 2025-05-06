@@ -1,0 +1,83 @@
+add true token‑streaming to SPH‑Chat
+
+1 · Server (Express)
+ts
+Copy
+Edit
+// src/routes/chat.ts
+import express from "express";
+import OpenAI from "openai";
+
+const router = express.Router();
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
+
+router.post("/chat", async (req, res) => {
+  res.setHeader("Content-Type", "text/event-stream; charset=utf-8");
+  res.setHeader("Cache-Control", "no-cache, no-transform");
+  res.setHeader("Connection", "keep-alive");
+  res.flushHeaders?.();                  // send headers now
+
+  try {
+    const stream = await openai.chat.completions.create({
+      model: "gpt-4o-mini",              // or your model
+      messages: req.body.messages,
+      temperature: 0.7,
+      stream: true,                      // <‑‑ THE switch
+    });
+
+    for await (const chunk of stream) {
+      const token = chunk.choices[0]?.delta?.content;
+      if (token) res.write(`data:${token}\n\n`);
+    }
+    res.write("event: done\ndata:[DONE]\n\n");
+    res.end();
+  } catch (err: any) {
+    res.write(`event: error\ndata:${err.message}\n\n`);
+    res.end();
+  }
+});
+
+export default router;
+2 · Client (React hook)
+ts
+Copy
+Edit
+// src/hooks/useChatStream.ts
+export async function* fetchChatStream(messages: any[]) {
+  const r = await fetch("/api/chat", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ messages }),
+  });
+
+  const dec = new TextDecoder();
+  const reader = r.body!.getReader();
+  let buf = "";
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    buf += dec.decode(value, { stream: true });
+
+    let ix;
+    while ((ix = buf.indexOf("\n\n")) !== -1) {
+      const frame = buf.slice(0, ix).trim(); // e.g. "data:Hello"
+      buf = buf.slice(ix + 2);
+      if (frame.startsWith("data:")) yield frame.slice(5);
+      if (frame === "event: done") return;
+    }
+  }
+}
+Usage inside a component:
+
+tsx
+Copy
+Edit
+const [answer, setAnswer] = useState("");
+
+const ask = async () => {
+  setAnswer("");
+  for await (const token of fetchChatStream(myMsgs)) {
+    setAnswer(prev => prev + token);
+  }
+};

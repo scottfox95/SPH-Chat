@@ -265,6 +265,24 @@
           "isUserMessage": false,
           "citation": "No specific source available",
           "createdAt": "2025-05-06T16:49:59.540Z"
+        },
+        {
+          "id": 454,
+          "chatbotId": 30,
+          "userId": null,
+          "content": "what happened yesterday?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T16:52:40.669Z"
+        },
+        {
+          "id": 455,
+          "chatbotId": 30,
+          "userId": null,
+          "content": "Yesterday’s key activities and issues at 1293 Sylvian included:\n\n- Motion Shading was on site rerouting all shade wires to their panel locations on assigned walls.\n- Jaime worked on grading the driveway, cutting the hill out, raising the curb, and performed a concrete pour.\n- A new construction entrance was cut to correspond with the driveway entrance, preparing for insulation and drywall trucks.\n- Trash and debris cleanup was a concern, with a neighbor complaint about trash on the road near the property.\n- Final rough review notes from Thomas and Ron Heller covered many areas including lift power installation in the foyer, relocating transformer boxes, adding step lights to the media platform, adjustments to bedrooms’ wiring and vents, verifying kitchen shut off valve, moving pantry light switch, and vacuuming walls before insulation/drywall.\n- A 1-inch water meter was installed, hitting a Google fiber line accidentally. Brookhaven officials required a ROW permit for future installs. A permit number (AP3164761) was noted.\n- Yanes Electrical completed multiple tasks including cove lighting installation, electrical panel setup, and various light and outlet adjustments.\n- Deliveries included Brazilian IPE wood and a dumpster drop, with coordination around unloading and placement.\n- A tile placement walkthrough with Freddy and Jeffrey took place, discussing detailed tile layouts for bathrooms and other areas.\n- Overhang metal roof and custom drip edge installation were completed.\n- Solar pipe boot seal and roof cap installation by Patric were done.\n- Focus on cleaning and site organization, including scaffolding removal on the side yard and plans for salt fence installation next week.\n\nThis summary is based on Slack messages and no conflicting info was found in other sources.\n\n**Sources:** Slack messages from 5/1/2025 and related dates (including Ron Heller’s notes and Thomas’s updates).",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-06T16:52:49.551Z"
         }
       ],
       "summaries": [
@@ -4278,6 +4296,6 @@
       "asanaProjects": []
     }
   ],
-  "exportedAt": "2025-05-06T16:52:15.919Z",
+  "exportedAt": "2025-05-06T17:10:11.269Z",
   "exportedBy": "SPH Chat Migration Utility"
 }
