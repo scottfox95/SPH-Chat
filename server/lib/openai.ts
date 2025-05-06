@@ -69,9 +69,45 @@ export async function getChatbotResponse(
     const asanaTasks = slackMessages.filter(msg => typeof msg === 'string');
     console.log(`Found ${asanaTasks.length} Asana tasks for context`);
     
-    // Context for the model
-    const documentContext = documents.map((doc) => `DOCUMENT: ${doc}`);
-    console.log(`Adding ${documentContext.length} document chunks to context`);
+    // Context for the model - add more detailed document validation
+    // First filter out error messages being sent as context
+    const validDocuments = documents.filter(doc => !doc.includes("Error processing"));
+    console.log(`Found ${documents.length} total document chunks, ${validDocuments.length} valid (non-error) chunks`);
+    
+    // Count how many sheets/pages of content we have from different file types
+    const excelSheetCount = documents.filter(doc => doc.includes("[Excel Sheet:")).length;
+    const pdfPageCount = documents.filter(doc => doc.includes("[PDF Page")).length;
+    const textFileCount = documents.filter(doc => doc.includes("[Text File")).length;
+    
+    console.log(`Document type breakdown: ${excelSheetCount} Excel sheets, ${pdfPageCount} PDF pages, ${textFileCount} text files`);
+    
+    // Analyze if we have actual content in our documents (not just headers)
+    documents.forEach((doc, index) => {
+      // Look at a sample of documents to avoid excessive logging
+      if (index < 5) {
+        const contentLength = doc.length;
+        const contentSample = doc.substring(0, Math.min(100, contentLength));
+        console.log(`Document ${index+1} type: ${
+          doc.includes("[Excel Sheet:") ? "Excel" :
+          doc.includes("[PDF Page") ? "PDF" :
+          doc.includes("[Text File") ? "Text" : "Unknown"
+        }, length: ${contentLength} chars, sample: ${contentSample}...`);
+      }
+    });
+    
+    // Change document prefixing to make content more prominent
+    const documentContext = validDocuments.map((doc) => {
+      if (doc.includes("[Excel Sheet:")) {
+        // Keep the sheet name but highlight it's a spreadsheet
+        return `SPREADSHEET DATA: ${doc}`;
+      } else if (doc.includes("[PDF Page")) {
+        return `PROJECT DOCUMENT: ${doc}`;
+      } else {
+        return `DOCUMENT DATA: ${doc}`;
+      }
+    });
+    
+    console.log(`Adding ${documentContext.length} valid document chunks to context`);
     
     const context = [
       ...documentContext,
@@ -84,6 +120,15 @@ export async function getChatbotResponse(
     console.log(`Total context size: ${contextSize} characters`);
     if (contextSize > 0) {
       console.log(`Context preview: ${context.substring(0, 200)}...`);
+      
+      // Do some additional validation on context
+      if (documentContext.length > 0) {
+        // Check if the first document has good content
+        const firstDocumentSample = documentContext[0].substring(0, 200);
+        console.log(`First document in context: ${firstDocumentSample}...`);
+      } else {
+        console.warn(`No valid documents in context! Only messages will be used.`);
+      }
     } else {
       console.warn(`No context provided to the model! This might be why responses are generic.`);
     }
