@@ -198,7 +198,7 @@
     </div>
   </div>
   
-  <div id="debug-output" class="debug hidden"></div>
+  <div id="debug-output" class="debug"></div>
   
   <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -216,33 +216,43 @@
       // Fetch available chatbots
       async function fetchChatbots() {
         try {
-          const response = await fetch('/api/chatbots');
-          if (!response.ok) {
-            throw new Error(`HTTP error ${response.status}`);
-          }
-          
-          const chatbots = await response.json();
+          // For testing purposes, we'll use a hardcoded chatbot ID (30)
+          // since the real endpoint requires authentication
           
           // Clear loading option
           chatbotSelect.innerHTML = '';
           
-          // Add chatbots to select
-          chatbots.forEach(chatbot => {
-            const option = document.createElement('option');
-            option.value = chatbot.id;
-            option.textContent = chatbot.name;
-            chatbotSelect.appendChild(option);
-          });
+          // Add a test chatbot
+          const option = document.createElement('option');
+          option.value = '30';  // Use a known chatbot ID
+          option.textContent = 'Test Chatbot';
+          chatbotSelect.appendChild(option);
           
-          if (chatbots.length === 0) {
-            const option = document.createElement('option');
-            option.value = '';
-            option.textContent = 'No chatbots available';
-            chatbotSelect.appendChild(option);
+          debug('Using hardcoded test chatbot with ID 30');
+          
+          // Try to fetch real chatbots (may fail due to auth requirements)
+          try {
+            const response = await fetch('/api/chatbots');
+            if (response.ok) {
+              const chatbots = await response.json();
+              
+              // Add actual chatbots if available
+              chatbots.forEach(chatbot => {
+                const option = document.createElement('option');
+                option.value = chatbot.id;
+                option.textContent = chatbot.name;
+                chatbotSelect.appendChild(option);
+              });
+              
+              debug(`Successfully loaded ${chatbots.length} real chatbots`);
+            }
+          } catch (fetchError) {
+            debug('Could not fetch real chatbots (authentication may be required)');
+            // Continue with the hardcoded test chatbot
           }
         } catch (error) {
-          console.error('Error fetching chatbots:', error);
-          chatbotSelect.innerHTML = `<option value="">Error loading chatbots</option>`;
+          console.error('Error setting up chatbots:', error);
+          chatbotSelect.innerHTML = `<option value="30">Test Chatbot</option>`;
         }
       }
       

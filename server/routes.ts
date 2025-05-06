@@ -18,6 +18,7 @@ import {
 } from "@shared/schema";
 import { getChatbotResponse, generateWeeklySummary, generateProjectSummary, testOpenAIConnection } from "./lib/openai";
 import { streamChatCompletion } from "./lib/chat-streaming";
+import { ChatCompletionMessageParam } from "openai/resources/chat/completions";
 import { 
   getFormattedSlackMessages, 
   getWeeklySlackMessages, 
@@ -1223,7 +1224,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         try {
           const asanaResult = await getAsanaProjectTasks(chatbot.asanaProjectId, true);
           if (asanaResult.success && asanaResult.tasks && asanaResult.tasks.length > 0) {
-            asanaTasks = formatTasksForChatbot(asanaResult.tasks);
+            // Format tasks with proper type conversion for all tasks
+            const formattedTasks = formatTasksForChatbot(asanaResult.tasks, "Project", "all");
+            if (formattedTasks) {
+              asanaTasks.push(formattedTasks);
+            }
           }
         } catch (error) {
           console.error("Error fetching Asana tasks:", error);
@@ -1239,8 +1244,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         citation: null, // Add required citation field
       });
       
-      // Prepare the messages for OpenAI
-      const messages = [
+      // Prepare the messages for OpenAI with proper type conversion
+      const messages: ChatCompletionMessageParam[] = [
         { 
           role: "system", 
           content: systemPrompt + (chatbot.outputFormat ? `\n\n${chatbot.outputFormat}` : "") 
