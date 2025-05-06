@@ -104,6 +104,7 @@ export interface IStorage {
   
   // Document methods
   getDocuments(chatbotId: number): Promise<Document[]>;
+  getDocument(id: number): Promise<Document | undefined>;
   createDocument(document: InsertDocument): Promise<Document>;
   deleteDocument(id: number): Promise<boolean>;
   
@@ -1317,6 +1318,15 @@ export class DatabaseStorage implements IStorage {
     return db.select()
       .from(documents)
       .where(eq(documents.chatbotId, chatbotId));
+  }
+  
+  async getDocument(id: number): Promise<Document | undefined> {
+    const result = await db.select()
+      .from(documents)
+      .where(eq(documents.id, id))
+      .limit(1);
+    
+    return result[0];
   }
   
   async createDocument(document: InsertDocument): Promise<Document> {

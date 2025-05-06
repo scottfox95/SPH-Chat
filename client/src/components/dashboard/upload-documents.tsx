@@ -77,8 +77,9 @@ export default function UploadDocuments({ chatbotId }: UploadDocumentsProps) {
           fileInputRef.current.value = "";
         }
         
-        // Refresh document list
+        // Refresh document lists - both chatbot-specific list and global knowledge base list
         queryClient.invalidateQueries({ queryKey: [`/api/chatbots/${chatbotId}/documents`] });
+        queryClient.invalidateQueries({ queryKey: ['/api/documents'] });
       }, 1000);
     } catch (error) {
       console.error("Failed to upload document", error);
