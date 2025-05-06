@@ -195,7 +195,11 @@
                 }
                 
                 if (eventData.content) {
+                  // Update the UI with the new chunk of text
                   resultDiv.textContent += eventData.content;
+                  
+                  // Auto-scroll to the bottom of the result div
+                  resultDiv.scrollTop = resultDiv.scrollHeight;
                 }
               } catch (e) {
                 console.error('Error parsing SSE data:', e, line);

@@ -211,6 +211,60 @@
           "isUserMessage": false,
           "citation": "No specific source available",
           "createdAt": "2025-05-06T16:47:56.448Z"
+        },
+        {
+          "id": 448,
+          "chatbotId": 30,
+          "userId": null,
+          "content": "what happened yesterday?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T16:49:29.451Z"
+        },
+        {
+          "id": 449,
+          "chatbotId": 30,
+          "userId": null,
+          "content": "what happened yesterday?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T16:49:31.924Z"
+        },
+        {
+          "id": 450,
+          "chatbotId": 30,
+          "userId": null,
+          "content": "Yesterday’s activities and updates included:\n\n- Motion Shading was on-site routing all shade wires to their assigned panel locations on walls.\n- Jaime was grading the driveway and cutting the hill out, raising the curb, and performing a concrete pour.\n- There was communication about trash and debris on the site and road, with requests to clean up and ensure proper trash disposal.\n- A new construction entrance was cut to align with the driveway entrance, with readiness noted for insulation and drywall trucks.\n- A 1-inch water meter was installed; during installation, Dekalb hit a Google Fiber line, and Brookhaven officials said a Right of Way permit is required for future water meter installs.\n- Final rough review notes from Thomas and Ron Heller covered multiple rooms with tasks such as lift power installation, HDMI cable deployment, moving transformer boxes, adding step lights to the media platform, and other electrical and structural adjustments.\n- Electrical work by Yanes included cove lighting, lowering ceiling lights and fans, and solar pipe boot sealing.\n- Overhang metal roof and custom drip edge installation was completed.\n- Tile placement walkthrough with Freddy and Jeffrey took place.\n- Deliveries and cleanup included Ipe wood from Miami and dumpster drop-off; a tow truck and police were involved in resolving the dumpster placement.\n- Discussions about the chandelier motor mount, change order estimates sent, and follow-up about ceiling motor mounts.\n- Coordination on mounting cameras was needed as battery power was running low.\n- The site was noted to be dry with no leaks.\n\nThis summary reflects the key points and progress from yesterday on the 1293 Sylvian project site.  \n\n**Source:** \"Slack, 2025-05-01\"",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-06T16:49:33.481Z"
+        },
+        {
+          "id": 451,
+          "chatbotId": 30,
+          "userId": null,
+          "content": "Yesterday’s activities on the 1293 Sylvian project included:\n\n- Motion Shading was on-site rerouting all shade wires to their panel locations on assigned walls.\n- A new construction entrance was cut to align with the driveway entrance, making the area ready for insulation and drywall trucks.\n- Jaime worked on grading the driveway and cutting the hill, raising the curb, and preparing for concrete pouring scheduled on Monday.\n- There was a site cleanup focus due to trash found on the road and around the property; Gerardo was asked to clean up debris around the outhouse.\n- The 1-inch water meter was installed, but during installation, Dekalb hit the Google Fiber line. Brookhaven officials were on-site requiring a ROW permit for future installations.\n- Thomas provided notes from the final rough review with Ron Heller, covering various electrical, drywall, and fixture installation points in multiple rooms including the entry foyer, den, bedrooms, kitchen, pantry, media, exterior canopies, and more.\n- Yanes Electrical completed all his electrical items except for solar on Tuesday and was on site for added items, adjustments, and reinstallations including vent pipes, outlets, lights, and solar extension.\n- The Ipe wood order was delivered, and Nathan Alejandro helped clean the garage and site for unloading.\n- The dumpster was on-site with a tow truck needed to fix its placement, police on scene to assist.\n- Preparations for the chandelier motor and other change orders were discussed and documented with approvals pending.\n- There was a tile placement walkthrough at 2 pm including Freddy and Jeffrey (designer).\n- Steel post support and roofing elements like metal roof overhang and drip edge were installed.\n- Solar pipe boot seal and roof cap work was completed.\n\nOverall, last day was busy with shading wire rerouting, driveway adjustments, electrical work progress, material deliveries, site cleaning efforts, and preparations for next week’s pours and installations.\n\n(Source: Slack messages, 2025-05-01)",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-06T16:49:38.410Z"
+        },
+        {
+          "id": 452,
+          "chatbotId": 30,
+          "userId": null,
+          "content": "what happened with google fiber?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T16:49:56.389Z"
+        },
+        {
+          "id": 453,
+          "chatbotId": 30,
+          "userId": null,
+          "content": "Regarding Google Fiber, the Slack messages note that during the installation of the 1-inch water meter, Dekalb hit the Google Fiber line. This led to Brookhaven officials stating that a Brookhaven Right of Way (ROW) permit is needed before any future water meter installation. They allowed the current work to proceed but advised obtaining the permit for future installations.\n\nHere is the exact relevant message excerpt:\n\"1 inch water meter installed yesterday. Dekalb hit the google fiber line. Ended up having 3 Brookhaven officials stating we needed Brookhaven ROW permit prior to water meter install. Said fine now but make sure in the future.\"\n\nNo further details or updates about Google Fiber were found in the available records.\n\n(Source: Slack, 2025-04-29 ET messages)",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-06T16:49:59.540Z"
         }
       ],
       "summaries": [
@@ -4224,6 +4278,6 @@
       "asanaProjects": []
     }
   ],
-  "exportedAt": "2025-05-06T16:49:08.150Z",
+  "exportedAt": "2025-05-06T16:51:58.649Z",
   "exportedBy": "SPH Chat Migration Utility"
 }

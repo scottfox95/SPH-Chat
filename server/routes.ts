@@ -1366,13 +1366,43 @@ You should **never make up information**. You may summarize or synthesize detail
         let fullContent = '';
         let citation = '';
         
+        // Track the number of chunks being sent for streaming simulation
+        let pendingChunks = 0;
+        
         // Define the stream handler function
         const streamHandler = (chunk: string) => {
-          // Send the chunk as an SSE event
-          res.write(`data: ${JSON.stringify({ content: chunk })}\n\n`);
-          
-          // Accumulate the full content
-          fullContent += chunk;
+          // For large chunks, manually break them up into smaller pieces
+          // to simulate more natural streaming
+          if (chunk.length > 20) { // Only chunk large responses
+            const words = chunk.split(' ');
+            let buffer = '';
+            const chunks = [];
+            
+            // Group words into small chunks
+            for (let i = 0; i < words.length; i++) {
+              buffer += words[i] + ' ';
+              
+              // Collect buffer every few words or at the end
+              if (i % 3 === 2 || i === words.length - 1) {
+                chunks.push(buffer.trim());
+                fullContent += buffer;
+                buffer = '';
+              }
+            }
+            
+            // Send chunks with progressive delay for streaming effect
+            pendingChunks += chunks.length;
+            chunks.forEach((chunkText, index) => {
+              setTimeout(() => {
+                res.write(`data: ${JSON.stringify({ content: chunkText + ' ' })}\n\n`);
+                pendingChunks--;
+              }, index * 30); // 30ms delay per chunk for smoother experience
+            });
+          } else {
+            // For smaller chunks, send them as is
+            res.write(`data: ${JSON.stringify({ content: chunk })}\n\n`);
+            fullContent += chunk;
+          }
         };
         
         try {
@@ -1401,9 +1431,22 @@ You should **never make up information**. You may summarize or synthesize detail
             citation: citation,
           });
           
-          // Send the completion event
-          res.write(`data: ${JSON.stringify({ done: true, messageId: botMessage.id })}\n\n`);
-          res.end();
+          // Wait for any pending chunks to be sent
+          // Use a recursive function to check pendingChunks periodically
+          const waitForPendingChunks = () => {
+            if (pendingChunks <= 0) {
+              // All chunks sent, now send completion event and end response
+              res.write(`data: ${JSON.stringify({ done: true, messageId: botMessage.id })}\n\n`);
+              res.end();
+            } else {
+              // Some chunks still pending, check again after a short delay
+              console.log(`Waiting for ${pendingChunks} pending chunks to complete...`);
+              setTimeout(waitForPendingChunks, 100);
+            }
+          };
+          
+          // Start waiting for chunks
+          waitForPendingChunks();
         } catch (error) {
           console.error("Error in streaming mode:", error);
           res.write(`data: ${JSON.stringify({ error: "Error generating response" })}\n\n`);
