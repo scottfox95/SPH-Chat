@@ -409,6 +409,42 @@
           "isUserMessage": false,
           "citation": "No specific source available",
           "createdAt": "2025-05-06T17:22:16.135Z"
+        },
+        {
+          "id": 470,
+          "chatbotId": 30,
+          "userId": null,
+          "content": "has any wood been delivered?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T17:27:14.963Z"
+        },
+        {
+          "id": 471,
+          "chatbotId": 30,
+          "userId": null,
+          "content": "I wasn’t able to find information about any wood deliveries in the available project files or messages.",
+          "isUserMessage": false,
+          "citation": "",
+          "createdAt": "2025-05-06T17:27:15.938Z"
+        },
+        {
+          "id": 472,
+          "chatbotId": 30,
+          "userId": null,
+          "content": "has any wood been delivered?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T17:27:22.901Z"
+        },
+        {
+          "id": 473,
+          "chatbotId": 30,
+          "userId": null,
+          "content": "Yes, wood has been delivered. Specifically, Ipe wood was received from Miami at 11:45, and the delivery was coordinated with Nathan Alejandro who helped clean up the garage and site before delivery. The wood came from Brazilian Lumber in Miami, and they planned a further delivery at 8 am the following day with a \"hot shot\" truck, requiring team assistance for unloading. \n\nThis is confirmed by the Slack message: \"Received IPE Wood from Miami at 11:45. Nathan Alejandro, cleaned up garage and site before delivery called Alex and A.D. To help offloading. Good contact for transport...\" and another message stating \"the Ipe from Brazilian Lumber in Miami is being delivered tomorrow at 8am in a 'hot shot' truck.\"\n\nSo, the Ipe wood delivery has begun and at least partial wood has arrived on site.\n\n(Slack, 2025-04-29 and 2025-04-30)",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-06T17:27:31.111Z"
         }
       ],
       "summaries": [
@@ -4422,6 +4458,6 @@
       "asanaProjects": []
     }
   ],
-  "exportedAt": "2025-05-06T17:26:52.560Z",
+  "exportedAt": "2025-05-06T17:31:19.646Z",
   "exportedBy": "SPH Chat Migration Utility"
 }
