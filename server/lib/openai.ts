@@ -461,6 +461,7 @@ export async function getChatbotResponse(
     if (model.startsWith("gpt-")) {
       if (model === "gpt-4o") model = "o4";
       else if (model === "gpt-4o-mini") model = "o4-mini";
+      else if (model === "gpt-4.1-mini") model = "4.1-mini"; // New model released May 2025
       // Add other model conversions as needed
     }
     
@@ -618,6 +619,7 @@ export async function generateWeeklySummary(slackMessages: string[], projectName
     if (model.startsWith("gpt-")) {
       if (model === "gpt-4o") model = "o4";
       else if (model === "gpt-4o-mini") model = "o4-mini";
+      else if (model === "gpt-4.1-mini") model = "4.1-mini"; // New model released May 2025
       // Add other model conversions as needed
     }
     
