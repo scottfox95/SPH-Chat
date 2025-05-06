@@ -279,19 +279,24 @@ export async function getChatbotResponse(
     }
     
     // Use the OpenAI Responses API
-    // Create request parameters without temperature to avoid compatibility issues with some models
+    // Create request parameters without temperature or tools to avoid compatibility issues with some models
     const requestParams: any = {
       model,
       instructions: systemPromptText, // System prompt becomes instructions
       input: userPromptText,          // User message becomes input
       max_output_tokens: 4000,        // Renamed from max_tokens
-      tools: [{"type": "web_search_preview"}] // Add web search capability
     };
     
     // Only add temperature if we're using a model that supports it
     // This avoids the "Unsupported parameter: 'temperature'" error with some models
     if (model !== "o1" && !model.includes("-preview")) {
       requestParams.temperature = 0.3;
+    }
+    
+    // Only add web_search_preview tool if using a model that supports it
+    // o4-mini does not support web_search_preview
+    if (model === "o4" || model === "gpt-4o") {
+      requestParams.tools = [{"type": "web_search_preview"}]; // Add web search capability
     }
     
     const response = await openai.responses.create(requestParams);
@@ -377,18 +382,22 @@ export async function generateWeeklySummary(slackMessages: string[], projectName
       // Add other model conversions as needed
     }
     
-    // Create request parameters without temperature to avoid compatibility issues with some models
+    // Create request parameters without temperature or tools to avoid compatibility issues with some models
     const requestParams: any = {
       model,
       instructions: summaryPrompt,
       input: `Here are the Slack messages from the past week for the ${projectName} project:\n\n${slackMessages.join("\n\n")}`,
-      max_output_tokens: 4000,
-      tools: [{"type": "web_search_preview"}] // Add web search capability for real-time info
+      max_output_tokens: 4000
     };
     
     // Only add temperature if we're using a model that supports it
     if (model !== "o1" && !model.includes("-preview")) {
       requestParams.temperature = 0.5;
+    }
+    
+    // Only add web_search_preview tool if using a model that supports it
+    if (model === "o4" || model === "gpt-4o") {
+      requestParams.tools = [{"type": "web_search_preview"}]; // Add web search capability
     }
     
     const response = await openai.responses.create(requestParams);
@@ -472,14 +481,18 @@ The summary MUST follow this EXACT format with numbered headings and bullet poin
     }
     
     // Make the API call to generate the combined summary using Responses API
-    // Create request parameters without temperature to avoid compatibility issues with some models
+    // Create request parameters without temperature or tools to avoid compatibility issues with some models
     const requestParams: any = {
       model,
       instructions: projectSummaryPrompt,
       input: `Here are the individual summaries from different aspects of the ${projectName} project:\n\n${chatbotSummarySection}\n\nHere are the raw messages from the past week for additional context if needed:\n\n${formattedMessages}`,
-      max_output_tokens: 4000,
-      tools: [{"type": "web_search_preview"}] // Add web search capability for real-time info
+      max_output_tokens: 4000
     };
+    
+    // Only add web_search_preview tool if using a model that supports it
+    if (model === "o4" || model === "gpt-4o") {
+      requestParams.tools = [{"type": "web_search_preview"}]; // Add web search capability
+    }
     
     // Only add temperature if we're using a model that supports it
     if (model !== "o1" && !model.includes("-preview")) {
