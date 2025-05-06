@@ -508,6 +508,10 @@ export class MemStorage implements IStorage {
     );
   }
   
+  async getDocument(id: number): Promise<Document | undefined> {
+    return this.documents.get(id);
+  }
+  
   async createDocument(document: InsertDocument): Promise<Document> {
     const id = this.currentDocumentId++;
     const now = new Date();
