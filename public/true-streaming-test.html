@@ -361,8 +361,8 @@
             // Process the SSE data
             const lines = chunk.split('\n\n');
             for (const line of lines) {
-              if (line.startsWith('data:')) {
-                const data = line.substring(5);
+              if (line.startsWith('data: ')) {
+                const data = line.substring(6); // Note the space after "data:"
                 if (data === '[DONE]') {
                   continue;
                 }
@@ -380,10 +380,10 @@
                 if (showCursorCheckbox.checked) {
                   assistantMessageStream.appendChild(cursorStream);
                 }
-              } else if (line.includes('event:error')) {
-                const errorLine = lines.find(l => l.startsWith('data:'));
+              } else if (line.includes('event: error')) {
+                const errorLine = lines.find(l => l.startsWith('data: '));
                 if (errorLine) {
-                  const errorData = errorLine.substring(5);
+                  const errorData = errorLine.substring(6);
                   throw new Error(JSON.parse(errorData).error || 'Unknown error');
                 }
               }

@@ -26,7 +26,7 @@ router.post("/chatbots/:id/stream", async (req, res) => {
     const chatbot = await storage.getChatbot(chatbotId);
     
     if (!chatbot) {
-      res.write(`event: error\ndata:${JSON.stringify({ error: "Chatbot not found" })}\n\n`);
+      res.write(`event: error\ndata: ${JSON.stringify({ error: "Chatbot not found" })}\n\n`);
       return res.end();
     }
     
@@ -37,7 +37,7 @@ router.post("/chatbots/:id/stream", async (req, res) => {
     
     // Check token unless from test page
     if (!isTestPage && chatbot.requireAuth && chatbot.publicToken !== token) {
-      res.write(`event: error\ndata:${JSON.stringify({ error: "Valid token required" })}\n\n`);
+      res.write(`event: error\ndata: ${JSON.stringify({ error: "Valid token required" })}\n\n`);
       return res.end();
     }
     
@@ -228,8 +228,8 @@ You should **never make up information**. You may summarize or synthesize detail
         // Add to the full response
         fullResponse += token;
         
-        // Send the token directly (no JSON wrapping for better performance)
-        res.write(`data:${token}\n\n`);
+        // Send the token as a proper SSE event
+        res.write(`data: ${token}\n\n`);
       }
     }
     
@@ -252,15 +252,15 @@ You should **never make up information**. You may summarize or synthesize detail
       citation,
     });
     
-    // Send completion event
-    res.write(`event:done\ndata:[DONE]\n\n`);
+    // Send completion event with proper SSE format
+    res.write(`event: done\ndata: [DONE]\n\n`);
     res.end();
     
   } catch (error) {
     console.error("Error in streaming endpoint:", error);
     
-    // Send error via SSE
-    res.write(`event:error\ndata:${JSON.stringify({ error: "Error generating response" })}\n\n`);
+    // Send error via SSE with proper format
+    res.write(`event: error\ndata: ${JSON.stringify({ error: "Error generating response" })}\n\n`);
     res.end();
   }
 });
