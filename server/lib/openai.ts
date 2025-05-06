@@ -2,6 +2,72 @@ import OpenAI from "openai";
 import { storage } from "../storage";
 import { Settings } from "@shared/schema";
 
+// Function to extract more detailed text from response object
+// Used as a fallback when the main extraction function fails
+function extractUsableTextFromResponse(output: any): string | null {
+  console.log("DEBUG - Attempting deep extraction of content from response");
+  
+  try {
+    // If output is an array (typical for the Responses API)
+    if (Array.isArray(output)) {
+      // Look for message objects which contain the actual response
+      const messageItems = output.filter(item => item && typeof item === 'object' && item.type === 'message');
+      
+      if (messageItems.length > 0) {
+        for (const msg of messageItems) {
+          // Check if message has a content array
+          if (msg.content && Array.isArray(msg.content)) {
+            // Extract text from output_text items
+            const textItems = msg.content
+              .filter(item => item && typeof item === 'object' && item.type === 'output_text')
+              .map(item => item.text)
+              .filter(Boolean);
+            
+            if (textItems.length > 0) {
+              return textItems.join("\n");
+            }
+          }
+        }
+      }
+      
+      // If no message with content found, try to stringify and look for text patterns
+      const outputStr = JSON.stringify(output);
+      const textMatches = outputStr.match(/"text":"([^"]+)"/g);
+      
+      if (textMatches && textMatches.length > 0) {
+        return textMatches
+          .map(match => {
+            const textContent = match.replace(/"text":"/, '').replace(/"$/, '');
+            return textContent;
+          })
+          .join("\n");
+      }
+    }
+    
+    // If it's an object, check for common properties
+    if (output && typeof output === 'object') {
+      if (output.text) return String(output.text);
+      if (output.content) return String(output.content);
+      if (output.value) return String(output.value);
+      
+      // Deep search for message content
+      if (output.message && output.message.content) {
+        return String(output.message.content);
+      }
+      
+      // Try to JSON stringify and search for text patterns
+      const outputStr = JSON.stringify(output);
+      const match = outputStr.match(/"text":"([^"]+)"/);
+      if (match && match[1]) return match[1];
+    }
+    
+    return null;
+  } catch (error) {
+    console.error("Error in extractUsableTextFromResponse:", error);
+    return null;
+  }
+}
+
 // Helper function to extract text content from Responses API output
 // This handles all the different output formats that might be returned
 function extractTextFromResponseOutput(output: any): string {
@@ -20,12 +86,35 @@ function extractTextFromResponseOutput(output: any): string {
     return "";
   }
   
-  // Case 3: output is an array of content items
+  // Case 3: output is an array of content items (typical for Responses API)
   if (Array.isArray(output)) {
     console.log("DEBUG - Output is an array of length:", output.length);
     if (output.length === 0) return "";
     
-    // Try to find text content in the array items
+    // Responses API (March 2025) returns different segments in an array
+    // First try to find "message" type items, which contain the actual response text
+    const messageItems = output.filter(item => item && typeof item === 'object' && item.type === 'message');
+    if (messageItems.length > 0) {
+      console.log(`DEBUG - Found ${messageItems.length} 'message' type items`);
+      
+      // Look through each message item
+      for (const messageItem of messageItems) {
+        // Each message can have a content array with different content types
+        if (messageItem.content && Array.isArray(messageItem.content)) {
+          console.log(`DEBUG - Message has content array with ${messageItem.content.length} items`);
+          
+          // Try to find output_text content
+          for (const contentItem of messageItem.content) {
+            if (contentItem.type === 'output_text' && contentItem.text) {
+              console.log(`DEBUG - Found output_text content: "${contentItem.text.substring(0, 50)}..."`);
+              return contentItem.text;
+            }
+          }
+        }
+      }
+    }
+    
+    // If we couldn't find message items, try each item directly for common properties
     for (const item of output) {
       // Check for text property (ResponseOutputMessage)
       if (item && typeof item === 'object' && 'text' in item && typeof item.text === 'string') {
@@ -46,9 +135,53 @@ function extractTextFromResponseOutput(output: any): string {
       }
     }
     
-    // If we couldn't find specific properties, stringify the first item as fallback
-    console.log("DEBUG - No recognizable properties in array items, using first item as string");
-    return String(output[0] || "");
+    // If still no text found, try to extract from the first message item's content however possible
+    const firstMessageItem = messageItems[0];
+    if (firstMessageItem && firstMessageItem.content) {
+      if (Array.isArray(firstMessageItem.content)) {
+        // If it's an array, join all text values
+        const allText = firstMessageItem.content
+          .map((item: any) => {
+            if (typeof item === 'string') return item;
+            if (item && typeof item === 'object') {
+              if (item.text) return item.text;
+              if (item.value) return item.value;
+              if (item.content) return item.content;
+            }
+            return '';
+          })
+          .filter((text: any) => text)
+          .join('\n');
+        
+        if (allText) {
+          console.log(`DEBUG - Extracted combined text from message content: "${allText.substring(0, 50)}..."`);
+          return allText;
+        }
+      } else if (typeof firstMessageItem.content === 'string') {
+        return firstMessageItem.content;
+      }
+    }
+    
+    // If we still couldn't find specific properties, stringify the array as JSON for debugging
+    console.log("DEBUG - No recognizable properties in array items, attempting to extract from raw data");
+    
+    try {
+      // Try to JSON.stringify the entire output for examination
+      const outputJson = JSON.stringify(output);
+      
+      // Look for text patterns in the stringified JSON
+      const textMatch = outputJson.match(/"text":"([^"]+)"/);
+      if (textMatch && textMatch[1]) {
+        console.log(`DEBUG - Found text in JSON: "${textMatch[1].substring(0, 50)}..."`);
+        return textMatch[1];
+      }
+    } catch (error) {
+      console.log("DEBUG - Error stringifying array output:", error);
+    }
+    
+    // Ultimate fallback - just return empty string instead of [object Object]
+    console.log("DEBUG - Could not extract meaningful text from response array");
+    return "";
   }
   
   // Case 4: output is an object with content property
@@ -414,12 +547,27 @@ export async function getChatbotResponse(
     // Handle the case where responseText is invalid
     let finalContent = "";
     
-    if (responseText === "[object Object]" || responseText.includes("object Object")) {
+    if (!responseText) {
+      // No response text at all
+      console.log("No response text found, using default message");
+      finalContent = "I wasn't able to find that information in the project files or Slack messages.";
+    } else if (responseText === "[object Object]" || responseText.includes("[object Object]")) {
       // We detected an object being stringified incorrectly
-      console.log("Converting invalid [object Object] to readable message");
-      finalContent = "I'm having trouble processing the information. Let me try again with a more specific question.";
+      console.log("Response contains [object Object] - extracting real content");
+      
+      // Try to capture the real text that might be in the response
+      const usableText = response.output ? extractUsableTextFromResponse(response.output) : null;
+      
+      if (usableText) {
+        console.log(`Recovered usable text from response: "${usableText.substring(0, 50)}..."`);
+        finalContent = usableText;
+      } else {
+        console.log("Couldn't recover text from response, using generic message");
+        finalContent = "I'm having trouble processing the information. Let me try again with a more specific question.";
+      }
     } else {
-      finalContent = responseText || "I wasn't able to find that information in the project files or Slack messages.";
+      // Valid response text
+      finalContent = responseText;
       
       // Only strip the citation if it's in the standard bracket format
       if (match && match[0]) {

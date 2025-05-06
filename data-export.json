@@ -1903,6 +1903,24 @@
           "isUserMessage": false,
           "citation": "object Object",
           "createdAt": "2025-05-06T15:16:47.599Z"
+        },
+        {
+          "id": 239,
+          "chatbotId": 41,
+          "userId": null,
+          "content": "what happened last week?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T15:21:21.144Z"
+        },
+        {
+          "id": 240,
+          "chatbotId": 41,
+          "userId": null,
+          "content": "I'm having trouble processing the information. Let me try again with a more specific question.",
+          "isUserMessage": false,
+          "citation": "object Object",
+          "createdAt": "2025-05-06T15:21:46.083Z"
         }
       ],
       "summaries": [],
@@ -2201,6 +2219,24 @@
           "isUserMessage": false,
           "citation": "Error",
           "createdAt": "2025-05-06T15:11:23.706Z"
+        },
+        {
+          "id": 241,
+          "chatbotId": 43,
+          "userId": null,
+          "content": "how much rent did we receive in May 2025?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T15:22:52.454Z"
+        },
+        {
+          "id": 242,
+          "chatbotId": 43,
+          "userId": null,
+          "content": "I'm having trouble processing the information. Let me try again with a more specific question.",
+          "isUserMessage": false,
+          "citation": "object Object",
+          "createdAt": "2025-05-06T15:23:04.285Z"
         }
       ],
       "summaries": [],
@@ -2208,6 +2244,6 @@
       "asanaProjects": []
     }
   ],
-  "exportedAt": "2025-05-06T15:20:39.405Z",
+  "exportedAt": "2025-05-06T15:25:49.583Z",
   "exportedBy": "SPH Chat Migration Utility"
 }
