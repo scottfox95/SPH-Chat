@@ -212,6 +212,42 @@
           "isUserMessage": false,
           "citation": "No specific source available",
           "createdAt": "2025-05-06T14:13:21.083Z"
+        },
+        {
+          "id": 199,
+          "chatbotId": 22,
+          "userId": null,
+          "content": "how much did we spend on the engineered floor system",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T14:22:03.703Z"
+        },
+        {
+          "id": 200,
+          "chatbotId": 22,
+          "userId": null,
+          "content": "I wasn’t able to find that information in the available project files or messages.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-06T14:22:05.224Z"
+        },
+        {
+          "id": 201,
+          "chatbotId": 22,
+          "userId": null,
+          "content": "what happened last week",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T14:22:12.721Z"
+        },
+        {
+          "id": 202,
+          "chatbotId": 22,
+          "userId": null,
+          "content": "Last week, several activities and updates occurred on the 1320 Mayfair project:\n\n1. **Site Work and Deliveries**: The pavers team was on site, and more pavers and 89 stone were scheduled for delivery. The driveway prep was in progress, and the installation of pervious pavers was ongoing.\n\n2. **Inspections and Reports**: The drywall team was working on sanding and finishing imperfections in the ceiling. Additionally, there was a focus on ensuring that the HVAC units were prepped for installation.\n\n3. **Security Incident**: There was a report of a theft involving a Bosch chip hammer valued at $255, which was stolen from a nearby site. A police report was filed, and security measures were being discussed, including relocating cameras.\n\n4. **Material Arrivals**: There were inquiries about the arrival of sliding door materials and Dekton slabs, with updates indicating that the materials were being fabricated.\n\n5. **Team Coordination**: Various team members were assigned tasks, including spray painting gas lines and ensuring that specific materials were delivered and installed.\n\n6. **Budget Tracking**: The project budget was being monitored, with actual costs reported at $801,185.52 against a total budget of $1,050,000.\n\nFor more detailed information on specific tasks or expenses, please let me know!",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-06T14:22:19.667Z"
         }
       ],
       "summaries": [
@@ -303,6 +339,42 @@
           "isUserMessage": false,
           "citation": "the message on 2025-04-28 15:53 ET",
           "createdAt": "2025-04-29T20:19:29.092Z"
+        },
+        {
+          "id": 207,
+          "chatbotId": 25,
+          "userId": null,
+          "content": "has the foundation survey been requested?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T14:34:47.587Z"
+        },
+        {
+          "id": 208,
+          "chatbotId": 25,
+          "userId": null,
+          "content": "Yes, the foundation survey has been requested. It is listed as a task in the Asana project for permits, and it has been marked as completed. Additionally, there was a Slack message confirming that the foundation survey was approved. \n\n**Sources:**  \n- **Asana:** \"Asana project ' 2387 Poplar Springs', task *'Foundation Survey'*\"  \n- **Slack:** \"Slack, 2025-04-28 17:12 ET\"",
+          "isUserMessage": false,
+          "citation": "PERMIT",
+          "createdAt": "2025-05-06T14:34:49.688Z"
+        },
+        {
+          "id": 209,
+          "chatbotId": 25,
+          "userId": null,
+          "content": "what slack messages?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T14:35:03.931Z"
+        },
+        {
+          "id": 210,
+          "chatbotId": 25,
+          "userId": null,
+          "content": "Here are the relevant Slack messages related to the 2387 Poplar home-building project:\n\n1. **Dirt Loads**: \"We will need 40+ loads of dirt.\"\n2. **Delivery Schedule**: \"They are booked for Monday, unit will drop on Tuesday.\"\n3. **Inspection and Scheduling**:\n   - \"Foundation Wall passed.\"\n   - \"Inspection tomorrow concrete pour on Wednesday. Setting up Waterproofing. 14-day wait before we backfill.\"\n   - \"Foundation survey approved, Foundation wall inspection scheduled for Tuesday.\"\n   - \"T pole hooked up to power. Densmore starting cut out have dump trucks tomorrow for haul off of bad soil.\"\n   - \"T-pole inspection scheduled for Friday.\"\n4. **Construction Updates**:\n   - \"Walls poured. Plate removal today.\"\n   - \"Wall Rebar stubbed up, plates going on Friday-Monday.\"\n   - \"Footing passed.\"\n   - \"Pre Demo Building passed. Pre Demo Site Failed: Sewer line needs to be capped.\"\n5. **Scheduling Requests**: \n   - \"<@UBKJU7ZTJ> please schedule dumpster drop on this lot for Monday.\"\n   - \"<@UBKJU7ZTJ> please schedule footing inspection for Monday.\"\n   - \"<@UBKJU7ZTJ> please send permit card and plans for subs to pull permits.\"\n6. **Tree and Site Preparation**:\n   - \"All tree stumps up but needs haul off. Need to grade still but no room to stock pile dirt.\"\n   - \"Dinsmore started removing stumps on 2393, notified 2387 ready for stump removal.\"\n   - \"Pre-con partial: Partial passed to remove trees as per the stamped approved site plan.\"\n\nThese messages provide insights into scheduling, inspections, construction progress, and site preparation activities. If you need more specific details or additional context, please let me know!",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-06T14:35:10.099Z"
         }
       ],
       "summaries": [
@@ -1669,7 +1741,26 @@
         "createdAt": "2025-05-01T19:58:02.248Z"
       },
       "documents": [],
-      "messages": [],
+      "messages": [
+        {
+          "id": 205,
+          "chatbotId": 41,
+          "userId": null,
+          "content": "what happened last week?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T14:31:59.011Z"
+        },
+        {
+          "id": 206,
+          "chatbotId": 41,
+          "userId": null,
+          "content": "Last week, several activities took place on the site:\n\n1. **Cooktop Preparation**: The cooktop prep was completed, and the cut for the cooktop was in progress.\n2. **Plumbing and Electric Trim**: Plumbing trim was reported as complete, with some led strips still on order. Electric trim was scheduled to be completed early this week.\n3. **Cleaning**: A&G was on track to clean the home, and there were plans for the stucco team to clean as well.\n4. **Touch-ups**: There were some missed touch-ups that needed to be addressed, and a walkthrough was completed with the electric trim team.\n5. **Materials and Installations**: Brandon was working on plumbing trim, and there were discussions about various materials being in transit or on order, including a latch for a sliding door.\n6. **Site Visits and Tasks**: Dimitri and another team member were scheduled to walk the house, and there were ongoing discussions about moving materials and scheduling measurements.\n\nOverall, it seems the team was focused on finishing various installations and ensuring the site was cleaned and prepared for the next steps.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-06T14:32:05.319Z"
+        }
+      ],
       "summaries": [],
       "emailRecipients": [],
       "asanaProjects": []
@@ -1714,13 +1805,22 @@
       },
       "documents": [
         {
-          "id": 9,
+          "id": 10,
           "chatbotId": 43,
-          "filename": "938958ac-faae-4393-81a4-c12748a0ef8f.xlsx",
+          "filename": "88ab515b-648b-4c61-b04a-8174ba9e0880.xlsx",
           "originalName": "Rental Income Tracking for 3400 W Hospital (2025).xlsx",
           "fileType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
           "uploadedById": 4,
-          "createdAt": "2025-05-06T13:54:35.860Z"
+          "createdAt": "2025-05-06T14:39:11.085Z"
+        },
+        {
+          "id": 11,
+          "chatbotId": 43,
+          "filename": "4041f53a-d860-4b8b-8d29-07a22dd825bf.xlsx",
+          "originalName": "Zaken Holdings 3400 W Hospital Rent Roll 2025.xlsx",
+          "fileType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          "uploadedById": 4,
+          "createdAt": "2025-05-06T14:41:40.973Z"
         }
       ],
       "messages": [
@@ -1831,6 +1931,96 @@
           "isUserMessage": false,
           "citation": "No specific source available",
           "createdAt": "2025-05-06T14:13:58.044Z"
+        },
+        {
+          "id": 203,
+          "chatbotId": 43,
+          "userId": null,
+          "content": "how much rent did we receive in April 2025?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T14:26:40.772Z"
+        },
+        {
+          "id": 204,
+          "chatbotId": 43,
+          "userId": null,
+          "content": "I wasn’t able to find that information in the available project files or messages.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-06T14:26:41.613Z"
+        },
+        {
+          "id": 211,
+          "chatbotId": 43,
+          "userId": null,
+          "content": "how much rent did we receive in April 2025?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T14:35:54.915Z"
+        },
+        {
+          "id": 212,
+          "chatbotId": 43,
+          "userId": null,
+          "content": "I wasn’t able to find that information in the available project files or messages.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-06T14:35:55.605Z"
+        },
+        {
+          "id": 213,
+          "chatbotId": 43,
+          "userId": null,
+          "content": "how much rent did we receive in April 2025?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T14:39:17.965Z"
+        },
+        {
+          "id": 214,
+          "chatbotId": 43,
+          "userId": null,
+          "content": "In April 2025, the total rent received was as follows:\n\n1. $2,145.83 from JG Confections LLC (Zelle Payment)\n2. $3,373.65 from Built by Bees (Check)\n3. $3,151.55 from Southeast Fiber Arts (Check)\n4. $4,500.00 from Lotus Fencing Academy (Check)\n5. $4,405.59 from The St John Group (ACH Deposit)\n6. $5,000.00 from Six Points Homes (Bank Transfer)\n7. $4,375.00 from Marcus Patton Str8OffDaBoat Suite 105 (ACH Deposit)\n\nCalculating the total:\n\n- $2,145.83\n- $3,373.65\n- $3,151.55\n- $4,500.00\n- $4,405.59\n- $5,000.00\n- $4,375.00\n\nTotal rent received in April 2025 = $2,145.83 + $3,373.65 + $3,151.55 + $4,500.00 + $4,405.59 + $5,000.00 + $4,375.00 = **$27,951.62**.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-06T14:39:22.270Z"
+        },
+        {
+          "id": 215,
+          "chatbotId": 43,
+          "userId": null,
+          "content": "how much rent did we receive in May 2025?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T14:40:50.714Z"
+        },
+        {
+          "id": 216,
+          "chatbotId": 43,
+          "userId": null,
+          "content": "In May 2025, the total rent received was as follows:\n\n1. Zelle Payment from JG Confections LLC: $2,145.83\n2. Check from Southeast Fiber Arts: $3,151.55\n3. ACH Deposit from The St John Group: $4,405.59\n4. Check from Lotus Fencing Academy: $4,500.00\n5. Check from Marcus Patton: $4,375.00\n6. Check from P1 Auto Paint Inc: $1,609.37\n\nCalculating the total:\n\n\\[\n2,145.83 + 3,151.55 + 4,405.59 + 4,500.00 + 4,375.00 + 1,609.37 = 20,187.34\n\\]\n\nThus, the total rent received in May 2025 was **$20,187.34**.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-06T14:40:57.178Z"
+        },
+        {
+          "id": 217,
+          "chatbotId": 43,
+          "userId": null,
+          "content": "Are we missing any May 2025 rent from any tenants?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T14:42:08.111Z"
+        },
+        {
+          "id": 218,
+          "chatbotId": 43,
+          "userId": null,
+          "content": "According to the rental income tracking data for May 2025, all tenants have made their rent payments. Here are the details of the payments received:\n\n1. **JG Confections LLC** - Zelle for $2,145.83\n2. **Southeast Fiber Arts** - Check for $3,151.55\n3. **The St John Group** - ACH Deposit for $4,405.59\n4. **Lotus Fencing Academy** - Check for $4,500.00\n5. **Marcus Patton Str8OffDaBoat Suite 105** - Check for $4,375\n6. **P1 Auto Paint Inc** - Check for $1,609.37\n\nAll payments have been accounted for, so we are not missing any May 2025 rent from any tenants. \n\n**Source:** “Rental Income Tracking for 3400 W Hospital (2025).xlsx, 2024 Rental Income tab”",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-06T14:42:11.967Z"
         }
       ],
       "summaries": [],
@@ -1838,6 +2028,6 @@
       "asanaProjects": []
     }
   ],
-  "exportedAt": "2025-05-06T14:20:20.720Z",
+  "exportedAt": "2025-05-06T14:55:54.588Z",
   "exportedBy": "SPH Chat Migration Utility"
 }

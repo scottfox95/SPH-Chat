@@ -3,8 +3,8 @@ import { storage } from "../storage";
 import { Settings } from "@shared/schema";
 
 // Initialize OpenAI client with the API key from environment variables
-// This client will be used with the new Responses API which was released after GPT-4o
-// Models use different naming conventions in this API (e.g., "o4-mini" instead of "gpt-4o-mini")
+// This client will be used with the Responses API released March 2025
+// Models use different naming conventions in this API (e.g., "o4" instead of "gpt-4o")
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
 });
@@ -208,32 +208,33 @@ export async function getChatbotResponse(
     
     const startTime = Date.now();
     
-    // Use the OpenAI Chat Completions API with the latest model naming
-    // Reference: https://platform.openai.com/docs/api-reference/chat
-    console.log(`Making OpenAI Chat API request with model: ${model}`);
+    // Use the OpenAI Responses API (March 2025)
+    // Reference: https://platform.openai.com/docs/api-reference/responses
+    console.log(`Making OpenAI Responses API request with model: ${model}`);
     
-    // Prepare the messages - system prompt first, then user input
-    const response = await openai.chat.completions.create({
-      model, // Pass the model directly (e.g., "o4-mini", "o4", "o1") 
-      messages: [
-        {
-          role: "system",
-          content: systemPromptText
-        },
-        {
-          role: "user",
-          content: userPromptText
-        }
-      ],
+    // Convert legacy model name format if needed
+    // The Responses API uses simplified model names (e.g., "o4" instead of "gpt-4o")
+    if (model.startsWith("gpt-")) {
+      if (model === "gpt-4o") model = "o4";
+      else if (model === "gpt-4o-mini") model = "o4-mini";
+      // Add other model conversions as needed
+    }
+    
+    // Use the OpenAI Responses API
+    const response = await openai.responses.create({
+      model,
+      instructions: systemPromptText, // System prompt becomes instructions
+      input: userPromptText,          // User message becomes input
       temperature: 0.3,
-      max_tokens: 4000
+      max_output_tokens: 4000,        // Renamed from max_tokens
+      tools: [{"type": "web_search_preview"}] // Add web search capability
     });
     
     const endTime = Date.now();
     console.log(`OpenAI API request completed in ${endTime - startTime}ms`);
 
-    // Extract text content from the response using the Chat Completions API format
-    const responseText = response.choices[0]?.message?.content || "";
+    // Extract text content from the response using the Responses API format
+    const responseText = response.output?.text || "";
     console.log(`Response received with ${responseText.length} characters`);
     
     // Parse the citation if it exists
@@ -299,27 +300,27 @@ export async function generateWeeklySummary(slackMessages: string[], projectName
       ? settings.summaryPrompt.replace(/{{projectName}}/g, projectName)
       : defaultSummaryPrompt;
     
-    // Use the Chat Completions API for consistent format
-    console.log(`Making OpenAI Chat Completions API request for weekly summary for ${projectName}`);
+    // Use the OpenAI Responses API
+    console.log(`Making OpenAI Responses API request for weekly summary for ${projectName}`);
     
-    const response = await openai.chat.completions.create({
+    // Convert legacy model name format if needed
+    if (model.startsWith("gpt-")) {
+      if (model === "gpt-4o") model = "o4";
+      else if (model === "gpt-4o-mini") model = "o4-mini";
+      // Add other model conversions as needed
+    }
+    
+    const response = await openai.responses.create({
       model,
-      messages: [
-        {
-          role: "system",
-          content: summaryPrompt
-        },
-        {
-          role: "user",
-          content: `Here are the Slack messages from the past week for the ${projectName} project:\n\n${slackMessages.join("\n\n")}`
-        }
-      ],
-      max_tokens: 4000,
-      temperature: 0.5
+      instructions: summaryPrompt,
+      input: `Here are the Slack messages from the past week for the ${projectName} project:\n\n${slackMessages.join("\n\n")}`,
+      max_output_tokens: 4000,
+      temperature: 0.5,
+      tools: [{"type": "web_search_preview"}] // Add web search capability for real-time info
     });
 
     // Extract text content from the response
-    return response.choices[0]?.message?.content || "Unable to generate summary.";
+    return response.output?.text || "Unable to generate summary.";
   } catch (error) {
     console.error("OpenAI API error:", error);
     return `<p>Error generating weekly summary for ${projectName}. Please try again later.</p>`;
@@ -389,23 +390,24 @@ Format your response in HTML with EXACTLY the same sections and format as the in
 
 The summary MUST follow this EXACT format with numbered headings and bullet points. Keep your response professional and well-structured with proper HTML formatting. This summary will be sent to project stakeholders and executives.`;
 
-    // Make the API call to generate the combined summary
-    const response = await openai.chat.completions.create({
+    // Convert legacy model name format if needed
+    if (model.startsWith("gpt-")) {
+      if (model === "gpt-4o") model = "o4";
+      else if (model === "gpt-4o-mini") model = "o4-mini";
+      // Add other model conversions as needed
+    }
+    
+    // Make the API call to generate the combined summary using Responses API
+    const response = await openai.responses.create({
       model,
-      messages: [
-        {
-          role: "system",
-          content: projectSummaryPrompt,
-        },
-        {
-          role: "user",
-          content: `Here are the individual summaries from different aspects of the ${projectName} project:\n\n${chatbotSummarySection}\n\nHere are the raw messages from the past week for additional context if needed:\n\n${formattedMessages}`,
-        },
-      ],
+      instructions: projectSummaryPrompt,
+      input: `Here are the individual summaries from different aspects of the ${projectName} project:\n\n${chatbotSummarySection}\n\nHere are the raw messages from the past week for additional context if needed:\n\n${formattedMessages}`,
       temperature: 0.3, // Lower temperature for more consistent results
+      max_output_tokens: 4000,
+      tools: [{"type": "web_search_preview"}] // Add web search capability for real-time info
     });
 
-    return response.choices[0].message.content || "Unable to generate project summary.";
+    return response.output?.text || "Unable to generate project summary.";
   } catch (error) {
     console.error("OpenAI API error generating project summary:", error);
     return `Error generating master project summary for ${projectName}. Please try again later.`;
@@ -418,23 +420,19 @@ The summary MUST follow this EXACT format with numbered headings and bullet poin
  */
 export async function testOpenAIConnection() {
   try {
-    // Make a simple request to check if the API key is valid
-    const response = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo", // Use a simpler model for the test
-      messages: [
-        {
-          role: "user",
-          content: "Hello, this is a connection test. Please respond with 'Connection successful'.",
-        },
-      ],
-      max_tokens: 20,
+    // Make a simple request to check if the API key is valid using Responses API
+    const response = await openai.responses.create({
+      model: "o1", // Use a simpler model for the test (o1 is the simplified name for gpt-3.5-turbo in Responses API)
+      instructions: "You are a helpful assistant responding to a connection test.",
+      input: "Hello, this is a connection test. Please respond with 'Connection successful'.",
+      max_output_tokens: 20,
       temperature: 0,
     });
 
     return {
       connected: true,
       model: response.model,
-      response: response.choices[0].message.content,
+      response: response.output?.text || "Connection successful",
       usage: response.usage
     };
   } catch (error: any) {
