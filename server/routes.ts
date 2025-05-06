@@ -894,8 +894,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         console.error("Error deleting file:", err);
       }
       
-      // Clear document cache for this chatbot
+      // Clear document cache for this specific chatbot
       clearDocumentCache(document.chatbotId);
+      
+      // Also clear the global document cache to ensure consistency
+      clearAllDocumentCache();
       
       res.json({ success: true });
     } catch (error) {
@@ -1174,6 +1177,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Get context for the chatbot
       const { documents, slackMessages } = await getChatbotContext(chatbotId);
+      
+      // Debug logging for document processing
+      console.log(`Chatbot ${chatbotId} documents count: ${documents.length}`);
+      if (documents.length > 0) {
+        console.log(`First document preview: ${documents[0].substring(0, 100)}...`);
+      } else {
+        console.log(`No documents found for chatbot ${chatbotId}. Checking if documents exist in database...`);
+        const dbDocuments = await storage.getDocuments(chatbotId);
+        console.log(`Database documents count: ${dbDocuments.length}`);
+        if (dbDocuments.length > 0) {
+          console.log(`Database has documents but processing failed. First document: ${dbDocuments[0].originalName}`);
+        }
+      }
       
       // Prepare the context sources for the prompt
       let contextSources = [

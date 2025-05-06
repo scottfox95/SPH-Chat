@@ -13,34 +13,56 @@ const documentContentCache = new Map<number, string[]>();
  */
 export async function getProcessedDocuments(chatbotId: number): Promise<string[]> {
   try {
+    console.log(`getProcessedDocuments called for chatbot ${chatbotId}`);
+    
     // Check cache first
     if (documentContentCache.has(chatbotId)) {
+      console.log(`Using cached documents for chatbot ${chatbotId}. Cache has ${documentContentCache.get(chatbotId)?.length || 0} document chunks`);
       return documentContentCache.get(chatbotId) || [];
     }
     
     // Get documents from storage
+    console.log(`No cache found. Fetching documents for chatbot ${chatbotId} from database`);
     const documents = await storage.getDocuments(chatbotId);
+    console.log(`Found ${documents.length} documents in database for chatbot ${chatbotId}`);
     
     // Process each document
     const processedContent: string[] = [];
     
     for (const doc of documents) {
+      console.log(`Processing document: ${doc.originalName} (ID: ${doc.id}) with type ${doc.fileType}`);
       const filePath = path.join(process.cwd(), "uploads", doc.filename);
-      const content = await processDocument(filePath, doc.fileType);
+      console.log(`Full file path: ${filePath}`);
       
-      const formattedContent = content.map(text => {
-        return `[From ${doc.originalName}] ${text}`;
-      });
-      
-      processedContent.push(...formattedContent);
+      try {
+        const content = await processDocument(filePath, doc.fileType);
+        console.log(`Document ${doc.originalName} processed with ${content.length} content chunks`);
+        
+        if (content.length === 0) {
+          console.warn(`Document ${doc.originalName} processed but returned no content`);
+          processedContent.push(`[From ${doc.originalName}] No content could be extracted from this document.`);
+          continue;
+        }
+        
+        const formattedContent = content.map(text => {
+          return `[From ${doc.originalName}] ${text}`;
+        });
+        
+        processedContent.push(...formattedContent);
+      } catch (docError) {
+        console.error(`Error processing individual document ${doc.originalName}:`, docError);
+        processedContent.push(`[From ${doc.originalName}] Error processing this document.`);
+      }
     }
+    
+    console.log(`Total processed document chunks for chatbot ${chatbotId}: ${processedContent.length}`);
     
     // Cache the results
     documentContentCache.set(chatbotId, processedContent);
     
     return processedContent;
   } catch (error) {
-    console.error("Error processing documents:", error);
+    console.error(`Error in getProcessedDocuments for chatbot ${chatbotId}:`, error);
     return [];
   }
 }

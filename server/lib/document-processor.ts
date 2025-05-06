@@ -11,17 +11,35 @@ import { promisify } from "util";
  */
 export async function extractTextFromPDF(filePath: string): Promise<string[]> {
   try {
+    console.log(`Starting PDF extraction for: ${path.basename(filePath)}`);
+    
     const loader = new PDFLoader(filePath, {
       splitPages: true,
     });
     
+    console.log(`PDF loader created, beginning load operation...`);
     const docs = await loader.load();
+    console.log(`PDF loaded successfully. Number of pages: ${docs.length}`);
     
-    return docs.map((doc, index) => {
-      return `[PDF Page ${index + 1}] ${doc.pageContent}`;
+    if (docs.length === 0) {
+      console.warn(`PDF loaded but no pages extracted: ${path.basename(filePath)}`);
+      return [`[PDF Document] No content could be extracted from this PDF.`];
+    }
+    
+    // Map to pages with references
+    const result = docs.map((doc, index) => {
+      const content = doc.pageContent || '';
+      if (content.trim().length === 0) {
+        console.warn(`Empty content on page ${index + 1} of PDF: ${path.basename(filePath)}`);
+        return `[PDF Page ${index + 1}] (No text content on this page)`;
+      }
+      return `[PDF Page ${index + 1}] ${content}`;
     });
+    
+    console.log(`PDF processing complete. Extracted ${result.length} pages from ${path.basename(filePath)}`);
+    return result;
   } catch (error) {
-    console.error("Error extracting text from PDF:", error);
+    console.error(`Error extracting text from PDF ${path.basename(filePath)}:`, error);
     return [`Error processing PDF: ${path.basename(filePath)}`];
   }
 }
@@ -114,29 +132,43 @@ export async function extractTextFromTXT(filePath: string): Promise<string[]> {
  */
 export async function processDocument(filePath: string, fileType: string): Promise<string[]> {
   try {
+    console.log(`Beginning document processing: ${path.basename(filePath)}, type: ${fileType}`);
+    
     // Check if file exists
     if (!fs.existsSync(filePath)) {
+      console.error(`Document file not found: ${filePath}`);
       throw new Error(`File not found: ${filePath}`);
     }
     
+    console.log(`File exists at path: ${filePath}`);
+    
     // Process based on file type
+    let result: string[] = [];
+    
     if (fileType === "application/pdf") {
-      return extractTextFromPDF(filePath);
+      console.log(`Processing PDF document: ${path.basename(filePath)}`);
+      result = await extractTextFromPDF(filePath);
     } else if (
       fileType === "application/vnd.ms-excel" ||
       fileType === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     ) {
-      return extractDataFromExcel(filePath);
+      console.log(`Processing Excel document: ${path.basename(filePath)}`);
+      result = await extractDataFromExcel(filePath);
     } else if (
       fileType === "text/plain" ||
       filePath.toLowerCase().endsWith('.txt')
     ) {
-      return extractTextFromTXT(filePath);
+      console.log(`Processing text document: ${path.basename(filePath)}`);
+      result = await extractTextFromTXT(filePath);
     } else {
+      console.error(`Unsupported file type: ${fileType} for file: ${path.basename(filePath)}`);
       throw new Error(`Unsupported file type: ${fileType}`);
     }
+    
+    console.log(`Successfully processed document: ${path.basename(filePath)}, extracted ${result.length} content chunks`);
+    return result;
   } catch (error) {
-    console.error("Error processing document:", error);
+    console.error(`Error processing document ${path.basename(filePath)}:`, error);
     return [`Error processing document: ${path.basename(filePath)}`];
   }
 }

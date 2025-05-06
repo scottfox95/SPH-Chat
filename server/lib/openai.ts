@@ -34,6 +34,9 @@ export async function getChatbotResponse(
   outputFormat?: string | null
 ) {
   try {
+    console.log(`getChatbotResponse called with prompt: "${prompt.substring(0, 50)}..."`);
+    console.log(`Documents count: ${documents.length}, Slack/Asana messages count: ${slackMessages.length}`);
+    
     // Get application settings to determine source attribution behavior
     const settings = await getSettings();
     
@@ -60,15 +63,30 @@ export async function getChatbotResponse(
       return `${messagePrefix}: ${msg.meta?.rawMessage || msg.text}`;
     });
     
+    console.log(`Formatted ${formattedSlackMessages.length} Slack messages for context`);
+    
     // Extract Asana tasks (these were passed as strings)
     const asanaTasks = slackMessages.filter(msg => typeof msg === 'string');
+    console.log(`Found ${asanaTasks.length} Asana tasks for context`);
     
     // Context for the model
+    const documentContext = documents.map((doc) => `DOCUMENT: ${doc}`);
+    console.log(`Adding ${documentContext.length} document chunks to context`);
+    
     const context = [
-      ...documents.map((doc) => `DOCUMENT: ${doc}`),
+      ...documentContext,
       ...formattedSlackMessages,
       ...asanaTasks.map(task => `ASANA TASK DATA: ${task}`)
     ].join("\n\n");
+    
+    // Log the total size of context (truncate for log clarity)
+    const contextSize = context.length;
+    console.log(`Total context size: ${contextSize} characters`);
+    if (contextSize > 0) {
+      console.log(`Context preview: ${context.substring(0, 200)}...`);
+    } else {
+      console.warn(`No context provided to the model! This might be why responses are generic.`);
+    }
 
     // Enhance the system prompt with instructions about including source information
     let enhancedSystemPrompt = systemPrompt;
@@ -109,14 +127,20 @@ export async function getChatbotResponse(
 
     // Get the model from settings
     const model = await getCurrentModel();
+    console.log(`Using OpenAI model: ${model}`);
     
+    console.log(`Making request to OpenAI API with ${messages.length} messages`);
+    const startTime = Date.now();
     const response = await openai.chat.completions.create({
       model, // Use model from settings
       messages,
       temperature: 0.3,
     });
+    const endTime = Date.now();
+    console.log(`OpenAI API request completed in ${endTime - startTime}ms`);
 
     const responseText = response.choices[0].message.content;
+    console.log(`Response received with ${responseText?.length || 0} characters`);
     
     // Parse the citation if it exists
     let citation = "";
@@ -125,12 +149,16 @@ export async function getChatbotResponse(
     
     if (match && match[1]) {
       citation = match[1];
+      console.log(`Citation found in standard format: ${citation}`);
     } else if (settings?.includeSourceDetails) {
       // Try to extract source details from the response text using patterns like "according to X on Y"
       const sourceRegex = /according to ([^\.]+)/i;
       const sourceMatch = responseText?.match(sourceRegex);
       if (sourceMatch && sourceMatch[1]) {
         citation = sourceMatch[1].trim();
+        console.log(`Citation found in "according to" format: ${citation}`);
+      } else {
+        console.log(`No citation pattern found in response`);
       }
     }
     
@@ -141,6 +169,7 @@ export async function getChatbotResponse(
       finalContent = finalContent.replace(citationRegex, "").trim();
     }
     
+    console.log(`Returning response with content length: ${finalContent.length}`);
     return {
       content: finalContent,
       citation: citation || "No specific source available"
