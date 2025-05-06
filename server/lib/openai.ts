@@ -276,8 +276,7 @@ export async function getChatbotResponse(
   documents: string[],
   slackMessages: any[],
   systemPrompt: string,
-  outputFormat?: string | null,
-  streamHandler?: (chunk: string) => void // New stream handler parameter
+  outputFormat?: string | null
 ) {
   try {
     console.log(`getChatbotResponse called with prompt: "${prompt.substring(0, 50)}..."`);
@@ -500,87 +499,14 @@ export async function getChatbotResponse(
     console.log(`DEBUG - Final request parameters for chatbot response:`);
     console.log(JSON.stringify(requestParams, null, 2));
     
-    // Variable to store the response text
-    let responseText = '';
-    let responseObj = null;
+    const response = await openai.responses.create(requestParams);
     
-    // Check if we're streaming or not
-    if (streamHandler) {
-      // Add stream: true parameter for streaming responses
-      requestParams.stream = true;
+    const endTime = Date.now();
+    console.log(`OpenAI API request completed in ${endTime - startTime}ms`);
 
-      let fullText = '';
-      // @ts-ignore - Ignoring type error as the OpenAI SDK types are not properly aligned with streaming functionality
-      const stream = await openai.responses.create(requestParams);
-      
-      // Process the stream
-      // @ts-ignore - Type checking doesn't properly handle the OpenAI streaming response type
-      for await (const chunk of stream) {
-        console.log("DEBUG - Stream chunk received:", JSON.stringify(chunk));
-        
-        // Handle different response formats that may come from OpenAI
-        let textChunk = '';
-        
-        if (chunk.output) {
-          // New responses format
-          if (Array.isArray(chunk.output)) {
-            textChunk = extractTextFromResponseOutput(chunk.output);
-          } else if (typeof chunk.output === 'string') {
-            textChunk = chunk.output;
-          } else if (chunk.output && typeof chunk.output === 'object') {
-            // Try to extract from object
-            if (chunk.output.text) {
-              textChunk = chunk.output.text;
-            } else if (chunk.output.content) {
-              textChunk = chunk.output.content;
-            }
-          }
-        } else if (chunk.choices && Array.isArray(chunk.choices) && chunk.choices.length > 0) {
-          // Chat completions format
-          const choice = chunk.choices[0];
-          if (choice.delta && choice.delta.content) {
-            textChunk = choice.delta.content;
-          } else if (choice.message && choice.message.content) {
-            textChunk = choice.message.content;
-          }
-        } else if (typeof chunk === 'string') {
-          // Direct string
-          textChunk = chunk;
-        } else if (chunk.content) {
-          // Simple content object
-          textChunk = chunk.content;
-        } else if (chunk.text) {
-          // Text property
-          textChunk = chunk.text;
-        }
-        
-        // If we found any text, process it
-        if (textChunk) {
-          console.log(`DEBUG - Extracted text chunk: "${textChunk.substring(0, 50)}..."`);
-          fullText += textChunk;
-          // Send the chunk to the handler
-          streamHandler(textChunk);
-        } else {
-          console.log("DEBUG - No text chunk found in this part of the stream");
-        }
-      }
-      
-      const endTime = Date.now();
-      console.log(`OpenAI API streaming request completed in ${endTime - startTime}ms`);
-      
-      // Use the full text as the response
-      responseText = fullText;
-    } else {
-      // Non-streaming request (original behavior)
-      responseObj = await openai.responses.create(requestParams);
-      
-      const endTime = Date.now();
-      console.log(`OpenAI API request completed in ${endTime - startTime}ms`);
-
-      // Extract text content from the response using our helper function
-      // This handles all possible output formats from the Responses API
-      responseText = extractTextFromResponseOutput(responseObj.output);
-    }
+    // Extract text content from the response using our helper function
+    // This handles all possible output formats from the Responses API
+    const responseText = extractTextFromResponseOutput(response.output);
     console.log(`Response received with ${responseText.length} characters`);
     
     // Parse the citation if it exists
@@ -631,7 +557,7 @@ export async function getChatbotResponse(
       console.log("Response contains [object Object] - extracting real content");
       
       // Try to capture the real text that might be in the response
-      const usableText = responseObj && responseObj.output ? extractUsableTextFromResponse(responseObj.output) : null;
+      const usableText = response.output ? extractUsableTextFromResponse(response.output) : null;
       
       if (usableText) {
         console.log(`Recovered usable text from response: "${usableText.substring(0, 50)}..."`);

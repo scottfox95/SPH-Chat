@@ -340,7 +340,6 @@ export const chatMessageSchema = z.object({
   message: z.string().min(1, "Message is required"),
   chatbotId: z.number().optional(),
   token: z.string().optional(),
-  stream: z.boolean().optional(),
 });
 
 export const addEmailRecipientSchema = z.object({
