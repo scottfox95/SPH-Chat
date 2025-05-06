@@ -1189,6 +1189,107 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   
   // Regular chat API endpoint
+  // True token-by-token streaming endpoint using the ChatCompletions API
+  apiRouter.post("/chatbots/:id/stream", async (req, res) => {
+    try {
+      const chatbotId = parseInt(req.params.id);
+      const { message, token } = chatMessageSchema.parse(req.body);
+      
+      // Check if token is valid
+      const chatbot = await storage.getChatbot(chatbotId);
+      
+      if (!chatbot) {
+        return res.status(404).json({ message: "Chatbot not found" });
+      }
+      
+      // Check token if authentication is required
+      if (chatbot.requireAuth && chatbot.publicToken !== token) {
+        return res.status(401).json({ message: "Valid token required" });
+      }
+      
+      // Get context for the chatbot
+      const { documents, slackMessages } = await getChatbotContext(chatbotId);
+      console.log(`Chatbot ${chatbotId} documents count: ${documents.length}`);
+      
+      // Get system prompt (use custom prompt if available, otherwise use default)
+      let systemPrompt = "You are a helpful homebuilding assistant that provides clear and accurate information.";
+      if (chatbot.systemPrompt) {
+        systemPrompt = chatbot.systemPrompt;
+      }
+      
+      // Prepare asana tasks data if available
+      let asanaTasks: string[] = [];
+      if (chatbot.asanaProjectId) {
+        try {
+          const asanaResult = await getAsanaProjectTasks(chatbot.asanaProjectId, true);
+          if (asanaResult.success && asanaResult.tasks && asanaResult.tasks.length > 0) {
+            asanaTasks = formatTasksForChatbot(asanaResult.tasks);
+          }
+        } catch (error) {
+          console.error("Error fetching Asana tasks:", error);
+        }
+      }
+      
+      // Create message record in database
+      const userMessage = await storage.createMessage({
+        chatbotId,
+        userId: req.user ? (req.user as any).id : null,
+        content: message,
+        isUserMessage: true,
+        citation: null, // Add required citation field
+      });
+      
+      // Prepare the messages for OpenAI
+      const messages = [
+        { 
+          role: "system", 
+          content: systemPrompt + (chatbot.outputFormat ? `\n\n${chatbot.outputFormat}` : "") 
+        }
+      ];
+      
+      // Add context as a system message
+      if (documents.length > 0 || slackMessages.length > 0 || asanaTasks.length > 0) {
+        let contextMessage = "Here is relevant context to help answer the question:\n\n";
+        
+        if (documents.length > 0) {
+          contextMessage += "PROJECT DOCUMENTS:\n" + documents.join("\n\n") + "\n\n";
+        }
+        
+        if (slackMessages.length > 0) {
+          contextMessage += "SLACK MESSAGES:\n" + slackMessages.join("\n\n") + "\n\n";
+        }
+        
+        if (asanaTasks.length > 0) {
+          contextMessage += "ASANA TASKS:\n" + asanaTasks.join("\n\n");
+        }
+        
+        messages.push({ role: "system", content: contextMessage });
+      }
+      
+      // Add the user's question
+      messages.push({ role: "user", content: message });
+      
+      // Get settings to determine model
+      const settings = await storage.getSettings();
+      let model = settings?.openaiModel || "gpt-4o";
+      
+      // Stream the completion directly to the client using our new streaming implementation
+      // Pass the chatbotId to save the message to the database
+      await streamChatCompletion(req, res, messages, model, chatbotId);
+      
+      // Note: the message is saved to the database by the streamChatCompletion function
+      // and the response is ended there as well, so we don't need to do anything here.
+    } catch (error) {
+      console.error("Error in stream endpoint:", error);
+      
+      // Only send error response if headers haven't been sent
+      if (!res.headersSent) {
+        res.status(500).json({ message: "Error generating response" });
+      }
+    }
+  });
+  
+  // Regular chat API endpoint with workaround streaming
   apiRouter.post("/chatbots/:id/chat", async (req, res) => {
     try {
       const chatbotId = parseInt(req.params.id);

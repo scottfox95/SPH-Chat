@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>True Streaming Test</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 20px;
+      color: #333;
+    }
+    
+    h1 {
+      color: #2C3E50;
+      margin-bottom: 30px;
+    }
+    
+    .container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    
+    @media (max-width: 768px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    .form-group {
+      margin-bottom: 15px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 600;
+    }
+    
+    select, textarea, input {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+    
+    textarea {
+      min-height: 150px;
+      resize: vertical;
+    }
+    
+    button {
+      background-color: #3498DB;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s;
+    }
+    
+    button:hover {
+      background-color: #2980B9;
+    }
+    
+    button:disabled {
+      background-color: #95a5a6;
+      cursor: not-allowed;
+    }
+    
+    .result {
+      background-color: #f9f9f9;
+      padding: 15px;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+      min-height: 150px;
+      max-height: 500px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+    
+    .status {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #7f8c8d;
+    }
+    
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 15px;
+    }
+    
+    .checkbox-group input {
+      width: auto;
+    }
+    
+    .debug {
+      font-family: monospace;
+      font-size: 12px;
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #f0f0f0;
+      border-radius: 4px;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    
+    .spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(0, 0, 0, 0.1);
+      border-top-color: #3498DB;
+      border-radius: 50%;
+      animation: spin 1s ease-in-out infinite;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    .hidden {
+      display: none;
+    }
+    
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .version-selector {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .version-selector label {
+      margin-bottom: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>SPH Chat - True Streaming Test</h1>
+    <div class="version-selector">
+      <label for="streaming-mode">API Version:</label>
+      <select id="api-version">
+        <option value="stream">New API (/stream) - True token streaming</option>
+        <option value="chat">Old API (/chat) - Simulated streaming</option>
+      </select>
+    </div>
+  </div>
+  
+  <div class="container">
+    <div>
+      <div class="form-group">
+        <label for="chatbot-select">Select Chatbot:</label>
+        <select id="chatbot-select">
+          <option value="">Loading chatbots...</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label for="message-input">Your Message:</label>
+        <textarea id="message-input" placeholder="Type your message here..." rows="5"></textarea>
+      </div>
+      
+      <div class="checkbox-group">
+        <input type="checkbox" id="use-streaming" checked>
+        <label for="use-streaming">Use streaming mode</label>
+      </div>
+      
+      <button id="send-button">Send Message</button>
+      <div class="status">
+        <span id="spinner" class="spinner hidden"></span>
+        <span id="status-message"></span>
+      </div>
+    </div>
+    
+    <div>
+      <label for="result-output">Response:</label>
+      <div id="result-output" class="result"></div>
+    </div>
+  </div>
+  
+  <div id="debug-output" class="debug hidden"></div>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Elements
+      const chatbotSelect = document.getElementById('chatbot-select');
+      const messageInput = document.getElementById('message-input');
+      const useStreamingCheckbox = document.getElementById('use-streaming');
+      const sendButton = document.getElementById('send-button');
+      const resultOutput = document.getElementById('result-output');
+      const statusMessage = document.getElementById('status-message');
+      const spinner = document.getElementById('spinner');
+      const debugOutput = document.getElementById('debug-output');
+      const apiVersionSelect = document.getElementById('api-version');
+      
+      // Fetch available chatbots
+      async function fetchChatbots() {
+        try {
+          const response = await fetch('/api/chatbots');
+          if (!response.ok) {
+            throw new Error(`HTTP error ${response.status}`);
+          }
+          
+          const chatbots = await response.json();
+          
+          // Clear loading option
+          chatbotSelect.innerHTML = '';
+          
+          // Add chatbots to select
+          chatbots.forEach(chatbot => {
+            const option = document.createElement('option');
+            option.value = chatbot.id;
+            option.textContent = chatbot.name;
+            chatbotSelect.appendChild(option);
+          });
+          
+          if (chatbots.length === 0) {
+            const option = document.createElement('option');
+            option.value = '';
+            option.textContent = 'No chatbots available';
+            chatbotSelect.appendChild(option);
+          }
+        } catch (error) {
+          console.error('Error fetching chatbots:', error);
+          chatbotSelect.innerHTML = `<option value="">Error loading chatbots</option>`;
+        }
+      }
+      
+      // Helper function to show status
+      function showStatus(message, isError = false) {
+        statusMessage.textContent = message;
+        statusMessage.style.color = isError ? '#e74c3c' : '#7f8c8d';
+      }
+      
+      // Function to log debug info
+      function debug(message) {
+        const timestamp = new Date().toLocaleTimeString();
+        debugOutput.innerHTML += `${timestamp} - ${message}<br>`;
+        debugOutput.scrollTop = debugOutput.scrollHeight;
+      }
+      
+      // Function to handle sending message with streaming
+      async function sendMessageWithStreaming(chatbotId, message) {
+        resultOutput.textContent = '';
+        spinner.classList.remove('hidden');
+        sendButton.disabled = true;
+        showStatus('Connecting to API...');
+        
+        try {
+          const apiEndpoint = apiVersionSelect.value === 'stream' 
+            ? `/api/chatbots/${chatbotId}/stream`
+            : `/api/chatbots/${chatbotId}/chat`;
+          
+          debug(`Using API endpoint: ${apiEndpoint}`);
+          
+          // Determine payload based on API version
+          const payload = {
+            message,
+            stream: useStreamingCheckbox.checked
+          };
+          
+          // For the chat endpoint, we need to specify the stream flag
+          if (apiVersionSelect.value === 'chat' && !useStreamingCheckbox.checked) {
+            delete payload.stream;
+          }
+          
+          debug(`Request payload: ${JSON.stringify(payload)}`);
+          
+          // Non-streaming mode for the old API
+          if (apiVersionSelect.value === 'chat' && !useStreamingCheckbox.checked) {
+            debug('Using regular non-streaming request');
+            const response = await fetch(apiEndpoint, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(payload)
+            });
+            
+            if (!response.ok) {
+              throw new Error(`HTTP error ${response.status}`);
+            }
+            
+            const data = await response.json();
+            resultOutput.textContent = data.content;
+            showStatus('Response received');
+            spinner.classList.add('hidden');
+            sendButton.disabled = false;
+            return;
+          }
+          
+          // Set up SSE for streaming response
+          showStatus('Waiting for response...');
+          
+          // Setup for streaming request
+          const response = await fetch(apiEndpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          
+          if (!response.ok) {
+            throw new Error(`HTTP error ${response.status}`);
+          }
+          
+          debug('Connection established, streaming started');
+          showStatus('Receiving response...');
+          
+          // Setup stream reader
+          const reader = response.body.getReader();
+          const decoder = new TextDecoder();
+          let buffer = '';
+          
+          // Process the stream
+          while (true) {
+            const { done, value } = await reader.read();
+            
+            if (done) {
+              debug('Stream complete');
+              break;
+            }
+            
+            // Decode the chunk and add to buffer
+            buffer += decoder.decode(value, { stream: true });
+            
+            // Process complete events in the buffer
+            let eventStart = 0;
+            let eventEnd = buffer.indexOf('\n\n');
+            
+            while (eventEnd !== -1) {
+              const eventData = buffer.slice(eventStart, eventEnd);
+              eventStart = eventEnd + 2; // Move past the \n\n
+              
+              if (eventData.startsWith('data:')) {
+                const jsonData = eventData.slice(5); // Remove 'data:' prefix
+                try {
+                  const data = JSON.parse(jsonData);
+                  
+                  if (data.content) {
+                    resultOutput.textContent += data.content;
+                    resultOutput.scrollTop = resultOutput.scrollHeight; // Auto-scroll
+                  }
+                  
+                  if (data.done) {
+                    debug(`Streaming complete, message ID: ${data.messageId}`);
+                    showStatus('Response complete');
+                    break;
+                  }
+                  
+                  if (data.error) {
+                    throw new Error(data.error);
+                  }
+                } catch (e) {
+                  debug(`Error parsing event data: ${e.message}`);
+                }
+              }
+              
+              // Find the next event
+              eventEnd = buffer.indexOf('\n\n', eventStart);
+            }
+            
+            // Keep the remainder of the buffer
+            buffer = buffer.slice(eventStart);
+          }
+          
+        } catch (error) {
+          console.error('Error sending message:', error);
+          debug(`Error: ${error.message}`);
+          showStatus(`Error: ${error.message}`, true);
+        } finally {
+          spinner.classList.add('hidden');
+          sendButton.disabled = false;
+        }
+      }
+      
+      // Event listener for send button
+      sendButton.addEventListener('click', () => {
+        const chatbotId = chatbotSelect.value;
+        const message = messageInput.value.trim();
+        
+        if (!chatbotId) {
+          alert('Please select a chatbot');
+          return;
+        }
+        
+        if (!message) {
+          alert('Please enter a message');
+          return;
+        }
+        
+        sendMessageWithStreaming(chatbotId, message);
+      });
+      
+      // Add event listener for Enter key in textarea
+      messageInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          sendButton.click();
+        }
+      });
+      
+      // Toggle debug output on double click of header
+      document.querySelector('h1').addEventListener('dblclick', () => {
+        debugOutput.classList.toggle('hidden');
+      });
+      
+      // Initialize
+      fetchChatbots();
+    });
+  </script>
+</body>
+</html>
