@@ -136,10 +136,14 @@ export async function getChatbotResponse(
         const firstDocumentSample = documentContext[0].substring(0, 200);
         console.log(`First document in context: ${firstDocumentSample}...`);
       } else {
-        console.warn(`No valid documents in context! Only messages will be used.`);
+        console.warn(`No valid documents in context! Only messages will be used. This may indicate a problem with document processing or database retrieval.`);
       }
     } else {
-      console.warn(`No context provided to the model! This might be why responses are generic.`);
+      console.warn(`No context provided to the model! This will result in generic responses. Troubleshooting steps:
+      1. Check if documents exist in the database for this chatbot
+      2. Verify the document processing is working correctly
+      3. Make sure document cache is properly invalidated when new documents are added
+      4. Check if any errors occurred during document processing`);
     }
 
     // Enhance the system prompt with instructions about including source information
@@ -180,13 +184,21 @@ export async function getChatbotResponse(
     }
 
     // Get the model from settings
-    const model = await getCurrentModel();
+    let model = await getCurrentModel();
+    
+    // Convert o4-mini to the correct format for the OpenAI API
+    // OpenAI's Assistants/Responses API uses "o4-mini" but Chat Completions uses "gpt-4o-mini"
+    if (model === "o4-mini") {
+      // We're using chat completions API which requires the gpt- prefix
+      model = "gpt-4o-mini";
+    }
+    
     console.log(`Using OpenAI model: ${model}`);
     
     console.log(`Making request to OpenAI API with ${messages.length} messages`);
     const startTime = Date.now();
     const response = await openai.chat.completions.create({
-      model, // Use model from settings
+      model, // Use model from settings with proper formatting for the API
       messages,
       temperature: 0.3,
     });
@@ -244,7 +256,12 @@ export async function generateWeeklySummary(slackMessages: string[], projectName
     const settings = await getSettings();
     
     // Get the model from settings
-    const model = settings?.openaiModel || "gpt-4o";
+    let model = settings?.openaiModel || "gpt-4o";
+    
+    // Convert o4-mini to the correct format for the OpenAI API if needed
+    if (model === "o4-mini") {
+      model = "gpt-4o-mini";
+    }
     
     // Use custom summary prompt if available, otherwise use the default
     const defaultSummaryPrompt = `You are an expert construction project manager. Create a concise weekly summary of activity for the ${projectName} homebuilding project based on Slack channel messages. Focus on key decisions, progress updates, issues, and upcoming milestones. Format the summary in HTML with sections for: 1) Key Achievements, 2) Issues or Blockers, 3) Upcoming Work, and 4) Action Items. Keep it professional and informative.`;
@@ -287,7 +304,12 @@ export async function generateProjectSummary(
     const settings = await getSettings();
     
     // Get the model from settings
-    const model = settings?.openaiModel || "gpt-4o";
+    let model = settings?.openaiModel || "gpt-4o";
+    
+    // Convert o4-mini to the correct format for the OpenAI API if needed
+    if (model === "o4-mini") {
+      model = "gpt-4o-mini";
+    }
     
     // Prepare the combined summary information
     const chatbotSummarySection = chatbotSummaries.map(summary => 
