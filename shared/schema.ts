@@ -4,11 +4,9 @@ import { z } from "zod";
 
 // Available OpenAI models
 export const OPENAI_MODELS = [
+  "gpt-4o-mini", // New o4-mini model
   "gpt-4o",
-  "gpt-4.1-nano",
-  "gpt-4.1-preview",
   "gpt-4-turbo",
-  "gpt-4-vision-preview",
   "gpt-4",
   "gpt-3.5-turbo",
   "gpt-3.5-turbo-16k"
