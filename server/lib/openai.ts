@@ -2,6 +2,64 @@ import OpenAI from "openai";
 import { storage } from "../storage";
 import { Settings } from "@shared/schema";
 
+// Helper function to extract text content from Responses API output
+// This handles all the different output formats that might be returned
+function extractTextFromResponseOutput(output: any): string {
+  // Case 1: output is a simple string
+  if (typeof output === 'string') {
+    return output;
+  }
+  
+  // Case 2: output is null or undefined
+  if (!output) {
+    return "";
+  }
+  
+  // Case 3: output is an array of content items
+  if (Array.isArray(output)) {
+    if (output.length === 0) return "";
+    
+    // Try to find text content in the array items
+    for (const item of output) {
+      // Check for text property (ResponseOutputMessage)
+      if (item && typeof item === 'object' && 'text' in item && typeof item.text === 'string') {
+        return item.text;
+      }
+      
+      // Check for content property 
+      if (item && typeof item === 'object' && 'content' in item && typeof item.content === 'string') {
+        return item.content;
+      }
+      
+      // Check for value property (some response types use this)
+      if (item && typeof item === 'object' && 'value' in item && typeof item.value === 'string') {
+        return item.value;
+      }
+    }
+    
+    // If we couldn't find specific properties, stringify the first item as fallback
+    return String(output[0] || "");
+  }
+  
+  // Case 4: output is an object with content property
+  if (output && typeof output === 'object') {
+    if ('content' in output && typeof output.content === 'string') {
+      return output.content;
+    }
+    
+    if ('text' in output && typeof output.text === 'string') {
+      return output.text;
+    }
+    
+    if ('value' in output && typeof output.value === 'string') {
+      return output.value;
+    }
+  }
+  
+  // Case 5: Fallback - convert to string as last resort
+  return String(output || "");
+}
+
 // Initialize OpenAI client with the API key from environment variables
 // This client will be used with the Responses API released March 2025
 // Models use different naming conventions in this API (e.g., "o4" instead of "gpt-4o")
@@ -233,12 +291,9 @@ export async function getChatbotResponse(
     const endTime = Date.now();
     console.log(`OpenAI API request completed in ${endTime - startTime}ms`);
 
-    // Extract text content from the response using the Responses API format
-    // The Responses API returns output content differently from the Chat Completions API
-    const responseText = typeof response.output === 'string' 
-      ? response.output 
-      : ((Array.isArray(response.output) && response.output.length > 0 && response.output[0].content) 
-          || (response.output && typeof response.output === 'object' && 'content' in response.output ? response.output.content : "")) || "";
+    // Extract text content from the response using our helper function
+    // This handles all possible output formats from the Responses API
+    const responseText = extractTextFromResponseOutput(response.output);
     console.log(`Response received with ${responseText.length} characters`);
     
     // Parse the citation if it exists
@@ -323,11 +378,8 @@ export async function generateWeeklySummary(slackMessages: string[], projectName
       tools: [{"type": "web_search_preview"}] // Add web search capability for real-time info
     });
 
-    // Extract text content from the response
-    return typeof response.output === 'string' 
-      ? response.output 
-      : ((Array.isArray(response.output) && response.output.length > 0 && response.output[0].content) 
-          || (response.output && typeof response.output === 'object' && 'content' in response.output ? response.output.content : "")) || "Unable to generate summary.";
+    // Extract text content from the response using our helper function
+    return extractTextFromResponseOutput(response.output) || "Unable to generate summary.";
   } catch (error) {
     console.error("OpenAI API error:", error);
     return `<p>Error generating weekly summary for ${projectName}. Please try again later.</p>`;
@@ -414,10 +466,8 @@ The summary MUST follow this EXACT format with numbered headings and bullet poin
       tools: [{"type": "web_search_preview"}] // Add web search capability for real-time info
     });
 
-    return typeof response.output === 'string' 
-      ? response.output 
-      : ((Array.isArray(response.output) && response.output.length > 0 && response.output[0].content) 
-          || (response.output && typeof response.output === 'object' && 'content' in response.output ? response.output.content : "")) || "Unable to generate project summary.";
+    // Extract text content from the response using our helper function
+    return extractTextFromResponseOutput(response.output) || "Unable to generate project summary.";
   } catch (error) {
     console.error("OpenAI API error generating project summary:", error);
     return `Error generating master project summary for ${projectName}. Please try again later.`;
@@ -442,10 +492,7 @@ export async function testOpenAIConnection() {
     return {
       connected: true,
       model: response.model,
-      response: typeof response.output === 'string' 
-        ? response.output 
-        : ((Array.isArray(response.output) && response.output.length > 0 && response.output[0].content) 
-            || (response.output && typeof response.output === 'object' && 'content' in response.output ? response.output.content : "")) || "Connection successful",
+      response: extractTextFromResponseOutput(response.output) || "Connection successful",
       usage: response.usage
     };
   } catch (error: any) {
