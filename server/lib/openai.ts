@@ -655,13 +655,17 @@ export async function testOpenAIConnection() {
       console.log(`Skipping temperature parameter for test with model: ${model}`);
     }
     
-    // Only add web_search_preview tool if using a model that supports it
+    // We discovered web_search_preview isn't supported with o4 in the Responses API
+    // Let's skip this tool for now as it causes errors
+    /*
     if (model === "o4" || model === "gpt-4o") {
       console.log(`Adding web_search_preview tool for test with model: ${model}`);
       requestParams.tools = [{"type": "web_search_preview"}];
     } else {
       console.log(`Skipping web_search_preview tool for test with model: ${model}`);
     }
+    */
+    console.log(`Skipping web_search_preview tools for all models to avoid API errors`);
     
     const response = await openai.responses.create(requestParams);
 
