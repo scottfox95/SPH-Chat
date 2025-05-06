@@ -52,6 +52,303 @@
   "chatbots": [
     {
       "chatbot": {
+        "id": 30,
+        "name": "1293 Sylvian",
+        "slackChannelId": "C05SBGY3AM6",
+        "asanaProjectId": null,
+        "asanaConnectionId": null,
+        "createdById": 4,
+        "projectId": 3,
+        "publicToken": "4d63a9a8-83a8-4662-bc7b-54df91d6bd32",
+        "isActive": true,
+        "requireAuth": false,
+        "systemPrompt": null,
+        "outputFormat": null,
+        "createdAt": "2025-04-29T18:04:03.241Z"
+      },
+      "documents": [],
+      "messages": [],
+      "summaries": [
+        {
+          "id": 26,
+          "chatbotId": 30,
+          "content": "<h2>1293 Sylvian – Weekly Summary • Week 2023-W17 – Week Ending April 29, 2023</h2>\n\n<ol>\n  <li><strong>Key Achievements</strong>\n    <ul>\n      <li>Motion Shading contractor rerouted shade wires to their assigned panel locations on walls.</li>\n      <li>New construction entrance cut to align with driveway entrance, prepared for insulation and drywall truck access.</li>\n      <li>Change order estimate was sent to Thomas for review.</li>\n    </ul>\n  </li>\n  <li><strong>Issues or Blockers</strong>\n    <ul>\n      <li>Neighbor complaint received regarding trash and debris on the road and around the property.</li>\n      <li>Ongoing concern about debris near the outhouse including plastic bottles and cans.</li>\n    </ul>\n  </li>\n  <li><strong>Upcoming Work</strong>\n    <ul>\n      <li>Insulation and drywall trucks scheduled to use the new construction entrance.</li>\n    </ul>\n  </li>\n  <li><strong>Action Items</strong>\n    <ul>\n      <li>Gerardo to clean up debris and trash around the property and road immediately.</li>\n      <li>Project team to monitor site cleanliness to prevent future neighbor complaints.</li>\n    </ul>\n  </li>\n</ol>",
+          "week": "2025-W19",
+          "sentAt": "2025-05-06T15:54:22.383Z"
+        },
+        {
+          "id": 20,
+          "chatbotId": 30,
+          "content": "<h2>1293 Sylvian – Weekly Summary • Week 2025-W18 – Week Ending April 29, 2025</h2>\n\n<ol>\n  <li><strong>Key Achievements</strong>\n    <ul>\n      <li>Jaime completed grading the driveway and raised the curb with a concrete pour.</li>\n      <li>1-inch water meter installed, resolving permit issues with Brookhaven officials.</li>\n      <li>Entry foyer lift power and wire installed; lift scheduled for April 29, 2025.</li>\n      <li>Various electrical and structural adjustments made based on final rough review notes.</li>\n    </ul>\n  </li>\n  <li><strong>Issues or Blockers</strong>\n    <ul>\n      <li>Debris and trash reported on the road and around the property, requiring cleanup.</li>\n      <li>Google fiber line hit during water meter installation.</li>\n    </ul>\n  </li>\n  <li><strong>Upcoming Work</strong>\n    <ul>\n      <li>Concrete delivery scheduled for Monday.</li>\n      <li>Chandelier lift update scheduled for May 7-8.</li>\n    </ul>\n  </li>\n  <li><strong>Action Items</strong>\n    <ul>\n      <li>Gerardo to clean up debris and trash around the site.</li>\n      <li>Verify and confirm step light quantities and locations with Jeffrey.</li>\n      <li>Ensure compliance with Brookhaven ROW permit requirements for future installations.</li>\n    </ul>\n  </li>\n</ol>",
+          "week": "2025-W18",
+          "sentAt": "2025-05-01T14:57:49.380Z"
+        },
+        {
+          "id": 11,
+          "chatbotId": 30,
+          "content": "<h2>1293 Sylvian – Weekly Summary • Week 2025-W18 – Week Ending April 29, 2025</h2>\n\n<ol>\n  <li><strong>Key Achievements</strong>\n    <ul>\n      <li>Entry Foyer lift power and wire installed; lift scheduled for April 29, 2025 delivery.</li>\n      <li>1-inch water meter installed; issues with Google fiber line resolved.</li>\n      <li>Driveway grading and curb raising completed with concrete pour.</li>\n      <li>Approval received for garage doors to match Yakir's design.</li>\n    </ul>\n  </li>\n  <li><strong>Issues or Blockers</strong>\n    <ul>\n      <li>Trash accumulation reported by neighbors; cleanup needed around the property.</li>\n      <li>Brookhaven ROW permit required for future water meter installations.</li>\n    </ul>\n  </li>\n  <li><strong>Upcoming Work</strong>\n    <ul>\n      <li>Chandelier lift scheduled for May 7-8.</li>\n      <li>Concrete delivery scheduled for Monday.</li>\n      <li>Installation of insulation prior to lift installation.</li>\n    </ul>\n  </li>\n  <li><strong>Action Items</strong>\n    <ul>\n      <li>Gerardo to clean debris and trash around the site.</li>\n      <li>Jaime to arrange for a dump truck for driveway grading.</li>\n      <li>Bravas to install j-box at the lower cabinet in the Den.</li>\n      <li>Shade company to relocate shade wires to the garage wall.</li>\n    </ul>\n  </li>\n</ol>",
+          "week": "2025-W18",
+          "sentAt": "2025-04-30T18:25:13.784Z"
+        }
+      ],
+      "emailRecipients": [],
+      "asanaProjects": [
+        {
+          "id": 15,
+          "chatbotId": 30,
+          "asanaProjectId": "1206970826732717",
+          "projectName": "1293 Sylvan - Matthew & John",
+          "projectType": "main",
+          "createdAt": "2025-04-29T18:04:38.766Z"
+        },
+        {
+          "id": 16,
+          "chatbotId": 30,
+          "asanaProjectId": "1206240887021457",
+          "projectName": "1293 Sylvan Circle",
+          "projectType": "permit",
+          "createdAt": "2025-04-29T18:04:46.789Z"
+        }
+      ]
+    },
+    {
+      "chatbot": {
+        "id": 35,
+        "name": "4846 Adams",
+        "slackChannelId": "C06AQ1JGN3C",
+        "asanaProjectId": null,
+        "asanaConnectionId": null,
+        "createdById": 4,
+        "projectId": 3,
+        "publicToken": "ab4bf845-aa54-41b9-b307-d2e699ea0c53",
+        "isActive": true,
+        "requireAuth": false,
+        "systemPrompt": null,
+        "outputFormat": null,
+        "createdAt": "2025-04-29T18:13:17.185Z"
+      },
+      "documents": [],
+      "messages": [
+        {
+          "id": 97,
+          "chatbotId": 35,
+          "userId": null,
+          "content": "what are the interior paint colors here ",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-04-29T18:28:11.338Z"
+        },
+        {
+          "id": 98,
+          "chatbotId": 35,
+          "userId": null,
+          "content": "I wasn't able to find information about the interior paint colors in the available project files or messages.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-04-29T18:28:12.737Z"
+        },
+        {
+          "id": 323,
+          "chatbotId": 35,
+          "userId": null,
+          "content": "what are the interior paint colors here ",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T16:01:08.255Z"
+        },
+        {
+          "id": 324,
+          "chatbotId": 35,
+          "userId": null,
+          "content": "I wasn't able to find information about the interior paint colors in the available project files or messages.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-06T16:01:08.255Z"
+        }
+      ],
+      "summaries": [
+        {
+          "id": 33,
+          "chatbotId": 35,
+          "content": "<h2>4846 Adams – Weekly Summary • Week 2025-W17 – Week Ending April 25, 2025</h2>\n\n<ol>\n  <li><strong>Key Achievements</strong>\n    <ul>\n      <li>AC and furnace connection completed and system is running.</li>\n      <li>Pool bonding and electrical inspections passed.</li>\n      <li>Grout work completed.</li>\n      <li>Glass measurements for windows and shower scheduled and mostly completed.</li>\n      <li>Tile and trim work finished, enabling painting to start.</li>\n      <li>Door jamb adjustment and closet light relocation identified with corrective action planned.</li>\n    </ul>\n  </li>\n  <li><strong>Issues or Blockers</strong>\n    <ul>\n      <li>Secondary cabinetry and closets missed initially and now rescheduled for completion by end of next week.</li>\n      <li>Dumpster company damaged a tree during exit, with costs to be billed for removal.</li>\n    </ul>\n  </li>\n  <li><strong>Upcoming Work</strong>\n    <ul>\n      <li>Floor installation to commence immediately after painting is completed next week.</li>\n      <li>Cabinetry installation to start once flooring is scheduled and complete, expected mid next week.</li>\n      <li>Handrail plan requires confirmation before installation.</li>\n      <li>Can light placement review meeting scheduled with Joel on Monday.</li>\n      <li>Shower glass hardware installation following measurements.</li>\n      <li>Carpet ordering and installation timing to be confirmed.</li>\n    </ul>\n  </li>\n  <li><strong>Action Items</strong>\n    <ul>\n      <li>Joel to complete flooring installation and correct can light cutouts.</li>\n      <li>Dmitiry to complete cabinetry by mid next week and be ready for installation.</li>\n      <li>Christian to complete secondary and linen closets, pantry, and master closet by end of next week.</li>\n      <li>UBKJU7ZTJ to schedule electric bonding inspection and underground electrical inspection.</li>\n      <li>Confirm handrail installation plan with relevant team members.</li>\n      <li>Provide updated pool photos when available.</li>\n      <li>Communicate damaged tree incident and coordinate billing with waste management.</li>\n    </ul>\n  </li>\n</ol>",
+          "week": "2025-W19",
+          "sentAt": "2025-05-06T15:55:29.011Z"
+        },
+        {
+          "id": 17,
+          "chatbotId": 35,
+          "content": "<h2>4846 Adams – Weekly Summary • Week 2025-W18 – Week Ending April 29, 2025</h2>\n\n<ol>\n  <li><strong>Key Achievements</strong>\n    <ul>\n      <li>Shower glass measurements scheduled for Friday.</li>\n      <li>Floors to be installed in 2 weeks.</li>\n      <li>Joel scheduled for touch-ups and painting preparation.</li>\n      <li>Freddy's team working on master tile installation.</li>\n      <li>Behrouz scheduled for AC unit installation, excluding registers.</li>\n      <li>Pato wrapping up the accent wall.</li>\n    </ul>\n  </li>\n  <li><strong>Issues or Blockers</strong>\n    <ul>\n      <li>Dumpster incident involving a tree; Peachtree Waste to be billed.</li>\n      <li>AC units awaited for HVAC completion.</li>\n      <li>Can light holes misaligned, requiring correction.</li>\n    </ul>\n  </li>\n  <li><strong>Upcoming Work</strong>\n    <ul>\n      <li>HVAC team to start prep on Saturday.</li>\n      <li>Freddy to continue tile work.</li>\n      <li>Pato scheduled for Friday.</li>\n    </ul>\n  </li>\n  <li><strong>Action Items</strong>\n    <ul>\n      <li>Order and place a dumpster at the top of the driveway.</li>\n      <li>Correct alignment of can light holes.</li>\n      <li>Ensure timely delivery and installation of AC units.</li>\n    </ul>\n  </li>\n</ol>",
+          "week": "2025-W18",
+          "sentAt": "2025-04-30T18:25:44.991Z"
+        }
+      ],
+      "emailRecipients": [],
+      "asanaProjects": [
+        {
+          "id": 24,
+          "chatbotId": 35,
+          "asanaProjectId": "1208249009003279",
+          "projectName": "4846 Adams Rd",
+          "projectType": "main",
+          "createdAt": "2025-04-29T18:13:40.986Z"
+        },
+        {
+          "id": 25,
+          "chatbotId": 35,
+          "asanaProjectId": "1206288340019391",
+          "projectName": "4846 Adams Drive",
+          "projectType": "permit",
+          "createdAt": "2025-04-29T18:13:50.502Z"
+        }
+      ]
+    },
+    {
+      "chatbot": {
+        "id": 37,
+        "name": "6265 Ferry",
+        "slackChannelId": "C055VV38R7D",
+        "asanaProjectId": null,
+        "asanaConnectionId": null,
+        "createdById": 4,
+        "projectId": 3,
+        "publicToken": "508b5412-8822-4b23-ade1-da92027f09b6",
+        "isActive": true,
+        "requireAuth": false,
+        "systemPrompt": null,
+        "outputFormat": null,
+        "createdAt": "2025-04-29T18:16:17.118Z"
+      },
+      "documents": [],
+      "messages": [
+        {
+          "id": 93,
+          "chatbotId": 37,
+          "userId": null,
+          "content": "is the tile in progress?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-04-29T18:18:06.811Z"
+        },
+        {
+          "id": 94,
+          "chatbotId": 37,
+          "userId": null,
+          "content": "The tile work is currently in progress, specifically the master tile, according to a message from Aaron Wilson on April 29, 2025, at 3:39:56 PM.",
+          "isUserMessage": false,
+          "citation": "a message from Aaron Wilson on April 29, 2025, at 3:39:56 PM",
+          "createdAt": "2025-04-29T18:18:08.982Z"
+        },
+        {
+          "id": 139,
+          "chatbotId": 37,
+          "userId": null,
+          "content": "What are the dimensions of the wine cooler unit?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-01T20:19:54.389Z"
+        },
+        {
+          "id": 140,
+          "chatbotId": 37,
+          "userId": null,
+          "content": "I wasn’t able to find that information in the available project files or messages.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-01T20:19:56.545Z"
+        },
+        {
+          "id": 335,
+          "chatbotId": 37,
+          "userId": null,
+          "content": "is the tile in progress?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T16:01:08.255Z"
+        },
+        {
+          "id": 336,
+          "chatbotId": 37,
+          "userId": null,
+          "content": "The tile work is currently in progress, specifically the master tile, according to a message from Aaron Wilson on April 29, 2025, at 3:39:56 PM.",
+          "isUserMessage": false,
+          "citation": "a message from Aaron Wilson on April 29, 2025, at 3:39:56 PM",
+          "createdAt": "2025-05-06T16:01:08.255Z"
+        },
+        {
+          "id": 337,
+          "chatbotId": 37,
+          "userId": null,
+          "content": "What are the dimensions of the wine cooler unit?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T16:01:08.255Z"
+        },
+        {
+          "id": 338,
+          "chatbotId": 37,
+          "userId": null,
+          "content": "I wasn’t able to find that information in the available project files or messages.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-06T16:01:08.255Z"
+        },
+        {
+          "id": 430,
+          "chatbotId": 37,
+          "userId": null,
+          "content": "what happened yesterday? ",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T16:03:27.030Z"
+        },
+        {
+          "id": 431,
+          "chatbotId": 37,
+          "userId": null,
+          "content": "Yesterday at the 6265 Ferry site, several key activities and updates happened:\n\n- Joel Yanes attempted to install the vanity but did not finish, noting it requires two people. He plans to return tomorrow afternoon to complete it.\n- Raul and his team were on-site working; however, Raul was at the shop during the day and is scheduled to install remaining cabinets tomorrow.\n- The powder room faucet and an adjustable P-trap for plumbing trim are still outstanding, though expected to arrive soon.\n- Vilma's crew came to re-measure after shelves returned and took fireplace slabs back for re-cutting related to shelves.\n- Eric and his team were on-site performing testing and adjusting registers in the mudroom.\n- A&G cleaned the home and organized materials, also covering countertops to protect them.\n- Flooring in the powder room was reportedly finished by Ivan's crew.\n- Some electrical trim work started with Carlos’ team.\n- Appliances were moved to the garage, with installation planned soon but not yet completed.\n- Discussions continued about coordinating electrical outlet placements, vent movements in the mudroom, and scheduling plywood board installation.\n- The flooring under the vanity needs to be completed before vanity installation to avoid damage.\n- Homeowners approved the heights for gas lanterns, which were being installed.\n- The fireplace slab installation was delayed due to missing living room shelves but is active in planning.\n\nOverall, progress was made on cabinetry, electrical trim, cleaning, and prep work, but some finishing tasks like vanity installation and plumbing trim await parts and coordination.\n\n**Source:** Slack messages dated 5/5/2025.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-06T16:03:37.520Z"
+        }
+      ],
+      "summaries": [
+        {
+          "id": 35,
+          "chatbotId": 37,
+          "content": "<h2>6265 Ferry – Weekly Summary • Week 2025-W18 – Week Ending April 29, 2025</h2>\n\n<ol>\n  <li><strong>Key Achievements</strong>\n    <ul>\n      <li>Drywall team finished work and patched powder room drywall.</li>\n      <li>Appliances delivered and moved to garage with secured locking.</li>\n      <li>Wallpaper installation is in progress with water supply provided for installer.</li>\n      <li>Electric trim work started with Carlos’s team on site.</li>\n      <li>Gas lanterns installation heights approved by homeowners.</li>\n      <li>Living room shelves installed allowing fireplace slabs re-cut and reinstallation.</li>\n      <li>Cabinet installation continuing with Raul completing remaining cabinets soon.</li>\n      <li>Plywood boards for mirrors delivered and scheduled for installation.</li>\n      <li>Flooring in powder room finished; full flooring scheduled for next week starting Wednesday.</li>\n      <li>Site cleaned and materials organized by A&G with countertops covered.</li>\n    </ul>\n  </li>\n  <li><strong>Issues or Blockers</strong>\n    <ul>\n      <li>Vanity installation delayed due to needing flooring completion first to avoid damage.</li>\n      <li>Joel Yanes unable to finish vanity install alone; requires two-man team and cabinets completion.</li>\n      <li>Powder room faucet and adjustable P-trap still awaited, delaying plumbing trim completion.</li>\n      <li>Master toilet length causing door swing obstruction; a smaller, shorter toilet will be ordered.</li>\n      <li>Fence alignment unresolved; property line issues require fence relocation or additional sections.</li>\n      <li>Need to move mudroom vent to accommodate cabinet overhang.</li>\n    </ul>\n  </li>\n  <li><strong>Upcoming Work</strong>\n    <ul>\n      <li>Joel Yanes scheduled to return for trim out, vanity installation, and plywood board installation.</li>\n      <li>Electric trim and ceiling imperfection corrections planned for this and next week.</li>\n      <li>Flooring installation across the project scheduled to start next Wednesday through Thursday.</li>\n      <li>Vilma’s team to reinstall concrete fireplace slab after wall leveling work.</li>\n      <li>Irrigation hose bib installation initiating across multiple projects including Ferry.</li>\n      <li>Fence construction with modifications based on zoning and legal considerations.</li>\n      <li>Punch list items by Raul and patching drywall coordinated post electrical work.</li>\n    </ul>\n  </li>\n  <li><strong>Action Items</strong>\n    <ul>\n      <li>Joel to coordinate with team for two-person job to complete vanity and trim installations.</li>\n      <li>Raul to complete cabinet installation and coordinate handle delivery with Rashad.</li>\n      <li>Taka and team to order shoe molding and verify plumbing trim material delivery.</li>\n      <li>Eric to complete testing and adjustment of registers and vents, including mudroom vent relocation.</li>\n      <li>Team to ensure all countertops and fixtures are properly covered during ongoing work.</li>\n      <li>Project manager to follow up on powder room faucet delivery and plumbing trim completion.</li>\n      <li>Site security team to maintain locked garage and secured home access points.</li>\n      <li>Decision needed on master bathroom toilet selection and door swing modifications.</li>\n      <li>Fence issues to be communicated with homeowners and zoning authorities for resolution.</li>\n      <li>Remove porta-john from site as work progresses toward completion.</li>\n    </ul>\n  </li>\n</ol>",
+          "week": "2025-W19",
+          "sentAt": "2025-05-06T15:55:55.566Z"
+        },
+        {
+          "id": 5,
+          "chatbotId": 37,
+          "content": "<h2>6265 Ferry – Weekly Summary • Week 2025-W17 – Week Ending April 29, 2025</h2>\n\n<ol>\n  <li><strong>Key Achievements</strong>\n    <ul>\n      <li>Drywall team completed work in the powder room.</li>\n      <li>Garage doors were installed.</li>\n      <li>Master tile and wallpaper installation in progress.</li>\n      <li>Plumbing trim is 70% complete.</li>\n      <li>Countertops were installed at 6265 Ferry Dr.</li>\n    </ul>\n  </li>\n  <li><strong>Issues or Blockers</strong>\n    <ul>\n      <li>Fireplace wall is too bowed for installation; requires drywall correction.</li>\n      <li>Back door lock does not fully latch.</li>\n      <li>Kitchen Island pendants were installed incorrectly and need to be centered.</li>\n      <li>Discoloration issues with tile due to potential wrong thinset usage.</li>\n      <li>Operational motor for the garage needs replacement.</li>\n    </ul>\n  </li>\n  <li><strong>Upcoming Work</strong>\n    <ul>\n      <li>Drywall team scheduled for Monday to fix fireplace wall.</li>\n      <li>Plumbing trim to start on Tuesday.</li>\n      <li>Gas lantern installation meeting on Monday.</li>\n      <li>Wallpaper installation for the powder room scheduled for Wednesday or Thursday.</li>\n      <li>Fireplace installation planned for May 1.</li>\n    </ul>\n  </li>\n  <li><strong>Action Items</strong>\n    <ul>\n      <li>Joel to cover all countertops.</li>\n      <li>Order a smaller toilet for the master bathroom.</li>\n      <li>Freddy to review and potentially replace discolored tiles.</li>\n      <li>Raul to ensure cabinets align with original design specifications.</li>\n      <li>Behrouz to be scheduled for gas lantern installation.</li>\n    </ul>\n  </li>\n</ol>",
+          "week": "2025-W18",
+          "sentAt": "2025-04-30T17:31:55.209Z"
+        }
+      ],
+      "emailRecipients": [],
+      "asanaProjects": [
+        {
+          "id": 28,
+          "chatbotId": 37,
+          "asanaProjectId": "1203091632732712",
+          "projectName": "6265 Ferry Dr - Dave & Dana Patton",
+          "projectType": "main",
+          "createdAt": "2025-04-29T18:17:19.762Z"
+        },
+        {
+          "id": 29,
+          "chatbotId": 37,
+          "asanaProjectId": "1204502061814450",
+          "projectName": "6265 Ferry",
+          "projectType": "permit",
+          "createdAt": "2025-04-29T18:17:27.080Z"
+        }
+      ]
+    },
+    {
+      "chatbot": {
         "id": 22,
         "name": "1320 Mayfair - Finance Team",
         "slackChannelId": "C06S1QZU9N2",
@@ -1294,67 +1591,6 @@
     },
     {
       "chatbot": {
-        "id": 30,
-        "name": "1293 Sylvian",
-        "slackChannelId": "C05SBGY3AM6",
-        "asanaProjectId": null,
-        "asanaConnectionId": null,
-        "createdById": 4,
-        "projectId": 2,
-        "publicToken": "4d63a9a8-83a8-4662-bc7b-54df91d6bd32",
-        "isActive": true,
-        "requireAuth": false,
-        "systemPrompt": null,
-        "outputFormat": null,
-        "createdAt": "2025-04-29T18:04:03.241Z"
-      },
-      "documents": [],
-      "messages": [],
-      "summaries": [
-        {
-          "id": 26,
-          "chatbotId": 30,
-          "content": "<h2>1293 Sylvian – Weekly Summary • Week 2023-W17 – Week Ending April 29, 2023</h2>\n\n<ol>\n  <li><strong>Key Achievements</strong>\n    <ul>\n      <li>Motion Shading contractor rerouted shade wires to their assigned panel locations on walls.</li>\n      <li>New construction entrance cut to align with driveway entrance, prepared for insulation and drywall truck access.</li>\n      <li>Change order estimate was sent to Thomas for review.</li>\n    </ul>\n  </li>\n  <li><strong>Issues or Blockers</strong>\n    <ul>\n      <li>Neighbor complaint received regarding trash and debris on the road and around the property.</li>\n      <li>Ongoing concern about debris near the outhouse including plastic bottles and cans.</li>\n    </ul>\n  </li>\n  <li><strong>Upcoming Work</strong>\n    <ul>\n      <li>Insulation and drywall trucks scheduled to use the new construction entrance.</li>\n    </ul>\n  </li>\n  <li><strong>Action Items</strong>\n    <ul>\n      <li>Gerardo to clean up debris and trash around the property and road immediately.</li>\n      <li>Project team to monitor site cleanliness to prevent future neighbor complaints.</li>\n    </ul>\n  </li>\n</ol>",
-          "week": "2025-W19",
-          "sentAt": "2025-05-06T15:54:22.383Z"
-        },
-        {
-          "id": 20,
-          "chatbotId": 30,
-          "content": "<h2>1293 Sylvian – Weekly Summary • Week 2025-W18 – Week Ending April 29, 2025</h2>\n\n<ol>\n  <li><strong>Key Achievements</strong>\n    <ul>\n      <li>Jaime completed grading the driveway and raised the curb with a concrete pour.</li>\n      <li>1-inch water meter installed, resolving permit issues with Brookhaven officials.</li>\n      <li>Entry foyer lift power and wire installed; lift scheduled for April 29, 2025.</li>\n      <li>Various electrical and structural adjustments made based on final rough review notes.</li>\n    </ul>\n  </li>\n  <li><strong>Issues or Blockers</strong>\n    <ul>\n      <li>Debris and trash reported on the road and around the property, requiring cleanup.</li>\n      <li>Google fiber line hit during water meter installation.</li>\n    </ul>\n  </li>\n  <li><strong>Upcoming Work</strong>\n    <ul>\n      <li>Concrete delivery scheduled for Monday.</li>\n      <li>Chandelier lift update scheduled for May 7-8.</li>\n    </ul>\n  </li>\n  <li><strong>Action Items</strong>\n    <ul>\n      <li>Gerardo to clean up debris and trash around the site.</li>\n      <li>Verify and confirm step light quantities and locations with Jeffrey.</li>\n      <li>Ensure compliance with Brookhaven ROW permit requirements for future installations.</li>\n    </ul>\n  </li>\n</ol>",
-          "week": "2025-W18",
-          "sentAt": "2025-05-01T14:57:49.380Z"
-        },
-        {
-          "id": 11,
-          "chatbotId": 30,
-          "content": "<h2>1293 Sylvian – Weekly Summary • Week 2025-W18 – Week Ending April 29, 2025</h2>\n\n<ol>\n  <li><strong>Key Achievements</strong>\n    <ul>\n      <li>Entry Foyer lift power and wire installed; lift scheduled for April 29, 2025 delivery.</li>\n      <li>1-inch water meter installed; issues with Google fiber line resolved.</li>\n      <li>Driveway grading and curb raising completed with concrete pour.</li>\n      <li>Approval received for garage doors to match Yakir's design.</li>\n    </ul>\n  </li>\n  <li><strong>Issues or Blockers</strong>\n    <ul>\n      <li>Trash accumulation reported by neighbors; cleanup needed around the property.</li>\n      <li>Brookhaven ROW permit required for future water meter installations.</li>\n    </ul>\n  </li>\n  <li><strong>Upcoming Work</strong>\n    <ul>\n      <li>Chandelier lift scheduled for May 7-8.</li>\n      <li>Concrete delivery scheduled for Monday.</li>\n      <li>Installation of insulation prior to lift installation.</li>\n    </ul>\n  </li>\n  <li><strong>Action Items</strong>\n    <ul>\n      <li>Gerardo to clean debris and trash around the site.</li>\n      <li>Jaime to arrange for a dump truck for driveway grading.</li>\n      <li>Bravas to install j-box at the lower cabinet in the Den.</li>\n      <li>Shade company to relocate shade wires to the garage wall.</li>\n    </ul>\n  </li>\n</ol>",
-          "week": "2025-W18",
-          "sentAt": "2025-04-30T18:25:13.784Z"
-        }
-      ],
-      "emailRecipients": [],
-      "asanaProjects": [
-        {
-          "id": 15,
-          "chatbotId": 30,
-          "asanaProjectId": "1206970826732717",
-          "projectName": "1293 Sylvan - Matthew & John",
-          "projectType": "main",
-          "createdAt": "2025-04-29T18:04:38.766Z"
-        },
-        {
-          "id": 16,
-          "chatbotId": 30,
-          "asanaProjectId": "1206240887021457",
-          "projectName": "1293 Sylvan Circle",
-          "projectType": "permit",
-          "createdAt": "2025-04-29T18:04:46.789Z"
-        }
-      ]
-    },
-    {
-      "chatbot": {
         "id": 31,
         "name": "1857 Wildwood",
         "slackChannelId": "C05TX1A5H32",
@@ -1718,97 +1954,6 @@
     },
     {
       "chatbot": {
-        "id": 35,
-        "name": "4846 Adams",
-        "slackChannelId": "C06AQ1JGN3C",
-        "asanaProjectId": null,
-        "asanaConnectionId": null,
-        "createdById": 4,
-        "projectId": 2,
-        "publicToken": "ab4bf845-aa54-41b9-b307-d2e699ea0c53",
-        "isActive": true,
-        "requireAuth": false,
-        "systemPrompt": null,
-        "outputFormat": null,
-        "createdAt": "2025-04-29T18:13:17.185Z"
-      },
-      "documents": [],
-      "messages": [
-        {
-          "id": 97,
-          "chatbotId": 35,
-          "userId": null,
-          "content": "what are the interior paint colors here ",
-          "isUserMessage": true,
-          "citation": null,
-          "createdAt": "2025-04-29T18:28:11.338Z"
-        },
-        {
-          "id": 98,
-          "chatbotId": 35,
-          "userId": null,
-          "content": "I wasn't able to find information about the interior paint colors in the available project files or messages.",
-          "isUserMessage": false,
-          "citation": "No specific source available",
-          "createdAt": "2025-04-29T18:28:12.737Z"
-        },
-        {
-          "id": 323,
-          "chatbotId": 35,
-          "userId": null,
-          "content": "what are the interior paint colors here ",
-          "isUserMessage": true,
-          "citation": null,
-          "createdAt": "2025-05-06T16:01:08.255Z"
-        },
-        {
-          "id": 324,
-          "chatbotId": 35,
-          "userId": null,
-          "content": "I wasn't able to find information about the interior paint colors in the available project files or messages.",
-          "isUserMessage": false,
-          "citation": "No specific source available",
-          "createdAt": "2025-05-06T16:01:08.255Z"
-        }
-      ],
-      "summaries": [
-        {
-          "id": 33,
-          "chatbotId": 35,
-          "content": "<h2>4846 Adams – Weekly Summary • Week 2025-W17 – Week Ending April 25, 2025</h2>\n\n<ol>\n  <li><strong>Key Achievements</strong>\n    <ul>\n      <li>AC and furnace connection completed and system is running.</li>\n      <li>Pool bonding and electrical inspections passed.</li>\n      <li>Grout work completed.</li>\n      <li>Glass measurements for windows and shower scheduled and mostly completed.</li>\n      <li>Tile and trim work finished, enabling painting to start.</li>\n      <li>Door jamb adjustment and closet light relocation identified with corrective action planned.</li>\n    </ul>\n  </li>\n  <li><strong>Issues or Blockers</strong>\n    <ul>\n      <li>Secondary cabinetry and closets missed initially and now rescheduled for completion by end of next week.</li>\n      <li>Dumpster company damaged a tree during exit, with costs to be billed for removal.</li>\n    </ul>\n  </li>\n  <li><strong>Upcoming Work</strong>\n    <ul>\n      <li>Floor installation to commence immediately after painting is completed next week.</li>\n      <li>Cabinetry installation to start once flooring is scheduled and complete, expected mid next week.</li>\n      <li>Handrail plan requires confirmation before installation.</li>\n      <li>Can light placement review meeting scheduled with Joel on Monday.</li>\n      <li>Shower glass hardware installation following measurements.</li>\n      <li>Carpet ordering and installation timing to be confirmed.</li>\n    </ul>\n  </li>\n  <li><strong>Action Items</strong>\n    <ul>\n      <li>Joel to complete flooring installation and correct can light cutouts.</li>\n      <li>Dmitiry to complete cabinetry by mid next week and be ready for installation.</li>\n      <li>Christian to complete secondary and linen closets, pantry, and master closet by end of next week.</li>\n      <li>UBKJU7ZTJ to schedule electric bonding inspection and underground electrical inspection.</li>\n      <li>Confirm handrail installation plan with relevant team members.</li>\n      <li>Provide updated pool photos when available.</li>\n      <li>Communicate damaged tree incident and coordinate billing with waste management.</li>\n    </ul>\n  </li>\n</ol>",
-          "week": "2025-W19",
-          "sentAt": "2025-05-06T15:55:29.011Z"
-        },
-        {
-          "id": 17,
-          "chatbotId": 35,
-          "content": "<h2>4846 Adams – Weekly Summary • Week 2025-W18 – Week Ending April 29, 2025</h2>\n\n<ol>\n  <li><strong>Key Achievements</strong>\n    <ul>\n      <li>Shower glass measurements scheduled for Friday.</li>\n      <li>Floors to be installed in 2 weeks.</li>\n      <li>Joel scheduled for touch-ups and painting preparation.</li>\n      <li>Freddy's team working on master tile installation.</li>\n      <li>Behrouz scheduled for AC unit installation, excluding registers.</li>\n      <li>Pato wrapping up the accent wall.</li>\n    </ul>\n  </li>\n  <li><strong>Issues or Blockers</strong>\n    <ul>\n      <li>Dumpster incident involving a tree; Peachtree Waste to be billed.</li>\n      <li>AC units awaited for HVAC completion.</li>\n      <li>Can light holes misaligned, requiring correction.</li>\n    </ul>\n  </li>\n  <li><strong>Upcoming Work</strong>\n    <ul>\n      <li>HVAC team to start prep on Saturday.</li>\n      <li>Freddy to continue tile work.</li>\n      <li>Pato scheduled for Friday.</li>\n    </ul>\n  </li>\n  <li><strong>Action Items</strong>\n    <ul>\n      <li>Order and place a dumpster at the top of the driveway.</li>\n      <li>Correct alignment of can light holes.</li>\n      <li>Ensure timely delivery and installation of AC units.</li>\n    </ul>\n  </li>\n</ol>",
-          "week": "2025-W18",
-          "sentAt": "2025-04-30T18:25:44.991Z"
-        }
-      ],
-      "emailRecipients": [],
-      "asanaProjects": [
-        {
-          "id": 24,
-          "chatbotId": 35,
-          "asanaProjectId": "1208249009003279",
-          "projectName": "4846 Adams Rd",
-          "projectType": "main",
-          "createdAt": "2025-04-29T18:13:40.986Z"
-        },
-        {
-          "id": 25,
-          "chatbotId": 35,
-          "asanaProjectId": "1206288340019391",
-          "projectName": "4846 Adams Drive",
-          "projectType": "permit",
-          "createdAt": "2025-04-29T18:13:50.502Z"
-        }
-      ]
-    },
-    {
-      "chatbot": {
         "id": 36,
         "name": "580 Elmwood",
         "slackChannelId": "C06KA0R8CRE",
@@ -2045,151 +2190,6 @@
           "projectName": "580 Elmwood",
           "projectType": "permit",
           "createdAt": "2025-04-29T18:15:06.278Z"
-        }
-      ]
-    },
-    {
-      "chatbot": {
-        "id": 37,
-        "name": "6265 Ferry",
-        "slackChannelId": "C055VV38R7D",
-        "asanaProjectId": null,
-        "asanaConnectionId": null,
-        "createdById": 4,
-        "projectId": 2,
-        "publicToken": "508b5412-8822-4b23-ade1-da92027f09b6",
-        "isActive": true,
-        "requireAuth": false,
-        "systemPrompt": null,
-        "outputFormat": null,
-        "createdAt": "2025-04-29T18:16:17.118Z"
-      },
-      "documents": [],
-      "messages": [
-        {
-          "id": 93,
-          "chatbotId": 37,
-          "userId": null,
-          "content": "is the tile in progress?",
-          "isUserMessage": true,
-          "citation": null,
-          "createdAt": "2025-04-29T18:18:06.811Z"
-        },
-        {
-          "id": 94,
-          "chatbotId": 37,
-          "userId": null,
-          "content": "The tile work is currently in progress, specifically the master tile, according to a message from Aaron Wilson on April 29, 2025, at 3:39:56 PM.",
-          "isUserMessage": false,
-          "citation": "a message from Aaron Wilson on April 29, 2025, at 3:39:56 PM",
-          "createdAt": "2025-04-29T18:18:08.982Z"
-        },
-        {
-          "id": 139,
-          "chatbotId": 37,
-          "userId": null,
-          "content": "What are the dimensions of the wine cooler unit?",
-          "isUserMessage": true,
-          "citation": null,
-          "createdAt": "2025-05-01T20:19:54.389Z"
-        },
-        {
-          "id": 140,
-          "chatbotId": 37,
-          "userId": null,
-          "content": "I wasn’t able to find that information in the available project files or messages.",
-          "isUserMessage": false,
-          "citation": "No specific source available",
-          "createdAt": "2025-05-01T20:19:56.545Z"
-        },
-        {
-          "id": 335,
-          "chatbotId": 37,
-          "userId": null,
-          "content": "is the tile in progress?",
-          "isUserMessage": true,
-          "citation": null,
-          "createdAt": "2025-05-06T16:01:08.255Z"
-        },
-        {
-          "id": 336,
-          "chatbotId": 37,
-          "userId": null,
-          "content": "The tile work is currently in progress, specifically the master tile, according to a message from Aaron Wilson on April 29, 2025, at 3:39:56 PM.",
-          "isUserMessage": false,
-          "citation": "a message from Aaron Wilson on April 29, 2025, at 3:39:56 PM",
-          "createdAt": "2025-05-06T16:01:08.255Z"
-        },
-        {
-          "id": 337,
-          "chatbotId": 37,
-          "userId": null,
-          "content": "What are the dimensions of the wine cooler unit?",
-          "isUserMessage": true,
-          "citation": null,
-          "createdAt": "2025-05-06T16:01:08.255Z"
-        },
-        {
-          "id": 338,
-          "chatbotId": 37,
-          "userId": null,
-          "content": "I wasn’t able to find that information in the available project files or messages.",
-          "isUserMessage": false,
-          "citation": "No specific source available",
-          "createdAt": "2025-05-06T16:01:08.255Z"
-        },
-        {
-          "id": 430,
-          "chatbotId": 37,
-          "userId": null,
-          "content": "what happened yesterday? ",
-          "isUserMessage": true,
-          "citation": null,
-          "createdAt": "2025-05-06T16:03:27.030Z"
-        },
-        {
-          "id": 431,
-          "chatbotId": 37,
-          "userId": null,
-          "content": "Yesterday at the 6265 Ferry site, several key activities and updates happened:\n\n- Joel Yanes attempted to install the vanity but did not finish, noting it requires two people. He plans to return tomorrow afternoon to complete it.\n- Raul and his team were on-site working; however, Raul was at the shop during the day and is scheduled to install remaining cabinets tomorrow.\n- The powder room faucet and an adjustable P-trap for plumbing trim are still outstanding, though expected to arrive soon.\n- Vilma's crew came to re-measure after shelves returned and took fireplace slabs back for re-cutting related to shelves.\n- Eric and his team were on-site performing testing and adjusting registers in the mudroom.\n- A&G cleaned the home and organized materials, also covering countertops to protect them.\n- Flooring in the powder room was reportedly finished by Ivan's crew.\n- Some electrical trim work started with Carlos’ team.\n- Appliances were moved to the garage, with installation planned soon but not yet completed.\n- Discussions continued about coordinating electrical outlet placements, vent movements in the mudroom, and scheduling plywood board installation.\n- The flooring under the vanity needs to be completed before vanity installation to avoid damage.\n- Homeowners approved the heights for gas lanterns, which were being installed.\n- The fireplace slab installation was delayed due to missing living room shelves but is active in planning.\n\nOverall, progress was made on cabinetry, electrical trim, cleaning, and prep work, but some finishing tasks like vanity installation and plumbing trim await parts and coordination.\n\n**Source:** Slack messages dated 5/5/2025.",
-          "isUserMessage": false,
-          "citation": "No specific source available",
-          "createdAt": "2025-05-06T16:03:37.520Z"
-        }
-      ],
-      "summaries": [
-        {
-          "id": 35,
-          "chatbotId": 37,
-          "content": "<h2>6265 Ferry – Weekly Summary • Week 2025-W18 – Week Ending April 29, 2025</h2>\n\n<ol>\n  <li><strong>Key Achievements</strong>\n    <ul>\n      <li>Drywall team finished work and patched powder room drywall.</li>\n      <li>Appliances delivered and moved to garage with secured locking.</li>\n      <li>Wallpaper installation is in progress with water supply provided for installer.</li>\n      <li>Electric trim work started with Carlos’s team on site.</li>\n      <li>Gas lanterns installation heights approved by homeowners.</li>\n      <li>Living room shelves installed allowing fireplace slabs re-cut and reinstallation.</li>\n      <li>Cabinet installation continuing with Raul completing remaining cabinets soon.</li>\n      <li>Plywood boards for mirrors delivered and scheduled for installation.</li>\n      <li>Flooring in powder room finished; full flooring scheduled for next week starting Wednesday.</li>\n      <li>Site cleaned and materials organized by A&G with countertops covered.</li>\n    </ul>\n  </li>\n  <li><strong>Issues or Blockers</strong>\n    <ul>\n      <li>Vanity installation delayed due to needing flooring completion first to avoid damage.</li>\n      <li>Joel Yanes unable to finish vanity install alone; requires two-man team and cabinets completion.</li>\n      <li>Powder room faucet and adjustable P-trap still awaited, delaying plumbing trim completion.</li>\n      <li>Master toilet length causing door swing obstruction; a smaller, shorter toilet will be ordered.</li>\n      <li>Fence alignment unresolved; property line issues require fence relocation or additional sections.</li>\n      <li>Need to move mudroom vent to accommodate cabinet overhang.</li>\n    </ul>\n  </li>\n  <li><strong>Upcoming Work</strong>\n    <ul>\n      <li>Joel Yanes scheduled to return for trim out, vanity installation, and plywood board installation.</li>\n      <li>Electric trim and ceiling imperfection corrections planned for this and next week.</li>\n      <li>Flooring installation across the project scheduled to start next Wednesday through Thursday.</li>\n      <li>Vilma’s team to reinstall concrete fireplace slab after wall leveling work.</li>\n      <li>Irrigation hose bib installation initiating across multiple projects including Ferry.</li>\n      <li>Fence construction with modifications based on zoning and legal considerations.</li>\n      <li>Punch list items by Raul and patching drywall coordinated post electrical work.</li>\n    </ul>\n  </li>\n  <li><strong>Action Items</strong>\n    <ul>\n      <li>Joel to coordinate with team for two-person job to complete vanity and trim installations.</li>\n      <li>Raul to complete cabinet installation and coordinate handle delivery with Rashad.</li>\n      <li>Taka and team to order shoe molding and verify plumbing trim material delivery.</li>\n      <li>Eric to complete testing and adjustment of registers and vents, including mudroom vent relocation.</li>\n      <li>Team to ensure all countertops and fixtures are properly covered during ongoing work.</li>\n      <li>Project manager to follow up on powder room faucet delivery and plumbing trim completion.</li>\n      <li>Site security team to maintain locked garage and secured home access points.</li>\n      <li>Decision needed on master bathroom toilet selection and door swing modifications.</li>\n      <li>Fence issues to be communicated with homeowners and zoning authorities for resolution.</li>\n      <li>Remove porta-john from site as work progresses toward completion.</li>\n    </ul>\n  </li>\n</ol>",
-          "week": "2025-W19",
-          "sentAt": "2025-05-06T15:55:55.566Z"
-        },
-        {
-          "id": 5,
-          "chatbotId": 37,
-          "content": "<h2>6265 Ferry – Weekly Summary • Week 2025-W17 – Week Ending April 29, 2025</h2>\n\n<ol>\n  <li><strong>Key Achievements</strong>\n    <ul>\n      <li>Drywall team completed work in the powder room.</li>\n      <li>Garage doors were installed.</li>\n      <li>Master tile and wallpaper installation in progress.</li>\n      <li>Plumbing trim is 70% complete.</li>\n      <li>Countertops were installed at 6265 Ferry Dr.</li>\n    </ul>\n  </li>\n  <li><strong>Issues or Blockers</strong>\n    <ul>\n      <li>Fireplace wall is too bowed for installation; requires drywall correction.</li>\n      <li>Back door lock does not fully latch.</li>\n      <li>Kitchen Island pendants were installed incorrectly and need to be centered.</li>\n      <li>Discoloration issues with tile due to potential wrong thinset usage.</li>\n      <li>Operational motor for the garage needs replacement.</li>\n    </ul>\n  </li>\n  <li><strong>Upcoming Work</strong>\n    <ul>\n      <li>Drywall team scheduled for Monday to fix fireplace wall.</li>\n      <li>Plumbing trim to start on Tuesday.</li>\n      <li>Gas lantern installation meeting on Monday.</li>\n      <li>Wallpaper installation for the powder room scheduled for Wednesday or Thursday.</li>\n      <li>Fireplace installation planned for May 1.</li>\n    </ul>\n  </li>\n  <li><strong>Action Items</strong>\n    <ul>\n      <li>Joel to cover all countertops.</li>\n      <li>Order a smaller toilet for the master bathroom.</li>\n      <li>Freddy to review and potentially replace discolored tiles.</li>\n      <li>Raul to ensure cabinets align with original design specifications.</li>\n      <li>Behrouz to be scheduled for gas lantern installation.</li>\n    </ul>\n  </li>\n</ol>",
-          "week": "2025-W18",
-          "sentAt": "2025-04-30T17:31:55.209Z"
-        }
-      ],
-      "emailRecipients": [],
-      "asanaProjects": [
-        {
-          "id": 28,
-          "chatbotId": 37,
-          "asanaProjectId": "1203091632732712",
-          "projectName": "6265 Ferry Dr - Dave & Dana Patton",
-          "projectType": "main",
-          "createdAt": "2025-04-29T18:17:19.762Z"
-        },
-        {
-          "id": 29,
-          "chatbotId": 37,
-          "asanaProjectId": "1204502061814450",
-          "projectName": "6265 Ferry",
-          "projectType": "permit",
-          "createdAt": "2025-04-29T18:17:27.080Z"
         }
       ]
     },
@@ -3067,415 +3067,6 @@
     },
     {
       "chatbot": {
-        "id": 41,
-        "name": "16 Bonnie",
-        "slackChannelId": "C06JM3D4BQB",
-        "asanaProjectId": null,
-        "asanaConnectionId": null,
-        "createdById": 4,
-        "projectId": 2,
-        "publicToken": "fb7d93bb-8f22-459d-895e-b546509f5247",
-        "isActive": true,
-        "requireAuth": false,
-        "systemPrompt": null,
-        "outputFormat": null,
-        "createdAt": "2025-05-01T19:58:02.248Z"
-      },
-      "documents": [],
-      "messages": [
-        {
-          "id": 205,
-          "chatbotId": 41,
-          "userId": null,
-          "content": "what happened last week?",
-          "isUserMessage": true,
-          "citation": null,
-          "createdAt": "2025-05-06T14:31:59.011Z"
-        },
-        {
-          "id": 206,
-          "chatbotId": 41,
-          "userId": null,
-          "content": "Last week, several activities took place on the site:\n\n1. **Cooktop Preparation**: The cooktop prep was completed, and the cut for the cooktop was in progress.\n2. **Plumbing and Electric Trim**: Plumbing trim was reported as complete, with some led strips still on order. Electric trim was scheduled to be completed early this week.\n3. **Cleaning**: A&G was on track to clean the home, and there were plans for the stucco team to clean as well.\n4. **Touch-ups**: There were some missed touch-ups that needed to be addressed, and a walkthrough was completed with the electric trim team.\n5. **Materials and Installations**: Brandon was working on plumbing trim, and there were discussions about various materials being in transit or on order, including a latch for a sliding door.\n6. **Site Visits and Tasks**: Dimitri and another team member were scheduled to walk the house, and there were ongoing discussions about moving materials and scheduling measurements.\n\nOverall, it seems the team was focused on finishing various installations and ensuring the site was cleaned and prepared for the next steps.",
-          "isUserMessage": false,
-          "citation": "No specific source available",
-          "createdAt": "2025-05-06T14:32:05.319Z"
-        },
-        {
-          "id": 225,
-          "chatbotId": 41,
-          "userId": null,
-          "content": "what happened last week?",
-          "isUserMessage": true,
-          "citation": null,
-          "createdAt": "2025-05-06T15:05:31.013Z"
-        },
-        {
-          "id": 226,
-          "chatbotId": 41,
-          "userId": null,
-          "content": "I'm having trouble connecting to my knowledge base. Please try again later.",
-          "isUserMessage": false,
-          "citation": "Error",
-          "createdAt": "2025-05-06T15:05:31.347Z"
-        },
-        {
-          "id": 229,
-          "chatbotId": 41,
-          "userId": null,
-          "content": "what happened last week?",
-          "isUserMessage": true,
-          "citation": null,
-          "createdAt": "2025-05-06T15:08:47.868Z"
-        },
-        {
-          "id": 230,
-          "chatbotId": 41,
-          "userId": null,
-          "content": "I'm having trouble connecting to my knowledge base. Please try again later.",
-          "isUserMessage": false,
-          "citation": "Error",
-          "createdAt": "2025-05-06T15:08:48.075Z"
-        },
-        {
-          "id": 237,
-          "chatbotId": 41,
-          "userId": null,
-          "content": "what happened last week?",
-          "isUserMessage": true,
-          "citation": null,
-          "createdAt": "2025-05-06T15:16:30.014Z"
-        },
-        {
-          "id": 238,
-          "chatbotId": 41,
-          "userId": null,
-          "content": "",
-          "isUserMessage": false,
-          "citation": "object Object",
-          "createdAt": "2025-05-06T15:16:47.599Z"
-        },
-        {
-          "id": 239,
-          "chatbotId": 41,
-          "userId": null,
-          "content": "what happened last week?",
-          "isUserMessage": true,
-          "citation": null,
-          "createdAt": "2025-05-06T15:21:21.144Z"
-        },
-        {
-          "id": 240,
-          "chatbotId": 41,
-          "userId": null,
-          "content": "I'm having trouble processing the information. Let me try again with a more specific question.",
-          "isUserMessage": false,
-          "citation": "object Object",
-          "createdAt": "2025-05-06T15:21:46.083Z"
-        },
-        {
-          "id": 243,
-          "chatbotId": 41,
-          "userId": null,
-          "content": "I'm having trouble processing the information. Let me try again with a more specific question.",
-          "isUserMessage": true,
-          "citation": null,
-          "createdAt": "2025-05-06T15:27:43.450Z"
-        },
-        {
-          "id": 244,
-          "chatbotId": 41,
-          "userId": null,
-          "content": "I’m happy to help—could you clarify what specific information you’re looking for from these messages? For example:\n\n• Status of the cooktop delivery or installation  \n• Timeline for exterior touch-ups  \n• Which materials are still outstanding  \n• Upcoming scheduled work (e.g., plumbing or electric trim)\n\nLet me know which topic, and I’ll pull out the details.",
-          "isUserMessage": false,
-          "citation": "No specific source available",
-          "createdAt": "2025-05-06T15:27:49.232Z"
-        },
-        {
-          "id": 245,
-          "chatbotId": 41,
-          "userId": null,
-          "content": "what happened last week?",
-          "isUserMessage": true,
-          "citation": null,
-          "createdAt": "2025-05-06T15:27:51.045Z"
-        },
-        {
-          "id": 246,
-          "chatbotId": 41,
-          "userId": null,
-          "content": "Here’s a summary of what happened last week (April 29–May 5) on 16 Bonnie, based on Slack updates:\n\n• Site cleanup & NOV compliance  \n  – Construction materials and sediment were removed from the street per the NOV (Slack, 2025-05-05).  \n  – Pavers and debris were also cleared from the roadway and driveway (Slack, 2025-05-01).  \n\n• Kitchen / cooktop  \n  – Prep for the cooktop was completed and the cut-in was in progress (Slack, 2025-05-05).  \n  – The Elbrus/Pitt cooktop was tracked down at the office; coordination underway to have Vilma cut the countertop (Slack, 2025-04-29).  \n\n• Doors & hardware  \n  – The stationary door was fixed but its latch was missing; a replacement latch was ordered (Slack, 2025-05-05).  \n  – A sliding-door latch was likewise ordered and is in transit (Slack, 2025-05-05).  \n\n• Floor protection  \n  – Gerardex was brought in to cover exposed flooring as a precaution (Slack, 2025-05-05).  \n\n• Trim & finishes  \n  – Plumbing trim-out was completed or wrapping up (Slack, 2025-05-05).  \n  – Electric trim walkthrough held; electric trim work is slated to continue early this week (Slack, 2025-05-05).  \n  – LED strips are on order for final trim (Slack, 2025-05-05).  \n\n• Cabinetry & shelving  \n  – Secondary closet shelves and cabinet pulls are in production with Christian Cabinetry; installation in master closet scheduled (Slack, 2025-05-05).  \n\n• Cleaning  \n  – A&G was on track to clean the home; stucco crew also tasked with cleaning exterior (Slack, 2025-05-05).  \n\n• Walkthroughs & inspections  \n  – Dimitri and Aaron conducted a site walk on Wednesday at 1 PM (Slack, 2025-05-05).  \n  – Registers were opened and counts compared to Aaron’s list (Slack, 2025-05-05).  \n  – Paint testing (“Greek Villa” SW-7551) and lime-wash scope reviewed for fireplace, TV wall, staircase, powder room (Slack, 2025-04-29).  \n\n• Logistics & scheduling  \n  – Triad scheduled for measurements; Radim’s exterior touch-up timing queried (Slack, 2025-05-01 & 2025-05-05).  \n  – Premium Pella items to ship directly from Brennan’s office; shipping updates pending (Slack, 2025-05-05).  \n  – Porta-John removal was requested (Slack, 2025-05-05).  \n\nLet me know if you need more detail on any of these items.",
-          "isUserMessage": false,
-          "citation": "No specific source available",
-          "createdAt": "2025-05-06T15:28:24.950Z"
-        },
-        {
-          "id": 255,
-          "chatbotId": 41,
-          "userId": null,
-          "content": "what happened yesterday?",
-          "isUserMessage": true,
-          "citation": null,
-          "createdAt": "2025-05-06T15:35:58.767Z"
-        },
-        {
-          "id": 256,
-          "chatbotId": 41,
-          "userId": null,
-          "content": "I wasn't able to find that information in the project files or Slack messages.",
-          "isUserMessage": false,
-          "citation": "No specific source available",
-          "createdAt": "2025-05-06T15:36:07.056Z"
-        },
-        {
-          "id": 257,
-          "chatbotId": 41,
-          "userId": null,
-          "content": "what happened last week?",
-          "isUserMessage": true,
-          "citation": null,
-          "createdAt": "2025-05-06T15:36:18.474Z"
-        },
-        {
-          "id": 258,
-          "chatbotId": 41,
-          "userId": null,
-          "content": "I wasn't able to find that information in the project files or Slack messages.",
-          "isUserMessage": false,
-          "citation": "No specific source available",
-          "createdAt": "2025-05-06T15:36:28.253Z"
-        },
-        {
-          "id": 259,
-          "chatbotId": 41,
-          "userId": null,
-          "content": "what happened yesterday?",
-          "isUserMessage": true,
-          "citation": null,
-          "createdAt": "2025-05-06T15:39:58.855Z"
-        },
-        {
-          "id": 260,
-          "chatbotId": 41,
-          "userId": null,
-          "content": "Yesterday, May 5, 2025, the following occurred at 16 Bonnie (per Slack):\n\n• 13:00 – Walk-through of the house with Dimitri (Slack)  \n• 15:41 – Aaron Wilson confirmed a premium Pella package is en route directly from Brennan; team to watch for shipper updates (Slack, 2025-05-05 15:41:42 ET)  \n• Stationary exterior door was repaired but its latch was missing; a replacement latch has been ordered (Slack)  \n• Request placed to remove the porta-john from site (Slack)  \n• Brandon returned in the afternoon to install proper",
-          "isUserMessage": false,
-          "citation": "No specific source available",
-          "createdAt": "2025-05-06T15:40:35.054Z"
-        },
-        {
-          "id": 261,
-          "chatbotId": 41,
-          "userId": null,
-          "content": "what happened yesterday?",
-          "isUserMessage": true,
-          "citation": null,
-          "createdAt": "2025-05-06T15:51:42.669Z"
-        },
-        {
-          "id": 262,
-          "chatbotId": 41,
-          "userId": null,
-          "content": "Yesterday at the 16 Bonnie site, the key activities and updates were:\n\n- NOV (Notice of Violation) was lifted after materials and sediment were removed from the street, ensuring compliance.\n- Cooktop prep was completed, and cut-in for the cooktop was in progress.\n- Plumbing trim was complete, with Brandon handling plumbing trim-out, and electric trim work was scheduled for early next week.\n- A&G were on site cleaning the home, including coordinating with stucco guys for cleaning.\n- Brandon was set to come back in the afternoon with proper drainage and sewage caps.\n- Walkthroughs were conducted, including with the electric trim team.\n- Certain hardware issues were noted: the stationary door latch was lost by the install team, and a replacement was ordered; sliding door latches were on order and in transit.\n- Coordination around materials: verifying all materials arrived, using Gerardex to cover exposed flooring for protection, and ensuring secondary closet shelving and cabinet pulls installation was planned.\n- Scheduling and site logistics were actively managed, including removing pavers from the street and driveway tomorrow.\n- There was also ongoing communication about premium window orders directly via Pella and package tracking outside BFS.\n\nOverall, the site was progressing with finish trims, cleaning, hardware fixes, and kitchen prep, while maintaining site cleanliness and compliance with NOV removal requirements.\n\nThis summary is based on Slack messages from 5/4/2025 and surrounding dates.",
-          "isUserMessage": false,
-          "citation": "No specific source available",
-          "createdAt": "2025-05-06T15:51:48.548Z"
-        },
-        {
-          "id": 380,
-          "chatbotId": 41,
-          "userId": null,
-          "content": "what happened last week?",
-          "isUserMessage": true,
-          "citation": null,
-          "createdAt": "2025-05-06T16:01:08.255Z"
-        },
-        {
-          "id": 381,
-          "chatbotId": 41,
-          "userId": null,
-          "content": "Last week, several activities took place on the site:\n\n1. **Cooktop Preparation**: The cooktop prep was completed, and the cut for the cooktop was in progress.\n2. **Plumbing and Electric Trim**: Plumbing trim was reported as complete, with some led strips still on order. Electric trim was scheduled to be completed early this week.\n3. **Cleaning**: A&G was on track to clean the home, and there were plans for the stucco team to clean as well.\n4. **Touch-ups**: There were some missed touch-ups that needed to be addressed, and a walkthrough was completed with the electric trim team.\n5. **Materials and Installations**: Brandon was working on plumbing trim, and there were discussions about various materials being in transit or on order, including a latch for a sliding door.\n6. **Site Visits and Tasks**: Dimitri and another team member were scheduled to walk the house, and there were ongoing discussions about moving materials and scheduling measurements.\n\nOverall, it seems the team was focused on finishing various installations and ensuring the site was cleaned and prepared for the next steps.",
-          "isUserMessage": false,
-          "citation": "No specific source available",
-          "createdAt": "2025-05-06T16:01:08.255Z"
-        },
-        {
-          "id": 382,
-          "chatbotId": 41,
-          "userId": null,
-          "content": "what happened last week?",
-          "isUserMessage": true,
-          "citation": null,
-          "createdAt": "2025-05-06T16:01:08.255Z"
-        },
-        {
-          "id": 383,
-          "chatbotId": 41,
-          "userId": null,
-          "content": "I'm having trouble connecting to my knowledge base. Please try again later.",
-          "isUserMessage": false,
-          "citation": "Error",
-          "createdAt": "2025-05-06T16:01:08.255Z"
-        },
-        {
-          "id": 384,
-          "chatbotId": 41,
-          "userId": null,
-          "content": "what happened last week?",
-          "isUserMessage": true,
-          "citation": null,
-          "createdAt": "2025-05-06T16:01:08.255Z"
-        },
-        {
-          "id": 385,
-          "chatbotId": 41,
-          "userId": null,
-          "content": "I'm having trouble connecting to my knowledge base. Please try again later.",
-          "isUserMessage": false,
-          "citation": "Error",
-          "createdAt": "2025-05-06T16:01:08.255Z"
-        },
-        {
-          "id": 386,
-          "chatbotId": 41,
-          "userId": null,
-          "content": "what happened last week?",
-          "isUserMessage": true,
-          "citation": null,
-          "createdAt": "2025-05-06T16:01:08.255Z"
-        },
-        {
-          "id": 387,
-          "chatbotId": 41,
-          "userId": null,
-          "content": "",
-          "isUserMessage": false,
-          "citation": "object Object",
-          "createdAt": "2025-05-06T16:01:08.255Z"
-        },
-        {
-          "id": 388,
-          "chatbotId": 41,
-          "userId": null,
-          "content": "what happened last week?",
-          "isUserMessage": true,
-          "citation": null,
-          "createdAt": "2025-05-06T16:01:08.255Z"
-        },
-        {
-          "id": 389,
-          "chatbotId": 41,
-          "userId": null,
-          "content": "I'm having trouble processing the information. Let me try again with a more specific question.",
-          "isUserMessage": false,
-          "citation": "object Object",
-          "createdAt": "2025-05-06T16:01:08.255Z"
-        },
-        {
-          "id": 390,
-          "chatbotId": 41,
-          "userId": null,
-          "content": "I'm having trouble processing the information. Let me try again with a more specific question.",
-          "isUserMessage": true,
-          "citation": null,
-          "createdAt": "2025-05-06T16:01:08.255Z"
-        },
-        {
-          "id": 391,
-          "chatbotId": 41,
-          "userId": null,
-          "content": "I’m happy to help—could you clarify what specific information you’re looking for from these messages? For example:\n\n• Status of the cooktop delivery or installation  \n• Timeline for exterior touch-ups  \n• Which materials are still outstanding  \n• Upcoming scheduled work (e.g., plumbing or electric trim)\n\nLet me know which topic, and I’ll pull out the details.",
-          "isUserMessage": false,
-          "citation": "No specific source available",
-          "createdAt": "2025-05-06T16:01:08.255Z"
-        },
-        {
-          "id": 392,
-          "chatbotId": 41,
-          "userId": null,
-          "content": "what happened last week?",
-          "isUserMessage": true,
-          "citation": null,
-          "createdAt": "2025-05-06T16:01:08.255Z"
-        },
-        {
-          "id": 393,
-          "chatbotId": 41,
-          "userId": null,
-          "content": "Here’s a summary of what happened last week (April 29–May 5) on 16 Bonnie, based on Slack updates:\n\n• Site cleanup & NOV compliance  \n  – Construction materials and sediment were removed from the street per the NOV (Slack, 2025-05-05).  \n  – Pavers and debris were also cleared from the roadway and driveway (Slack, 2025-05-01).  \n\n• Kitchen / cooktop  \n  – Prep for the cooktop was completed and the cut-in was in progress (Slack, 2025-05-05).  \n  – The Elbrus/Pitt cooktop was tracked down at the office; coordination underway to have Vilma cut the countertop (Slack, 2025-04-29).  \n\n• Doors & hardware  \n  – The stationary door was fixed but its latch was missing; a replacement latch was ordered (Slack, 2025-05-05).  \n  – A sliding-door latch was likewise ordered and is in transit (Slack, 2025-05-05).  \n\n• Floor protection  \n  – Gerardex was brought in to cover exposed flooring as a precaution (Slack, 2025-05-05).  \n\n• Trim & finishes  \n  – Plumbing trim-out was completed or wrapping up (Slack, 2025-05-05).  \n  – Electric trim walkthrough held; electric trim work is slated to continue early this week (Slack, 2025-05-05).  \n  – LED strips are on order for final trim (Slack, 2025-05-05).  \n\n• Cabinetry & shelving  \n  – Secondary closet shelves and cabinet pulls are in production with Christian Cabinetry; installation in master closet scheduled (Slack, 2025-05-05).  \n\n• Cleaning  \n  – A&G was on track to clean the home; stucco crew also tasked with cleaning exterior (Slack, 2025-05-05).  \n\n• Walkthroughs & inspections  \n  – Dimitri and Aaron conducted a site walk on Wednesday at 1 PM (Slack, 2025-05-05).  \n  – Registers were opened and counts compared to Aaron’s list (Slack, 2025-05-05).  \n  – Paint testing (“Greek Villa” SW-7551) and lime-wash scope reviewed for fireplace, TV wall, staircase, powder room (Slack, 2025-04-29).  \n\n• Logistics & scheduling  \n  – Triad scheduled for measurements; Radim’s exterior touch-up timing queried (Slack, 2025-05-01 & 2025-05-05).  \n  – Premium Pella items to ship directly from Brennan’s office; shipping updates pending (Slack, 2025-05-05).  \n  – Porta-John removal was requested (Slack, 2025-05-05).  \n\nLet me know if you need more detail on any of these items.",
-          "isUserMessage": false,
-          "citation": "No specific source available",
-          "createdAt": "2025-05-06T16:01:08.255Z"
-        },
-        {
-          "id": 394,
-          "chatbotId": 41,
-          "userId": null,
-          "content": "what happened yesterday?",
-          "isUserMessage": true,
-          "citation": null,
-          "createdAt": "2025-05-06T16:01:08.255Z"
-        },
-        {
-          "id": 395,
-          "chatbotId": 41,
-          "userId": null,
-          "content": "I wasn't able to find that information in the project files or Slack messages.",
-          "isUserMessage": false,
-          "citation": "No specific source available",
-          "createdAt": "2025-05-06T16:01:08.255Z"
-        },
-        {
-          "id": 396,
-          "chatbotId": 41,
-          "userId": null,
-          "content": "what happened last week?",
-          "isUserMessage": true,
-          "citation": null,
-          "createdAt": "2025-05-06T16:01:08.255Z"
-        },
-        {
-          "id": 397,
-          "chatbotId": 41,
-          "userId": null,
-          "content": "I wasn't able to find that information in the project files or Slack messages.",
-          "isUserMessage": false,
-          "citation": "No specific source available",
-          "createdAt": "2025-05-06T16:01:08.255Z"
-        },
-        {
-          "id": 398,
-          "chatbotId": 41,
-          "userId": null,
-          "content": "what happened yesterday?",
-          "isUserMessage": true,
-          "citation": null,
-          "createdAt": "2025-05-06T16:01:08.255Z"
-        },
-        {
-          "id": 399,
-          "chatbotId": 41,
-          "userId": null,
-          "content": "Yesterday, May 5, 2025, the following occurred at 16 Bonnie (per Slack):\n\n• 13:00 – Walk-through of the house with Dimitri (Slack)  \n• 15:41 – Aaron Wilson confirmed a premium Pella package is en route directly from Brennan; team to watch for shipper updates (Slack, 2025-05-05 15:41:42 ET)  \n• Stationary exterior door was repaired but its latch was missing; a replacement latch has been ordered (Slack)  \n• Request placed to remove the porta-john from site (Slack)  \n• Brandon returned in the afternoon to install proper",
-          "isUserMessage": false,
-          "citation": "No specific source available",
-          "createdAt": "2025-05-06T16:01:08.255Z"
-        }
-      ],
-      "summaries": [
-        {
-          "id": 38,
-          "chatbotId": 41,
-          "content": "<h2>16 Bonnie – Weekly Summary • Week 2025-W18 – Week Ending April 29, 2025</h2>\n\n<ol>\n  <li><strong>Key Achievements</strong>\n    <ul>\n      <li>NOV lifted after removal of materials and sediment from the street.</li>\n      <li>Cooktop prep and cut-in progress, with cooktop confirmed offsite at the office.</li>\n      <li>Plumbing trim completed and plumbing trim out in progress with Brandon on site.</li>\n      <li>Secondary shelves and cabinet pulls installation scheduled for master closet.</li>\n      <li>Home cleaning scheduled and underway by A&amp;G and stucco team.</li>\n      <li>Walkthroughs completed with electric trim team; electric trim to continue early next week.</li>\n      <li>Stationary door fixed; new latch ordered for sliding door.</li>\n      <li>Debris removal and site cleaning completed including pavers removed from road and driveway.</li>\n    </ul>\n  </li>\n  <li><strong>Issues or Blockers</strong>\n    <ul>\n      <li>Some exterior touch-ups missed last week pending completion.</li>\n      <li>Sliding door latch lost by installation team and currently on order and in transit.</li>\n      <li>LED strips required for final installation are still on order.</li>\n      <li>Need for multiple workers to assist with moving the tub upstairs.</li>\n    </ul>\n  </li>\n  <li><strong>Upcoming Work</strong>\n    <ul>\n      <li>Electric trim continuation scheduled for Friday and early next week.</li>\n      <li>Christian to install secondary closet shelving and finish master closet trim Monday.</li>\n      <li>Brandon to continue plumbing trim installation tomorrow.</li>\n      <li>Gerardex requested to cover exposed flooring for protection.</li>\n      <li>Schedule countertop cutting and related installation.</li>\n      <li>Notification to remove porta john after site re-cleaning.</li>\n    </ul>\n  </li>\n  <li><strong>Action Items</strong>\n    <ul>\n      <li><strong>Aaron</strong> to coordinate cooktop delivery and schedule Vilma for cooktop cut-out.</li>\n      <li><strong>Rashad</strong> to confirm arrival of all electric materials and assist with onsite material handling.</li>\n      <li><strong>Christian</strong> to complete installation of master closet secondary shelves and cabinet pulls.</li>\n      <li><strong>Brandon</strong> to continue plumbing trim out and provide drainage and sewage caps.</li>\n      <li><strong>All teams</strong> to verify all materials are onsite and accounted for prior to upcoming installations.</li>\n    </ul>\n  </li>\n</ol>",
-          "week": "2025-W19",
-          "sentAt": "2025-05-06T15:56:14.604Z"
-        }
-      ],
-      "emailRecipients": [],
-      "asanaProjects": []
-    },
-    {
-      "chatbot": {
         "id": 42,
         "name": "Amex Expense Agent",
         "slackChannelId": "GKSGGN59C",
@@ -4077,8 +3668,417 @@
       "summaries": [],
       "emailRecipients": [],
       "asanaProjects": []
+    },
+    {
+      "chatbot": {
+        "id": 41,
+        "name": "16 Bonnie",
+        "slackChannelId": "C06JM3D4BQB",
+        "asanaProjectId": null,
+        "asanaConnectionId": null,
+        "createdById": 4,
+        "projectId": 3,
+        "publicToken": "fb7d93bb-8f22-459d-895e-b546509f5247",
+        "isActive": true,
+        "requireAuth": false,
+        "systemPrompt": null,
+        "outputFormat": null,
+        "createdAt": "2025-05-01T19:58:02.248Z"
+      },
+      "documents": [],
+      "messages": [
+        {
+          "id": 205,
+          "chatbotId": 41,
+          "userId": null,
+          "content": "what happened last week?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T14:31:59.011Z"
+        },
+        {
+          "id": 206,
+          "chatbotId": 41,
+          "userId": null,
+          "content": "Last week, several activities took place on the site:\n\n1. **Cooktop Preparation**: The cooktop prep was completed, and the cut for the cooktop was in progress.\n2. **Plumbing and Electric Trim**: Plumbing trim was reported as complete, with some led strips still on order. Electric trim was scheduled to be completed early this week.\n3. **Cleaning**: A&G was on track to clean the home, and there were plans for the stucco team to clean as well.\n4. **Touch-ups**: There were some missed touch-ups that needed to be addressed, and a walkthrough was completed with the electric trim team.\n5. **Materials and Installations**: Brandon was working on plumbing trim, and there were discussions about various materials being in transit or on order, including a latch for a sliding door.\n6. **Site Visits and Tasks**: Dimitri and another team member were scheduled to walk the house, and there were ongoing discussions about moving materials and scheduling measurements.\n\nOverall, it seems the team was focused on finishing various installations and ensuring the site was cleaned and prepared for the next steps.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-06T14:32:05.319Z"
+        },
+        {
+          "id": 225,
+          "chatbotId": 41,
+          "userId": null,
+          "content": "what happened last week?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T15:05:31.013Z"
+        },
+        {
+          "id": 226,
+          "chatbotId": 41,
+          "userId": null,
+          "content": "I'm having trouble connecting to my knowledge base. Please try again later.",
+          "isUserMessage": false,
+          "citation": "Error",
+          "createdAt": "2025-05-06T15:05:31.347Z"
+        },
+        {
+          "id": 229,
+          "chatbotId": 41,
+          "userId": null,
+          "content": "what happened last week?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T15:08:47.868Z"
+        },
+        {
+          "id": 230,
+          "chatbotId": 41,
+          "userId": null,
+          "content": "I'm having trouble connecting to my knowledge base. Please try again later.",
+          "isUserMessage": false,
+          "citation": "Error",
+          "createdAt": "2025-05-06T15:08:48.075Z"
+        },
+        {
+          "id": 237,
+          "chatbotId": 41,
+          "userId": null,
+          "content": "what happened last week?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T15:16:30.014Z"
+        },
+        {
+          "id": 238,
+          "chatbotId": 41,
+          "userId": null,
+          "content": "",
+          "isUserMessage": false,
+          "citation": "object Object",
+          "createdAt": "2025-05-06T15:16:47.599Z"
+        },
+        {
+          "id": 239,
+          "chatbotId": 41,
+          "userId": null,
+          "content": "what happened last week?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T15:21:21.144Z"
+        },
+        {
+          "id": 240,
+          "chatbotId": 41,
+          "userId": null,
+          "content": "I'm having trouble processing the information. Let me try again with a more specific question.",
+          "isUserMessage": false,
+          "citation": "object Object",
+          "createdAt": "2025-05-06T15:21:46.083Z"
+        },
+        {
+          "id": 243,
+          "chatbotId": 41,
+          "userId": null,
+          "content": "I'm having trouble processing the information. Let me try again with a more specific question.",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T15:27:43.450Z"
+        },
+        {
+          "id": 244,
+          "chatbotId": 41,
+          "userId": null,
+          "content": "I’m happy to help—could you clarify what specific information you’re looking for from these messages? For example:\n\n• Status of the cooktop delivery or installation  \n• Timeline for exterior touch-ups  \n• Which materials are still outstanding  \n• Upcoming scheduled work (e.g., plumbing or electric trim)\n\nLet me know which topic, and I’ll pull out the details.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-06T15:27:49.232Z"
+        },
+        {
+          "id": 245,
+          "chatbotId": 41,
+          "userId": null,
+          "content": "what happened last week?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T15:27:51.045Z"
+        },
+        {
+          "id": 246,
+          "chatbotId": 41,
+          "userId": null,
+          "content": "Here’s a summary of what happened last week (April 29–May 5) on 16 Bonnie, based on Slack updates:\n\n• Site cleanup & NOV compliance  \n  – Construction materials and sediment were removed from the street per the NOV (Slack, 2025-05-05).  \n  – Pavers and debris were also cleared from the roadway and driveway (Slack, 2025-05-01).  \n\n• Kitchen / cooktop  \n  – Prep for the cooktop was completed and the cut-in was in progress (Slack, 2025-05-05).  \n  – The Elbrus/Pitt cooktop was tracked down at the office; coordination underway to have Vilma cut the countertop (Slack, 2025-04-29).  \n\n• Doors & hardware  \n  – The stationary door was fixed but its latch was missing; a replacement latch was ordered (Slack, 2025-05-05).  \n  – A sliding-door latch was likewise ordered and is in transit (Slack, 2025-05-05).  \n\n• Floor protection  \n  – Gerardex was brought in to cover exposed flooring as a precaution (Slack, 2025-05-05).  \n\n• Trim & finishes  \n  – Plumbing trim-out was completed or wrapping up (Slack, 2025-05-05).  \n  – Electric trim walkthrough held; electric trim work is slated to continue early this week (Slack, 2025-05-05).  \n  – LED strips are on order for final trim (Slack, 2025-05-05).  \n\n• Cabinetry & shelving  \n  – Secondary closet shelves and cabinet pulls are in production with Christian Cabinetry; installation in master closet scheduled (Slack, 2025-05-05).  \n\n• Cleaning  \n  – A&G was on track to clean the home; stucco crew also tasked with cleaning exterior (Slack, 2025-05-05).  \n\n• Walkthroughs & inspections  \n  – Dimitri and Aaron conducted a site walk on Wednesday at 1 PM (Slack, 2025-05-05).  \n  – Registers were opened and counts compared to Aaron’s list (Slack, 2025-05-05).  \n  – Paint testing (“Greek Villa” SW-7551) and lime-wash scope reviewed for fireplace, TV wall, staircase, powder room (Slack, 2025-04-29).  \n\n• Logistics & scheduling  \n  – Triad scheduled for measurements; Radim’s exterior touch-up timing queried (Slack, 2025-05-01 & 2025-05-05).  \n  – Premium Pella items to ship directly from Brennan’s office; shipping updates pending (Slack, 2025-05-05).  \n  – Porta-John removal was requested (Slack, 2025-05-05).  \n\nLet me know if you need more detail on any of these items.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-06T15:28:24.950Z"
+        },
+        {
+          "id": 255,
+          "chatbotId": 41,
+          "userId": null,
+          "content": "what happened yesterday?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T15:35:58.767Z"
+        },
+        {
+          "id": 256,
+          "chatbotId": 41,
+          "userId": null,
+          "content": "I wasn't able to find that information in the project files or Slack messages.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-06T15:36:07.056Z"
+        },
+        {
+          "id": 257,
+          "chatbotId": 41,
+          "userId": null,
+          "content": "what happened last week?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T15:36:18.474Z"
+        },
+        {
+          "id": 258,
+          "chatbotId": 41,
+          "userId": null,
+          "content": "I wasn't able to find that information in the project files or Slack messages.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-06T15:36:28.253Z"
+        },
+        {
+          "id": 259,
+          "chatbotId": 41,
+          "userId": null,
+          "content": "what happened yesterday?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T15:39:58.855Z"
+        },
+        {
+          "id": 260,
+          "chatbotId": 41,
+          "userId": null,
+          "content": "Yesterday, May 5, 2025, the following occurred at 16 Bonnie (per Slack):\n\n• 13:00 – Walk-through of the house with Dimitri (Slack)  \n• 15:41 – Aaron Wilson confirmed a premium Pella package is en route directly from Brennan; team to watch for shipper updates (Slack, 2025-05-05 15:41:42 ET)  \n• Stationary exterior door was repaired but its latch was missing; a replacement latch has been ordered (Slack)  \n• Request placed to remove the porta-john from site (Slack)  \n• Brandon returned in the afternoon to install proper",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-06T15:40:35.054Z"
+        },
+        {
+          "id": 261,
+          "chatbotId": 41,
+          "userId": null,
+          "content": "what happened yesterday?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T15:51:42.669Z"
+        },
+        {
+          "id": 262,
+          "chatbotId": 41,
+          "userId": null,
+          "content": "Yesterday at the 16 Bonnie site, the key activities and updates were:\n\n- NOV (Notice of Violation) was lifted after materials and sediment were removed from the street, ensuring compliance.\n- Cooktop prep was completed, and cut-in for the cooktop was in progress.\n- Plumbing trim was complete, with Brandon handling plumbing trim-out, and electric trim work was scheduled for early next week.\n- A&G were on site cleaning the home, including coordinating with stucco guys for cleaning.\n- Brandon was set to come back in the afternoon with proper drainage and sewage caps.\n- Walkthroughs were conducted, including with the electric trim team.\n- Certain hardware issues were noted: the stationary door latch was lost by the install team, and a replacement was ordered; sliding door latches were on order and in transit.\n- Coordination around materials: verifying all materials arrived, using Gerardex to cover exposed flooring for protection, and ensuring secondary closet shelving and cabinet pulls installation was planned.\n- Scheduling and site logistics were actively managed, including removing pavers from the street and driveway tomorrow.\n- There was also ongoing communication about premium window orders directly via Pella and package tracking outside BFS.\n\nOverall, the site was progressing with finish trims, cleaning, hardware fixes, and kitchen prep, while maintaining site cleanliness and compliance with NOV removal requirements.\n\nThis summary is based on Slack messages from 5/4/2025 and surrounding dates.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-06T15:51:48.548Z"
+        },
+        {
+          "id": 380,
+          "chatbotId": 41,
+          "userId": null,
+          "content": "what happened last week?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T16:01:08.255Z"
+        },
+        {
+          "id": 381,
+          "chatbotId": 41,
+          "userId": null,
+          "content": "Last week, several activities took place on the site:\n\n1. **Cooktop Preparation**: The cooktop prep was completed, and the cut for the cooktop was in progress.\n2. **Plumbing and Electric Trim**: Plumbing trim was reported as complete, with some led strips still on order. Electric trim was scheduled to be completed early this week.\n3. **Cleaning**: A&G was on track to clean the home, and there were plans for the stucco team to clean as well.\n4. **Touch-ups**: There were some missed touch-ups that needed to be addressed, and a walkthrough was completed with the electric trim team.\n5. **Materials and Installations**: Brandon was working on plumbing trim, and there were discussions about various materials being in transit or on order, including a latch for a sliding door.\n6. **Site Visits and Tasks**: Dimitri and another team member were scheduled to walk the house, and there were ongoing discussions about moving materials and scheduling measurements.\n\nOverall, it seems the team was focused on finishing various installations and ensuring the site was cleaned and prepared for the next steps.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-06T16:01:08.255Z"
+        },
+        {
+          "id": 382,
+          "chatbotId": 41,
+          "userId": null,
+          "content": "what happened last week?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T16:01:08.255Z"
+        },
+        {
+          "id": 383,
+          "chatbotId": 41,
+          "userId": null,
+          "content": "I'm having trouble connecting to my knowledge base. Please try again later.",
+          "isUserMessage": false,
+          "citation": "Error",
+          "createdAt": "2025-05-06T16:01:08.255Z"
+        },
+        {
+          "id": 384,
+          "chatbotId": 41,
+          "userId": null,
+          "content": "what happened last week?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T16:01:08.255Z"
+        },
+        {
+          "id": 385,
+          "chatbotId": 41,
+          "userId": null,
+          "content": "I'm having trouble connecting to my knowledge base. Please try again later.",
+          "isUserMessage": false,
+          "citation": "Error",
+          "createdAt": "2025-05-06T16:01:08.255Z"
+        },
+        {
+          "id": 386,
+          "chatbotId": 41,
+          "userId": null,
+          "content": "what happened last week?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T16:01:08.255Z"
+        },
+        {
+          "id": 387,
+          "chatbotId": 41,
+          "userId": null,
+          "content": "",
+          "isUserMessage": false,
+          "citation": "object Object",
+          "createdAt": "2025-05-06T16:01:08.255Z"
+        },
+        {
+          "id": 388,
+          "chatbotId": 41,
+          "userId": null,
+          "content": "what happened last week?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T16:01:08.255Z"
+        },
+        {
+          "id": 389,
+          "chatbotId": 41,
+          "userId": null,
+          "content": "I'm having trouble processing the information. Let me try again with a more specific question.",
+          "isUserMessage": false,
+          "citation": "object Object",
+          "createdAt": "2025-05-06T16:01:08.255Z"
+        },
+        {
+          "id": 390,
+          "chatbotId": 41,
+          "userId": null,
+          "content": "I'm having trouble processing the information. Let me try again with a more specific question.",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T16:01:08.255Z"
+        },
+        {
+          "id": 391,
+          "chatbotId": 41,
+          "userId": null,
+          "content": "I’m happy to help—could you clarify what specific information you’re looking for from these messages? For example:\n\n• Status of the cooktop delivery or installation  \n• Timeline for exterior touch-ups  \n• Which materials are still outstanding  \n• Upcoming scheduled work (e.g., plumbing or electric trim)\n\nLet me know which topic, and I’ll pull out the details.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-06T16:01:08.255Z"
+        },
+        {
+          "id": 392,
+          "chatbotId": 41,
+          "userId": null,
+          "content": "what happened last week?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T16:01:08.255Z"
+        },
+        {
+          "id": 393,
+          "chatbotId": 41,
+          "userId": null,
+          "content": "Here’s a summary of what happened last week (April 29–May 5) on 16 Bonnie, based on Slack updates:\n\n• Site cleanup & NOV compliance  \n  – Construction materials and sediment were removed from the street per the NOV (Slack, 2025-05-05).  \n  – Pavers and debris were also cleared from the roadway and driveway (Slack, 2025-05-01).  \n\n• Kitchen / cooktop  \n  – Prep for the cooktop was completed and the cut-in was in progress (Slack, 2025-05-05).  \n  – The Elbrus/Pitt cooktop was tracked down at the office; coordination underway to have Vilma cut the countertop (Slack, 2025-04-29).  \n\n• Doors & hardware  \n  – The stationary door was fixed but its latch was missing; a replacement latch was ordered (Slack, 2025-05-05).  \n  – A sliding-door latch was likewise ordered and is in transit (Slack, 2025-05-05).  \n\n• Floor protection  \n  – Gerardex was brought in to cover exposed flooring as a precaution (Slack, 2025-05-05).  \n\n• Trim & finishes  \n  – Plumbing trim-out was completed or wrapping up (Slack, 2025-05-05).  \n  – Electric trim walkthrough held; electric trim work is slated to continue early this week (Slack, 2025-05-05).  \n  – LED strips are on order for final trim (Slack, 2025-05-05).  \n\n• Cabinetry & shelving  \n  – Secondary closet shelves and cabinet pulls are in production with Christian Cabinetry; installation in master closet scheduled (Slack, 2025-05-05).  \n\n• Cleaning  \n  – A&G was on track to clean the home; stucco crew also tasked with cleaning exterior (Slack, 2025-05-05).  \n\n• Walkthroughs & inspections  \n  – Dimitri and Aaron conducted a site walk on Wednesday at 1 PM (Slack, 2025-05-05).  \n  – Registers were opened and counts compared to Aaron’s list (Slack, 2025-05-05).  \n  – Paint testing (“Greek Villa” SW-7551) and lime-wash scope reviewed for fireplace, TV wall, staircase, powder room (Slack, 2025-04-29).  \n\n• Logistics & scheduling  \n  – Triad scheduled for measurements; Radim’s exterior touch-up timing queried (Slack, 2025-05-01 & 2025-05-05).  \n  – Premium Pella items to ship directly from Brennan’s office; shipping updates pending (Slack, 2025-05-05).  \n  – Porta-John removal was requested (Slack, 2025-05-05).  \n\nLet me know if you need more detail on any of these items.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-06T16:01:08.255Z"
+        },
+        {
+          "id": 394,
+          "chatbotId": 41,
+          "userId": null,
+          "content": "what happened yesterday?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T16:01:08.255Z"
+        },
+        {
+          "id": 395,
+          "chatbotId": 41,
+          "userId": null,
+          "content": "I wasn't able to find that information in the project files or Slack messages.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-06T16:01:08.255Z"
+        },
+        {
+          "id": 396,
+          "chatbotId": 41,
+          "userId": null,
+          "content": "what happened last week?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T16:01:08.255Z"
+        },
+        {
+          "id": 397,
+          "chatbotId": 41,
+          "userId": null,
+          "content": "I wasn't able to find that information in the project files or Slack messages.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-06T16:01:08.255Z"
+        },
+        {
+          "id": 398,
+          "chatbotId": 41,
+          "userId": null,
+          "content": "what happened yesterday?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T16:01:08.255Z"
+        },
+        {
+          "id": 399,
+          "chatbotId": 41,
+          "userId": null,
+          "content": "Yesterday, May 5, 2025, the following occurred at 16 Bonnie (per Slack):\n\n• 13:00 – Walk-through of the house with Dimitri (Slack)  \n• 15:41 – Aaron Wilson confirmed a premium Pella package is en route directly from Brennan; team to watch for shipper updates (Slack, 2025-05-05 15:41:42 ET)  \n• Stationary exterior door was repaired but its latch was missing; a replacement latch has been ordered (Slack)  \n• Request placed to remove the porta-john from site (Slack)  \n• Brandon returned in the afternoon to install proper",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-06T16:01:08.255Z"
+        }
+      ],
+      "summaries": [
+        {
+          "id": 38,
+          "chatbotId": 41,
+          "content": "<h2>16 Bonnie – Weekly Summary • Week 2025-W18 – Week Ending April 29, 2025</h2>\n\n<ol>\n  <li><strong>Key Achievements</strong>\n    <ul>\n      <li>NOV lifted after removal of materials and sediment from the street.</li>\n      <li>Cooktop prep and cut-in progress, with cooktop confirmed offsite at the office.</li>\n      <li>Plumbing trim completed and plumbing trim out in progress with Brandon on site.</li>\n      <li>Secondary shelves and cabinet pulls installation scheduled for master closet.</li>\n      <li>Home cleaning scheduled and underway by A&amp;G and stucco team.</li>\n      <li>Walkthroughs completed with electric trim team; electric trim to continue early next week.</li>\n      <li>Stationary door fixed; new latch ordered for sliding door.</li>\n      <li>Debris removal and site cleaning completed including pavers removed from road and driveway.</li>\n    </ul>\n  </li>\n  <li><strong>Issues or Blockers</strong>\n    <ul>\n      <li>Some exterior touch-ups missed last week pending completion.</li>\n      <li>Sliding door latch lost by installation team and currently on order and in transit.</li>\n      <li>LED strips required for final installation are still on order.</li>\n      <li>Need for multiple workers to assist with moving the tub upstairs.</li>\n    </ul>\n  </li>\n  <li><strong>Upcoming Work</strong>\n    <ul>\n      <li>Electric trim continuation scheduled for Friday and early next week.</li>\n      <li>Christian to install secondary closet shelving and finish master closet trim Monday.</li>\n      <li>Brandon to continue plumbing trim installation tomorrow.</li>\n      <li>Gerardex requested to cover exposed flooring for protection.</li>\n      <li>Schedule countertop cutting and related installation.</li>\n      <li>Notification to remove porta john after site re-cleaning.</li>\n    </ul>\n  </li>\n  <li><strong>Action Items</strong>\n    <ul>\n      <li><strong>Aaron</strong> to coordinate cooktop delivery and schedule Vilma for cooktop cut-out.</li>\n      <li><strong>Rashad</strong> to confirm arrival of all electric materials and assist with onsite material handling.</li>\n      <li><strong>Christian</strong> to complete installation of master closet secondary shelves and cabinet pulls.</li>\n      <li><strong>Brandon</strong> to continue plumbing trim out and provide drainage and sewage caps.</li>\n      <li><strong>All teams</strong> to verify all materials are onsite and accounted for prior to upcoming installations.</li>\n    </ul>\n  </li>\n</ol>",
+          "week": "2025-W19",
+          "sentAt": "2025-05-06T15:56:14.604Z"
+        }
+      ],
+      "emailRecipients": [],
+      "asanaProjects": []
     }
   ],
-  "exportedAt": "2025-05-06T16:27:20.985Z",
+  "exportedAt": "2025-05-06T16:38:26.612Z",
   "exportedBy": "SPH Chat Migration Utility"
 }
