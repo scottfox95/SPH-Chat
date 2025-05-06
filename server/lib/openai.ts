@@ -537,15 +537,44 @@ The summary MUST follow this EXACT format with numbered headings and bullet poin
  */
 export async function testOpenAIConnection() {
   try {
+    // Get the model from settings - same as we do for actual requests
+    let model = await getCurrentModel();
+    console.log(`Testing OpenAI connection with model from settings: ${model}`);
+    
+    // Convert legacy model name format if needed
+    if (model.startsWith("gpt-")) {
+      if (model === "gpt-4o") model = "o4";
+      else if (model === "gpt-4o-mini") model = "o4-mini";
+      // Add other model conversions as needed
+    }
+    
+    console.log(`Converted model name for test: ${model}`);
+    
     // Make a simple request to check if the API key is valid using Responses API
     // Create request parameters without temperature to avoid compatibility issues with some models
     const requestParams: any = {
-      model: "o1", // Use a simpler model for the test (o1 is the simplified name for gpt-3.5-turbo in Responses API)
+      model: model, // Use the model from settings
       instructions: "You are a helpful assistant responding to a connection test.",
       input: "Hello, this is a connection test. Please respond with 'Connection successful'.",
       max_output_tokens: 20
-      // Do not add temperature for o1 model as it's not supported
     };
+    
+    // Add temperature parameter conditionally based on the model
+    // Same check as in the other functions
+    if (model !== "o1" && !model.includes("-preview") && !model.includes("o4-mini")) {
+      console.log(`Adding temperature parameter for test with model: ${model}`);
+      requestParams.temperature = 0.3;
+    } else {
+      console.log(`Skipping temperature parameter for test with model: ${model}`);
+    }
+    
+    // Only add web_search_preview tool if using a model that supports it
+    if (model === "o4" || model === "gpt-4o") {
+      console.log(`Adding web_search_preview tool for test with model: ${model}`);
+      requestParams.tools = [{"type": "web_search_preview"}];
+    } else {
+      console.log(`Skipping web_search_preview tool for test with model: ${model}`);
+    }
     
     const response = await openai.responses.create(requestParams);
 
