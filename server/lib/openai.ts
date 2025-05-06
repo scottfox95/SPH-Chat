@@ -234,7 +234,11 @@ export async function getChatbotResponse(
     console.log(`OpenAI API request completed in ${endTime - startTime}ms`);
 
     // Extract text content from the response using the Responses API format
-    const responseText = response.output?.text || "";
+    // The Responses API returns output content differently from the Chat Completions API
+    const responseText = typeof response.output === 'string' 
+      ? response.output 
+      : ((Array.isArray(response.output) && response.output.length > 0 && response.output[0].content) 
+          || (response.output && typeof response.output === 'object' && 'content' in response.output ? response.output.content : "")) || "";
     console.log(`Response received with ${responseText.length} characters`);
     
     // Parse the citation if it exists
@@ -320,7 +324,10 @@ export async function generateWeeklySummary(slackMessages: string[], projectName
     });
 
     // Extract text content from the response
-    return response.output?.text || "Unable to generate summary.";
+    return typeof response.output === 'string' 
+      ? response.output 
+      : ((Array.isArray(response.output) && response.output.length > 0 && response.output[0].content) 
+          || (response.output && typeof response.output === 'object' && 'content' in response.output ? response.output.content : "")) || "Unable to generate summary.";
   } catch (error) {
     console.error("OpenAI API error:", error);
     return `<p>Error generating weekly summary for ${projectName}. Please try again later.</p>`;
@@ -407,7 +414,10 @@ The summary MUST follow this EXACT format with numbered headings and bullet poin
       tools: [{"type": "web_search_preview"}] // Add web search capability for real-time info
     });
 
-    return response.output?.text || "Unable to generate project summary.";
+    return typeof response.output === 'string' 
+      ? response.output 
+      : ((Array.isArray(response.output) && response.output.length > 0 && response.output[0].content) 
+          || (response.output && typeof response.output === 'object' && 'content' in response.output ? response.output.content : "")) || "Unable to generate project summary.";
   } catch (error) {
     console.error("OpenAI API error generating project summary:", error);
     return `Error generating master project summary for ${projectName}. Please try again later.`;
@@ -432,7 +442,10 @@ export async function testOpenAIConnection() {
     return {
       connected: true,
       model: response.model,
-      response: response.output?.text || "Connection successful",
+      response: typeof response.output === 'string' 
+        ? response.output 
+        : ((Array.isArray(response.output) && response.output.length > 0 && response.output[0].content) 
+            || (response.output && typeof response.output === 'object' && 'content' in response.output ? response.output.content : "")) || "Connection successful",
       usage: response.usage
     };
   } catch (error: any) {
