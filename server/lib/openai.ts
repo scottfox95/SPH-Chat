@@ -470,7 +470,7 @@ export async function getChatbotResponse(
       model,
       instructions: systemPromptText, // System prompt becomes instructions
       input: userPromptText,          // User message becomes input
-      max_output_tokens: 1000,        // Reduced from 4000 to improve response time
+      max_output_tokens: 4000,        // Restored to original value 
     };
     
     // Only add temperature if we're using a model that supports it
@@ -481,7 +481,7 @@ export async function getChatbotResponse(
     
     if (model !== "o1" && !model.includes("-preview") && !model.includes("o4-mini")) {
       console.log(`DEBUG - Adding temperature parameter for model: ${model}`);
-      requestParams.temperature = 0.1; // Reduced from 0.3 to improve response time
+      requestParams.temperature = 0.3; // Restored to original value
     } else {
       console.log(`DEBUG - Skipping temperature parameter for model: ${model}`);
     }
@@ -798,7 +798,7 @@ export async function testOpenAIConnection() {
     // Same check as in the other functions
     if (model !== "o1" && !model.includes("-preview") && !model.includes("o4-mini")) {
       console.log(`Adding temperature parameter for test with model: ${model}`);
-      requestParams.temperature = 0.1; // Lower temperature for faster responses
+      requestParams.temperature = 0.3; // Restored to original value
     } else {
       console.log(`Skipping temperature parameter for test with model: ${model}`);
     }

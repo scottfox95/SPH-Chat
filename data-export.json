@@ -338,6 +338,42 @@
           "isUserMessage": false,
           "citation": "object Object",
           "createdAt": "2025-05-06T15:15:53.487Z"
+        },
+        {
+          "id": 247,
+          "chatbotId": 22,
+          "userId": null,
+          "content": "what happened last week",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T15:28:59.437Z"
+        },
+        {
+          "id": 248,
+          "chatbotId": 22,
+          "userId": null,
+          "content": "Here’s what happened on site last week, based on Slack updates:\n\n• 2025-04-28 13:34 ET – Drywall team worked on sanding and finishing ceiling imperfections; Gerardo and Alex were on site; pavers were delivered; front yard was backfilled and graded; a tree was planted and silt sock installed; gravel delivery was scheduled for Monday and pavers installation set for next week; gravel install planned the next day. (Slack, 2025-04-28 13:34 ET)\n\n• 2025-05-01 13:17 ET – Walk-through with Max was completed and the order list sent to Rashad; mirror measurements were scheduled. (Slack, 2025-05-01 13:17 ET)\n\n• 2025-05-01 13:12 ET – Plywood board installation was in progress. (Slack, 2025-05-01 13:12 ET)\n\n• 2025-05-01 12:55 ET – Driveway pervious pavers installation began; site piping required a turned-down detail and sealant around a 1″ pipe; questions were raised about the scupper, catch basin and garage downspout status; Max was scheduled to meet on site the next day. (Slack, 2025-05-01 12:55 ET)",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-06T15:29:30.069Z"
+        },
+        {
+          "id": 249,
+          "chatbotId": 22,
+          "userId": null,
+          "content": "was anything stolen from the site?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T15:29:52.129Z"
+        },
+        {
+          "id": 250,
+          "chatbotId": 22,
+          "userId": null,
+          "content": "According to our Slack channel, here’s what’s known:\n\n• A Bosch chip-hammer (value ~$255) was reported stolen from the pool crew at the *adjacent* 1269 Mayfair site. (Slack, undated)  \n• At 1320 Mayfair itself, trades discovered someone had unhooked the back sliding-door latch and made unauthorized entries. A police report was filed on 5/5/2025 and they’re compiling an inventory of exactly what was taken. So far no specific stolen items have been confirmed in writing. (Slack, 2025-05-05 18:31 PM ET; 2025-05-05 18:41 PM ET)",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-06T15:30:14.828Z"
         }
       ],
       "summaries": [
@@ -1808,6 +1844,24 @@
           "isUserMessage": false,
           "citation": "No specific source available",
           "createdAt": "2025-05-06T13:11:26.146Z"
+        },
+        {
+          "id": 253,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "$363",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T15:31:23.272Z"
+        },
+        {
+          "id": 254,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "Home Depot  $363.00  Framing Materials  for  195 Pebble",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-06T15:31:33.463Z"
         }
       ],
       "summaries": [],
@@ -1921,6 +1975,78 @@
           "isUserMessage": false,
           "citation": "object Object",
           "createdAt": "2025-05-06T15:21:46.083Z"
+        },
+        {
+          "id": 243,
+          "chatbotId": 41,
+          "userId": null,
+          "content": "I'm having trouble processing the information. Let me try again with a more specific question.",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T15:27:43.450Z"
+        },
+        {
+          "id": 244,
+          "chatbotId": 41,
+          "userId": null,
+          "content": "I’m happy to help—could you clarify what specific information you’re looking for from these messages? For example:\n\n• Status of the cooktop delivery or installation  \n• Timeline for exterior touch-ups  \n• Which materials are still outstanding  \n• Upcoming scheduled work (e.g., plumbing or electric trim)\n\nLet me know which topic, and I’ll pull out the details.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-06T15:27:49.232Z"
+        },
+        {
+          "id": 245,
+          "chatbotId": 41,
+          "userId": null,
+          "content": "what happened last week?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T15:27:51.045Z"
+        },
+        {
+          "id": 246,
+          "chatbotId": 41,
+          "userId": null,
+          "content": "Here’s a summary of what happened last week (April 29–May 5) on 16 Bonnie, based on Slack updates:\n\n• Site cleanup & NOV compliance  \n  – Construction materials and sediment were removed from the street per the NOV (Slack, 2025-05-05).  \n  – Pavers and debris were also cleared from the roadway and driveway (Slack, 2025-05-01).  \n\n• Kitchen / cooktop  \n  – Prep for the cooktop was completed and the cut-in was in progress (Slack, 2025-05-05).  \n  – The Elbrus/Pitt cooktop was tracked down at the office; coordination underway to have Vilma cut the countertop (Slack, 2025-04-29).  \n\n• Doors & hardware  \n  – The stationary door was fixed but its latch was missing; a replacement latch was ordered (Slack, 2025-05-05).  \n  – A sliding-door latch was likewise ordered and is in transit (Slack, 2025-05-05).  \n\n• Floor protection  \n  – Gerardex was brought in to cover exposed flooring as a precaution (Slack, 2025-05-05).  \n\n• Trim & finishes  \n  – Plumbing trim-out was completed or wrapping up (Slack, 2025-05-05).  \n  – Electric trim walkthrough held; electric trim work is slated to continue early this week (Slack, 2025-05-05).  \n  – LED strips are on order for final trim (Slack, 2025-05-05).  \n\n• Cabinetry & shelving  \n  – Secondary closet shelves and cabinet pulls are in production with Christian Cabinetry; installation in master closet scheduled (Slack, 2025-05-05).  \n\n• Cleaning  \n  – A&G was on track to clean the home; stucco crew also tasked with cleaning exterior (Slack, 2025-05-05).  \n\n• Walkthroughs & inspections  \n  – Dimitri and Aaron conducted a site walk on Wednesday at 1 PM (Slack, 2025-05-05).  \n  – Registers were opened and counts compared to Aaron’s list (Slack, 2025-05-05).  \n  – Paint testing (“Greek Villa” SW-7551) and lime-wash scope reviewed for fireplace, TV wall, staircase, powder room (Slack, 2025-04-29).  \n\n• Logistics & scheduling  \n  – Triad scheduled for measurements; Radim’s exterior touch-up timing queried (Slack, 2025-05-01 & 2025-05-05).  \n  – Premium Pella items to ship directly from Brennan’s office; shipping updates pending (Slack, 2025-05-05).  \n  – Porta-John removal was requested (Slack, 2025-05-05).  \n\nLet me know if you need more detail on any of these items.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-06T15:28:24.950Z"
+        },
+        {
+          "id": 255,
+          "chatbotId": 41,
+          "userId": null,
+          "content": "what happened yesterday?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T15:35:58.767Z"
+        },
+        {
+          "id": 256,
+          "chatbotId": 41,
+          "userId": null,
+          "content": "I wasn't able to find that information in the project files or Slack messages.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-06T15:36:07.056Z"
+        },
+        {
+          "id": 257,
+          "chatbotId": 41,
+          "userId": null,
+          "content": "what happened last week?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T15:36:18.474Z"
+        },
+        {
+          "id": 258,
+          "chatbotId": 41,
+          "userId": null,
+          "content": "I wasn't able to find that information in the project files or Slack messages.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-06T15:36:28.253Z"
         }
       ],
       "summaries": [],
@@ -2237,6 +2363,24 @@
           "isUserMessage": false,
           "citation": "object Object",
           "createdAt": "2025-05-06T15:23:04.285Z"
+        },
+        {
+          "id": 251,
+          "chatbotId": 43,
+          "userId": null,
+          "content": "how much rent did we receive in May 2025?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T15:30:35.344Z"
+        },
+        {
+          "id": 252,
+          "chatbotId": 43,
+          "userId": null,
+          "content": "We received $21,311.89 in rent for May 2025.  \nCitation: Rental Income Tracking for 3400 W Hospital (2025).xlsx, “2024 Rental Income” sheet (cell V7)",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-06T15:30:53.534Z"
         }
       ],
       "summaries": [],
@@ -2244,6 +2388,6 @@
       "asanaProjects": []
     }
   ],
-  "exportedAt": "2025-05-06T15:27:02.108Z",
+  "exportedAt": "2025-05-06T15:38:29.204Z",
   "exportedBy": "SPH Chat Migration Utility"
 }
