@@ -248,6 +248,24 @@
           "isUserMessage": false,
           "citation": "No specific source available",
           "createdAt": "2025-05-06T14:22:19.667Z"
+        },
+        {
+          "id": 221,
+          "chatbotId": 22,
+          "userId": null,
+          "content": "what happened last week",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T15:01:26.719Z"
+        },
+        {
+          "id": 222,
+          "chatbotId": 22,
+          "userId": null,
+          "content": "I'm having trouble connecting to my knowledge base. Please try again later.",
+          "isUserMessage": false,
+          "citation": "Error",
+          "createdAt": "2025-05-06T15:01:26.974Z"
         }
       ],
       "summaries": [
@@ -2021,6 +2039,24 @@
           "isUserMessage": false,
           "citation": "No specific source available",
           "createdAt": "2025-05-06T14:42:11.967Z"
+        },
+        {
+          "id": 219,
+          "chatbotId": 43,
+          "userId": null,
+          "content": "how much rent did we receive in May 2025?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T15:01:04.706Z"
+        },
+        {
+          "id": 220,
+          "chatbotId": 43,
+          "userId": null,
+          "content": "I'm having trouble connecting to my knowledge base. Please try again later.",
+          "isUserMessage": false,
+          "citation": "Error",
+          "createdAt": "2025-05-06T15:01:04.970Z"
         }
       ],
       "summaries": [],
@@ -2028,6 +2064,6 @@
       "asanaProjects": []
     }
   ],
-  "exportedAt": "2025-05-06T14:59:36.717Z",
+  "exportedAt": "2025-05-06T15:04:02.204Z",
   "exportedBy": "SPH Chat Migration Utility"
 }

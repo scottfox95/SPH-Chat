@@ -279,14 +279,22 @@ export async function getChatbotResponse(
     }
     
     // Use the OpenAI Responses API
-    const response = await openai.responses.create({
+    // Create request parameters without temperature to avoid compatibility issues with some models
+    const requestParams: any = {
       model,
       instructions: systemPromptText, // System prompt becomes instructions
       input: userPromptText,          // User message becomes input
-      temperature: 0.3,
       max_output_tokens: 4000,        // Renamed from max_tokens
       tools: [{"type": "web_search_preview"}] // Add web search capability
-    });
+    };
+    
+    // Only add temperature if we're using a model that supports it
+    // This avoids the "Unsupported parameter: 'temperature'" error with some models
+    if (model !== "o1" && !model.includes("-preview")) {
+      requestParams.temperature = 0.3;
+    }
+    
+    const response = await openai.responses.create(requestParams);
     
     const endTime = Date.now();
     console.log(`OpenAI API request completed in ${endTime - startTime}ms`);
@@ -369,14 +377,21 @@ export async function generateWeeklySummary(slackMessages: string[], projectName
       // Add other model conversions as needed
     }
     
-    const response = await openai.responses.create({
+    // Create request parameters without temperature to avoid compatibility issues with some models
+    const requestParams: any = {
       model,
       instructions: summaryPrompt,
       input: `Here are the Slack messages from the past week for the ${projectName} project:\n\n${slackMessages.join("\n\n")}`,
       max_output_tokens: 4000,
-      temperature: 0.5,
       tools: [{"type": "web_search_preview"}] // Add web search capability for real-time info
-    });
+    };
+    
+    // Only add temperature if we're using a model that supports it
+    if (model !== "o1" && !model.includes("-preview")) {
+      requestParams.temperature = 0.5;
+    }
+    
+    const response = await openai.responses.create(requestParams);
 
     // Extract text content from the response using our helper function
     return extractTextFromResponseOutput(response.output) || "Unable to generate summary.";
@@ -457,14 +472,21 @@ The summary MUST follow this EXACT format with numbered headings and bullet poin
     }
     
     // Make the API call to generate the combined summary using Responses API
-    const response = await openai.responses.create({
+    // Create request parameters without temperature to avoid compatibility issues with some models
+    const requestParams: any = {
       model,
       instructions: projectSummaryPrompt,
       input: `Here are the individual summaries from different aspects of the ${projectName} project:\n\n${chatbotSummarySection}\n\nHere are the raw messages from the past week for additional context if needed:\n\n${formattedMessages}`,
-      temperature: 0.3, // Lower temperature for more consistent results
       max_output_tokens: 4000,
       tools: [{"type": "web_search_preview"}] // Add web search capability for real-time info
-    });
+    };
+    
+    // Only add temperature if we're using a model that supports it
+    if (model !== "o1" && !model.includes("-preview")) {
+      requestParams.temperature = 0.3; // Lower temperature for more consistent results
+    }
+    
+    const response = await openai.responses.create(requestParams);
 
     // Extract text content from the response using our helper function
     return extractTextFromResponseOutput(response.output) || "Unable to generate project summary.";
@@ -481,13 +503,16 @@ The summary MUST follow this EXACT format with numbered headings and bullet poin
 export async function testOpenAIConnection() {
   try {
     // Make a simple request to check if the API key is valid using Responses API
-    const response = await openai.responses.create({
+    // Create request parameters without temperature to avoid compatibility issues with some models
+    const requestParams: any = {
       model: "o1", // Use a simpler model for the test (o1 is the simplified name for gpt-3.5-turbo in Responses API)
       instructions: "You are a helpful assistant responding to a connection test.",
       input: "Hello, this is a connection test. Please respond with 'Connection successful'.",
-      max_output_tokens: 20,
-      temperature: 0,
-    });
+      max_output_tokens: 20
+      // Do not add temperature for o1 model as it's not supported
+    };
+    
+    const response = await openai.responses.create(requestParams);
 
     return {
       connected: true,
