@@ -99,8 +99,37 @@ export async function extractDataFromExcel(filePath: string): Promise<string[]> 
           cellsProcessed++;
           const colLetter = String.fromCharCode(64 + colNumber);
           const cellRef = `${colLetter}${rowNumber}`;
-          const cellValue = cell.text || cell.value?.toString() || '';
-          cells.push(`${cellRef}: ${cellValue}`);
+          
+          // Extract the appropriate value based on cell type
+          let cellValue: string;
+          if (cell.formula) {
+            // For formula cells, use the result
+            cellValue = cell.result ? cell.result.toString() : cell.value?.toString() || '';
+            cells.push(`${cellRef} (formula): ${cellValue}`);
+          } else if (typeof cell.value === 'number') {
+            // For numeric cells, check if it might be currency
+            const isCurrency = cell.numFmt?.includes('$') || 
+                              cell.numFmt?.includes('€') ||
+                              cell.numFmt?.includes('£');
+            
+            if (isCurrency) {
+              // Format currency values specially
+              cellValue = cell.numFmt?.replace(/\[.*\]/, '') || '$';
+              cellValue = `${cellValue}${cell.value.toFixed(2)}`;
+            } else {
+              cellValue = cell.value.toString();
+            }
+            cells.push(`${cellRef}: ${cellValue}`);
+          } else if (cell.value instanceof Date) {
+            // For date cells, format them consistently
+            const date = cell.value as Date;
+            cellValue = date.toISOString().split('T')[0];
+            cells.push(`${cellRef} (date): ${cellValue}`);
+          } else {
+            // Default case for text and other cell types
+            cellValue = cell.text || cell.value?.toString() || '';
+            cells.push(`${cellRef}: ${cellValue}`);
+          }
         });
         
         if (cells.length > 0) {
@@ -196,34 +225,51 @@ export async function processDocument(filePath: string, fileType: string): Promi
     
     // Process based on file type
     let result: string[] = [];
+    const fileName = path.basename(filePath);
+    const fileExtension = path.extname(filePath).toLowerCase();
     
-    if (fileType === "application/pdf") {
-      console.log(`Processing PDF document: ${path.basename(filePath)}`);
-      result = await extractTextFromPDF(filePath);
-    } else if (
-      fileType === "application/vnd.ms-excel" ||
+    // Determine file type using both MIME type and extension for more reliable detection
+    const isPdf = fileType === "application/pdf" || fileExtension === '.pdf';
+    const isExcel = 
+      fileType === "application/vnd.ms-excel" || 
       fileType === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" ||
       fileType === "application/octet-stream" || // Sometimes Excel files are detected as generic binary
-      filePath.toLowerCase().endsWith('.xlsx') || 
-      filePath.toLowerCase().endsWith('.xls')
-    ) {
-      console.log(`Processing Excel document: ${path.basename(filePath)}`);
+      fileExtension === '.xlsx' || 
+      fileExtension === '.xls';
+    const isText = 
+      fileType === "text/plain" || 
+      fileExtension === '.txt' || 
+      fileExtension === '.csv' ||
+      fileExtension === '.md';
+    
+    console.log(`File type detection: isPdf=${isPdf}, isExcel=${isExcel}, isText=${isText}`);
+    
+    if (isPdf) {
+      console.log(`Processing PDF document: ${fileName}`);
+      result = await extractTextFromPDF(filePath);
+    } else if (isExcel) {
+      console.log(`Processing Excel document: ${fileName}`);
       result = await extractDataFromExcel(filePath);
-    } else if (
-      fileType === "text/plain" ||
-      filePath.toLowerCase().endsWith('.txt')
-    ) {
-      console.log(`Processing text document: ${path.basename(filePath)}`);
+    } else if (isText) {
+      console.log(`Processing text document: ${fileName}`);
       result = await extractTextFromTXT(filePath);
     } else {
-      console.error(`Unsupported file type: ${fileType} for file: ${path.basename(filePath)}`);
-      throw new Error(`Unsupported file type: ${fileType}`);
+      console.error(`Unsupported file type: ${fileType} with extension ${fileExtension} for file: ${fileName}`);
+      return [`The file "${fileName}" has an unsupported format (${fileType}). Please upload PDF, Excel, or text files.`];
     }
     
-    console.log(`Successfully processed document: ${path.basename(filePath)}, extracted ${result.length} content chunks`);
+    if (result.length === 0) {
+      console.warn(`Document processed but yielded no content: ${fileName}`);
+      return [`The file "${fileName}" was processed but no text content could be extracted. The file might be empty, password-protected, or contain only images.`];
+    }
+    
+    console.log(`Successfully processed document: ${fileName}, extracted ${result.length} content chunks`);
     return result;
   } catch (error) {
-    console.error(`Error processing document ${path.basename(filePath)}:`, error);
-    return [`Error processing document: ${path.basename(filePath)}`];
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    console.error(`Error processing document ${path.basename(filePath)}: ${errorMessage}`);
+    
+    // Return a more informative error message that still indicates there was a processing issue
+    return [`The document "${path.basename(filePath)}" could not be processed: ${errorMessage}. Please try uploading it again or contact support if the issue persists.`];
   }
 }

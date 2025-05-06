@@ -70,14 +70,23 @@ export async function getChatbotResponse(
     console.log(`Found ${asanaTasks.length} Asana tasks for context`);
     
     // Context for the model - add more detailed document validation
-    // First filter out error messages being sent as context
+    // First filter out error messages being sent as context, but keep better track of what's happening
+    const errorDocuments = documents.filter(doc => doc.includes("Error processing"));
     const validDocuments = documents.filter(doc => !doc.includes("Error processing"));
+    
+    if (errorDocuments.length > 0) {
+      console.log(`WARNING: Found ${errorDocuments.length} document processing errors that will be excluded from context`);
+      errorDocuments.forEach((errDoc, i) => {
+        if (i < 3) console.log(`Error document ${i+1}: ${errDoc}`);
+      });
+    }
+    
     console.log(`Found ${documents.length} total document chunks, ${validDocuments.length} valid (non-error) chunks`);
     
     // Count how many sheets/pages of content we have from different file types
-    const excelSheetCount = documents.filter(doc => doc.includes("[Excel Sheet:")).length;
-    const pdfPageCount = documents.filter(doc => doc.includes("[PDF Page")).length;
-    const textFileCount = documents.filter(doc => doc.includes("[Text File")).length;
+    const excelSheetCount = validDocuments.filter(doc => doc.includes("[Excel Sheet:")).length;
+    const pdfPageCount = validDocuments.filter(doc => doc.includes("[PDF Page")).length;
+    const textFileCount = validDocuments.filter(doc => doc.includes("[Text File")).length;
     
     console.log(`Document type breakdown: ${excelSheetCount} Excel sheets, ${pdfPageCount} PDF pages, ${textFileCount} text files`);
     

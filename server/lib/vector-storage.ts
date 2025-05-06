@@ -9,25 +9,37 @@ const documentContentCache = new Map<number, string[]>();
 /**
  * Gets documents for a chatbot from storage and processes them
  * @param chatbotId The ID of the chatbot
+ * @param forceRefresh Whether to force a refresh of the cache
  * @returns Array of processed document content
  */
-export async function getProcessedDocuments(chatbotId: number): Promise<string[]> {
+export async function getProcessedDocuments(chatbotId: number, forceRefresh: boolean = false): Promise<string[]> {
   try {
-    console.log(`getProcessedDocuments called for chatbot ${chatbotId}`);
+    console.log(`getProcessedDocuments called for chatbot ${chatbotId}, forceRefresh=${forceRefresh}`);
     
-    // Check cache first
-    if (documentContentCache.has(chatbotId)) {
-      console.log(`Using cached documents for chatbot ${chatbotId}. Cache has ${documentContentCache.get(chatbotId)?.length || 0} document chunks`);
-      return documentContentCache.get(chatbotId) || [];
+    // Check cache first if we're not forcing a refresh
+    if (!forceRefresh && documentContentCache.has(chatbotId)) {
+      const cachedContent = documentContentCache.get(chatbotId) || [];
+      console.log(`Using cached documents for chatbot ${chatbotId}. Cache has ${cachedContent.length} document chunks`);
+      
+      // Additional validation that cache actually contains useful content
+      const nonErrorContent = cachedContent.filter(item => !item.includes("Error processing") && !item.includes("No content could be extracted"));
+      
+      if (nonErrorContent.length === 0 && cachedContent.length > 0) {
+        console.warn(`Cache only contains error messages for chatbot ${chatbotId}, forcing refresh`);
+        // Continue to refresh cache as it only contains errors
+      } else if (cachedContent.length > 0) {
+        return cachedContent;
+      }
     }
     
     // Get documents from storage
-    console.log(`No cache found. Fetching documents for chatbot ${chatbotId} from database`);
+    console.log(`${forceRefresh ? 'Force refreshing' : 'No valid cache found'}. Fetching documents for chatbot ${chatbotId} from database`);
     const documents = await storage.getDocuments(chatbotId);
     console.log(`Found ${documents.length} documents in database for chatbot ${chatbotId}`);
     
     // Process each document
     const processedContent: string[] = [];
+    const processingErrors: string[] = [];
     
     for (const doc of documents) {
       console.log(`Processing document: ${doc.originalName} (ID: ${doc.id}) with type ${doc.fileType}`);
@@ -37,6 +49,18 @@ export async function getProcessedDocuments(chatbotId: number): Promise<string[]
       try {
         const content = await processDocument(filePath, doc.fileType);
         console.log(`Document ${doc.originalName} processed with ${content.length} content chunks`);
+        
+        // Check if this document only returned error messages
+        const onlyErrors = content.every(chunk => 
+          chunk.includes("could not be processed") || 
+          chunk.includes("no text content could be extracted") ||
+          chunk.includes("has an unsupported format")
+        );
+        
+        if (onlyErrors) {
+          console.warn(`Document ${doc.originalName} only produced error messages`);
+          processingErrors.push(`Document ${doc.originalName} processing failed: ${content[0]}`);
+        }
         
         if (content.length === 0) {
           console.warn(`Document ${doc.originalName} processed but returned no content`);
@@ -50,19 +74,31 @@ export async function getProcessedDocuments(chatbotId: number): Promise<string[]
         
         processedContent.push(...formattedContent);
       } catch (docError) {
-        console.error(`Error processing individual document ${doc.originalName}:`, docError);
-        processedContent.push(`[From ${doc.originalName}] Error processing this document.`);
+        const errorMessage = docError instanceof Error ? docError.message : 'Unknown error';
+        console.error(`Error processing individual document ${doc.originalName}: ${errorMessage}`);
+        processingErrors.push(`Error processing ${doc.originalName}: ${errorMessage}`);
+        processedContent.push(`[From ${doc.originalName}] Error processing this document: ${errorMessage}`);
       }
     }
     
     console.log(`Total processed document chunks for chatbot ${chatbotId}: ${processedContent.length}`);
+    if (processingErrors.length > 0) {
+      console.warn(`Encountered ${processingErrors.length} document processing errors:`);
+      processingErrors.forEach((err, i) => {
+        if (i < 5) console.warn(`- ${err}`);
+      });
+      if (processingErrors.length > 5) {
+        console.warn(`... and ${processingErrors.length - 5} more errors`);
+      }
+    }
     
     // Cache the results
     documentContentCache.set(chatbotId, processedContent);
     
     return processedContent;
   } catch (error) {
-    console.error(`Error in getProcessedDocuments for chatbot ${chatbotId}:`, error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    console.error(`Error in getProcessedDocuments for chatbot ${chatbotId}: ${errorMessage}`);
     return [];
   }
 }
@@ -85,8 +121,8 @@ export async function getChatbotContext(chatbotId: number, query?: string): Prom
       throw new Error(`Chatbot not found: ${chatbotId}`);
     }
     
-    // Get processed documents
-    const documents = await getProcessedDocuments(chatbotId);
+    // Get processed documents - force refresh to ensure we have the latest data
+    const documents = await getProcessedDocuments(chatbotId, true);
     
     // Validate Slack channel before trying to get messages
     let slackMessages: any[] = [];
