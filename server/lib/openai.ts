@@ -478,9 +478,9 @@ export async function getChatbotResponse(
     // This avoids the "Unsupported parameter: 'temperature'" error with some models
     // Debug logs to trace model and temperature decisions
     console.log(`DEBUG - Model before temperature check: "${model}"`);
-    console.log(`DEBUG - Model type check: model !== "o1": ${model !== "o1"}, !model.includes("-preview"): ${!model.includes("-preview")}, !model.includes("o4-mini"): ${!model.includes("o4-mini")}`);
+    console.log(`DEBUG - Model type check: model !== "o1": ${model !== "o1"}, !model.includes("-preview"): ${!model.includes("-preview")}, !model.includes("o4-mini"): ${!model.includes("o4-mini")}, !model.includes("4.1-mini"): ${!model.includes("4.1-mini")}`);
     
-    if (model !== "o1" && !model.includes("-preview") && !model.includes("o4-mini")) {
+    if (model !== "o1" && !model.includes("-preview") && !model.includes("o4-mini") && !model.includes("4.1-mini")) {
       console.log(`DEBUG - Adding temperature parameter for model: ${model}`);
       requestParams.temperature = 0.3; // Restored to original value
     } else {
@@ -633,9 +633,9 @@ export async function generateWeeklySummary(slackMessages: string[], projectName
     
     // Only add temperature if we're using a model that supports it
     console.log(`DEBUG - Weekly Summary - Model before temperature check: "${model}"`);
-    console.log(`DEBUG - Weekly Summary - Model type check: model !== "o1": ${model !== "o1"}, !model.includes("-preview"): ${!model.includes("-preview")}, !model.includes("o4-mini"): ${!model.includes("o4-mini")}`);
+    console.log(`DEBUG - Weekly Summary - Model type check: model !== "o1": ${model !== "o1"}, !model.includes("-preview"): ${!model.includes("-preview")}, !model.includes("o4-mini"): ${!model.includes("o4-mini")}, !model.includes("4.1-mini"): ${!model.includes("4.1-mini")}`);
     
-    if (model !== "o1" && !model.includes("-preview") && !model.includes("o4-mini")) {
+    if (model !== "o1" && !model.includes("-preview") && !model.includes("o4-mini") && !model.includes("4.1-mini")) {
       console.log(`DEBUG - Weekly Summary - Adding temperature parameter for model: ${model}`);
       requestParams.temperature = 0.2; // Lower temperature for faster responses
     } else {
@@ -727,6 +727,7 @@ The summary MUST follow this EXACT format with numbered headings and bullet poin
     if (model.startsWith("gpt-")) {
       if (model === "gpt-4o") model = "o4";
       else if (model === "gpt-4o-mini") model = "o4-mini";
+      else if (model === "gpt-4.1-mini") model = "4.1-mini"; // New model released May 2025
       // Add other model conversions as needed
     }
     
@@ -749,9 +750,9 @@ The summary MUST follow this EXACT format with numbered headings and bullet poin
     
     // Only add temperature if we're using a model that supports it
     console.log(`DEBUG - Project Summary - Model before temperature check: "${model}"`);
-    console.log(`DEBUG - Project Summary - Model type check: model !== "o1": ${model !== "o1"}, !model.includes("-preview"): ${!model.includes("-preview")}, !model.includes("o4-mini"): ${!model.includes("o4-mini")}`);
+    console.log(`DEBUG - Project Summary - Model type check: model !== "o1": ${model !== "o1"}, !model.includes("-preview"): ${!model.includes("-preview")}, !model.includes("o4-mini"): ${!model.includes("o4-mini")}, !model.includes("4.1-mini"): ${!model.includes("4.1-mini")}`);
     
-    if (model !== "o1" && !model.includes("-preview") && !model.includes("o4-mini")) {
+    if (model !== "o1" && !model.includes("-preview") && !model.includes("o4-mini") && !model.includes("4.1-mini")) {
       console.log(`DEBUG - Project Summary - Adding temperature parameter for model: ${model}`);
       requestParams.temperature = 0.2; // Lower temperature for faster responses
     } else {
@@ -782,6 +783,7 @@ export async function testOpenAIConnection() {
     if (model.startsWith("gpt-")) {
       if (model === "gpt-4o") model = "o4";
       else if (model === "gpt-4o-mini") model = "o4-mini";
+      else if (model === "gpt-4.1-mini") model = "4.1-mini"; // New model released May 2025
       // Add other model conversions as needed
     }
     
@@ -798,7 +800,7 @@ export async function testOpenAIConnection() {
     
     // Add temperature parameter conditionally based on the model
     // Same check as in the other functions
-    if (model !== "o1" && !model.includes("-preview") && !model.includes("o4-mini")) {
+    if (model !== "o1" && !model.includes("-preview") && !model.includes("o4-mini") && !model.includes("4.1-mini")) {
       console.log(`Adding temperature parameter for test with model: ${model}`);
       requestParams.temperature = 0.3; // Restored to original value
     } else {
