@@ -1,0 +1,113 @@
+Migrate the existing codebase from the legacy `openai.Completion.create` / `openai.ChatCompletion.create` calls to the **Responses API** released March 2025. Follow OpenAI’s latest public documentation and the considerations listed below.
+
+### PROJECT‑SPECIFIC SETTINGS
+BACKEND_LANGUAGE = "Python 3.12"
+HTTP_STACK        = "FastAPI + Uvicorn"
+OPENAI_SDK        = "openai ≥ 1.23.0"          # ensure `pip install --upgrade openai`
+MODEL_NAME        = "gpt‑4o"                   # same model we already use
+STREAMING_UI      = true                       # we stream assistant output to the browser
+FUNCTION_TOOLS    = true                       # we expose custom tools (function calling)
+BUILTIN_TOOLS     = ["web_search_preview"]     # for real‑time info
+
+### HIGH‑LEVEL CHECKLIST
+1. **Upgrade dependencies**  
+   * Pin `openai>=1.23.0` which includes the `client.responses.*` helper.  
+   * Run `pip uninstall openai --yes && pip install --upgrade openai`.
+
+2. **Endpoint & SDK surface**  
+   * Replace `POST https://api.openai.com/v1/completions` or `/v1/chat/completions` with  
+     `POST https://api.openai.com/v1/responses`. :contentReference[oaicite:0]{index=0}  
+   * In the Python SDK switch from  
+     ```python
+     from openai import OpenAI ; client = OpenAI()
+     # OLD
+     client.chat.completions.create(...)
+     # NEW
+     client.responses.create(...)
+     ``` :contentReference[oaicite:1]{index=1}
+
+3. **Request‑payload changes**  
+   | Legacy field | New field (Responses API) | Notes |
+   |-------------|---------------------------|-------|
+   | `messages=[...]` (chat) or `prompt=`   | `input=` (string **or** message array) | If you already build an array of role messages, pass it unchanged to `input`. |
+   | *no* first‑class system prompt in Completions | `instructions="System‑level guidance"` | Equivalent to initial system role. |
+   | `max_tokens` | `max_output_tokens` | Same semantics. |
+   | `stream=True` | unchanged | See streaming section. |
+   | `functions=[...]` | `tools=[{"type":"function", ...}]` | Each function definition goes under the `tools` array. |
+   | *N/A* | `built‑in tools` (`web_search_preview`, `file_search`, `computer_use`) | Enabled by adding objects to `tools`. :contentReference[oaicite:2]{index=2} |
+   | `user=` | unchanged | Still recommended for rate‑limit attribution. |
+
+4. **Streaming semantics**  
+   * Set `stream=True`.  
+   * Iterate over **typed events**:  
+     `event.type == "response.output_text.delta"` → incremental text  
+     `event.type == "response.error"` → handle & log. :contentReference[oaicite:3]{index=3}  
+   * Your current SSE/WS frontend only needs a small adapter: instead of looking for `"choices[].delta.content"`, read `event.delta`.
+
+5. **Conversation state (multi‑turn)**  
+   * The Responses API is **stateful**; include `previous_response_id` to continue a thread when needed :contentReference[oaicite:4]{index=4}.  
+   * For stateless one‑shot calls you can omit it (same cost as Chat‑Completions).
+
+6. **Custom function calling → `tools` array**  
+   ```python
+   tools = [
+       {
+         "type": "function",
+         "name": "get_order_status",
+         "description": "Look up an order ID in our DB",
+         "parameters": { ... JSON Schema ... },
+         "strict": True
+       }
+   ]
+   response = client.responses.create(
+       model=MODEL_NAME,
+       input=user_messages,
+       tools=tools,
+       tool_choice="auto"
+   )
+   ``` :contentReference[oaicite:5]{index=5}
+
+7. **Built‑in tools** (optional but powerful)  
+   * **Web search** and **File search** are single‑line activations in the same `tools` array, e.g.  
+     `{"type": "web_search_preview"}`.  
+   * **Computer use** is currently preview‑only (`computer-use-preview` model) and requires `truncation="auto"` :contentReference[oaicite:6]{index=6}.
+
+8. **Error handling & retries**  
+   * The error schema is unchanged; keep exponential back‑off logic.  
+   * The most common migration error is HTTP 404 when the path is still `/chat/completions`.
+
+9. **Test plan**  
+   * Unit‑test each wrapper function; assert identical or better outputs.  
+   * Regression‑test streaming UI, function invocation flow, and any rate‑limit guards.
+
+10. **Deprecation awareness**  
+    * Chat‑Completions is still supported, but Responses API is its **superset** and the recommended default for new work. :contentReference[oaicite:7]{index=7}
+
+### WORK‑ITEMS FOR THE AGENT
+- [ ] Search codebase for `openai.Completion` or `.chat.completions` and refactor calls.
+- [ ] Introduce a thin helper `create_response(**kwargs)` mirroring the old `create_chat_completion` wrapper to minimise diff noise.
+- [ ] Update streaming handler to read `event.delta`.
+- [ ] Rename `max_tokens` → `max_output_tokens`.
+- [ ] Migrate existing `functions` → `tools` definitions.
+- [ ] Add smoke tests and update docs/README.
+
+### SAMPLE PYTHON SNIPPET (drop‑in replacement)
+```python
+from openai import OpenAI
+client = OpenAI()
+
+def ask_llm(messages, **opts):
+    response = client.responses.create(
+        model="gpt-4o",
+        instructions="You are a helpful assistant.",
+        input=messages,                # accept either str or list[dict]
+        tools=[                        # built‑in web search + our function
+            {"type": "web_search_preview"},
+            *opts.get("tools", [])
+        ],
+        temperature=opts.get("temperature", 0.7),
+        max_output_tokens=opts.get("max_output_tokens", 512),
+        stream=opts.get("stream", False),
+        user=opts.get("user")
+    )
+    return response
