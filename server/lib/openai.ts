@@ -500,6 +500,10 @@ export async function getChatbotResponse(
     console.log(`DEBUG - Final request parameters for chatbot response:`);
     console.log(JSON.stringify(requestParams, null, 2));
     
+    // Variable to store the response text
+    let responseText = '';
+    let responseObj = null;
+    
     // Check if we're streaming or not
     if (streamHandler) {
       // Add stream: true parameter for streaming responses
@@ -525,17 +529,17 @@ export async function getChatbotResponse(
       console.log(`OpenAI API streaming request completed in ${endTime - startTime}ms`);
       
       // Use the full text as the response
-      const responseText = fullText;
+      responseText = fullText;
     } else {
       // Non-streaming request (original behavior)
-      const response = await openai.responses.create(requestParams);
+      responseObj = await openai.responses.create(requestParams);
       
       const endTime = Date.now();
       console.log(`OpenAI API request completed in ${endTime - startTime}ms`);
 
       // Extract text content from the response using our helper function
       // This handles all possible output formats from the Responses API
-      var responseText = extractTextFromResponseOutput(response.output);
+      responseText = extractTextFromResponseOutput(responseObj.output);
     }
     console.log(`Response received with ${responseText.length} characters`);
     
@@ -587,7 +591,7 @@ export async function getChatbotResponse(
       console.log("Response contains [object Object] - extracting real content");
       
       // Try to capture the real text that might be in the response
-      const usableText = response.output ? extractUsableTextFromResponse(response.output) : null;
+      const usableText = responseObj && responseObj.output ? extractUsableTextFromResponse(responseObj.output) : null;
       
       if (usableText) {
         console.log(`Recovered usable text from response: "${usableText.substring(0, 50)}..."`);

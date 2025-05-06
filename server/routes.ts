@@ -1366,8 +1366,6 @@ You should **never make up information**. You may summarize or synthesize detail
         const streamHandler = (chunk: string) => {
           // Send the chunk as an SSE event
           res.write(`data: ${JSON.stringify({ content: chunk })}\n\n`);
-          // Make sure to flush the response to send the chunk immediately
-          res.flush && res.flush();
           
           // Accumulate the full content
           fullContent += chunk;
