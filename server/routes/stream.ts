@@ -1,5 +1,6 @@
 import express from "express";
 import OpenAI from "openai";
+import { ChatCompletionMessageParam } from "openai/resources/chat/completions";
 import { storage } from "../storage";
 import { chatMessageSchema } from "@shared/schema";
 import { getChatbotContext } from "../lib/vector-storage";
@@ -175,8 +176,8 @@ You should **never make up information**. You may summarize or synthesize detail
       citation: null,
     });
     
-    // Prepare the messages for OpenAI
-    const messages = [
+    // Prepare the messages for OpenAI with proper typing
+    const messages: ChatCompletionMessageParam[] = [
       { role: "system", content: systemPrompt }
     ];
     
