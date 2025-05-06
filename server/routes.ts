@@ -1,6 +1,7 @@
 import express, { type Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
 import { WebSocketServer, WebSocket } from "ws";
+import path from "path";
 import { storage } from "./storage";
 import { requireAuth, requireAdmin } from "./middleware/auth";
 import { upload } from "./middleware/multer";
@@ -48,6 +49,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // Initialize WebSocket server on a specific path to avoid conflicts with Vite's HMR
   const wss = new WebSocketServer({ server: httpServer, path: '/ws' });
+  
+  // Serve static files from the public directory
+  app.use(express.static(path.join(process.cwd(), 'public')));
   
   // WebSocket connection handler
   wss.on('connection', (ws) => {
