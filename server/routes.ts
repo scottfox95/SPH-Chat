@@ -17,6 +17,7 @@ import {
   OPENAI_MODELS
 } from "@shared/schema";
 import { getChatbotResponse, generateWeeklySummary, generateProjectSummary, testOpenAIConnection } from "./lib/openai";
+import { streamChatCompletion } from "./lib/chat-streaming";
 import { 
   getFormattedSlackMessages, 
   getWeeklySlackMessages, 

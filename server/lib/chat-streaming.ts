@@ -1,4 +1,5 @@
 import OpenAI from "openai";
+import type { ChatCompletionMessageParam } from "openai/resources/chat/completions";
 
 // Initialize OpenAI client with the API key from environment variables
 const openai = new OpenAI({
@@ -12,7 +13,7 @@ const openai = new OpenAI({
 export async function streamChatCompletion(
   req: any,
   res: any,
-  messages: { role: string, content: string }[],
+  messages: ChatCompletionMessageParam[],
   model: string = "gpt-4o"
 ): Promise<void> {
   // Set up SSE headers
@@ -66,7 +67,7 @@ export async function streamChatCompletion(
  * Get a chat completion without streaming
  */
 export async function getChatCompletion(
-  messages: { role: string, content: string }[],
+  messages: ChatCompletionMessageParam[],
   model: string = "gpt-4o"
 ): Promise<string> {
   try {
