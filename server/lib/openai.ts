@@ -208,23 +208,32 @@ export async function getChatbotResponse(
     
     const startTime = Date.now();
     
-    // Use the OpenAI Completion API with a combined prompt
-    const fullPrompt = `${systemPromptText}\n\n${userPromptText}`;
-    console.log(`Making OpenAI API request with ${fullPrompt.length} character prompt`);
+    // Use the OpenAI Chat Completions API with the latest model naming
+    // Reference: https://platform.openai.com/docs/api-reference/chat
+    console.log(`Making OpenAI Chat API request with model: ${model}`);
     
-    // We'll use the newer OpenAI text completion API
-    const response = await openai.completions.create({
-      model, // Pass the model directly (e.g. "o4") - OpenAI will handle it
-      prompt: fullPrompt,
-      max_tokens: 4000,
-      temperature: 0.3
+    // Prepare the messages - system prompt first, then user input
+    const response = await openai.chat.completions.create({
+      model, // Pass the model directly (e.g., "o4-mini", "o4", "o1") 
+      messages: [
+        {
+          role: "system",
+          content: systemPromptText
+        },
+        {
+          role: "user",
+          content: userPromptText
+        }
+      ],
+      temperature: 0.3,
+      max_tokens: 4000
     });
     
     const endTime = Date.now();
     console.log(`OpenAI API request completed in ${endTime - startTime}ms`);
 
-    // Extract text content from the response
-    const responseText = response.choices[0].text || "";
+    // Extract text content from the response using the Chat Completions API format
+    const responseText = response.choices[0]?.message?.content || "";
     console.log(`Response received with ${responseText.length} characters`);
     
     // Parse the citation if it exists
@@ -290,19 +299,27 @@ export async function generateWeeklySummary(slackMessages: string[], projectName
       ? settings.summaryPrompt.replace(/{{projectName}}/g, projectName)
       : defaultSummaryPrompt;
     
-    // Use the Responses API format according to OpenAI's documentation
-    const fullPrompt = `${summaryPrompt}\n\nHere are the Slack messages from the past week for the ${projectName} project:\n\n${slackMessages.join("\n\n")}`;
-    console.log(`Making OpenAI Beta Completions API request with ${fullPrompt.length} character prompt for weekly summary`);
+    // Use the Chat Completions API for consistent format
+    console.log(`Making OpenAI Chat Completions API request for weekly summary for ${projectName}`);
     
-    const response = await openai.beta.completions.create({
+    const response = await openai.chat.completions.create({
       model,
-      prompt: fullPrompt,
+      messages: [
+        {
+          role: "system",
+          content: summaryPrompt
+        },
+        {
+          role: "user",
+          content: `Here are the Slack messages from the past week for the ${projectName} project:\n\n${slackMessages.join("\n\n")}`
+        }
+      ],
       max_tokens: 4000,
       temperature: 0.5
     });
 
     // Extract text content from the response
-    return response.choices[0].text || "Unable to generate summary.";
+    return response.choices[0]?.message?.content || "Unable to generate summary.";
   } catch (error) {
     console.error("OpenAI API error:", error);
     return `<p>Error generating weekly summary for ${projectName}. Please try again later.</p>`;
