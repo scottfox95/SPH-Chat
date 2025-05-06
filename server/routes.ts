@@ -871,9 +871,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const id = parseInt(req.params.id);
       
-      const document = await storage.getDocuments(0).then(docs => 
-        docs.find(doc => doc.id === id)
-      );
+      // Get all chatbots first to search through all documents
+      const chatbots = await storage.getChatbots();
+      let document = null;
+      
+      // Search through all chatbots' documents to find the one with the matching ID
+      for (const chatbot of chatbots) {
+        const docs = await storage.getDocuments(chatbot.id);
+        const foundDoc = docs.find(doc => doc.id === id);
+        
+        if (foundDoc) {
+          document = foundDoc;
+          break;
+        }
+      }
       
       if (!document) {
         return res.status(404).json({ message: "Document not found" });
