@@ -1191,15 +1191,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   
   // Regular chat API endpoint
-  // True token-by-token streaming endpoint using OpenAI Responses API
+  // True token-by-token streaming endpoint (uses the same API as the chat endpoint)
   apiRouter.post("/chatbots/:id/stream", async (req, res) => {
-    // Set up SSE headers
-    res.setHeader("Content-Type", "text/event-stream; charset=utf-8");
-    res.setHeader("Cache-Control", "no-cache, no-transform");
-    res.setHeader("Connection", "keep-alive");
-    res.socket?.setTimeout(0);  // Replit proxy: no idle timeout
-    res.flushHeaders?.();
-    
     try {
       const chatbotId = parseInt(req.params.id);
       const { message, token } = chatMessageSchema.parse(req.body);
@@ -1208,8 +1201,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const chatbot = await storage.getChatbot(chatbotId);
       
       if (!chatbot) {
-        res.write(`event: error\ndata: ${JSON.stringify({ message: "Chatbot not found" })}\n\n`);
-        return res.end();
+        return res.status(404).json({ message: "Chatbot not found" });
       }
       
       // Check if this is a test page
@@ -1428,7 +1420,7 @@ You should **never make up information**. You may summarize or synthesize detail
         res.end();
       }
     }
-  });
+  // Regular chat API endpoint with workaround streaming
   
   // Regular chat API endpoint with workaround streaming
   apiRouter.post("/chatbots/:id/chat", async (req, res) => {
