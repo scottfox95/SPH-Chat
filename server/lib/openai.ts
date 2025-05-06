@@ -5,59 +5,112 @@ import { Settings } from "@shared/schema";
 // Helper function to extract text content from Responses API output
 // This handles all the different output formats that might be returned
 function extractTextFromResponseOutput(output: any): string {
+  console.log("DEBUG - Response output type:", typeof output);
+  console.log("DEBUG - Response output (stringified):", JSON.stringify(output, null, 2));
+  
   // Case 1: output is a simple string
   if (typeof output === 'string') {
+    console.log("DEBUG - Output is a string, returning directly");
     return output;
   }
   
   // Case 2: output is null or undefined
   if (!output) {
+    console.log("DEBUG - Output is null/undefined, returning empty string");
     return "";
   }
   
   // Case 3: output is an array of content items
   if (Array.isArray(output)) {
+    console.log("DEBUG - Output is an array of length:", output.length);
     if (output.length === 0) return "";
     
     // Try to find text content in the array items
     for (const item of output) {
       // Check for text property (ResponseOutputMessage)
       if (item && typeof item === 'object' && 'text' in item && typeof item.text === 'string') {
+        console.log("DEBUG - Found text property in array item");
         return item.text;
       }
       
       // Check for content property 
       if (item && typeof item === 'object' && 'content' in item && typeof item.content === 'string') {
+        console.log("DEBUG - Found content property in array item");
         return item.content;
       }
       
       // Check for value property (some response types use this)
       if (item && typeof item === 'object' && 'value' in item && typeof item.value === 'string') {
+        console.log("DEBUG - Found value property in array item");
         return item.value;
       }
     }
     
     // If we couldn't find specific properties, stringify the first item as fallback
+    console.log("DEBUG - No recognizable properties in array items, using first item as string");
     return String(output[0] || "");
   }
   
   // Case 4: output is an object with content property
   if (output && typeof output === 'object') {
+    console.log("DEBUG - Output is an object, checking for known properties");
+    
     if ('content' in output && typeof output.content === 'string') {
+      console.log("DEBUG - Found content property");
       return output.content;
     }
     
     if ('text' in output && typeof output.text === 'string') {
+      console.log("DEBUG - Found text property");
       return output.text;
     }
     
     if ('value' in output && typeof output.value === 'string') {
+      console.log("DEBUG - Found value property");
       return output.value;
+    }
+    
+    // Special case for o4 model which sometimes returns nested structure
+    if ('text' in output && typeof output.text === 'object') {
+      console.log("DEBUG - Found text as object, trying to extract text from it");
+      const textObj = output.text;
+      if (textObj && 'value' in textObj && typeof textObj.value === 'string') {
+        return textObj.value;
+      }
+    }
+    
+    // Special case for JSON output from models like gpt-4o
+    try {
+      const jsonString = JSON.stringify(output);
+      console.log("DEBUG - Stringified output:", jsonString.substring(0, 100) + "...");
+      
+      // If it looks like a JSON object with text/value/content, try to extract
+      if (jsonString.includes('"text":') || jsonString.includes('"value":') || jsonString.includes('"content":')) {
+        console.log("DEBUG - JSON contains text/value/content properties, attempting extraction");
+        
+        // Try various paths that might contain the content
+        if (output.value && typeof output.value === 'string') return output.value;
+        if (output.message && output.message.content) return output.message.content;
+        if (output.choices && output.choices[0] && output.choices[0].message) {
+          return output.choices[0].message.content || "";
+        }
+      }
+    } catch (error) {
+      console.log("DEBUG - Error stringifying output:", error);
     }
   }
   
   // Case 5: Fallback - convert to string as last resort
-  return String(output || "");
+  console.log("DEBUG - Using fallback string conversion");
+  try {
+    if (typeof output === 'object') {
+      return JSON.stringify(output) || "";
+    }
+    return String(output || "");
+  } catch (error) {
+    console.error("Error converting output to string:", error);
+    return "Error extracting response text";
+  }
 }
 
 // Initialize OpenAI client with the API key from environment variables
@@ -300,11 +353,14 @@ export async function getChatbotResponse(
       console.log(`DEBUG - Skipping temperature parameter for model: ${model}`);
     }
     
-    // Only add web_search_preview tool if using a model that supports it
-    // o4-mini does not support web_search_preview
+    // We discovered web_search_preview isn't supported with o4 in the Responses API
+    // Let's skip this tool for now as it causes errors
+    // This is different from the Chat Completions API where gpt-4o does support web_search_preview
+    /*
     if (model === "o4" || model === "gpt-4o") {
-      requestParams.tools = [{"type": "web_search_preview"}]; // Add web search capability
+      requestParams.tools = [{"type": "web_search_preview"}]; 
     }
+    */
     // Log the entire request parameters for debugging
     console.log(`DEBUG - Final request parameters for chatbot response:`);
     console.log(JSON.stringify(requestParams, null, 2));
@@ -324,9 +380,25 @@ export async function getChatbotResponse(
     const citationRegex = /\[(?:From |Source: |Slack(?: message)?,? )?(.*?)\]/;
     const match = responseText?.match(citationRegex);
     
+    // Check if responseText is valid and not just "[object Object]"
+    if (responseText === "[object Object]" || responseText.includes("object Object")) {
+      console.log("WARNING: Response contains [object Object] instead of actual content. This indicates a formatting error.");
+      // We'll set a proper response content later
+    }
+    
     if (match && match[1]) {
-      citation = match[1];
-      console.log(`Citation found in standard format: ${citation}`);
+      // Make sure citation is a string
+      if (typeof match[1] === 'string') {
+        citation = match[1];
+        console.log(`Citation found in standard format: ${citation}`);
+      } else {
+        console.log(`Citation found but in unexpected format: ${typeof match[1]}`);
+        try {
+          citation = JSON.stringify(match[1]);
+        } catch (e) {
+          citation = "Citation extraction error";
+        }
+      }
     } else if (settings?.includeSourceDetails) {
       // Try to extract source details from the response text using patterns like "according to X on Y"
       const sourceRegex = /according to ([^\.]+)/i;
@@ -339,11 +411,20 @@ export async function getChatbotResponse(
       }
     }
     
-    let finalContent = responseText || "I wasn't able to find that information in the project files or Slack messages.";
+    // Handle the case where responseText is invalid
+    let finalContent = "";
     
-    // Only strip the citation if it's in the standard bracket format
-    if (match && match[0]) {
-      finalContent = finalContent.replace(citationRegex, "").trim();
+    if (responseText === "[object Object]" || responseText.includes("object Object")) {
+      // We detected an object being stringified incorrectly
+      console.log("Converting invalid [object Object] to readable message");
+      finalContent = "I'm having trouble processing the information. Let me try again with a more specific question.";
+    } else {
+      finalContent = responseText || "I wasn't able to find that information in the project files or Slack messages.";
+      
+      // Only strip the citation if it's in the standard bracket format
+      if (match && match[0]) {
+        finalContent = finalContent.replace(citationRegex, "").trim();
+      }
     }
     
     console.log(`Returning response with content length: ${finalContent.length}`);
@@ -411,10 +492,13 @@ export async function generateWeeklySummary(slackMessages: string[], projectName
       console.log(`DEBUG - Weekly Summary - Skipping temperature parameter for model: ${model}`);
     }
     
-    // Only add web_search_preview tool if using a model that supports it
+    // We discovered web_search_preview isn't supported with o4 in the Responses API
+    // Let's skip this tool for now as it causes errors
+    /*
     if (model === "o4" || model === "gpt-4o") {
-      requestParams.tools = [{"type": "web_search_preview"}]; // Add web search capability
+      requestParams.tools = [{"type": "web_search_preview"}];
     }
+    */
     
     const response = await openai.responses.create(requestParams);
 
@@ -505,10 +589,13 @@ The summary MUST follow this EXACT format with numbered headings and bullet poin
       max_output_tokens: 4000
     };
     
-    // Only add web_search_preview tool if using a model that supports it
+    // We discovered web_search_preview isn't supported with o4 in the Responses API
+    // Let's skip this tool for now as it causes errors
+    /*
     if (model === "o4" || model === "gpt-4o") {
-      requestParams.tools = [{"type": "web_search_preview"}]; // Add web search capability
+      requestParams.tools = [{"type": "web_search_preview"}];
     }
+    */
     
     // Only add temperature if we're using a model that supports it
     console.log(`DEBUG - Project Summary - Model before temperature check: "${model}"`);

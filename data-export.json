@@ -320,6 +320,24 @@
           "isUserMessage": false,
           "citation": "Error",
           "createdAt": "2025-05-06T15:11:10.891Z"
+        },
+        {
+          "id": 235,
+          "chatbotId": 22,
+          "userId": null,
+          "content": "what happened last week",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T15:15:30.782Z"
+        },
+        {
+          "id": 236,
+          "chatbotId": 22,
+          "userId": null,
+          "content": "",
+          "isUserMessage": false,
+          "citation": "object Object",
+          "createdAt": "2025-05-06T15:15:53.487Z"
         }
       ],
       "summaries": [
@@ -1867,6 +1885,24 @@
           "isUserMessage": false,
           "citation": "Error",
           "createdAt": "2025-05-06T15:08:48.075Z"
+        },
+        {
+          "id": 237,
+          "chatbotId": 41,
+          "userId": null,
+          "content": "what happened last week?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T15:16:30.014Z"
+        },
+        {
+          "id": 238,
+          "chatbotId": 41,
+          "userId": null,
+          "content": "",
+          "isUserMessage": false,
+          "citation": "object Object",
+          "createdAt": "2025-05-06T15:16:47.599Z"
         }
       ],
       "summaries": [],
@@ -2172,6 +2208,6 @@
       "asanaProjects": []
     }
   ],
-  "exportedAt": "2025-05-06T15:14:19.627Z",
+  "exportedAt": "2025-05-06T15:19:52.152Z",
   "exportedBy": "SPH Chat Migration Utility"
 }
