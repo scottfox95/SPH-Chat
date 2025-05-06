@@ -11,7 +11,7 @@ function extractUsableTextFromResponse(output: any): string | null {
     // If output is an array (typical for the Responses API)
     if (Array.isArray(output)) {
       // Look for message objects which contain the actual response
-      const messageItems = output.filter(item => item && typeof item === 'object' && item.type === 'message');
+      const messageItems = output.filter((item: any) => item && typeof item === 'object' && item.type === 'message');
       
       if (messageItems.length > 0) {
         for (const msg of messageItems) {
@@ -19,9 +19,9 @@ function extractUsableTextFromResponse(output: any): string | null {
           if (msg.content && Array.isArray(msg.content)) {
             // Extract text from output_text items
             const textItems = msg.content
-              .filter(item => item && typeof item === 'object' && item.type === 'output_text')
-              .map(item => item.text)
-              .filter(Boolean);
+              .filter((item: any) => item && typeof item === 'object' && item.type === 'output_text')
+              .map((item: any) => item.text)
+              .filter((item: any) => Boolean(item));
             
             if (textItems.length > 0) {
               return textItems.join("\n");
@@ -36,7 +36,7 @@ function extractUsableTextFromResponse(output: any): string | null {
       
       if (textMatches && textMatches.length > 0) {
         return textMatches
-          .map(match => {
+          .map((match: string) => {
             const textContent = match.replace(/"text":"/, '').replace(/"$/, '');
             return textContent;
           })
@@ -150,7 +150,7 @@ function extractTextFromResponseOutput(output: any): string {
             }
             return '';
           })
-          .filter((text: any) => text)
+          .filter((text: string) => Boolean(text))
           .join('\n');
         
         if (allText) {
