@@ -2,9 +2,10 @@ import OpenAI from "openai";
 import { storage } from "../storage";
 import { Settings } from "@shared/schema";
 
-// Initialize OpenAI client
-const openai = new OpenAI({ 
-  apiKey: process.env.OPENAI_API_KEY || "sk-placeholder"
+// Initialize OpenAI client with the API key from environment variables
+// the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY
 });
 
 // Helper to get the settings

@@ -94,9 +94,19 @@ export async function getChatbotContext(chatbotId: number, query?: string): Prom
 }
 
 /**
- * Clears the document cache for a chatbot
+ * Clears the document cache for a specific chatbot
  * @param chatbotId The ID of the chatbot
  */
 export function clearDocumentCache(chatbotId: number): void {
   documentContentCache.delete(chatbotId);
+  console.log(`Document cache cleared for chatbot ${chatbotId}`);
+}
+
+/**
+ * Clears the entire document cache
+ * Useful when documents are added/deleted from the global knowledge base view
+ */
+export function clearAllDocumentCache(): void {
+  documentContentCache.clear();
+  console.log("All document caches cleared");
 }

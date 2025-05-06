@@ -32,7 +32,7 @@ import {
   formatTasksForChatbot
 } from "./lib/asana";
 import { processDocument } from "./lib/document-processor";
-import { getChatbotContext, clearDocumentCache } from "./lib/vector-storage";
+import { getChatbotContext, clearDocumentCache, clearAllDocumentCache } from "./lib/vector-storage";
 import { sendSummaryEmail, sendProjectSummaryEmail } from "./lib/email";
 import * as fs from "fs";
 import { nanoid } from "nanoid";
@@ -783,8 +783,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         uploadedById: user.id
       });
       
-      // Clear document cache for this chatbot
+      // Clear document cache for this specific chatbot
       clearDocumentCache(chatbotId);
+      
+      // Also clear the global document cache to ensure consistency
+      clearAllDocumentCache();
       
       res.status(201).json(document);
     } catch (error) {
