@@ -286,7 +286,8 @@
           // Determine payload based on API version
           const payload = {
             message,
-            stream: useStreamingCheckbox.checked
+            stream: useStreamingCheckbox.checked,
+            token: "public-token" // Add a token for authentication
           };
           
           // For the chat endpoint, we need to specify the stream flag
