@@ -4,6 +4,7 @@ import { z } from "zod";
 
 // Available OpenAI models
 export const OPENAI_MODELS = [
+  "gpt-4.1-mini", // New model released May 2025
   "o4-mini", // New o4-mini model (note: OpenAI uses o4-mini, not gpt-4o-mini)
   "gpt-4o",
   "gpt-4-turbo",

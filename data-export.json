@@ -2047,6 +2047,24 @@
           "isUserMessage": false,
           "citation": "No specific source available",
           "createdAt": "2025-05-06T15:36:28.253Z"
+        },
+        {
+          "id": 259,
+          "chatbotId": 41,
+          "userId": null,
+          "content": "what happened yesterday?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T15:39:58.855Z"
+        },
+        {
+          "id": 260,
+          "chatbotId": 41,
+          "userId": null,
+          "content": "Yesterday, May 5, 2025, the following occurred at 16 Bonnie (per Slack):\n\n• 13:00 – Walk-through of the house with Dimitri (Slack)  \n• 15:41 – Aaron Wilson confirmed a premium Pella package is en route directly from Brennan; team to watch for shipper updates (Slack, 2025-05-05 15:41:42 ET)  \n• Stationary exterior door was repaired but its latch was missing; a replacement latch has been ordered (Slack)  \n• Request placed to remove the porta-john from site (Slack)  \n• Brandon returned in the afternoon to install proper",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-06T15:40:35.054Z"
         }
       ],
       "summaries": [],
@@ -2388,6 +2406,6 @@
       "asanaProjects": []
     }
   ],
-  "exportedAt": "2025-05-06T15:38:29.204Z",
+  "exportedAt": "2025-05-06T15:42:43.633Z",
   "exportedBy": "SPH Chat Migration Utility"
 }
