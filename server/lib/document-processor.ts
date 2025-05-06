@@ -51,22 +51,56 @@ export async function extractTextFromPDF(filePath: string): Promise<string[]> {
  */
 export async function extractDataFromExcel(filePath: string): Promise<string[]> {
   try {
+    console.log(`Starting Excel extraction for: ${path.basename(filePath)}`);
+    
     const workbook = new ExcelJS.Workbook();
+    console.log(`Excel workbook created, beginning file read...`);
+    
+    // Read the Excel file
     await workbook.xlsx.readFile(filePath);
+    console.log(`Excel file loaded successfully`);
+    
+    // Count the total sheets to see if we need to handle empty ones differently
+    const totalSheets = workbook.worksheets.length;
+    console.log(`Excel file contains ${totalSheets} sheets`);
+    
+    if (totalSheets === 0) {
+      console.warn(`Excel file has no sheets: ${path.basename(filePath)}`);
+      return [`[Excel Document] No sheets found in this Excel file.`];
+    }
     
     const sheets: string[] = [];
+    let emptySheetsCount = 0;
+    let processedSheetsCount = 0;
     
     workbook.eachSheet((worksheet, sheetId) => {
+      processedSheetsCount++;
       const sheetName = worksheet.name;
+      console.log(`Processing Excel sheet: "${sheetName}" (${sheetId})`);
+      
+      // Count rows in the sheet
+      const rowCount = worksheet.rowCount;
+      const columnCount = worksheet.columnCount;
+      console.log(`Sheet dimensions: ${rowCount} rows, ${columnCount} columns`);
+      
+      if (rowCount === 0 || columnCount === 0) {
+        console.warn(`Empty sheet found: "${sheetName}" - no content to extract`);
+        emptySheetsCount++;
+        return;
+      }
+      
       const rows: string[] = [];
+      let cellsProcessed = 0;
       
       worksheet.eachRow((row, rowNumber) => {
         const cells: string[] = [];
         
-        row.eachCell((cell, colNumber) => {
+        row.eachCell({ includeEmpty: false }, (cell, colNumber) => {
+          cellsProcessed++;
           const colLetter = String.fromCharCode(64 + colNumber);
           const cellRef = `${colLetter}${rowNumber}`;
-          cells.push(`${cellRef}: ${cell.text}`);
+          const cellValue = cell.text || cell.value?.toString() || '';
+          cells.push(`${cellRef}: ${cellValue}`);
         });
         
         if (cells.length > 0) {
@@ -74,14 +108,32 @@ export async function extractDataFromExcel(filePath: string): Promise<string[]> 
         }
       });
       
+      console.log(`Processed ${cellsProcessed} cells in sheet "${sheetName}"`);
+      
       if (rows.length > 0) {
-        sheets.push(`[Excel Sheet: ${sheetName}]\n${rows.join("\n")}`);
+        const sheetContent = `[Excel Sheet: ${sheetName}]\n${rows.join("\n")}`;
+        sheets.push(sheetContent);
+        console.log(`Sheet "${sheetName}" processed with ${rows.length} rows of content`);
+      } else {
+        console.warn(`No content extracted from sheet "${sheetName}"`);
+        emptySheetsCount++;
       }
     });
     
+    // Log summary statistics
+    console.log(`Excel processing complete for ${path.basename(filePath)}:`);
+    console.log(`- Total sheets: ${totalSheets}`);
+    console.log(`- Sheets with content: ${sheets.length}`);
+    console.log(`- Empty sheets: ${emptySheetsCount}`);
+    
+    if (sheets.length === 0) {
+      console.warn(`No content extracted from any sheet in: ${path.basename(filePath)}`);
+      return [`[Excel Document] No extractable content found in this Excel file.`];
+    }
+    
     return sheets;
   } catch (error) {
-    console.error("Error extracting data from Excel:", error);
+    console.error(`Error extracting data from Excel ${path.basename(filePath)}:`, error);
     return [`Error processing Excel file: ${path.basename(filePath)}`];
   }
 }
@@ -150,7 +202,10 @@ export async function processDocument(filePath: string, fileType: string): Promi
       result = await extractTextFromPDF(filePath);
     } else if (
       fileType === "application/vnd.ms-excel" ||
-      fileType === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      fileType === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" ||
+      fileType === "application/octet-stream" || // Sometimes Excel files are detected as generic binary
+      filePath.toLowerCase().endsWith('.xlsx') || 
+      filePath.toLowerCase().endsWith('.xls')
     ) {
       console.log(`Processing Excel document: ${path.basename(filePath)}`);
       result = await extractDataFromExcel(filePath);
