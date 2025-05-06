@@ -445,6 +445,60 @@
           "isUserMessage": false,
           "citation": "No specific source available",
           "createdAt": "2025-05-06T17:27:31.111Z"
+        },
+        {
+          "id": 474,
+          "chatbotId": 30,
+          "userId": null,
+          "content": "Has the wood been delivered",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T17:33:23.135Z"
+        },
+        {
+          "id": 475,
+          "chatbotId": 30,
+          "userId": null,
+          "content": "Yes, the wood (IPE) has been delivered. A message states: \"Received IPE Wood from Miami at 11:45. Nathan Alejandro cleaned up garage and site before delivery, called Alex and A.D. to help offloading.\" \n\nThere was also an earlier note that the Brazilian lumber from Miami was scheduled to be delivered, and the team was to assist with unloading.\n\n— From Slack messages, 2025-04-29 and earlier.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-06T17:33:25.269Z"
+        },
+        {
+          "id": 476,
+          "chatbotId": 30,
+          "userId": 4,
+          "content": "Has the wood been delivered",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T17:33:31.800Z"
+        },
+        {
+          "id": 477,
+          "chatbotId": 30,
+          "userId": null,
+          "content": "I wasn’t able to find information about wood delivery in the available project files or messages.",
+          "isUserMessage": false,
+          "citation": "",
+          "createdAt": "2025-05-06T17:33:32.852Z"
+        },
+        {
+          "id": 478,
+          "chatbotId": 30,
+          "userId": null,
+          "content": "was the wood delivered?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T17:34:17.245Z"
+        },
+        {
+          "id": 479,
+          "chatbotId": 30,
+          "userId": null,
+          "content": "Yes, the wood was delivered. Specifically, Ipe wood from Brazilian Lumber in Miami was delivered at 11:45. Nathan Alejandro cleaned up the garage and site before the delivery and called Alex and A.D. to help with offloading. The delivery contact is based in Atlanta with multiple hauling vehicles. \n\nAdditionally, there was earlier mention that the Ipe wood was ordered and milling would take about 5 business days. There was also a scheduled delivery of Brazilian lumber from Miami for the next day at 8 am, requiring someone from the team to be present for unloading, with Ron Z. as the point of contact.\n\n**Source:** Slack messages including the one with \"Received IPE Wood from Miami at 11:45...\" and related delivery notes.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-06T17:34:20.035Z"
         }
       ],
       "summaries": [
@@ -4458,6 +4512,6 @@
       "asanaProjects": []
     }
   ],
-  "exportedAt": "2025-05-06T17:32:33.542Z",
+  "exportedAt": "2025-05-06T17:35:05.944Z",
   "exportedBy": "SPH Chat Migration Utility"
 }
