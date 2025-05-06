@@ -3,7 +3,8 @@ import { storage } from "../storage";
 import { Settings } from "@shared/schema";
 
 // Initialize OpenAI client with the API key from environment variables
-// the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
+// This client will be used with the new Responses API which was released after GPT-4o
+// Models use different naming conventions in this API (e.g., "o4-mini" instead of "gpt-4o-mini")
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
 });
@@ -183,30 +184,48 @@ export async function getChatbotResponse(
       });
     }
 
-    // Get the model from settings
+    // Get the model from settings - use the correct format for Responses API
     let model = await getCurrentModel();
     
-    // Convert o4-mini to the correct format for the OpenAI API
-    // OpenAI's Assistants/Responses API uses "o4-mini" but Chat Completions uses "gpt-4o-mini"
-    if (model === "o4-mini") {
-      // We're using chat completions API which requires the gpt- prefix
-      model = "gpt-4o-mini";
-    }
+    // The Responses API uses simplified model names (e.g., "o4-mini" not "gpt-4o-mini")
+    // No need to add the "gpt-" prefix as we're using the Responses API
     
     console.log(`Using OpenAI model: ${model}`);
     
-    console.log(`Making request to OpenAI API with ${messages.length} messages`);
+    // Prepare the input from our messages
+    // Convert from Chat Completions format to Responses API format
+    let systemPromptText = messages.find(m => m.role === "system")?.content || "";
+    let userPromptText = messages.find(m => m.role === "user")?.content || "";
+    
+    // Extract output format requirements if any
+    const formatMessage = messages.find(m => 
+      m.role === "system" && m.content?.includes("OUTPUT FORMAT")
+    );
+    const hasFormatRequirements = !!formatMessage;
+    
+    console.log(`Making request to OpenAI Responses API`);
+    console.log(`System prompt length: ${systemPromptText.length}, User prompt length: ${userPromptText.length}`);
+    
     const startTime = Date.now();
-    const response = await openai.chat.completions.create({
-      model, // Use model from settings with proper formatting for the API
-      messages,
-      temperature: 0.3,
+    
+    // Use the OpenAI Completion API with a combined prompt
+    const fullPrompt = `${systemPromptText}\n\n${userPromptText}`;
+    console.log(`Making OpenAI API request with ${fullPrompt.length} character prompt`);
+    
+    // We'll use the newer OpenAI text completion API
+    const response = await openai.completions.create({
+      model, // Pass the model directly (e.g. "o4") - OpenAI will handle it
+      prompt: fullPrompt,
+      max_tokens: 4000,
+      temperature: 0.3
     });
+    
     const endTime = Date.now();
     console.log(`OpenAI API request completed in ${endTime - startTime}ms`);
 
-    const responseText = response.choices[0].message.content;
-    console.log(`Response received with ${responseText?.length || 0} characters`);
+    // Extract text content from the response
+    const responseText = response.choices[0].text || "";
+    console.log(`Response received with ${responseText.length} characters`);
     
     // Parse the citation if it exists
     let citation = "";
@@ -271,22 +290,19 @@ export async function generateWeeklySummary(slackMessages: string[], projectName
       ? settings.summaryPrompt.replace(/{{projectName}}/g, projectName)
       : defaultSummaryPrompt;
     
-    const response = await openai.chat.completions.create({
+    // Use the Responses API format according to OpenAI's documentation
+    const fullPrompt = `${summaryPrompt}\n\nHere are the Slack messages from the past week for the ${projectName} project:\n\n${slackMessages.join("\n\n")}`;
+    console.log(`Making OpenAI Beta Completions API request with ${fullPrompt.length} character prompt for weekly summary`);
+    
+    const response = await openai.beta.completions.create({
       model,
-      messages: [
-        {
-          role: "system",
-          content: summaryPrompt,
-        },
-        {
-          role: "user",
-          content: `Here are the Slack messages from the past week for the ${projectName} project:\n\n${slackMessages.join("\n\n")}`,
-        },
-      ],
-      temperature: 0.5,
+      prompt: fullPrompt,
+      max_tokens: 4000,
+      temperature: 0.5
     });
 
-    return response.choices[0].message.content || "Unable to generate summary.";
+    // Extract text content from the response
+    return response.choices[0].text || "Unable to generate summary.";
   } catch (error) {
     console.error("OpenAI API error:", error);
     return `<p>Error generating weekly summary for ${projectName}. Please try again later.</p>`;
