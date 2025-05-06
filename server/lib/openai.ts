@@ -289,8 +289,15 @@ export async function getChatbotResponse(
     
     // Only add temperature if we're using a model that supports it
     // This avoids the "Unsupported parameter: 'temperature'" error with some models
-    if (model !== "o1" && !model.includes("-preview")) {
+    // Debug logs to trace model and temperature decisions
+    console.log(`DEBUG - Model before temperature check: "${model}"`);
+    console.log(`DEBUG - Model type check: model !== "o1": ${model !== "o1"}, !model.includes("-preview"): ${!model.includes("-preview")}, !model.includes("o4-mini"): ${!model.includes("o4-mini")}`);
+    
+    if (model !== "o1" && !model.includes("-preview") && !model.includes("o4-mini")) {
+      console.log(`DEBUG - Adding temperature parameter for model: ${model}`);
       requestParams.temperature = 0.3;
+    } else {
+      console.log(`DEBUG - Skipping temperature parameter for model: ${model}`);
     }
     
     // Only add web_search_preview tool if using a model that supports it
@@ -298,6 +305,9 @@ export async function getChatbotResponse(
     if (model === "o4" || model === "gpt-4o") {
       requestParams.tools = [{"type": "web_search_preview"}]; // Add web search capability
     }
+    // Log the entire request parameters for debugging
+    console.log(`DEBUG - Final request parameters for chatbot response:`);
+    console.log(JSON.stringify(requestParams, null, 2));
     
     const response = await openai.responses.create(requestParams);
     
@@ -391,8 +401,14 @@ export async function generateWeeklySummary(slackMessages: string[], projectName
     };
     
     // Only add temperature if we're using a model that supports it
-    if (model !== "o1" && !model.includes("-preview")) {
+    console.log(`DEBUG - Weekly Summary - Model before temperature check: "${model}"`);
+    console.log(`DEBUG - Weekly Summary - Model type check: model !== "o1": ${model !== "o1"}, !model.includes("-preview"): ${!model.includes("-preview")}, !model.includes("o4-mini"): ${!model.includes("o4-mini")}`);
+    
+    if (model !== "o1" && !model.includes("-preview") && !model.includes("o4-mini")) {
+      console.log(`DEBUG - Weekly Summary - Adding temperature parameter for model: ${model}`);
       requestParams.temperature = 0.5;
+    } else {
+      console.log(`DEBUG - Weekly Summary - Skipping temperature parameter for model: ${model}`);
     }
     
     // Only add web_search_preview tool if using a model that supports it
@@ -495,8 +511,14 @@ The summary MUST follow this EXACT format with numbered headings and bullet poin
     }
     
     // Only add temperature if we're using a model that supports it
-    if (model !== "o1" && !model.includes("-preview")) {
+    console.log(`DEBUG - Project Summary - Model before temperature check: "${model}"`);
+    console.log(`DEBUG - Project Summary - Model type check: model !== "o1": ${model !== "o1"}, !model.includes("-preview"): ${!model.includes("-preview")}, !model.includes("o4-mini"): ${!model.includes("o4-mini")}`);
+    
+    if (model !== "o1" && !model.includes("-preview") && !model.includes("o4-mini")) {
+      console.log(`DEBUG - Project Summary - Adding temperature parameter for model: ${model}`);
       requestParams.temperature = 0.3; // Lower temperature for more consistent results
+    } else {
+      console.log(`DEBUG - Project Summary - Skipping temperature parameter for model: ${model}`);
     }
     
     const response = await openai.responses.create(requestParams);
