@@ -510,18 +510,58 @@ export async function getChatbotResponse(
       requestParams.stream = true;
 
       let fullText = '';
+      // @ts-ignore - Ignoring type error as the OpenAI SDK types are not properly aligned with streaming functionality
       const stream = await openai.responses.create(requestParams);
       
       // Process the stream
+      // @ts-ignore - Type checking doesn't properly handle the OpenAI streaming response type
       for await (const chunk of stream) {
-        if (chunk && chunk.output && Array.isArray(chunk.output)) {
-          // Extract text from each chunk
-          const textChunk = extractTextFromResponseOutput(chunk.output);
-          if (textChunk) {
-            fullText += textChunk;
-            // Send the chunk to the handler
-            streamHandler(textChunk);
+        console.log("DEBUG - Stream chunk received:", JSON.stringify(chunk));
+        
+        // Handle different response formats that may come from OpenAI
+        let textChunk = '';
+        
+        if (chunk.output) {
+          // New responses format
+          if (Array.isArray(chunk.output)) {
+            textChunk = extractTextFromResponseOutput(chunk.output);
+          } else if (typeof chunk.output === 'string') {
+            textChunk = chunk.output;
+          } else if (chunk.output && typeof chunk.output === 'object') {
+            // Try to extract from object
+            if (chunk.output.text) {
+              textChunk = chunk.output.text;
+            } else if (chunk.output.content) {
+              textChunk = chunk.output.content;
+            }
           }
+        } else if (chunk.choices && Array.isArray(chunk.choices) && chunk.choices.length > 0) {
+          // Chat completions format
+          const choice = chunk.choices[0];
+          if (choice.delta && choice.delta.content) {
+            textChunk = choice.delta.content;
+          } else if (choice.message && choice.message.content) {
+            textChunk = choice.message.content;
+          }
+        } else if (typeof chunk === 'string') {
+          // Direct string
+          textChunk = chunk;
+        } else if (chunk.content) {
+          // Simple content object
+          textChunk = chunk.content;
+        } else if (chunk.text) {
+          // Text property
+          textChunk = chunk.text;
+        }
+        
+        // If we found any text, process it
+        if (textChunk) {
+          console.log(`DEBUG - Extracted text chunk: "${textChunk.substring(0, 50)}..."`);
+          fullText += textChunk;
+          // Send the chunk to the handler
+          streamHandler(textChunk);
+        } else {
+          console.log("DEBUG - No text chunk found in this part of the stream");
         }
       }
       
