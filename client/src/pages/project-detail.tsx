@@ -11,9 +11,11 @@ import {
   Edit, 
   Trash,
   FolderOpen, 
-  MessageSquare 
+  MessageSquare,
+  PlusCircle
 } from "lucide-react";
 import CreateChatbotForm from "@/components/dashboard/create-chatbot-form";
+import ExistingChatbotsSelector from "@/components/dashboard/existing-chatbots-selector";
 import ChatbotCard from "@/components/shared/chatbot-card";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
@@ -24,26 +26,45 @@ export default function ProjectDetail() {
   const params = useParams<{ id: string }>();
   const [_, setLocation] = useLocation();
   const [createModalOpen, setCreateModalOpen] = useState(false);
+  const [addExistingOpen, setAddExistingOpen] = useState(false);
   const [selectedChatbot, setSelectedChatbot] = useState<any>(null);
   const [shareModalOpen, setShareModalOpen] = useState(false);
   const { toast } = useToast();
   
   const projectId = parseInt(params.id);
   
+  interface Project {
+    id: number;
+    name: string;
+    description: string | null;
+    createdById: number;
+    createdAt: string;
+  }
+
+  interface Chatbot {
+    id: number;
+    name: string;
+    slackChannelId: string;
+    projectId: number | null;
+    isActive: boolean;
+    createdAt: string;
+    [key: string]: any; // for any additional properties
+  }
+
   // Fetch project details
   const { 
-    data: project, 
+    data: project = {} as Project, 
     isLoading: isLoadingProject,
     error: projectError
-  } = useQuery({
+  } = useQuery<Project>({
     queryKey: [`/api/projects/${projectId}`],
   });
   
   // Fetch chatbots for this project
   const { 
-    data: chatbots = [], 
+    data: chatbots = [] as Chatbot[], 
     isLoading: isLoadingChatbots 
-  } = useQuery({
+  } = useQuery<Chatbot[]>({
     queryKey: [`/api/projects/${projectId}/chatbots`],
   });
   
@@ -151,6 +172,15 @@ export default function ProjectDetail() {
             </Button>
             
             <Button 
+              variant="outline"
+              onClick={() => setAddExistingOpen(true)}
+              disabled={isLoading}
+            >
+              <PlusCircle className="h-4 w-4 mr-2" />
+              Add Existing Chatbots
+            </Button>
+            
+            <Button 
               onClick={() => setCreateModalOpen(true)}
               disabled={isLoading}
               className="bg-[#D2B48C] hover:bg-[#D2B48C]/90"
@@ -228,6 +258,14 @@ export default function ProjectDetail() {
           chatbot={selectedChatbot}
         />
       )}
+
+      {/* Add Existing Chatbots Modal */}
+      <ExistingChatbotsSelector
+        isOpen={addExistingOpen}
+        onClose={() => setAddExistingOpen(false)}
+        projectId={projectId}
+        projectName={project?.name || ""}
+      />
     </>
   );
 }
