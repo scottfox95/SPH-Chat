@@ -283,6 +283,132 @@
           "isUserMessage": false,
           "citation": "No specific source available",
           "createdAt": "2025-05-06T16:52:49.551Z"
+        },
+        {
+          "id": 456,
+          "chatbotId": 30,
+          "userId": null,
+          "content": "what happened yesterday",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T17:18:16.056Z"
+        },
+        {
+          "id": 457,
+          "chatbotId": 30,
+          "userId": null,
+          "content": "I don't have information about what happened yesterday. Could you please specify what event or topic you're referring to? That way, I can try to help you better.",
+          "isUserMessage": false,
+          "citation": "",
+          "createdAt": "2025-05-06T17:18:17.445Z"
+        },
+        {
+          "id": 458,
+          "chatbotId": 30,
+          "userId": null,
+          "content": "what project can I ask you about",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T17:18:41.944Z"
+        },
+        {
+          "id": 459,
+          "chatbotId": 30,
+          "userId": null,
+          "content": "You can ask me about a wide range of homebuilding and construction projects, such as:\n\n- Building a new house or addition\n- Renovating or remodeling rooms (kitchen, bathroom, basement, etc.)\n- Installing or repairing roofing, siding, or flooring\n- Plumbing, electrical, or HVAC work\n- Landscaping and outdoor structures (decks, patios, fences)\n- Energy efficiency upgrades and insulation\n- Interior design and finishing touches\n\nFeel free to ask about any specific project you're planning or interested in, and I can provide guidance, tips, and information!",
+          "isUserMessage": false,
+          "citation": "",
+          "createdAt": "2025-05-06T17:18:44.773Z"
+        },
+        {
+          "id": 460,
+          "chatbotId": 30,
+          "userId": null,
+          "content": "has any wood been delivered",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T17:20:17.435Z"
+        },
+        {
+          "id": 461,
+          "chatbotId": 30,
+          "userId": null,
+          "content": "Yes, wood has been delivered. Specifically, IPE wood from Brazilian Lumber in Miami was received on site at 11:45. The delivery was coordinated with Nathan Alejandro who cleaned up the garage and site before the delivery and called Alex and A.D. to assist with offloading.\n\nThere is also a note that additional IPE wood will be delivered tomorrow at 8 am in a \"hot shot\" truck and will require someone from the team to be at the delivery to help unload, with Ron Z as the point of contact.\n\nThis confirms wood deliveries have occurred and are ongoing.\n\nSource: Slack, multiple messages mentioning IPE wood delivery and coordination.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-06T17:20:20.872Z"
+        },
+        {
+          "id": 462,
+          "chatbotId": 30,
+          "userId": null,
+          "content": "has any wood been delivered",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T17:20:34.308Z"
+        },
+        {
+          "id": 463,
+          "chatbotId": 30,
+          "userId": null,
+          "content": "I don't have information about any wood deliveries. You may want to check with the delivery coordinator or the supplier directly to confirm if any wood has been delivered.",
+          "isUserMessage": false,
+          "citation": "",
+          "createdAt": "2025-05-06T17:20:35.269Z"
+        },
+        {
+          "id": 464,
+          "chatbotId": 30,
+          "userId": null,
+          "content": "has any wood been delivered",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T17:20:49.481Z"
+        },
+        {
+          "id": 465,
+          "chatbotId": 30,
+          "userId": null,
+          "content": "Yes, wood has been delivered. Specifically, Ipe wood from Brazilian Lumber in Miami was received onsite at 11:45, with the delivery coordinated by Nathan Alejandro who helped clean up the garage and site before delivery and called the team to help offload. This delivery was done by a contact out of Atlanta with multiple hauling vehicles. \n\nAdditionally, there is mention that Ipe wood was ordered and milling takes about 5 business days, and a scheduled delivery of Brazilian lumber via a \"hot shot\" truck from Miami is planned for tomorrow at 8 am, requiring someone from the team to assist.\n\n(Source: Slack messages around 4/16 to 5/1/2025)",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-06T17:20:51.664Z"
+        },
+        {
+          "id": 466,
+          "chatbotId": 30,
+          "userId": null,
+          "content": "has any wood been delivered",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T17:21:26.184Z"
+        },
+        {
+          "id": 467,
+          "chatbotId": 30,
+          "userId": null,
+          "content": "I don't have any information about wood delivery in the current context. You might want to check with the delivery team or review recent shipment records to confirm if any wood has been delivered.",
+          "isUserMessage": false,
+          "citation": "",
+          "createdAt": "2025-05-06T17:21:27.579Z"
+        },
+        {
+          "id": 468,
+          "chatbotId": 30,
+          "userId": null,
+          "content": "has any wood been delivered",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T17:22:10.327Z"
+        },
+        {
+          "id": 469,
+          "chatbotId": 30,
+          "userId": null,
+          "content": "Yes, wood has been delivered. Specifically, Ipe wood from Brazilian Lumber in Miami was received at 11:45 AM. The delivery was coordinated with Nathan Alejandro, who cleaned up the garage and site before delivery and called Alex and A.D. to help with offloading.\n\nAdditionally, there is mention that Ipe wood was ordered and milling will take about 5 business days, and another delivery of Brazilian lumber from Miami is scheduled for tomorrow at 8 AM, requiring onsite help for unloading.\n\nThis confirms that wood deliveries have occurred and are planned for the site.\n\n(Slack, messages around 4/25/2025 to 5/1/2025)",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-06T17:22:16.135Z"
         }
       ],
       "summaries": [
@@ -4296,6 +4422,6 @@
       "asanaProjects": []
     }
   ],
-  "exportedAt": "2025-05-06T17:17:08.995Z",
+  "exportedAt": "2025-05-06T17:24:37.332Z",
   "exportedBy": "SPH Chat Migration Utility"
 }

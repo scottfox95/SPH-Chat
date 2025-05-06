@@ -1212,11 +1212,71 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { documents, slackMessages } = await getChatbotContext(chatbotId);
       console.log(`Chatbot ${chatbotId} documents count: ${documents.length}`);
       
-      // Get system prompt (use custom prompt if available, otherwise use default)
-      let systemPrompt = "You are a helpful homebuilding assistant that provides clear and accurate information.";
-      if (chatbot.systemPrompt) {
-        systemPrompt = chatbot.systemPrompt;
+      // Prepare the context sources for the prompt
+      let contextSources = [
+        "1. The project's initial documentation (budget, timeline, notes, plans, spreadsheets).",
+        "2. The Slack message history from the project's dedicated Slack channel."
+      ];
+      
+      // Prepare asana tasks data if available
+      let hasAsanaProjects = false;
+      if (chatbot.asanaProjectId) {
+        hasAsanaProjects = true;
+        contextSources.push("3. The project's Asana tasks and their status.");
       }
+      
+      // Fetch settings to check for a custom system prompt template
+      const appSettings = await storage.getSettings();
+      
+      // Default system prompt template (same as chat endpoint)
+      const defaultSystemPromptTemplate = `You are a helpful assistant named SPH ChatBot assigned to the {{chatbotName}} homebuilding project. Your role is to provide project managers and executives with accurate, up-to-date answers about this construction project by referencing the following sources of information:
+
+{{contextSources}}
+
+Your job is to answer questions clearly and concisely. Always cite your source. If your answer comes from:
+- a document: mention the filename and, if available, the page or section.
+- Slack: mention the date and approximate time of the Slack message.
+{{asanaNote}}
+
+IMPORTANT FOR DOCUMENT PROCESSING:
+1. You have access to project documents that contain critical information. Always search these documents thoroughly.
+2. Pay special attention to content that begins with "SPREADSHEET DATA:" - this contains budget information, schedules, and project specifications.
+3. For spreadsheet content, look for relevant cells and their values (e.g., "B12: $45,000") to answer budget and financial questions.
+4. When answering questions about costs, timelines, or specifications, always prioritize information from documents over conversations.
+5. Mention cell references (like "cell A5") when citing spreadsheet data to help users find the information.
+
+IMPORTANT FOR ASANA TASKS: 
+1. When users ask about "tasks", "Asana", "project status", "overdue", "upcoming", "progress", or other task-related information, ALWAYS prioritize checking the Asana data.
+2. Pay special attention to content that begins with "ASANA TASK DATA:" in your provided context. This contains valuable task information.
+3. When answering Asana-related questions, directly reference the tasks, including their status, due dates, and assignees if available.
+4. Try to match the user's question with the most relevant task view (all tasks, overdue tasks, upcoming tasks, or completed tasks).
+
+Respond using complete sentences. If the information is unavailable, say:  
+"I wasn't able to find that information in the project files or messages."
+
+You should **never make up information**. You may summarize or synthesize details if the answer is spread across multiple sources.`;
+      
+      // Determine which system prompt to use
+      // 1. Use chatbot-specific prompt if available
+      // 2. Fall back to app-wide prompt from settings if available
+      // 3. Use default prompt as last resort
+      let systemPromptTemplate;
+      
+      if (chatbot.systemPrompt) {
+        // Use chatbot-specific system prompt
+        console.log(`Using custom system prompt for chatbot ${chatbotId}`);
+        systemPromptTemplate = chatbot.systemPrompt;
+      } else {
+        // Fall back to app-wide prompt or default
+        console.log(`Using app-wide system prompt for chatbot ${chatbotId}`);
+        systemPromptTemplate = appSettings?.responseTemplate || defaultSystemPromptTemplate;
+      }
+      
+      // Replace variables in the template
+      let systemPrompt = systemPromptTemplate
+        .replace(/{{chatbotName}}/g, chatbot.name)
+        .replace(/{{contextSources}}/g, contextSources.join("\n"))
+        .replace(/{{asanaNote}}/g, chatbot.asanaProjectId ? "- Asana: always mention that the information comes from Asana project tasks and include the project name." : "");
       
       // Prepare asana tasks data if available
       let asanaTasks: string[] = [];
