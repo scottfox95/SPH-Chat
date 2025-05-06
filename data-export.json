@@ -194,6 +194,24 @@
           "isUserMessage": false,
           "citation": "No specific source available",
           "createdAt": "2025-05-06T14:05:29.718Z"
+        },
+        {
+          "id": 195,
+          "chatbotId": 22,
+          "userId": null,
+          "content": "how much did we spend on the engineered floor system",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T14:13:18.047Z"
+        },
+        {
+          "id": 196,
+          "chatbotId": 22,
+          "userId": null,
+          "content": "I wasn't able to find that information in the available project files or messages.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-06T14:13:21.083Z"
         }
       ],
       "summaries": [
@@ -1795,6 +1813,24 @@
           "isUserMessage": false,
           "citation": "No specific source available",
           "createdAt": "2025-05-06T14:05:01.279Z"
+        },
+        {
+          "id": 197,
+          "chatbotId": 43,
+          "userId": null,
+          "content": "How much rent did we receive in May",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T14:13:57.117Z"
+        },
+        {
+          "id": 198,
+          "chatbotId": 43,
+          "userId": null,
+          "content": "I wasn't able to find that information in the available project files or messages.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-06T14:13:58.044Z"
         }
       ],
       "summaries": [],
@@ -1802,6 +1838,6 @@
       "asanaProjects": []
     }
   ],
-  "exportedAt": "2025-05-06T14:10:46.138Z",
+  "exportedAt": "2025-05-06T14:16:37.552Z",
   "exportedBy": "SPH Chat Migration Utility"
 }
