@@ -1,5 +1,6 @@
 import express, { type Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
+import { WebSocketServer, WebSocket } from "ws";
 import { storage } from "./storage";
 import { requireAuth, requireAdmin } from "./middleware/auth";
 import { upload } from "./middleware/multer";
@@ -42,6 +43,30 @@ import { hashPassword } from "./lib/password-utils";
 import { asyncHandler } from "./lib/api-utils";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Create HTTP server
+  const httpServer = createServer(app);
+  
+  // Initialize WebSocket server on a specific path to avoid conflicts with Vite's HMR
+  const wss = new WebSocketServer({ server: httpServer, path: '/ws' });
+  
+  // WebSocket connection handler
+  wss.on('connection', (ws) => {
+    console.log('WebSocket client connected');
+    
+    ws.on('message', (message) => {
+      try {
+        const data = JSON.parse(message.toString());
+        console.log('WebSocket message received:', data);
+      } catch (error) {
+        console.error('Error parsing WebSocket message:', error);
+      }
+    });
+    
+    ws.on('close', () => {
+      console.log('WebSocket client disconnected');
+    });
+  });
+  
   // Set up authentication
   const { isAuthenticated } = setupAuth(app);
   
@@ -1158,10 +1183,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
+  // Regular chat API endpoint
   apiRouter.post("/chatbots/:id/chat", async (req, res) => {
     try {
       const chatbotId = parseInt(req.params.id);
-      const { message, token } = chatMessageSchema.parse(req.body);
+      const { message, token, stream } = chatMessageSchema.parse(req.body);
       
       // Check if token is valid
       const chatbot = await storage.getChatbot(chatbotId);
@@ -1326,28 +1352,85 @@ You should **never make up information**. You may summarize or synthesize detail
         citation: null,
       });
       
-      // Get response from OpenAI
-      const aiResponse = await getChatbotResponse(
-        message,
-        documents,
-        [...slackMessages, ...asanaTasks],
-        systemPrompt,
-        chatbot.outputFormat
-      );
-      
-      // Save AI response
-      const botMessage = await storage.createMessage({
-        chatbotId,
-        userId: null,
-        content: aiResponse.content,
-        isUserMessage: false,
-        citation: aiResponse.citation,
-      });
-      
-      res.json({
-        userMessage,
-        botMessage,
-      });
+      // If streaming is requested and this is an HTTP request (not WebSocket)
+      if (stream === true) {
+        // Set up SSE (Server-Sent Events)
+        res.setHeader('Content-Type', 'text/event-stream');
+        res.setHeader('Cache-Control', 'no-cache');
+        res.setHeader('Connection', 'keep-alive');
+        
+        let fullContent = '';
+        let citation = '';
+        
+        // Define the stream handler function
+        const streamHandler = (chunk: string) => {
+          // Send the chunk as an SSE event
+          res.write(`data: ${JSON.stringify({ content: chunk })}\n\n`);
+          // Make sure to flush the response to send the chunk immediately
+          res.flush && res.flush();
+          
+          // Accumulate the full content
+          fullContent += chunk;
+        };
+        
+        try {
+          // Call OpenAI with streaming
+          const aiResponse = await getChatbotResponse(
+            message,
+            documents,
+            [...slackMessages, ...asanaTasks],
+            systemPrompt,
+            chatbot.outputFormat,
+            streamHandler // Pass the stream handler
+          );
+          
+          // Update the full content and citation from the response
+          if (aiResponse) {
+            fullContent = aiResponse.content;
+            citation = aiResponse.citation;
+          }
+          
+          // Save the complete AI response to the database
+          const botMessage = await storage.createMessage({
+            chatbotId,
+            userId: null,
+            content: fullContent,
+            isUserMessage: false,
+            citation: citation,
+          });
+          
+          // Send the completion event
+          res.write(`data: ${JSON.stringify({ done: true, messageId: botMessage.id })}\n\n`);
+          res.end();
+        } catch (error) {
+          console.error("Error in streaming mode:", error);
+          res.write(`data: ${JSON.stringify({ error: "Error generating response" })}\n\n`);
+          res.end();
+        }
+      } else {
+        // Non-streaming mode (original behavior)
+        const aiResponse = await getChatbotResponse(
+          message,
+          documents,
+          [...slackMessages, ...asanaTasks],
+          systemPrompt,
+          chatbot.outputFormat
+        );
+        
+        // Save AI response
+        const botMessage = await storage.createMessage({
+          chatbotId,
+          userId: null,
+          content: aiResponse.content,
+          isUserMessage: false,
+          citation: aiResponse.citation,
+        });
+        
+        res.json({
+          userMessage,
+          botMessage,
+        });
+      }
     } catch (error) {
       if (error instanceof z.ZodError) {
         return res.status(400).json({ message: error.errors[0].message });
@@ -2109,8 +2192,6 @@ You should **never make up information**. You may summarize or synthesize detail
   // Register API routes
   app.use("/api", apiRouter);
   
-  // Create HTTP server
-  const httpServer = createServer(app);
-  
+  // Return the HTTP server that was created at the top of this function
   return httpServer;
 }

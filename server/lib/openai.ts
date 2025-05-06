@@ -276,7 +276,8 @@ export async function getChatbotResponse(
   documents: string[],
   slackMessages: any[],
   systemPrompt: string,
-  outputFormat?: string | null
+  outputFormat?: string | null,
+  streamHandler?: (chunk: string) => void // New stream handler parameter
 ) {
   try {
     console.log(`getChatbotResponse called with prompt: "${prompt.substring(0, 50)}..."`);
@@ -499,14 +500,43 @@ export async function getChatbotResponse(
     console.log(`DEBUG - Final request parameters for chatbot response:`);
     console.log(JSON.stringify(requestParams, null, 2));
     
-    const response = await openai.responses.create(requestParams);
-    
-    const endTime = Date.now();
-    console.log(`OpenAI API request completed in ${endTime - startTime}ms`);
+    // Check if we're streaming or not
+    if (streamHandler) {
+      // Add stream: true parameter for streaming responses
+      requestParams.stream = true;
 
-    // Extract text content from the response using our helper function
-    // This handles all possible output formats from the Responses API
-    const responseText = extractTextFromResponseOutput(response.output);
+      let fullText = '';
+      const stream = await openai.responses.create(requestParams);
+      
+      // Process the stream
+      for await (const chunk of stream) {
+        if (chunk && chunk.output && Array.isArray(chunk.output)) {
+          // Extract text from each chunk
+          const textChunk = extractTextFromResponseOutput(chunk.output);
+          if (textChunk) {
+            fullText += textChunk;
+            // Send the chunk to the handler
+            streamHandler(textChunk);
+          }
+        }
+      }
+      
+      const endTime = Date.now();
+      console.log(`OpenAI API streaming request completed in ${endTime - startTime}ms`);
+      
+      // Use the full text as the response
+      const responseText = fullText;
+    } else {
+      // Non-streaming request (original behavior)
+      const response = await openai.responses.create(requestParams);
+      
+      const endTime = Date.now();
+      console.log(`OpenAI API request completed in ${endTime - startTime}ms`);
+
+      // Extract text content from the response using our helper function
+      // This handles all possible output formats from the Responses API
+      var responseText = extractTextFromResponseOutput(response.output);
+    }
     console.log(`Response received with ${responseText.length} characters`);
     
     // Parse the citation if it exists
