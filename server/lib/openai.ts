@@ -470,7 +470,7 @@ export async function getChatbotResponse(
       model,
       instructions: systemPromptText, // System prompt becomes instructions
       input: userPromptText,          // User message becomes input
-      max_output_tokens: 4000,        // Renamed from max_tokens
+      max_output_tokens: 1000,        // Reduced from 4000 to improve response time
     };
     
     // Only add temperature if we're using a model that supports it
@@ -481,7 +481,7 @@ export async function getChatbotResponse(
     
     if (model !== "o1" && !model.includes("-preview") && !model.includes("o4-mini")) {
       console.log(`DEBUG - Adding temperature parameter for model: ${model}`);
-      requestParams.temperature = 0.3;
+      requestParams.temperature = 0.1; // Reduced from 0.3 to improve response time
     } else {
       console.log(`DEBUG - Skipping temperature parameter for model: ${model}`);
     }
@@ -626,7 +626,7 @@ export async function generateWeeklySummary(slackMessages: string[], projectName
       model,
       instructions: summaryPrompt,
       input: `Here are the Slack messages from the past week for the ${projectName} project:\n\n${slackMessages.join("\n\n")}`,
-      max_output_tokens: 4000
+      max_output_tokens: 1500
     };
     
     // Only add temperature if we're using a model that supports it
@@ -635,7 +635,7 @@ export async function generateWeeklySummary(slackMessages: string[], projectName
     
     if (model !== "o1" && !model.includes("-preview") && !model.includes("o4-mini")) {
       console.log(`DEBUG - Weekly Summary - Adding temperature parameter for model: ${model}`);
-      requestParams.temperature = 0.5;
+      requestParams.temperature = 0.2; // Lower temperature for faster responses
     } else {
       console.log(`DEBUG - Weekly Summary - Skipping temperature parameter for model: ${model}`);
     }
@@ -734,7 +734,7 @@ The summary MUST follow this EXACT format with numbered headings and bullet poin
       model,
       instructions: projectSummaryPrompt,
       input: `Here are the individual summaries from different aspects of the ${projectName} project:\n\n${chatbotSummarySection}\n\nHere are the raw messages from the past week for additional context if needed:\n\n${formattedMessages}`,
-      max_output_tokens: 4000
+      max_output_tokens: 1500
     };
     
     // We discovered web_search_preview isn't supported with o4 in the Responses API
@@ -751,7 +751,7 @@ The summary MUST follow this EXACT format with numbered headings and bullet poin
     
     if (model !== "o1" && !model.includes("-preview") && !model.includes("o4-mini")) {
       console.log(`DEBUG - Project Summary - Adding temperature parameter for model: ${model}`);
-      requestParams.temperature = 0.3; // Lower temperature for more consistent results
+      requestParams.temperature = 0.2; // Lower temperature for faster responses
     } else {
       console.log(`DEBUG - Project Summary - Skipping temperature parameter for model: ${model}`);
     }
@@ -798,7 +798,7 @@ export async function testOpenAIConnection() {
     // Same check as in the other functions
     if (model !== "o1" && !model.includes("-preview") && !model.includes("o4-mini")) {
       console.log(`Adding temperature parameter for test with model: ${model}`);
-      requestParams.temperature = 0.3;
+      requestParams.temperature = 0.1; // Lower temperature for faster responses
     } else {
       console.log(`Skipping temperature parameter for test with model: ${model}`);
     }
