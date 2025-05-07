@@ -108,8 +108,12 @@ function extractTextFromResponseOutput(output: any): string {
             if (contentItem.type === 'output_text' && contentItem.text) {
               // Clean up any code fence markers that might be present
               let cleanText = contentItem.text;
-              cleanText = cleanText.replace(/^```html\s*/i, '');
+              // Remove opening code fence with language specifier (```html, ```javascript, etc.)
+              cleanText = cleanText.replace(/^```[a-z]*\s*/i, '');
+              // Remove closing code fence
               cleanText = cleanText.replace(/```\s*$/i, '');
+              // Remove any remaining code fence markers that might be in the middle
+              cleanText = cleanText.replace(/```[a-z]*\s*/gi, '');
               
               console.log(`DEBUG - Found output_text content: "${cleanText.substring(0, 50)}..."`);
               return cleanText;
@@ -126,8 +130,12 @@ function extractTextFromResponseOutput(output: any): string {
         console.log("DEBUG - Found text property in array item");
         // Clean up code fence markers
         let cleanText = item.text;
-        cleanText = cleanText.replace(/^```html\s*/i, '');
+        // Remove opening code fence with language specifier (```html, ```javascript, etc.)
+        cleanText = cleanText.replace(/^```[a-z]*\s*/i, '');
+        // Remove closing code fence
         cleanText = cleanText.replace(/```\s*$/i, '');
+        // Remove any remaining code fence markers that might be in the middle
+        cleanText = cleanText.replace(/```[a-z]*\s*/gi, '');
         return cleanText;
       }
       
@@ -136,8 +144,12 @@ function extractTextFromResponseOutput(output: any): string {
         console.log("DEBUG - Found content property in array item");
         // Clean up code fence markers
         let cleanContent = item.content;
-        cleanContent = cleanContent.replace(/^```html\s*/i, '');
+        // Remove opening code fence with language specifier (```html, ```javascript, etc.)
+        cleanContent = cleanContent.replace(/^```[a-z]*\s*/i, '');
+        // Remove closing code fence
         cleanContent = cleanContent.replace(/```\s*$/i, '');
+        // Remove any remaining code fence markers that might be in the middle
+        cleanContent = cleanContent.replace(/```[a-z]*\s*/gi, '');
         return cleanContent;
       }
       
@@ -146,8 +158,12 @@ function extractTextFromResponseOutput(output: any): string {
         console.log("DEBUG - Found value property in array item");
         // Clean up code fence markers
         let cleanValue = item.value;
-        cleanValue = cleanValue.replace(/^```html\s*/i, '');
+        // Remove opening code fence with language specifier (```html, ```javascript, etc.)
+        cleanValue = cleanValue.replace(/^```[a-z]*\s*/i, '');
+        // Remove closing code fence
         cleanValue = cleanValue.replace(/```\s*$/i, '');
+        // Remove any remaining code fence markers that might be in the middle
+        cleanValue = cleanValue.replace(/```[a-z]*\s*/gi, '');
         return cleanValue;
       }
     }
@@ -207,17 +223,41 @@ function extractTextFromResponseOutput(output: any): string {
     
     if ('content' in output && typeof output.content === 'string') {
       console.log("DEBUG - Found content property");
-      return output.content;
+      // Clean up code fence markers
+      let cleanContent = output.content;
+      // Remove opening code fence with language specifier (```html, ```javascript, etc.)
+      cleanContent = cleanContent.replace(/^```[a-z]*\s*/i, '');
+      // Remove closing code fence
+      cleanContent = cleanContent.replace(/```\s*$/i, '');
+      // Remove any remaining code fence markers that might be in the middle
+      cleanContent = cleanContent.replace(/```[a-z]*\s*/gi, '');
+      return cleanContent;
     }
     
     if ('text' in output && typeof output.text === 'string') {
       console.log("DEBUG - Found text property");
-      return output.text;
+      // Clean up code fence markers
+      let cleanText = output.text;
+      // Remove opening code fence with language specifier (```html, ```javascript, etc.)
+      cleanText = cleanText.replace(/^```[a-z]*\s*/i, '');
+      // Remove closing code fence
+      cleanText = cleanText.replace(/```\s*$/i, '');
+      // Remove any remaining code fence markers that might be in the middle
+      cleanText = cleanText.replace(/```[a-z]*\s*/gi, '');
+      return cleanText;
     }
     
     if ('value' in output && typeof output.value === 'string') {
       console.log("DEBUG - Found value property");
-      return output.value;
+      // Clean up code fence markers
+      let cleanValue = output.value;
+      // Remove opening code fence with language specifier (```html, ```javascript, etc.)
+      cleanValue = cleanValue.replace(/^```[a-z]*\s*/i, '');
+      // Remove closing code fence
+      cleanValue = cleanValue.replace(/```\s*$/i, '');
+      // Remove any remaining code fence markers that might be in the middle
+      cleanValue = cleanValue.replace(/```[a-z]*\s*/gi, '');
+      return cleanValue;
     }
     
     // Special case for o4 model which sometimes returns nested structure

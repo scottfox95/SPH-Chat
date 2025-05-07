@@ -13,8 +13,12 @@ export function convertHtmlToSlackFormat(html: string): string {
   if (!html) return '';
   
   // Remove any code fence markers that might be in the output
-  html = html.replace(/^```html\s*/i, '');
+  // Remove opening code fence with language specifier (```html, ```javascript, etc.)
+  html = html.replace(/^```[a-z]*\s*/i, '');
+  // Remove closing code fence
   html = html.replace(/```\s*$/i, '');
+  // Remove any remaining code fence markers that might be in the middle
+  html = html.replace(/```[a-z]*\s*/gi, '');
   
   // Check if the content is already plain text (no HTML tags)
   if (!/<[a-z][\s\S]*>/i.test(html)) {
