@@ -273,8 +273,32 @@ export class MemStorage implements IStorage {
     return Array.from(this.projects.values());
   }
   
+  // Alias for getAllProjects for scheduler
+  async getAllProjects(): Promise<Project[]> {
+    return this.getProjects();
+  }
+  
   async getProject(id: number): Promise<Project | undefined> {
     return this.projects.get(id);
+  }
+  
+  async getProjectSummarySettings(projectId: number): Promise<{ slackChannelId: string | null } | undefined> {
+    try {
+      // Get the last project summary to use its settings
+      const projectSummariesList = Array.from(this.projectSummaries.values())
+        .filter(summary => summary.projectId === projectId)
+        .sort((a, b) => b.sentAt.getTime() - a.sentAt.getTime()); // Latest first
+        
+      if (projectSummariesList.length > 0) {
+        const lastSummary = projectSummariesList[0];
+        return { slackChannelId: lastSummary.slackChannelId || null };
+      }
+      
+      return undefined;
+    } catch (error) {
+      console.error(`Failed to get project summary settings for project with id ${projectId}:`, error);
+      return undefined;
+    }
   }
   
   async createProject(project: InsertProject): Promise<Project> {
@@ -629,6 +653,16 @@ export class MemStorage implements IStorage {
       .slice(-limit);
   }
   
+  async getChatbotMessagesByDateRange(chatbotId: number, startDate: Date, endDate: Date): Promise<Message[]> {
+    return Array.from(this.messages.values())
+      .filter((message) => message.chatbotId === chatbotId)
+      .filter((message) => {
+        // Check if message is within the date range
+        return message.createdAt >= startDate && message.createdAt <= endDate;
+      })
+      .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime()); // Oldest first
+  }
+  
   async createMessage(message: InsertMessage): Promise<Message> {
     const id = this.currentMessageId++;
     const now = new Date();
@@ -671,6 +705,19 @@ export class MemStorage implements IStorage {
         includeUserInSource: false,
         responseTemplate: null,
         summaryPrompt: null,
+        // Scheduler settings
+        enableDailySchedule: false,
+        dailyScheduleTime: "08:00",
+        enableWeeklySchedule: false,
+        weeklyScheduleDay: "Monday",
+        weeklyScheduleTime: "08:00",
+        // SMTP settings
+        smtpEnabled: false,
+        smtpHost: null,
+        smtpPort: "587",
+        smtpUser: null,
+        smtpPass: null,
+        smtpFrom: null,
         createdAt: now,
         updatedAt: now
       };
@@ -691,6 +738,19 @@ export class MemStorage implements IStorage {
         includeUserInSource: data.includeUserInSource ?? false,
         responseTemplate: data.responseTemplate ?? null,
         summaryPrompt: data.summaryPrompt ?? null,
+        // Scheduler settings
+        enableDailySchedule: data.enableDailySchedule ?? false,
+        dailyScheduleTime: data.dailyScheduleTime ?? "08:00",
+        enableWeeklySchedule: data.enableWeeklySchedule ?? false,
+        weeklyScheduleDay: data.weeklyScheduleDay ?? "Monday",
+        weeklyScheduleTime: data.weeklyScheduleTime ?? "08:00",
+        // SMTP settings
+        smtpEnabled: data.smtpEnabled ?? false,
+        smtpHost: data.smtpHost ?? null,
+        smtpPort: data.smtpPort ?? "587",
+        smtpUser: data.smtpUser ?? null,
+        smtpPass: data.smtpPass ?? null,
+        smtpFrom: data.smtpFrom ?? null,
         createdAt: now,
         updatedAt: now
       };

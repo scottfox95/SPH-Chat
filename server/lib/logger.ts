@@ -2,21 +2,51 @@
  * Simple logger utility
  */
 export const logger = {
-  info: (message: string, ...args: any[]) => {
-    console.log(`[INFO] ${message}`, ...args);
+  /**
+   * Log info message
+   * @param message Message to log
+   * @param context Optional context object
+   */
+  info: (message: string, context?: any): void => {
+    console.log(`[INFO] ${message}`, context ? context : '');
   },
-  
-  warn: (message: string, ...args: any[]) => {
-    console.warn(`[WARNING] ${message}`, ...args);
+
+  /**
+   * Log warning message
+   * @param message Message to log
+   * @param context Optional context object
+   */
+  warn: (message: string, context?: any): void => {
+    console.warn(`[WARN] ${message}`, context ? context : '');
   },
-  
-  error: (message: string, error?: any) => {
-    console.error(`[ERROR] ${message}`, error || '');
+
+  /**
+   * Log error message
+   * @param message Message to log
+   * @param error Optional error object
+   * @param context Optional context object
+   */
+  error: (message: string, error?: Error | unknown, context?: any): void => {
+    console.error(`[ERROR] ${message}`, error ? error : '', context ? context : '');
   },
-  
-  debug: (message: string, ...args: any[]) => {
-    if (process.env.NODE_ENV === 'development') {
-      console.debug(`[DEBUG] ${message}`, ...args);
+
+  /**
+   * Log debug message (only in development)
+   * @param message Message to log
+   * @param context Optional context object
+   */
+  debug: (message: string, context?: any): void => {
+    if (process.env.NODE_ENV !== 'production') {
+      console.debug(`[DEBUG] ${message}`, context ? context : '');
     }
+  },
+
+  /**
+   * Log scheduler-related message
+   * @param message Message to log
+   * @param context Optional context object
+   */
+  scheduler: (message: string, context?: any): void => {
+    console.log(`[SCHEDULER] ${message}`, context ? context : '');
   }
 };
