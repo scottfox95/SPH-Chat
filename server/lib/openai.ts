@@ -106,8 +106,13 @@ function extractTextFromResponseOutput(output: any): string {
           // Try to find output_text content
           for (const contentItem of messageItem.content) {
             if (contentItem.type === 'output_text' && contentItem.text) {
-              console.log(`DEBUG - Found output_text content: "${contentItem.text.substring(0, 50)}..."`);
-              return contentItem.text;
+              // Clean up any code fence markers that might be present
+              let cleanText = contentItem.text;
+              cleanText = cleanText.replace(/^```html\s*/i, '');
+              cleanText = cleanText.replace(/```\s*$/i, '');
+              
+              console.log(`DEBUG - Found output_text content: "${cleanText.substring(0, 50)}..."`);
+              return cleanText;
             }
           }
         }
@@ -119,19 +124,31 @@ function extractTextFromResponseOutput(output: any): string {
       // Check for text property (ResponseOutputMessage)
       if (item && typeof item === 'object' && 'text' in item && typeof item.text === 'string') {
         console.log("DEBUG - Found text property in array item");
-        return item.text;
+        // Clean up code fence markers
+        let cleanText = item.text;
+        cleanText = cleanText.replace(/^```html\s*/i, '');
+        cleanText = cleanText.replace(/```\s*$/i, '');
+        return cleanText;
       }
       
       // Check for content property 
       if (item && typeof item === 'object' && 'content' in item && typeof item.content === 'string') {
         console.log("DEBUG - Found content property in array item");
-        return item.content;
+        // Clean up code fence markers
+        let cleanContent = item.content;
+        cleanContent = cleanContent.replace(/^```html\s*/i, '');
+        cleanContent = cleanContent.replace(/```\s*$/i, '');
+        return cleanContent;
       }
       
       // Check for value property (some response types use this)
       if (item && typeof item === 'object' && 'value' in item && typeof item.value === 'string') {
         console.log("DEBUG - Found value property in array item");
-        return item.value;
+        // Clean up code fence markers
+        let cleanValue = item.value;
+        cleanValue = cleanValue.replace(/^```html\s*/i, '');
+        cleanValue = cleanValue.replace(/```\s*$/i, '');
+        return cleanValue;
       }
     }
     
