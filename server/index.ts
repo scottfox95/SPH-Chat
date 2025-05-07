@@ -4,6 +4,8 @@ import { setupVite, serveStatic, log } from "./vite";
 import cors from "cors";
 import path from "path";
 import { runMigration } from "./lib/data-migration";
+import { initializeSchedulerOnStartup } from "./lib/scheduler";
+import { logger } from "./lib/logger";
 
 // Configure environment-specific settings
 const isProduction = process.env.NODE_ENV === 'production';
@@ -94,5 +96,14 @@ app.use((req, res, next) => {
     reusePort: true,
   }, () => {
     log(`serving on port ${port}`);
+    
+    // Initialize the scheduler
+    initializeSchedulerOnStartup()
+      .then(() => {
+        logger.info('Scheduler initialized successfully');
+      })
+      .catch(error => {
+        logger.error('Failed to initialize scheduler', error);
+      });
   });
 })();

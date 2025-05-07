@@ -1,49 +1,14 @@
 /**
- * Utility to convert HTML-formatted summaries to Slack-friendly formatting
+ * Formats HTML content to Slack-compatible markdown
+ * @param html HTML content
+ * @returns Slack-compatible markdown
  */
-
-/**
- * Converts HTML formatted text to Slack-friendly markdown-like format
- * Removes HTML tags and converts basic formatting
- * 
- * @param html HTML formatted string
- * @returns String formatted for Slack
- */
-export function convertHtmlToSlackFormat(html: string): string {
-  if (!html) return '';
+export function formatHtmlForSlack(html: string): string {
+  // Maximum character limit for Slack messages (to avoid hitting the limit)
+  const MAX_CHAR_LIMIT = 3000;
   
-  // Remove any code fence markers that might be in the output
-  // Remove opening code fence with language specifier (```html, ```javascript, etc.)
-  html = html.replace(/^```[a-z]*\s*/i, '');
-  // Remove closing code fence
-  html = html.replace(/```\s*$/i, '');
-  // Remove any remaining code fence markers that might be in the middle
-  html = html.replace(/```[a-z]*\s*/gi, '');
-  
-  // Check if the content is already plain text (no HTML tags)
-  if (!/<[a-z][\s\S]*>/i.test(html)) {
-    // Clean up any HTML entities that might be present
-    return html
-      .replace(/&nbsp;/g, ' ')
-      .replace(/&amp;/g, '&')
-      .replace(/&lt;/g, '<')
-      .replace(/&gt;/g, '>')
-      .replace(/&quot;/g, '"')
-      .replace(/&#39;/g, "'");
-  }
-  
-  // Create a cleaner version with line breaks preserved
-  let slackText = html;
-  
-  // Replace basic HTML tags with appropriate Slack formatting
-  slackText = slackText
-    // Strip complete HTML structure
-    .replace(/<html>[\s\S]*?<body>/gi, '')
-    .replace(/<\/body>[\s\S]*?<\/html>/gi, '')
-    .replace(/<head>[\s\S]*?<\/head>/gi, '')
-    .replace(/<style>[\s\S]*?<\/style>/gi, '')
-    
-    // Handle headings - convert to bold with newlines
+  let formatted = html
+    // Replace headers with bold text
     .replace(/<h1[^>]*>(.*?)<\/h1>/gi, '*$1*\n')
     .replace(/<h2[^>]*>(.*?)<\/h2>/gi, '*$1*\n')
     .replace(/<h3[^>]*>(.*?)<\/h3>/gi, '*$1*\n')
@@ -51,48 +16,62 @@ export function convertHtmlToSlackFormat(html: string): string {
     .replace(/<h5[^>]*>(.*?)<\/h5>/gi, '*$1*\n')
     .replace(/<h6[^>]*>(.*?)<\/h6>/gi, '*$1*\n')
     
-    // Handle paragraphs - add newlines
+    // Replace paragraph tags
     .replace(/<p[^>]*>(.*?)<\/p>/gi, '$1\n\n')
     
-    // Handle lists - convert to dashes with proper formatting
+    // Replace list items
     .replace(/<li[^>]*>(.*?)<\/li>/gi, '• $1\n')
     
-    // Remove list containers (ul/ol) but keep a newline
-    .replace(/<\/?ul[^>]*>/gi, '\n')
-    .replace(/<\/?ol[^>]*>/gi, '\n')
+    // Remove unordered list containers
+    .replace(/<\/?ul[^>]*>/gi, '')
     
-    // Handle text formatting
+    // Remove ordered list containers
+    .replace(/<\/?ol[^>]*>/gi, '')
+    
+    // Replace bold tags
     .replace(/<strong[^>]*>(.*?)<\/strong>/gi, '*$1*')
     .replace(/<b[^>]*>(.*?)<\/b>/gi, '*$1*')
+    
+    // Replace italic tags
     .replace(/<em[^>]*>(.*?)<\/em>/gi, '_$1_')
     .replace(/<i[^>]*>(.*?)<\/i>/gi, '_$1_')
     
-    // Handle line breaks
+    // Replace line breaks
     .replace(/<br\s*\/?>/gi, '\n')
+    
+    // Replace divs with new lines
+    .replace(/<div[^>]*>(.*?)<\/div>/gi, '$1\n')
+    
+    // Replace horizontal rules
+    .replace(/<hr[^>]*>/gi, '---\n')
     
     // Remove all other HTML tags
     .replace(/<[^>]*>/g, '')
     
-    // Decode HTML entities
+    // Replace non-breaking spaces with regular spaces
     .replace(/&nbsp;/g, ' ')
+    
+    // Replace ampersands
     .replace(/&amp;/g, '&')
+    
+    // Replace quotes
+    .replace(/&quot;/g, '"')
+    
+    // Replace other common HTML entities
     .replace(/&lt;/g, '<')
     .replace(/&gt;/g, '>')
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
     
-    // Fix repeated newlines (no more than 2)
-    .replace(/\n\s*\n\s*\n+/g, '\n\n')
+    // Fix multiple consecutive new lines (no more than 2)
+    .replace(/\n{3,}/g, '\n\n')
     
-    // Trim extra whitespace
+    // Trim whitespace
     .trim();
   
-  // Ensure each list item is properly formatted with a bullet
-  // Make sure items are on separate lines with proper indentation
-  slackText = slackText
-    // Make sure bullet points are properly formatted
-    .replace(/^•\s*/gm, '• ')
-    .replace(/([^\n])•\s*/g, '$1\n• ');
+  // Truncate if over character limit
+  if (formatted.length > MAX_CHAR_LIMIT) {
+    formatted = formatted.substring(0, MAX_CHAR_LIMIT - 100) + 
+      '\n\n... _Summary truncated due to length. View complete summary on the web interface._';
+  }
   
-  return slackText;
+  return formatted;
 }

@@ -1,8 +1,9 @@
-import { format, subDays, startOfWeek, endOfWeek } from 'date-fns';
 import { IStorage } from '../storage';
-import { generateProjectSummaryWithAI } from './openai';
-import { sendProjectSummaryToSlack } from './slack';
+import { sendSlackMessage } from './slack';
+import { generateProjectSummary } from './openai';
+import { format, subDays, startOfWeek, endOfWeek } from 'date-fns';
 import { logger } from './logger';
+import { formatHtmlForSlack } from './html-to-slack';
 
 /**
  * Generate and send a daily summary for a project (previous 24 hours)
@@ -12,108 +13,101 @@ import { logger } from './logger';
  * @returns Object with summary results
  */
 export async function generateDailySummaryForProject(
-  projectId: number, 
+  projectId: number,
   slackChannelId: string | null,
   storage: IStorage
-): Promise<{ summary: any, slackSent: boolean }> {
+): Promise<{ success: boolean; message: string }> {
   try {
-    // Get project and its chatbots
+    logger.info(`Generating daily summary for project ${projectId}`);
+    
+    // Get project details
     const project = await storage.getProject(projectId);
     if (!project) {
-      throw new Error(`Project with ID ${projectId} not found`);
+      logger.error(`Project with ID ${projectId} not found`);
+      return { success: false, message: `Project with ID ${projectId} not found` };
     }
     
-    const chatbots = await storage.getProjectChatbots(projectId);
-    if (chatbots.length === 0) {
-      throw new Error(`No chatbots found for project ${project.name} (ID: ${projectId})`);
-    }
-    
-    // Set date range for daily summary (last 24 hours)
+    // Define date range (last 24 hours)
     const endDate = new Date();
     const startDate = subDays(endDate, 1);
     
-    // Format date range for the summary
-    const dateRangeStr = `${format(startDate, 'MMM d')} - ${format(endDate, 'MMM d, yyyy')}`;
+    // Format dates for display
+    const dateRange = `${format(startDate, 'MMM d, yyyy')} - ${format(endDate, 'MMM d, yyyy')}`;
     
-    // Generate chatbot summaries for the last 24 hours
+    // Get all chatbots for this project
+    const chatbots = await storage.getProjectChatbots(projectId);
+    
+    // Prepare content sections for each chatbot
     const chatbotSummaries = [];
+    
+    // Process each chatbot
     for (const chatbot of chatbots) {
-      // Get recent messages for this chatbot within the date range
-      const messages = await storage.getChatbotMessagesByDateRange(
-        chatbot.id,
-        startDate,
-        endDate
-      );
+      // Get messages for this chatbot within the date range
+      const messages = await storage.getChatbotMessagesByDateRange(chatbot.id, startDate, endDate);
       
-      if (messages.length > 0) {
-        // Format messages for AI processing
-        const messagesForAI = messages.map(msg => ({
+      if (messages.length === 0) {
+        continue; // Skip chatbots with no messages in the date range
+      }
+      
+      // Generate summary for this chatbot
+      const chatbotSummary = await generateChatbotDailySummary(
+        chatbot.name,
+        messages.map(msg => ({
           role: msg.isUserMessage ? 'user' : 'assistant',
           content: msg.content,
           timestamp: msg.createdAt
-        }));
-        
-        try {
-          const summaryContent = await generateChatbotDailySummary(
-            chatbot.name,
-            messagesForAI,
-            dateRangeStr
-          );
-          
-          chatbotSummaries.push({
-            chatbotId: chatbot.id,
-            chatbotName: chatbot.name,
-            content: summaryContent
-          });
-        } catch (error) {
-          logger.error(`Error generating daily summary for chatbot ${chatbot.name}`, error);
-        }
-      } else {
-        logger.info(`No messages found for chatbot ${chatbot.name} in the last 24 hours. Skipping summary.`);
-      }
+        })),
+        dateRange
+      );
+      
+      chatbotSummaries.push(chatbotSummary);
     }
     
-    // If no chatbot has messages, return early
+    // If no chatbots had activity, return early
     if (chatbotSummaries.length === 0) {
-      logger.info(`No activities found for project ${project.name} in the last 24 hours. Skipping summary.`);
-      return { summary: null, slackSent: false };
+      logger.info(`No activity found for project ${project.name} in the last 24 hours`);
+      return { 
+        success: true, 
+        message: `No activity found for project ${project.name} in the last 24 hours` 
+      };
     }
     
-    // Generate project summary using AI
-    const projectSummaryContent = await generateProjectSummaryWithAI(
-      chatbotSummaries,
-      project.name,
-      `Daily Summary (${dateRangeStr})`,
-      'daily'
-    );
+    // Combine all summaries into one HTML document
+    const fullSummary = `
+      <h1>Daily Summary for ${project.name}</h1>
+      <p><strong>Date Range:</strong> ${dateRange}</p>
+      ${chatbotSummaries.join('')}
+    `;
     
-    // Store project summary
-    const projectSummary = await storage.createProjectSummary({
+    // Store the summary
+    await storage.createProjectSummary({
       projectId,
-      content: projectSummaryContent,
-      week: `Daily-${format(endDate, 'yyyy-MM-dd')}`,
-      slackChannelId: slackChannelId || undefined
+      content: fullSummary,
+      week: format(endDate, 'yyyy-MM-dd'),
+      slackChannelId: slackChannelId
     });
     
-    // Send to Slack if a channel ID was provided
-    let slackResult = false;
+    // Send to Slack if a channel is specified
     if (slackChannelId) {
-      slackResult = await sendProjectSummaryToSlack(
-        slackChannelId,
-        project.name,
-        projectSummaryContent,
-        chatbots.length,
-        'Daily'
-      );
+      const slackFormattedContent = formatHtmlForSlack(fullSummary);
+      const slackResponse = await sendSlackMessage(slackChannelId, `Daily Summary for ${project.name}\n\n${slackFormattedContent}`);
+      
+      return { 
+        success: true, 
+        message: `Daily summary for project ${project.name} generated and sent to Slack` 
+      };
     }
     
-    return {
-      summary: projectSummary,
-      slackSent: !!slackResult
+    return { 
+      success: true, 
+      message: `Daily summary for project ${project.name} generated successfully` 
     };
   } catch (error) {
     logger.error('Error generating daily project summary', error);
-    throw error;
+    return { 
+      success: false, 
+      message: `Error generating daily summary: ${error instanceof Error ? error.message : String(error)}` 
+    };
   }
 }
 
@@ -125,108 +119,101 @@ export async function generateDailySummaryForProject(
  * @returns Object with summary results
  */
 export async function generateWeekToDateSummaryForProject(
-  projectId: number, 
+  projectId: number,
   slackChannelId: string | null,
   storage: IStorage
-): Promise<{ summary: any, slackSent: boolean }> {
+): Promise<{ success: boolean; message: string }> {
   try {
-    // Get project and its chatbots
+    logger.info(`Generating week-to-date summary for project ${projectId}`);
+    
+    // Get project details
     const project = await storage.getProject(projectId);
     if (!project) {
-      throw new Error(`Project with ID ${projectId} not found`);
+      logger.error(`Project with ID ${projectId} not found`);
+      return { success: false, message: `Project with ID ${projectId} not found` };
     }
     
-    const chatbots = await storage.getProjectChatbots(projectId);
-    if (chatbots.length === 0) {
-      throw new Error(`No chatbots found for project ${project.name} (ID: ${projectId})`);
-    }
-    
-    // Set date range for week-to-date summary
+    // Define date range (start of current week to now)
     const endDate = new Date();
-    const startDate = startOfWeek(endDate, { weekStartsOn: 1 }); // Start from Monday
+    const startDate = startOfWeek(endDate, { weekStartsOn: 1 }); // Week starts on Monday
     
-    // Format date range for the summary
-    const dateRangeStr = `${format(startDate, 'MMM d')} - ${format(endDate, 'MMM d, yyyy')}`;
+    // Format dates for display
+    const dateRange = `${format(startDate, 'MMM d, yyyy')} - ${format(endDate, 'MMM d, yyyy')}`;
     
-    // Generate chatbot summaries for the week-to-date
+    // Get all chatbots for this project
+    const chatbots = await storage.getProjectChatbots(projectId);
+    
+    // Prepare content sections for each chatbot
     const chatbotSummaries = [];
+    
+    // Process each chatbot
     for (const chatbot of chatbots) {
       // Get messages for this chatbot within the date range
-      const messages = await storage.getChatbotMessagesByDateRange(
-        chatbot.id,
-        startDate,
-        endDate
-      );
+      const messages = await storage.getChatbotMessagesByDateRange(chatbot.id, startDate, endDate);
       
-      if (messages.length > 0) {
-        // Format messages for AI processing
-        const messagesForAI = messages.map(msg => ({
+      if (messages.length === 0) {
+        continue; // Skip chatbots with no messages in the date range
+      }
+      
+      // Generate summary for this chatbot
+      const chatbotSummary = await generateChatbotWeekToDateSummary(
+        chatbot.name,
+        messages.map(msg => ({
           role: msg.isUserMessage ? 'user' : 'assistant',
           content: msg.content,
           timestamp: msg.createdAt
-        }));
-        
-        try {
-          const summaryContent = await generateChatbotWeekToDateSummary(
-            chatbot.name,
-            messagesForAI,
-            dateRangeStr
-          );
-          
-          chatbotSummaries.push({
-            chatbotId: chatbot.id,
-            chatbotName: chatbot.name,
-            content: summaryContent
-          });
-        } catch (error) {
-          logger.error(`Error generating week-to-date summary for chatbot ${chatbot.name}`, error);
-        }
-      } else {
-        logger.info(`No messages found for chatbot ${chatbot.name} in the current week. Skipping summary.`);
-      }
+        })),
+        dateRange
+      );
+      
+      chatbotSummaries.push(chatbotSummary);
     }
     
-    // If no chatbot has messages, return early
+    // If no chatbots had activity, return early
     if (chatbotSummaries.length === 0) {
-      logger.info(`No activities found for project ${project.name} in the current week. Skipping summary.`);
-      return { summary: null, slackSent: false };
+      logger.info(`No activity found for project ${project.name} in the current week so far`);
+      return { 
+        success: true, 
+        message: `No activity found for project ${project.name} in the current week so far` 
+      };
     }
     
-    // Generate project summary using AI
-    const projectSummaryContent = await generateProjectSummaryWithAI(
-      chatbotSummaries,
-      project.name,
-      `Week-to-Date Summary (${dateRangeStr})`,
-      'week-to-date'
-    );
+    // Combine all summaries into one HTML document
+    const fullSummary = `
+      <h1>Week-to-Date Summary for ${project.name}</h1>
+      <p><strong>Date Range:</strong> ${dateRange}</p>
+      ${chatbotSummaries.join('')}
+    `;
     
-    // Store project summary
-    const projectSummary = await storage.createProjectSummary({
+    // Store the summary
+    await storage.createProjectSummary({
       projectId,
-      content: projectSummaryContent,
-      week: `WeekToDate-${format(endDate, 'yyyy-MM-dd')}`,
-      slackChannelId: slackChannelId || undefined
+      content: fullSummary,
+      week: format(endDate, 'yyyy-MM-dd'),
+      slackChannelId: slackChannelId
     });
     
-    // Send to Slack if a channel ID was provided
-    let slackResult = false;
+    // Send to Slack if a channel is specified
     if (slackChannelId) {
-      slackResult = await sendProjectSummaryToSlack(
-        slackChannelId,
-        project.name,
-        projectSummaryContent,
-        chatbots.length,
-        'Week-to-Date'
-      );
+      const slackFormattedContent = formatHtmlForSlack(fullSummary);
+      const slackResponse = await sendSlackMessage(slackChannelId, `Week-to-Date Summary for ${project.name}\n\n${slackFormattedContent}`);
+      
+      return { 
+        success: true, 
+        message: `Week-to-date summary for project ${project.name} generated and sent to Slack` 
+      };
     }
     
-    return {
-      summary: projectSummary,
-      slackSent: !!slackResult
+    return { 
+      success: true, 
+      message: `Week-to-date summary for project ${project.name} generated successfully` 
     };
   } catch (error) {
     logger.error('Error generating week-to-date project summary', error);
-    throw error;
+    return { 
+      success: false, 
+      message: `Error generating week-to-date summary: ${error instanceof Error ? error.message : String(error)}` 
+    };
   }
 }
 
@@ -238,112 +225,102 @@ export async function generateWeekToDateSummaryForProject(
  * @returns Object with summary results
  */
 export async function generateWeeklyProjectSummary(
-  projectId: number, 
+  projectId: number,
   slackChannelId: string | null,
   storage: IStorage
-): Promise<{ summary: any, slackSent: boolean }> {
+): Promise<{ success: boolean; message: string }> {
   try {
-    // Get project and its chatbots
+    logger.info(`Generating weekly summary for project ${projectId}`);
+    
+    // Get project details
     const project = await storage.getProject(projectId);
     if (!project) {
-      throw new Error(`Project with ID ${projectId} not found`);
+      logger.error(`Project with ID ${projectId} not found`);
+      return { success: false, message: `Project with ID ${projectId} not found` };
     }
     
+    // Define date range (previous week)
+    const now = new Date();
+    const endDate = startOfWeek(now, { weekStartsOn: 1 }); // Monday
+    const startDate = subDays(endDate, 7); // Previous Monday
+    
+    // Format dates for display
+    const dateRange = `${format(startDate, 'MMM d, yyyy')} - ${format(endDate, 'MMM d, yyyy')}`;
+    
+    // Get all chatbots for this project
     const chatbots = await storage.getProjectChatbots(projectId);
-    if (chatbots.length === 0) {
-      throw new Error(`No chatbots found for project ${project.name} (ID: ${projectId})`);
-    }
     
-    // Set date range for weekly summary (previous week)
-    const currentDate = new Date();
-    const endOfLastWeek = subDays(startOfWeek(currentDate, { weekStartsOn: 1 }), 1);
-    const startOfLastWeek = startOfWeek(endOfLastWeek, { weekStartsOn: 1 });
-    
-    // Format date range for the summary
-    const dateRangeStr = `${format(startOfLastWeek, 'MMM d')} - ${format(endOfLastWeek, 'MMM d, yyyy')}`;
-    
-    // Generate chatbot summaries for each chatbot
+    // Prepare content sections for each chatbot
     const chatbotSummaries = [];
+    
+    // Process each chatbot
     for (const chatbot of chatbots) {
-      // Get messages for this chatbot within the week
-      const messages = await storage.getChatbotMessagesByDateRange(
-        chatbot.id,
-        startOfLastWeek,
-        endOfLastWeek
-      );
+      // Get messages for this chatbot within the date range
+      const messages = await storage.getChatbotMessagesByDateRange(chatbot.id, startDate, endDate);
       
-      if (messages.length > 0) {
-        // Format messages for AI processing
-        const messagesForAI = messages.map(msg => ({
+      if (messages.length === 0) {
+        continue; // Skip chatbots with no messages in the date range
+      }
+      
+      // Generate summary for this chatbot
+      const chatbotSummary = await generateChatbotWeeklySummary(
+        chatbot.name,
+        messages.map(msg => ({
           role: msg.isUserMessage ? 'user' : 'assistant',
           content: msg.content,
           timestamp: msg.createdAt
-        }));
-        
-        try {
-          const summaryContent = await generateChatbotWeeklySummary(
-            chatbot.name,
-            messagesForAI,
-            dateRangeStr
-          );
-          
-          chatbotSummaries.push({
-            chatbotId: chatbot.id,
-            chatbotName: chatbot.name,
-            content: summaryContent
-          });
-        } catch (error) {
-          logger.error(`Error generating weekly summary for chatbot ${chatbot.name}`, error);
-        }
-      } else {
-        logger.info(`No messages found for chatbot ${chatbot.name} in the past week. Skipping summary.`);
-      }
+        })),
+        dateRange
+      );
+      
+      chatbotSummaries.push(chatbotSummary);
     }
     
-    // If no chatbot has messages, return early
+    // If no chatbots had activity, return early
     if (chatbotSummaries.length === 0) {
-      logger.info(`No activities found for project ${project.name} in the past week. Skipping summary.`);
-      return { summary: null, slackSent: false };
+      logger.info(`No activity found for project ${project.name} in the previous week`);
+      return { 
+        success: true, 
+        message: `No activity found for project ${project.name} in the previous week` 
+      };
     }
     
-    // Generate project summary using AI
-    const projectSummaryContent = await generateProjectSummaryWithAI(
-      chatbotSummaries,
-      project.name,
-      `Weekly Summary (${dateRangeStr})`,
-      'weekly'
-    );
+    // Combine all summaries into one HTML document
+    const fullSummary = `
+      <h1>Weekly Summary for ${project.name}</h1>
+      <p><strong>Date Range:</strong> ${dateRange}</p>
+      ${chatbotSummaries.join('')}
+    `;
     
-    // Create week string in format "YYYY-WW" (year and week number)
-    const weekStr = `${format(startOfLastWeek, 'yyyy')}-W${format(startOfLastWeek, 'ww')}`;
-    
-    // Store project summary
-    const projectSummary = await storage.createProjectSummary({
+    // Store the summary
+    await storage.createProjectSummary({
       projectId,
-      content: projectSummaryContent,
-      week: weekStr,
-      slackChannelId: slackChannelId || undefined
+      content: fullSummary,
+      week: format(endDate, 'yyyy-MM-dd'),
+      slackChannelId: slackChannelId
     });
     
-    // Send to Slack if a channel ID was provided
-    let slackResult = false;
+    // Send to Slack if a channel is specified
     if (slackChannelId) {
-      slackResult = await sendProjectSummaryToSlack(
-        slackChannelId,
-        project.name,
-        projectSummaryContent,
-        chatbots.length,
-        'Weekly'
-      );
+      const slackFormattedContent = formatHtmlForSlack(fullSummary);
+      const slackResponse = await sendSlackMessage(slackChannelId, `Weekly Summary for ${project.name}\n\n${slackFormattedContent}`);
+      
+      return { 
+        success: true, 
+        message: `Weekly summary for project ${project.name} generated and sent to Slack` 
+      };
     }
     
-    return {
-      summary: projectSummary,
-      slackSent: !!slackResult
+    return { 
+      success: true, 
+      message: `Weekly summary for project ${project.name} generated successfully` 
     };
   } catch (error) {
     logger.error('Error generating weekly project summary', error);
-    throw error;
+    return { 
+      success: false, 
+      message: `Error generating weekly summary: ${error instanceof Error ? error.message : String(error)}` 
+    };
   }
 }
 
@@ -355,26 +332,36 @@ export async function generateWeeklyProjectSummary(
  * @returns Summary content as HTML
  */
 async function generateChatbotDailySummary(
-  chatbotName: string,
+  chatbotName: string, 
   messages: { role: string; content: string; timestamp: Date }[],
   dateRange: string
 ): Promise<string> {
-  // For now, we're reusing the weekly summary prompt with slight modifications
-  const prompt = `Generate a concise daily summary for ${chatbotName} covering the period ${dateRange}. 
-Focus on key updates, progress made, issues raised, and next steps. 
-Organize the summary into sections if appropriate:
-1. Key Progress
-2. Issues & Blockers
-3. Next Steps
-
-Format the response as HTML with appropriate headings, paragraphs, and lists.`;
-
   try {
-    const aiResponse = await generateAISummary(prompt, messages);
-    return aiResponse;
+    const prompt = `
+      Create a concise daily summary of the following conversation between a user and an AI assistant.
+      Focus on the key topics discussed, important decisions made, and any action items identified.
+      Format the output in HTML with appropriate headers and bullet points.
+      Conversation time frame: ${dateRange}
+      Chatbot: ${chatbotName}
+    `;
+    
+    const aiSummary = await generateAISummary(prompt, messages);
+    
+    // Wrap in a section with the chatbot name as a header
+    return `
+      <div class="chatbot-summary">
+        <h2>${chatbotName}</h2>
+        ${aiSummary}
+      </div>
+    `;
   } catch (error) {
-    logger.error(`Error generating daily AI summary for ${chatbotName}`, error);
-    throw error;
+    logger.error(`Error generating chatbot daily summary for ${chatbotName}`, error);
+    return `
+      <div class="chatbot-summary">
+        <h2>${chatbotName}</h2>
+        <p>Error generating summary: ${error instanceof Error ? error.message : String(error)}</p>
+      </div>
+    `;
   }
 }
 
@@ -386,26 +373,37 @@ Format the response as HTML with appropriate headings, paragraphs, and lists.`;
  * @returns Summary content as HTML
  */
 async function generateChatbotWeekToDateSummary(
-  chatbotName: string,
+  chatbotName: string, 
   messages: { role: string; content: string; timestamp: Date }[],
   dateRange: string
 ): Promise<string> {
-  const prompt = `Generate a concise week-to-date summary for ${chatbotName} covering the period from ${dateRange}. 
-Focus on key updates, progress made, issues raised, and next steps. 
-Organize the summary into sections if appropriate:
-1. Weekly Overview
-2. Key Progress
-3. Issues & Blockers
-4. Next Steps
-
-Format the response as HTML with appropriate headings, paragraphs, and lists.`;
-
   try {
-    const aiResponse = await generateAISummary(prompt, messages);
-    return aiResponse;
+    const prompt = `
+      Create a concise week-to-date summary of the following conversation between a user and an AI assistant.
+      Focus on the key topics discussed, important decisions made, and any action items identified.
+      Organize by main themes/topics, not by day.
+      Format the output in HTML with appropriate headers and bullet points.
+      Conversation time frame: ${dateRange}
+      Chatbot: ${chatbotName}
+    `;
+    
+    const aiSummary = await generateAISummary(prompt, messages);
+    
+    // Wrap in a section with the chatbot name as a header
+    return `
+      <div class="chatbot-summary">
+        <h2>${chatbotName}</h2>
+        ${aiSummary}
+      </div>
+    `;
   } catch (error) {
-    logger.error(`Error generating week-to-date AI summary for ${chatbotName}`, error);
-    throw error;
+    logger.error(`Error generating chatbot week-to-date summary for ${chatbotName}`, error);
+    return `
+      <div class="chatbot-summary">
+        <h2>${chatbotName}</h2>
+        <p>Error generating summary: ${error instanceof Error ? error.message : String(error)}</p>
+      </div>
+    `;
   }
 }
 
@@ -417,26 +415,37 @@ Format the response as HTML with appropriate headings, paragraphs, and lists.`;
  * @returns Summary content as HTML
  */
 async function generateChatbotWeeklySummary(
-  chatbotName: string,
+  chatbotName: string, 
   messages: { role: string; content: string; timestamp: Date }[],
   dateRange: string
 ): Promise<string> {
-  const prompt = `Generate a comprehensive weekly summary for ${chatbotName} covering the period ${dateRange}. 
-Focus on key updates, progress made, issues raised, and next steps. 
-Organize the summary into sections:
-1. Weekly Overview
-2. Key Progress
-3. Issues & Blockers
-4. Next Steps / Action Items
-
-Format the response as HTML with appropriate headings, paragraphs, and lists.`;
-
   try {
-    const aiResponse = await generateAISummary(prompt, messages);
-    return aiResponse;
+    const prompt = `
+      Create a detailed weekly summary of the following conversation between a user and an AI assistant.
+      Focus on the key topics discussed, important decisions made, and any action items identified.
+      Organize by main themes/topics, not by day.
+      Format the output in HTML with appropriate headers and bullet points.
+      Conversation time frame: ${dateRange}
+      Chatbot: ${chatbotName}
+    `;
+    
+    const aiSummary = await generateAISummary(prompt, messages);
+    
+    // Wrap in a section with the chatbot name as a header
+    return `
+      <div class="chatbot-summary">
+        <h2>${chatbotName}</h2>
+        ${aiSummary}
+      </div>
+    `;
   } catch (error) {
-    logger.error(`Error generating weekly AI summary for ${chatbotName}`, error);
-    throw error;
+    logger.error(`Error generating chatbot weekly summary for ${chatbotName}`, error);
+    return `
+      <div class="chatbot-summary">
+        <h2>${chatbotName}</h2>
+        <p>Error generating summary: ${error instanceof Error ? error.message : String(error)}</p>
+      </div>
+    `;
   }
 }
 
@@ -450,13 +459,20 @@ async function generateAISummary(
   prompt: string,
   messages: { role: string; content: string; timestamp: Date }[]
 ): Promise<string> {
-  // This is a placeholder that will use the OpenAI module
-  // The actual implementation should use the existing OpenAI module
-  // For now, we'll assume this function exists in the OpenAI module
-  
-  // In a real implementation, we would call something like:
-  // return openai.generateSummary(prompt, messages);
-  
-  // For this stub, we'll return a placeholder
-  return "<h3>Summary content will be generated by AI</h3><p>This is a placeholder for the actual AI-generated summary.</p>";
+  try {
+    // Format the messages for the AI
+    const formattedMessages = messages.map(msg => {
+      const timestamp = format(msg.timestamp, 'MMM d, yyyy h:mm a');
+      return `[${timestamp}] ${msg.role.toUpperCase()}: ${msg.content}`;
+    }).join('\n\n');
+    
+    // Generate a summary using OpenAI
+    const fullPrompt = `${prompt}\n\nCONVERSATION:\n${formattedMessages}`;
+    
+    const summaryResponse = await generateProjectSummary(fullPrompt, 'summary');
+    return summaryResponse;
+  } catch (error) {
+    logger.error('Error generating AI summary', error);
+    throw error;
+  }
 }

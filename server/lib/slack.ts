@@ -1,5 +1,5 @@
 import { WebClient, type ChatPostMessageArguments } from "@slack/web-api";
-import { convertHtmlToSlackFormat } from "./html-to-slack";
+import { formatHtmlForSlack } from "./html-to-slack";
 
 // Initialize Slack client with the token and explicitly force a new connection
 // This helps ensure we're not using a cached version of the client with old permissions
@@ -475,7 +475,7 @@ export async function sendProjectSummaryToSlack(
     }
     
     // Convert HTML to Slack format
-    const slackFormattedContent = convertHtmlToSlackFormat(summaryContent);
+    const slackFormattedContent = formatHtmlForSlack(summaryContent);
     
     // Create a formatted message with blocks for better presentation
     const message: ChatPostMessageArguments = {
