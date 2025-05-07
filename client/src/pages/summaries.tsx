@@ -5,7 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Search, Mail, Download, Calendar, Plus, Building, Activity, User, Send, Trash2 } from "lucide-react";
+import { Search, Mail, Download, Calendar, Plus, Building, Activity, User, Send, Trash2, BarChart } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -609,6 +609,126 @@ export default function Summaries() {
             >
               <Send className="h-4 w-4" />
               {generateSummaryMutation.isPending ? 'Generating...' : 'Generate Summary'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      
+      {/* Generate Daily Summary Modal */}
+      <Dialog open={generateDailyModalOpen} onOpenChange={setGenerateDailyModalOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Generate Daily Summary</DialogTitle>
+            <DialogDescription>
+              Generate a summary of yesterday's activities for {getCurrentEntityName()}.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4">
+            {view === "projects" && (
+              <div>
+                <label className="text-sm font-medium">Slack Channel ID (optional)</label>
+                <Input
+                  placeholder="C01A2BC3DEF"
+                  value={dailySlackChannelInput}
+                  onChange={(e) => setDailySlackChannelInput(e.target.value)}
+                  className="mt-1"
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  If provided, the summary will be sent to this Slack channel.
+                </p>
+              </div>
+            )}
+            
+            <div>
+              <h4 className="text-sm font-medium mb-2">Email Recipients</h4>
+              {recipientsLoading ? (
+                <p className="text-sm text-gray-500">Loading recipients...</p>
+              ) : recipients.length === 0 ? (
+                <div className="text-sm text-amber-500 bg-amber-50 p-2 rounded">
+                  No email recipients configured. The summary won't be emailed.
+                </div>
+              ) : (
+                <div className="flex flex-wrap gap-2">
+                  {recipients.map((recipient: any) => (
+                    <Badge key={recipient.id} variant="outline" className="px-2 py-1">
+                      {recipient.email}
+                    </Badge>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+          
+          <DialogFooter>
+            <Button
+              type="button"
+              onClick={() => generateDailySummaryMutation.mutate()}
+              disabled={generateDailySummaryMutation.isPending}
+              className="bg-[#80A3C9] hover:bg-[#6989AF] flex items-center gap-2"
+            >
+              <Calendar className="h-4 w-4" />
+              {generateDailySummaryMutation.isPending ? 'Generating...' : 'Generate Daily Summary'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      
+      {/* Generate Week-to-Date Summary Modal */}
+      <Dialog open={generateWeekToDateModalOpen} onOpenChange={setGenerateWeekToDateModalOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Generate Week-to-Date Summary</DialogTitle>
+            <DialogDescription>
+              Generate a summary of this week's activities (so far) for {getCurrentEntityName()}.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4">
+            {view === "projects" && (
+              <div>
+                <label className="text-sm font-medium">Slack Channel ID (optional)</label>
+                <Input
+                  placeholder="C01A2BC3DEF"
+                  value={weekToDateSlackChannelInput}
+                  onChange={(e) => setWeekToDateSlackChannelInput(e.target.value)}
+                  className="mt-1"
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  If provided, the summary will be sent to this Slack channel.
+                </p>
+              </div>
+            )}
+            
+            <div>
+              <h4 className="text-sm font-medium mb-2">Email Recipients</h4>
+              {recipientsLoading ? (
+                <p className="text-sm text-gray-500">Loading recipients...</p>
+              ) : recipients.length === 0 ? (
+                <div className="text-sm text-amber-500 bg-amber-50 p-2 rounded">
+                  No email recipients configured. The summary won't be emailed.
+                </div>
+              ) : (
+                <div className="flex flex-wrap gap-2">
+                  {recipients.map((recipient: any) => (
+                    <Badge key={recipient.id} variant="outline" className="px-2 py-1">
+                      {recipient.email}
+                    </Badge>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+          
+          <DialogFooter>
+            <Button
+              type="button"
+              onClick={() => generateWeekToDateSummaryMutation.mutate()}
+              disabled={generateWeekToDateSummaryMutation.isPending}
+              className="bg-[#91C499] hover:bg-[#78B080] flex items-center gap-2"
+            >
+              <BarChart className="h-4 w-4" />
+              {generateWeekToDateSummaryMutation.isPending ? 'Generating...' : 'Generate Week-to-Date Summary'}
             </Button>
           </DialogFooter>
         </DialogContent>
