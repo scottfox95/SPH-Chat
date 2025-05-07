@@ -1113,6 +1113,108 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
+  apiRouter.post("/chatbots/:id/generate-daily-summary", isAuthenticated, async (req, res) => {
+    try {
+      const chatbotId = parseInt(req.params.id);
+      
+      const chatbot = await storage.getChatbot(chatbotId);
+      
+      if (!chatbot) {
+        return res.status(404).json({ message: "Chatbot not found" });
+      }
+      
+      // Get messages from the previous day
+      const messages = await getDailySlackMessages(chatbot.slackChannelId);
+      
+      if (messages.length === 0) {
+        return res.status(400).json({ message: "No messages found for the previous day" });
+      }
+      
+      // Generate daily summary
+      const formattedMessages = messages.map(msg => `${msg.user}: ${msg.text}`);
+      const content = await generateDailySummary(formattedMessages, chatbot.name);
+      
+      // Create date identifier for previous day
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      const dailyId = format(yesterday, "yyyy-MM-dd");
+      
+      // Save summary with special week format to distinguish from weekly summaries
+      const summary = await storage.createSummary({
+        chatbotId,
+        content,
+        week: `D-${dailyId}`, // Prefix with D- to identify as a daily summary
+      });
+      
+      // Send email to recipients
+      const emailResult = await sendSummaryEmail(
+        chatbotId,
+        `Daily Summary: ${chatbot.name} - ${format(yesterday, "MMMM d, yyyy")}`,
+        content
+      );
+      
+      res.json({
+        summary,
+        emailSent: emailResult.success,
+        emailDetails: emailResult,
+      });
+    } catch (error) {
+      console.error("Error generating daily summary:", error);
+      res.status(500).json({ message: "Failed to generate daily summary" });
+    }
+  });
+  
+  apiRouter.post("/chatbots/:id/generate-week-to-date-summary", isAuthenticated, async (req, res) => {
+    try {
+      const chatbotId = parseInt(req.params.id);
+      
+      const chatbot = await storage.getChatbot(chatbotId);
+      
+      if (!chatbot) {
+        return res.status(404).json({ message: "Chatbot not found" });
+      }
+      
+      // Get messages from the beginning of week to the current day
+      const messages = await getWeekToDateSlackMessages(chatbot.slackChannelId);
+      
+      if (messages.length === 0) {
+        return res.status(400).json({ message: "No messages found for the current week" });
+      }
+      
+      // Generate week-to-date summary
+      const formattedMessages = messages.map(msg => `${msg.user}: ${msg.text}`);
+      const content = await generateWeekToDateSummary(formattedMessages, chatbot.name);
+      
+      // Create week identifier with current date
+      const now = new Date();
+      const week = format(now, "yyyy-'W'ww");
+      const currentDay = now.getDay(); // 0 is Sunday, 1 is Monday, etc.
+      
+      // Save summary with special format to distinguish from weekly summaries
+      const summary = await storage.createSummary({
+        chatbotId,
+        content,
+        week: `WTD-${week}-${currentDay}`, // Prefix with WTD- to identify as a week-to-date summary
+      });
+      
+      // Send email to recipients
+      const emailResult = await sendSummaryEmail(
+        chatbotId,
+        `Week-to-Date Summary: ${chatbot.name} - ${format(now, "MMMM d, yyyy")}`,
+        content
+      );
+      
+      res.json({
+        summary,
+        emailSent: emailResult.success,
+        emailDetails: emailResult,
+      });
+    } catch (error) {
+      console.error("Error generating week-to-date summary:", error);
+      res.status(500).json({ message: "Failed to generate week-to-date summary" });
+    }
+  });
+  
   // Chat message routes
   apiRouter.get("/chatbots/:id/messages", async (req, res) => {
     try {
@@ -2075,6 +2177,238 @@ You should **never make up information**. You may summarize or synthesize detail
     } catch (error) {
       console.error("Error generating project summary:", error);
       res.status(500).json({ message: "Failed to generate project summary" });
+    }
+  });
+  
+  apiRouter.post("/projects/:id/generate-daily-summary", isAuthenticated, async (req, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      const { slackChannelId } = req.body;
+      
+      // Verify the project exists
+      const project = await storage.getProject(projectId);
+      if (!project) {
+        return res.status(404).json({ message: "Project not found" });
+      }
+      
+      // Get all chatbots for this project
+      const chatbots = await storage.getProjectChatbots(projectId);
+      if (chatbots.length === 0) {
+        return res.status(400).json({ message: "No chatbots found for this project" });
+      }
+      
+      // Prepare data from all chatbots in the project
+      const chatbotSummaries = [];
+      const allProjectMessages = [];
+      
+      // Generate individual daily summaries for each chatbot
+      for (const chatbot of chatbots) {
+        // Get messages for this chatbot from the previous day
+        const slackMessages = await getDailySlackMessages(chatbot.slackChannelId);
+        
+        if (slackMessages.length === 0) {
+          // Skip chatbots with no messages from yesterday
+          continue;
+        }
+        
+        // Store messages for the overall summary
+        allProjectMessages.push({
+          chatbotName: chatbot.name,
+          messages: slackMessages.map(msg => `${msg.user}: ${msg.text}`)
+        });
+        
+        // Generate daily summary for this chatbot
+        const formattedMessages = slackMessages.map(msg => `${msg.user}: ${msg.text}`);
+        const chatbotSummaryContent = await generateDailySummary(formattedMessages, chatbot.name);
+        
+        // Create date identifier for previous day
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        const dailyId = format(yesterday, "yyyy-MM-dd");
+        
+        // Save the individual chatbot daily summary
+        await storage.createSummary({
+          chatbotId: chatbot.id,
+          content: chatbotSummaryContent,
+          week: `D-${dailyId}`, // Prefix with D- to identify as a daily summary
+        });
+        
+        chatbotSummaries.push({
+          chatbotName: chatbot.name,
+          content: chatbotSummaryContent
+        });
+      }
+      
+      if (chatbotSummaries.length === 0) {
+        return res.status(400).json({ message: "No daily summaries could be generated for any chatbots in this project (no messages from yesterday)" });
+      }
+      
+      // Generate the combined project daily summary
+      const projectSummaryContent = await generateProjectSummary(
+        project.name,
+        chatbotSummaries,
+        allProjectMessages
+      );
+      
+      // Create date identifier for previous day
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      const dailyId = format(yesterday, "yyyy-MM-dd");
+      
+      // Save the project daily summary
+      const projectSummary = await storage.createProjectSummary({
+        projectId,
+        content: projectSummaryContent,
+        week: `D-${dailyId}`, // Prefix with D- to identify as a daily summary
+        slackChannelId: slackChannelId || null
+      });
+      
+      // Send to Slack if a channel ID was provided
+      let slackResult = null;
+      if (slackChannelId) {
+        slackResult = await sendProjectSummaryToSlack(
+          slackChannelId,
+          project.name,
+          projectSummaryContent,
+          chatbots.length
+        );
+      }
+      
+      // Send email to project recipients if configured
+      const projectEmailRecipients = await storage.getProjectEmailRecipients(projectId);
+      let emailResult = { success: false, message: "No email recipients configured" };
+      
+      if (projectEmailRecipients.length > 0) {
+        const subject = `Daily Project Summary: ${project.name} - ${format(yesterday, 'MMMM d, yyyy')}`;
+        emailResult = await sendProjectSummaryEmail(projectId, subject, projectSummaryContent);
+      }
+      
+      res.json({
+        summary: projectSummary,
+        summariesCount: chatbotSummaries.length,
+        slackSent: !!slackResult,
+        emailSent: emailResult.success,
+        emailDetails: emailResult,
+      });
+    } catch (error) {
+      console.error("Error generating daily project summary:", error);
+      res.status(500).json({ message: "Failed to generate daily project summary" });
+    }
+  });
+  
+  apiRouter.post("/projects/:id/generate-week-to-date-summary", isAuthenticated, async (req, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      const { slackChannelId } = req.body;
+      
+      // Verify the project exists
+      const project = await storage.getProject(projectId);
+      if (!project) {
+        return res.status(404).json({ message: "Project not found" });
+      }
+      
+      // Get all chatbots for this project
+      const chatbots = await storage.getProjectChatbots(projectId);
+      if (chatbots.length === 0) {
+        return res.status(400).json({ message: "No chatbots found for this project" });
+      }
+      
+      // Prepare data from all chatbots in the project
+      const chatbotSummaries = [];
+      const allProjectMessages = [];
+      
+      // Generate individual week-to-date summaries for each chatbot
+      for (const chatbot of chatbots) {
+        // Get messages for this chatbot from the beginning of the week to current day
+        const slackMessages = await getWeekToDateSlackMessages(chatbot.slackChannelId);
+        
+        if (slackMessages.length === 0) {
+          // Skip chatbots with no messages this week
+          continue;
+        }
+        
+        // Store messages for the overall summary
+        allProjectMessages.push({
+          chatbotName: chatbot.name,
+          messages: slackMessages.map(msg => `${msg.user}: ${msg.text}`)
+        });
+        
+        // Generate week-to-date summary for this chatbot
+        const formattedMessages = slackMessages.map(msg => `${msg.user}: ${msg.text}`);
+        const chatbotSummaryContent = await generateWeekToDateSummary(formattedMessages, chatbot.name);
+        
+        // Create week identifier with current date
+        const now = new Date();
+        const week = format(now, "yyyy-'W'ww");
+        const currentDay = now.getDay(); // 0 is Sunday, 1 is Monday, etc.
+        
+        // Save the individual chatbot week-to-date summary
+        await storage.createSummary({
+          chatbotId: chatbot.id,
+          content: chatbotSummaryContent,
+          week: `WTD-${week}-${currentDay}`, // Prefix with WTD- to identify as a week-to-date summary
+        });
+        
+        chatbotSummaries.push({
+          chatbotName: chatbot.name,
+          content: chatbotSummaryContent
+        });
+      }
+      
+      if (chatbotSummaries.length === 0) {
+        return res.status(400).json({ message: "No week-to-date summaries could be generated for any chatbots in this project (no messages this week)" });
+      }
+      
+      // Generate the combined project week-to-date summary
+      const projectSummaryContent = await generateProjectSummary(
+        project.name,
+        chatbotSummaries,
+        allProjectMessages
+      );
+      
+      // Create week identifier with current date
+      const now = new Date();
+      const week = format(now, "yyyy-'W'ww");
+      const currentDay = now.getDay(); // 0 is Sunday, 1 is Monday, etc.
+      
+      // Save the project week-to-date summary
+      const projectSummary = await storage.createProjectSummary({
+        projectId,
+        content: projectSummaryContent,
+        week: `WTD-${week}-${currentDay}`, // Prefix with WTD- to identify as a week-to-date summary
+        slackChannelId: slackChannelId || null
+      });
+      
+      // Send to Slack if a channel ID was provided
+      let slackResult = null;
+      if (slackChannelId) {
+        slackResult = await sendProjectSummaryToSlack(
+          slackChannelId,
+          project.name,
+          projectSummaryContent,
+          chatbots.length
+        );
+      }
+      
+      // Send email to project recipients if configured
+      const projectEmailRecipients = await storage.getProjectEmailRecipients(projectId);
+      let emailResult = { success: false, message: "No email recipients configured" };
+      
+      if (projectEmailRecipients.length > 0) {
+        const subject = `Week-to-Date Project Summary: ${project.name} - ${format(now, 'MMMM d, yyyy')}`;
+        emailResult = await sendProjectSummaryEmail(projectId, subject, projectSummaryContent);
+      }
+      
+      res.json({
+        summary: projectSummary,
+        summariesCount: chatbotSummaries.length,
+        slackSent: !!slackResult,
+        emailSent: emailResult.success,
+        emailDetails: emailResult,
+      });
+    } catch (error) {
+      console.error("Error generating week-to-date project summary:", error);
+      res.status(500).json({ message: "Failed to generate week-to-date project summary" });
     }
   });
   

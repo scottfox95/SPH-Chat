@@ -31,7 +31,11 @@ export default function Summaries() {
   const [searchQuery, setSearchQuery] = useState("");
   const [emailModalOpen, setEmailModalOpen] = useState(false);
   const [generateModalOpen, setGenerateModalOpen] = useState(false);
+  const [generateDailyModalOpen, setGenerateDailyModalOpen] = useState(false);
+  const [generateWeekToDateModalOpen, setGenerateWeekToDateModalOpen] = useState(false);
   const [slackChannelInput, setSlackChannelInput] = useState("");
+  const [dailySlackChannelInput, setDailySlackChannelInput] = useState("");
+  const [weekToDateSlackChannelInput, setWeekToDateSlackChannelInput] = useState("");
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
@@ -137,7 +141,7 @@ export default function Summaries() {
     },
   });
 
-  // Generate summary mutation
+  // Generate weekly summary mutation
   const generateSummaryMutation = useMutation({
     mutationFn: async () => {
       const endpoint = view === "chatbots"
@@ -168,6 +172,78 @@ export default function Summaries() {
       toast({
         title: "Error",
         description: "Failed to generate summary. Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
+  
+  // Generate daily summary mutation
+  const generateDailySummaryMutation = useMutation({
+    mutationFn: async () => {
+      const endpoint = view === "chatbots"
+        ? `/api/chatbots/${selectedEntity}/generate-daily-summary`
+        : `/api/projects/${selectedEntity}/generate-daily-summary`;
+      
+      const payload = view === "projects" && dailySlackChannelInput.trim() 
+        ? { slackChannelId: dailySlackChannelInput.trim() } 
+        : {};
+      
+      return apiRequest("POST", endpoint, payload);
+    },
+    onSuccess: async (response) => {
+      const data = await response.json();
+      toast({
+        title: "Daily summary generated",
+        description: `Daily summary has been generated ${data.slackSent ? " and sent to Slack" : ""}${data.emailSent ? " and emailed to recipients" : ""}`,
+      });
+      setGenerateDailyModalOpen(false);
+      setDailySlackChannelInput("");
+      queryClient.invalidateQueries({
+        queryKey: view === "chatbots" 
+          ? [`/api/chatbots/${selectedEntity}/summaries`]
+          : [`/api/projects/${selectedEntity}/summaries`],
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: "Failed to generate daily summary. Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
+  
+  // Generate week-to-date summary mutation
+  const generateWeekToDateSummaryMutation = useMutation({
+    mutationFn: async () => {
+      const endpoint = view === "chatbots"
+        ? `/api/chatbots/${selectedEntity}/generate-week-to-date-summary`
+        : `/api/projects/${selectedEntity}/generate-week-to-date-summary`;
+      
+      const payload = view === "projects" && weekToDateSlackChannelInput.trim() 
+        ? { slackChannelId: weekToDateSlackChannelInput.trim() } 
+        : {};
+      
+      return apiRequest("POST", endpoint, payload);
+    },
+    onSuccess: async (response) => {
+      const data = await response.json();
+      toast({
+        title: "Week-to-date summary generated",
+        description: `Week-to-date summary has been generated ${data.slackSent ? " and sent to Slack" : ""}${data.emailSent ? " and emailed to recipients" : ""}`,
+      });
+      setGenerateWeekToDateModalOpen(false);
+      setWeekToDateSlackChannelInput("");
+      queryClient.invalidateQueries({
+        queryKey: view === "chatbots" 
+          ? [`/api/chatbots/${selectedEntity}/summaries`]
+          : [`/api/projects/${selectedEntity}/summaries`],
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: "Failed to generate week-to-date summary. Please try again.",
         variant: "destructive",
       });
     },
@@ -224,15 +300,37 @@ export default function Summaries() {
                   <Mail className="h-4 w-4" />
                   <span className="hidden sm:inline">Add Recipient</span>
                 </Button>
-                <Button
-                  variant="default"
-                  size="sm"
-                  className="flex items-center gap-1 bg-[#D2B48C] hover:bg-[#C3A379]"
-                  onClick={() => setGenerateModalOpen(true)}
-                >
-                  <Activity className="h-4 w-4" />
-                  <span className="hidden sm:inline">Generate Summary</span>
-                </Button>
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <Button
+                    variant="default"
+                    size="sm"
+                    className="flex items-center gap-1 bg-[#D2B48C] hover:bg-[#C3A379]"
+                    onClick={() => setGenerateModalOpen(true)}
+                  >
+                    <Activity className="h-4 w-4" />
+                    <span className="hidden sm:inline">Weekly Summary</span>
+                  </Button>
+                  
+                  <Button
+                    variant="default"
+                    size="sm"
+                    className="flex items-center gap-1 bg-[#80A3C9] hover:bg-[#6989AF]"
+                    onClick={() => setGenerateDailyModalOpen(true)}
+                  >
+                    <Calendar className="h-4 w-4" />
+                    <span className="hidden sm:inline">Daily Summary</span>
+                  </Button>
+                  
+                  <Button
+                    variant="default"
+                    size="sm"
+                    className="flex items-center gap-1 bg-[#91C499] hover:bg-[#78B080]"
+                    onClick={() => setGenerateWeekToDateModalOpen(true)}
+                  >
+                    <BarChart className="h-4 w-4" />
+                    <span className="hidden sm:inline">Week-to-Date</span>
+                  </Button>
+                </div>
               </>
             )}
           </div>
