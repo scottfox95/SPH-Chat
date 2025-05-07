@@ -112,6 +112,12 @@ export const settings = pgTable("settings", {
   includeUserInSource: boolean("include_user_in_source").notNull().default(false),
   responseTemplate: text("response_template"),
   summaryPrompt: text("summary_prompt"),
+  // Scheduling settings
+  enableDailySchedule: boolean("enable_daily_schedule").default(false),
+  dailyScheduleTime: text("daily_schedule_time").default("08:00"), // Format: HH:MM in 24-hour format
+  enableWeeklySchedule: boolean("enable_weekly_schedule").default(false),
+  weeklyScheduleDay: text("weekly_schedule_day").default("Monday"), // Day of week for weekly summary
+  weeklyScheduleTime: text("weekly_schedule_time").default("08:00"), // Format: HH:MM in 24-hour format
   // Email settings
   smtpEnabled: boolean("smtp_enabled").default(false),
   smtpHost: text("smtp_host"),
@@ -233,6 +239,11 @@ export const updateSettingsSchema = createInsertSchema(settings).pick({
   includeUserInSource: true,
   responseTemplate: true,
   summaryPrompt: true,
+  enableDailySchedule: true,
+  dailyScheduleTime: true,
+  enableWeeklySchedule: true,
+  weeklyScheduleDay: true,
+  weeklyScheduleTime: true,
   smtpEnabled: true,
   smtpHost: true,
   smtpPort: true,
@@ -249,6 +260,15 @@ export const emailSettingsSchema = z.object({
   smtpUser: z.string().nullable(),
   smtpPass: z.string().nullable(),
   smtpFrom: z.string().nullable(),
+});
+
+// Schema for scheduler settings updates
+export const schedulerSettingsSchema = z.object({
+  enableDailySchedule: z.boolean(),
+  dailyScheduleTime: z.string(), // Format: HH:MM
+  enableWeeklySchedule: z.boolean(),
+  weeklyScheduleDay: z.string(), // Day of week: Monday, Tuesday, etc.
+  weeklyScheduleTime: z.string(), // Format: HH:MM
 });
 
 export const insertApiTokenSchema = createInsertSchema(apiTokens).pick({
@@ -307,6 +327,7 @@ export type InsertMessage = z.infer<typeof insertMessageSchema>;
 export type Settings = typeof settings.$inferSelect;
 export type InsertSettings = z.infer<typeof insertSettingsSchema>;
 export type UpdateSettings = z.infer<typeof updateSettingsSchema>;
+export type SchedulerSettings = z.infer<typeof schedulerSettingsSchema>;
 
 export type ApiToken = typeof apiTokens.$inferSelect;
 export type InsertApiToken = z.infer<typeof insertApiTokenSchema>;
