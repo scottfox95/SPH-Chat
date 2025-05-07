@@ -2450,8 +2450,8 @@ You should **never make up information**. You may summarize or synthesize detail
     }
   });
   
-  // Test Slack integration route
-  apiRouter.get("/system/test-slack/:channelId", isAuthenticated, async (req, res) => {
+  // Test Slack integration route (without auth for testing)
+  apiRouter.get("/system/test-slack/:channelId", async (req, res) => {
     try {
       const { channelId } = req.params;
       console.log(`Testing Slack integration with channel ID: ${channelId}`);
@@ -2499,6 +2499,53 @@ You should **never make up information**. You may summarize or synthesize detail
   
   // Register API routes
   app.use("/api", apiRouter);
+  
+  // Public test routes (outside API router, no auth required)
+  app.get("/test-slack/:channelId", async (req, res) => {
+    try {
+      const { channelId } = req.params;
+      console.log(`Testing Slack integration with channel ID: ${channelId}`);
+      
+      // Test Slack connection
+      const connectionTest = await testSlackConnection();
+      console.log(`Slack connection test result: ${JSON.stringify(connectionTest)}`);
+      
+      if (!connectionTest.connected) {
+        return res.status(400).json({ 
+          status: "error", 
+          message: "Failed to connect to Slack API",
+          details: connectionTest
+        });
+      }
+      
+      // Send a test message
+      const testMessage = `Test message from SPH Chat - ${new Date().toLocaleString()}`;
+      const result = await sendSlackMessage(channelId, testMessage);
+      
+      if (!result) {
+        return res.status(400).json({ 
+          status: "error", 
+          message: "Failed to send test message to Slack"
+        });
+      }
+      
+      res.json({
+        status: "success",
+        message: "Test message sent successfully",
+        details: {
+          channel: result.channel,
+          ts: result.ts,
+          text: testMessage
+        }
+      });
+    } catch (error) {
+      console.error("Error testing Slack integration:", error);
+      res.status(500).json({ 
+        status: "error", 
+        message: "Error testing Slack integration" 
+      });
+    }
+  });
   
   // Create HTTP server
   const httpServer = createServer(app);
