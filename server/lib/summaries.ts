@@ -1,6 +1,6 @@
 import { IStorage } from '../storage';
 import { sendSlackMessage } from './slack';
-import { generateProjectSummary } from './openai';
+import { generateProjectSummary, generateSimpleSummary } from './openai';
 import { format, subDays, startOfWeek, endOfWeek } from 'date-fns';
 import { logger } from './logger';
 import { formatHtmlForSlack } from './html-to-slack';
@@ -469,7 +469,7 @@ async function generateAISummary(
     // Generate a summary using OpenAI
     const fullPrompt = `${prompt}\n\nCONVERSATION:\n${formattedMessages}`;
     
-    const summaryResponse = await generateSimpleSummary(fullPrompt, formattedMessages.join("\n\n"));
+    const summaryResponse = await generateSimpleSummary(fullPrompt, formattedMessages);
     return summaryResponse;
   } catch (error) {
     logger.error('Error generating AI summary', error);
