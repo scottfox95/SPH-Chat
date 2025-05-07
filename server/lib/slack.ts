@@ -474,16 +474,19 @@ export async function sendProjectSummaryToSlack(
       console.warn(`Will still attempt to send the message.`);
     }
     
+    // Convert HTML to Slack format
+    const slackFormattedContent = convertHtmlToSlackFormat(summaryContent);
+    
     // Create a formatted message with blocks for better presentation
     const message: ChatPostMessageArguments = {
       channel: channelId,
-      text: `Weekly Summary for ${projectName}`, // Fallback text
+      text: `Summary for ${projectName}: ${slackFormattedContent.substring(0, 300)}...`, // Fallback text with first part of formatted content
       blocks: [
         {
           type: "header",
           text: {
             type: "plain_text",
-            text: `📊 Weekly Summary: ${projectName}`,
+            text: `📊 Project Summary: ${projectName}`,
             emoji: true
           }
         },
@@ -501,7 +504,7 @@ export async function sendProjectSummaryToSlack(
           type: "section",
           text: {
             type: "mrkdwn",
-            text: convertHtmlToSlackFormat(summaryContent).substring(0, 3000) // Convert HTML to Slack format and limit to 3000 chars
+            text: slackFormattedContent.substring(0, 3000) // Use the already converted content and limit to 3000 chars
           }
         },
         {

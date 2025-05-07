@@ -12,6 +12,18 @@
 export function convertHtmlToSlackFormat(html: string): string {
   if (!html) return '';
   
+  // Check if the content is already plain text (no HTML tags)
+  if (!/<[a-z][\s\S]*>/i.test(html)) {
+    // Clean up any HTML entities that might be present
+    return html
+      .replace(/&nbsp;/g, ' ')
+      .replace(/&amp;/g, '&')
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;/g, "'");
+  }
+  
   // Create a cleaner version with line breaks preserved
   let slackText = html;
   
@@ -20,6 +32,8 @@ export function convertHtmlToSlackFormat(html: string): string {
     // Strip complete HTML structure
     .replace(/<html>[\s\S]*?<body>/gi, '')
     .replace(/<\/body>[\s\S]*?<\/html>/gi, '')
+    .replace(/<head>[\s\S]*?<\/head>/gi, '')
+    .replace(/<style>[\s\S]*?<\/style>/gi, '')
     
     // Handle headings - convert to bold with newlines
     .replace(/<h1[^>]*>(.*?)<\/h1>/gi, '*$1*\n')
@@ -32,7 +46,7 @@ export function convertHtmlToSlackFormat(html: string): string {
     // Handle paragraphs - add newlines
     .replace(/<p[^>]*>(.*?)<\/p>/gi, '$1\n\n')
     
-    // Handle lists - convert to dashes
+    // Handle lists - convert to dashes with proper formatting
     .replace(/<li[^>]*>(.*?)<\/li>/gi, '• $1\n')
     
     // Remove list containers (ul/ol) but keep a newline
@@ -64,6 +78,13 @@ export function convertHtmlToSlackFormat(html: string): string {
     
     // Trim extra whitespace
     .trim();
+  
+  // Ensure each list item is properly formatted with a bullet
+  // Make sure items are on separate lines with proper indentation
+  slackText = slackText
+    // Make sure bullet points are properly formatted
+    .replace(/^•\s*/gm, '• ')
+    .replace(/([^\n])•\s*/g, '$1\n• ');
   
   return slackText;
 }
