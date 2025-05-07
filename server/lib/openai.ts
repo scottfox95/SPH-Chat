@@ -854,6 +854,15 @@ export async function generateProjectSummary(
   chatbotSummaries: Array<{ chatbotName: string, content: string }>,
   allProjectMessages: Array<{ chatbotName: string, messages: string[] }>
 ) {
+
+  return generateSimpleSummary(projectName, chatbotSummaries.map(s => s.content).join('\n\n'));
+}
+
+// Function to generate a simple summary from text content
+export async function generateSimpleSummary(
+  prompt: string,
+  content: string = ""
+) {
   try {
     // Get the settings
     const settings = await getSettings();
@@ -866,51 +875,6 @@ export async function generateProjectSummary(
       model = "gpt-4o-mini";
     }
     
-    // Prepare the combined summary information
-    const chatbotSummarySection = chatbotSummaries.map(summary => 
-      `==== SUMMARY FROM ${summary.chatbotName} ====\n${summary.content}\n`
-    ).join("\n\n");
-    
-    // Format all messages by chatbot for additional context
-    const formattedMessages = allProjectMessages
-      .filter(item => item.messages && item.messages.length > 0)
-      .map(item => 
-        `==== MESSAGES FROM ${item.chatbotName} ====\n${item.messages.join("\n")}\n`
-      ).join("\n\n");
-    
-    // Custom prompt specifically for the project-level summary
-    const projectSummaryPrompt = `You are an expert construction project manager responsible for creating a comprehensive weekly project summary. 
-
-I'll provide you with:
-1. Individual summaries from different chatbots/channels within the same project
-2. The raw messages from these channels
-
-Your task is to create a unified, master weekly summary for the entire "${projectName}" project that:
-- Synthesizes information across all channels/chatbots
-- Eliminates redundancies
-- Highlights the most important developments
-- Provides a clear overview of the entire project's status
-
-Format your response in HTML with EXACTLY the same sections and format as the individual chatbot summaries:
-
-1. Key Achievements
-   - Use bullet points for each achievement
-   - Include the most important accomplishments across all project areas
-
-2. Issues or Blockers
-   - Use bullet points for each issue
-   - List any problems that need attention
-
-3. Upcoming Work
-   - Use bullet points for planned tasks
-   - Include the important upcoming tasks for the next week
-
-4. Action Items
-   - Use bullet points for specific actions needed
-   - List prioritized action items with clear owners when available
-
-The summary MUST follow this EXACT format with numbered headings and bullet points. Keep your response professional and well-structured with proper HTML formatting. This summary will be sent to project stakeholders and executives.`;
-
     // Convert legacy model name format if needed
     if (model.startsWith("gpt-")) {
       if (model === "gpt-4o") model = "o4";
@@ -919,12 +883,11 @@ The summary MUST follow this EXACT format with numbered headings and bullet poin
       // Add other model conversions as needed
     }
     
-    // Make the API call to generate the combined summary using Responses API
-    // Create request parameters without temperature or tools to avoid compatibility issues with some models
+    // Simple generation for scheduler-based summaries
     const requestParams: any = {
       model,
-      instructions: projectSummaryPrompt,
-      input: `Here are the individual summaries from different aspects of the ${projectName} project:\n\n${chatbotSummarySection}\n\nHere are the raw messages from the past week for additional context if needed:\n\n${formattedMessages}`,
+      instructions: prompt,
+      input: content,
       max_output_tokens: 1500
     };
     
@@ -950,10 +913,10 @@ The summary MUST follow this EXACT format with numbered headings and bullet poin
     const response = await openai.responses.create(requestParams);
 
     // Extract text content from the response using our helper function
-    return extractTextFromResponseOutput(response.output) || "Unable to generate project summary.";
+    return extractTextFromResponseOutput(response.output) || "Unable to generate summary.";
   } catch (error) {
-    console.error("OpenAI API error generating project summary:", error);
-    return `Error generating master project summary for ${projectName}. Please try again later.`;
+    console.error("OpenAI API error generating summary:", error);
+    return `Error generating summary. Please try again later.`;
   }
 }
 

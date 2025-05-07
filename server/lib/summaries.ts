@@ -469,7 +469,7 @@ async function generateAISummary(
     // Generate a summary using OpenAI
     const fullPrompt = `${prompt}\n\nCONVERSATION:\n${formattedMessages}`;
     
-    const summaryResponse = await generateProjectSummary(fullPrompt, 'summary');
+    const summaryResponse = await generateSimpleSummary(fullPrompt, formattedMessages.join("\n\n"));
     return summaryResponse;
   } catch (error) {
     logger.error('Error generating AI summary', error);
