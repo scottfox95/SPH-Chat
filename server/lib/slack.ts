@@ -306,15 +306,22 @@ export async function sendSlackMessage(channelId: string, text: string) {
   }
   
   try {
+    console.log(`Attempting to send Slack message to channel ID: ${channelId}`);
+    console.log(`Message text (first 100 chars): ${text.substring(0, 100)}...`);
+    
     const message: ChatPostMessageArguments = {
       channel: channelId,
       text,
     };
     
     const result = await slack.chat.postMessage(message);
+    console.log(`Successfully sent Slack message! Message TS: ${result.ts}, Channel: ${result.channel}`);
     return result;
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error sending Slack message:", error);
+    if (error.data) {
+      console.error(`Slack API error details: ${JSON.stringify(error.data)}`);
+    }
     return null;
   }
 }
@@ -445,6 +452,10 @@ export async function sendProjectSummaryToSlack(
   }
   
   try {
+    console.log(`Attempting to send project summary to Slack channel ID: ${channelId}`);
+    console.log(`Project name: ${projectName}`);
+    console.log(`Summary content length: ${summaryContent.length} chars`);
+    
     // Create a formatted message with blocks for better presentation
     const message: ChatPostMessageArguments = {
       channel: channelId,
@@ -472,7 +483,7 @@ export async function sendProjectSummaryToSlack(
           type: "section",
           text: {
             type: "mrkdwn",
-            text: summaryContent
+            text: summaryContent.substring(0, 3000) // Limit to 3000 chars to avoid Slack limits
           }
         },
         {
@@ -487,10 +498,15 @@ export async function sendProjectSummaryToSlack(
       ]
     };
     
+    console.log(`Sending message to Slack with channel: ${channelId}`);
     const result = await slack.chat.postMessage(message);
+    console.log(`Successfully sent project summary to Slack! Message TS: ${result.ts}, Channel: ${result.channel}`);
     return result;
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error sending project summary to Slack:", error);
+    if (error.data) {
+      console.error(`Slack API error details: ${JSON.stringify(error.data)}`);
+    }
     return null;
   }
 }

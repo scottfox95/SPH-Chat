@@ -539,6 +539,13 @@
       ],
       "summaries": [
         {
+          "id": 40,
+          "chatbotId": 30,
+          "content": "```html\n<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <title>1293 Sylvian Project - Daily Summary</title>\n</head>\n<body>\n    <h1>1293 Sylvian Homebuilding Project - Daily Summary</h1>\n    <h2>1) Key Achievements</h2>\n    <ul>\n        <li>Return label received from Nicole at Brazilian Lumber for the clips being returned.</li>\n    </ul>\n    <h2>2) Issues or Blockers</h2>\n    <ul>\n        <li>Incorrect or unwanted clips that required returning to supplier.</li>\n    </ul>\n    <h2>3) Upcoming Work</h2>\n    <ul>\n        <li>Awaiting replacement clips to continue installation once returned items are processed.</li>\n    </ul>\n    <h2>4) Action Items</h2>\n    <ul>\n        <li>Send back clips using the provided return label located on the corner of the desk.</li>\n        <li>Coordinate with Brazilian Lumber for replacement clip delivery.</li>\n    </ul>\n</body>\n</html>\n```",
+          "week": "D-2025-05-06",
+          "sentAt": "2025-05-07T19:47:35.279Z"
+        },
+        {
           "id": 26,
           "chatbotId": 30,
           "content": "<h2>1293 Sylvian – Weekly Summary • Week 2023-W17 – Week Ending April 29, 2023</h2>\n\n<ol>\n  <li><strong>Key Achievements</strong>\n    <ul>\n      <li>Motion Shading contractor rerouted shade wires to their assigned panel locations on walls.</li>\n      <li>New construction entrance cut to align with driveway entrance, prepared for insulation and drywall truck access.</li>\n      <li>Change order estimate was sent to Thomas for review.</li>\n    </ul>\n  </li>\n  <li><strong>Issues or Blockers</strong>\n    <ul>\n      <li>Neighbor complaint received regarding trash and debris on the road and around the property.</li>\n      <li>Ongoing concern about debris near the outhouse including plastic bottles and cans.</li>\n    </ul>\n  </li>\n  <li><strong>Upcoming Work</strong>\n    <ul>\n      <li>Insulation and drywall trucks scheduled to use the new construction entrance.</li>\n    </ul>\n  </li>\n  <li><strong>Action Items</strong>\n    <ul>\n      <li>Gerardo to clean up debris and trash around the property and road immediately.</li>\n      <li>Project team to monitor site cleanliness to prevent future neighbor complaints.</li>\n    </ul>\n  </li>\n</ol>",
@@ -636,6 +643,13 @@
         }
       ],
       "summaries": [
+        {
+          "id": 41,
+          "chatbotId": 35,
+          "content": "```html\n<h2>4846 Adams Homebuilding Project - Daily Summary (Yesterday)</h2>\n\n<h3>1) Key Achievements</h3>\n<ul>\n  <li>Project schedule reviewed and confirmed in meeting with Glynn and Ron Z.; detailed timeline established for upcoming tasks including painting, flooring, cabinetry, countertops, and trim work.</li>\n  <li>HVAC connections (AC and furnace) successfully completed by Joel’s crew, enabling next phase of flooring installation.</li>\n  <li>Pool construction advanced to grading, tile, and coping phase.</li>\n  <li>French drain and planted swale planned for front yard landscaping to address water quality concerns.</li>\n</ul>\n\n<h3>2) Issues or Blockers</h3>\n<ul>\n  <li>Need to finalize landscaping grading plans and wall dimensions for accurate execution.</li>\n  <li>Coordination required to ensure flooring installation precedes cabinet installation without delay.</li>\n</ul>\n\n<h3>3) Upcoming Work</h3>\n<ul>\n  <li>Flooring installation scheduled May 19-24, with a preference for lighter natural color samples.</li>\n  <li>Cabinet installation planned May 27 - June 6, led by Dimitri and Christian.</li>\n  <li>Countertop installation slated for June 9-16.</li>\n  <li>Plumbing and electrical trim work to occur June 17-24.</li>\n  <li>Exterior work in progress from May 12 to June 23.</li>\n  <li>Second painting phase from June 24 to July 9, followed by additional flooring July 9-12 and cleanup on July 13.</li>\n</ul>\n\n<h3>4) Action Items</h3>\n<ul>\n  <li>Provide finalized landscaping grading plans and wall measurements urgently.</li>\n  <li>Ensure Joel’s crew completes flooring promptly to allow Ivan’s team to begin cabinet installation as scheduled.</li>\n  <li>Confirm flooring sample color choice aligns with overall interior design preferences.</li>\n</ul>\n```",
+          "week": "D-2025-05-06",
+          "sentAt": "2025-05-07T19:47:39.988Z"
+        },
         {
           "id": 33,
           "chatbotId": 35,
@@ -781,6 +795,13 @@
         }
       ],
       "summaries": [
+        {
+          "id": 42,
+          "chatbotId": 37,
+          "content": "```html\n<h2>6265 Ferry Project - Daily Summary (Yesterday)</h2>\n\n<h3>1) Key Achievements</h3>\n<ul>\n  <li>Back door delivered and double locked as required.</li>\n  <li>Vanity installation progressed with Joel Yanes on site; trim-out to continue tomorrow afternoon.</li>\n  <li>Raul and his team on site to advance ongoing works.</li>\n  <li>A&amp;G team completed cleaning and material organization at the home.</li>\n  <li>Drywalling over outlets completed to protect wallpaper installation before vanity goes in.</li>\n</ul>\n\n<h3>2) Issues or Blockers</h3>\n<ul>\n  <li>Electricians have not returned to site since Monday, delaying outlet work.</li>\n  <li>Uncoordinated cuts made at outlet locations; exact intended positioning unknown.</li>\n  <li>Joel Yanes unable to finish vanity trim-out alone, requiring at least two workers.</li>\n  <li>Awaiting ETA on powder room faucet; plumbing completion pending.</li>\n</ul>\n\n<h3>3) Upcoming Work</h3>\n<ul>\n  <li>Joel Yanes scheduled to return tomorrow afternoon to complete trim-out (two-man job).</li>\n  <li>Ivan scheduled on site from Thursday afternoon through Sunday.</li>\n  <li>Follow-up needed with tile vendor for status update.</li>\n  <li>Monitor electricians’ return to resume outlet and electrical work.</li>\n</ul>\n\n<h3>4) Action Items</h3>\n<ul>\n  <li>Ensure field supervision monitors outlet and electrical work closely to avoid uncoordinated cuts.</li>\n  <li>Confirm powder room faucet ETA and verify adjustable P-trap compatibility for sink installation.</li>\n  <li>Coordinate two-person crew for vanity trim completion with Joel.</li>\n  <li>Request update from tile vendor to confirm delivery and installation schedule.</li>\n</ul>\n```",
+          "week": "D-2025-05-06",
+          "sentAt": "2025-05-07T19:47:45.275Z"
+        },
         {
           "id": 35,
           "chatbotId": 37,
@@ -4627,6 +4648,13 @@
       ],
       "summaries": [
         {
+          "id": 43,
+          "chatbotId": 41,
+          "content": "```html\n<h2>16 Bonnie Project - Daily Summary (Yesterday)</h2>\n\n<h3>1) Key Achievements</h3>\n<ul>\n  <li>Secondary shelves installed and master closet finishing work in progress by Christian on-site.</li>\n  <li>Cooktop preparation completed, ready for appliance install.</li>\n  <li>Max scheduled to complete electrical trim out tomorrow.</li>\n  <li>Notice of Violation (NOV) lifted after materials and sediment were cleared from the street.</li>\n</ul>\n\n<h3>2) Issues or Blockers</h3>\n<ul>\n  <li>Some touchups were missed during the late work conducted last week; documentation of these issues is planned for follow-up.</li>\n  <li>Pending confirmation on exterior touchups schedule from Radim.</li>\n</ul>\n\n<h3>3) Upcoming Work</h3>\n<ul>\n  <li>Joel to begin final trim out and appliance installation starting Tuesday.</li>\n  <li>Max to complete electrical trim out tomorrow.</li>\n  <li>Exterior touchups to be scheduled and completed pending Radim's availability.</li>\n</ul>\n\n<h3>4) Action Items</h3>\n<ul>\n  <li>Submit photos documenting missed touchups for contractor follow-up.</li>\n  <li>Confirm and communicate Radim’s schedule for exterior touchups.</li>\n  <li>Coordinate with Joel to ensure smooth start of trim out and appliance installation on Tuesday.</li>\n</ul>\n```",
+          "week": "D-2025-05-06",
+          "sentAt": "2025-05-07T19:47:52.816Z"
+        },
+        {
           "id": 38,
           "chatbotId": 41,
           "content": "<h2>16 Bonnie – Weekly Summary • Week 2025-W18 – Week Ending April 29, 2025</h2>\n\n<ol>\n  <li><strong>Key Achievements</strong>\n    <ul>\n      <li>NOV lifted after removal of materials and sediment from the street.</li>\n      <li>Cooktop prep and cut-in progress, with cooktop confirmed offsite at the office.</li>\n      <li>Plumbing trim completed and plumbing trim out in progress with Brandon on site.</li>\n      <li>Secondary shelves and cabinet pulls installation scheduled for master closet.</li>\n      <li>Home cleaning scheduled and underway by A&amp;G and stucco team.</li>\n      <li>Walkthroughs completed with electric trim team; electric trim to continue early next week.</li>\n      <li>Stationary door fixed; new latch ordered for sliding door.</li>\n      <li>Debris removal and site cleaning completed including pavers removed from road and driveway.</li>\n    </ul>\n  </li>\n  <li><strong>Issues or Blockers</strong>\n    <ul>\n      <li>Some exterior touch-ups missed last week pending completion.</li>\n      <li>Sliding door latch lost by installation team and currently on order and in transit.</li>\n      <li>LED strips required for final installation are still on order.</li>\n      <li>Need for multiple workers to assist with moving the tub upstairs.</li>\n    </ul>\n  </li>\n  <li><strong>Upcoming Work</strong>\n    <ul>\n      <li>Electric trim continuation scheduled for Friday and early next week.</li>\n      <li>Christian to install secondary closet shelving and finish master closet trim Monday.</li>\n      <li>Brandon to continue plumbing trim installation tomorrow.</li>\n      <li>Gerardex requested to cover exposed flooring for protection.</li>\n      <li>Schedule countertop cutting and related installation.</li>\n      <li>Notification to remove porta john after site re-cleaning.</li>\n    </ul>\n  </li>\n  <li><strong>Action Items</strong>\n    <ul>\n      <li><strong>Aaron</strong> to coordinate cooktop delivery and schedule Vilma for cooktop cut-out.</li>\n      <li><strong>Rashad</strong> to confirm arrival of all electric materials and assist with onsite material handling.</li>\n      <li><strong>Christian</strong> to complete installation of master closet secondary shelves and cabinet pulls.</li>\n      <li><strong>Brandon</strong> to continue plumbing trim out and provide drainage and sewage caps.</li>\n      <li><strong>All teams</strong> to verify all materials are onsite and accounted for prior to upcoming installations.</li>\n    </ul>\n  </li>\n</ol>",
@@ -4638,6 +4666,6 @@
       "asanaProjects": []
     }
   ],
-  "exportedAt": "2025-05-07T19:43:51.079Z",
+  "exportedAt": "2025-05-07T19:51:13.759Z",
   "exportedBy": "SPH Chat Migration Utility"
 }
