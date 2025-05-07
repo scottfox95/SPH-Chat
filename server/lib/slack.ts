@@ -456,6 +456,23 @@ export async function sendProjectSummaryToSlack(
     console.log(`Project name: ${projectName}`);
     console.log(`Summary content length: ${summaryContent.length} chars`);
     
+    // First, let's verify if the channel exists and is accessible
+    try {
+      // Try to get channel info to verify it exists and we can see it
+      const channelInfo = await slack.conversations.info({ channel: channelId });
+      console.log(`Channel info retrieved: ${channelInfo.channel?.name || 'Unknown'} (${channelId})`);
+      
+      // Check if the bot is a member of the channel
+      if (!channelInfo.channel?.is_member) {
+        console.warn(`⚠️ Bot is not a member of the channel: ${channelInfo.channel?.name || 'Unknown'} (${channelId})`);
+        console.warn(`This may cause issues with sending messages. Consider using /invite @SPH_Buddy in the channel.`);
+      }
+    } catch (channelError: any) {
+      // If we can't get channel info, log it but continue trying to send the message
+      console.warn(`⚠️ Could not verify channel access for ${channelId}: ${channelError?.data?.error || channelError?.message}`);
+      console.warn(`Will still attempt to send the message.`);
+    }
+    
     // Create a formatted message with blocks for better presentation
     const message: ChatPostMessageArguments = {
       channel: channelId,
@@ -504,9 +521,26 @@ export async function sendProjectSummaryToSlack(
     return result;
   } catch (error: any) {
     console.error("Error sending project summary to Slack:", error);
+    
+    // Provide more detailed error messages based on error type
     if (error.data) {
+      const errorCode = error.data.error;
       console.error(`Slack API error details: ${JSON.stringify(error.data)}`);
+      
+      // Handle specific error cases with helpful messages
+      if (errorCode === 'channel_not_found') {
+        console.error(`Channel ${channelId} not found. Make sure the channel ID is correct.`);
+      } else if (errorCode === 'not_in_channel') {
+        console.error(`Bot is not in channel ${channelId}. Please invite the bot to the channel using /invite @SPH_Buddy.`);
+      } else if (errorCode === 'invalid_auth') {
+        console.error('Invalid authentication token. Please check your Slack bot token.');
+      } else if (errorCode === 'channel_is_archived') {
+        console.error(`Channel ${channelId} is archived and cannot receive messages.`);
+      } else if (errorCode === 'missing_scope') {
+        console.error(`Missing required OAuth scope: ${error.data.needed}. Current scopes: ${error.data.provided}.`);
+      }
     }
+    
     return null;
   }
 }
