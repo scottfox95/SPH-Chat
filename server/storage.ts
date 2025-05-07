@@ -75,11 +75,13 @@ export interface IStorage {
   
   // Project methods
   getProjects(): Promise<Project[]>;
+  getAllProjects(): Promise<Project[]>; // Get all projects for scheduler
   getProject(id: number): Promise<Project | undefined>;
   createProject(project: InsertProject): Promise<Project>;
   updateProject(id: number, data: Partial<InsertProject>): Promise<Project | undefined>;
   deleteProject(id: number): Promise<boolean>;
   getProjectChatbots(projectId: number): Promise<Chatbot[]>;
+  getProjectSummarySettings(projectId: number): Promise<{ slackChannelId: string | null } | undefined>;
   
   // User-Project assignment methods
   getUserProjects(userId: number): Promise<UserProject[]>;
@@ -128,6 +130,7 @@ export interface IStorage {
   
   // Message methods
   getMessages(chatbotId: number, limit?: number): Promise<Message[]>;
+  getChatbotMessagesByDateRange(chatbotId: number, startDate: Date, endDate: Date): Promise<Message[]>;
   createMessage(message: InsertMessage): Promise<Message>;
   clearMessages(chatbotId: number): Promise<boolean>;
   
@@ -912,12 +915,37 @@ export class DatabaseStorage implements IStorage {
     }
   }
   
+  // Alias for getAllProjects for scheduler
+  async getAllProjects(): Promise<Project[]> {
+    return this.getProjects();
+  }
+  
   async getProject(id: number): Promise<Project | undefined> {
     try {
       const [project] = await db.select().from(projects).where(eq(projects.id, id));
       return project;
     } catch (error) {
       console.error(`Failed to get project with id ${id}:`, error);
+      return undefined;
+    }
+  }
+  
+  async getProjectSummarySettings(projectId: number): Promise<{ slackChannelId: string | null } | undefined> {
+    try {
+      // Get the last project summary to use its settings
+      const [lastSummary] = await db.select()
+        .from(projectSummaries)
+        .where(eq(projectSummaries.projectId, projectId))
+        .orderBy(desc(projectSummaries.sentAt))
+        .limit(1);
+        
+      if (lastSummary) {
+        return { slackChannelId: lastSummary.slackChannelId || null };
+      }
+      
+      return undefined;
+    } catch (error) {
+      console.error(`Failed to get project summary settings for project with id ${projectId}:`, error);
       return undefined;
     }
   }
@@ -1450,6 +1478,27 @@ export class DatabaseStorage implements IStorage {
       .where(eq(messages.chatbotId, chatbotId))
       .orderBy(messages.createdAt) // Oldest first
       .limit(limit);
+  }
+  
+  async getChatbotMessagesByDateRange(chatbotId: number, startDate: Date, endDate: Date): Promise<Message[]> {
+    try {
+      // Query messages within the date range for this chatbot
+      const result = await db.select()
+        .from(messages)
+        .where(
+          and(
+            eq(messages.chatbotId, chatbotId),
+            sql`${messages.createdAt} >= ${startDate.toISOString()}`,
+            sql`${messages.createdAt} <= ${endDate.toISOString()}`
+          )
+        )
+        .orderBy(messages.createdAt); // Sort by creation date (oldest first)
+      
+      return result;
+    } catch (error) {
+      console.error(`Failed to get messages by date range for chatbot ${chatbotId}:`, error);
+      return [];
+    }
   }
   
   async createMessage(message: InsertMessage): Promise<Message> {
