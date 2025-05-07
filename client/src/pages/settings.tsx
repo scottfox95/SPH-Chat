@@ -36,7 +36,9 @@ import {
   XCircle,
   Loader2,
   Database,
-  MessageCircle
+  MessageCircle,
+  Calendar,
+  Clock
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useQuery, useMutation } from "@tanstack/react-query";
@@ -55,6 +57,13 @@ export default function Settings() {
     smtpUser: "",
     smtpPass: "",
     smtpFrom: "",
+  });
+  const [schedulerSettings, setSchedulerSettings] = useState({
+    enableDailySchedule: false,
+    dailyScheduleTime: "08:00",
+    enableWeeklySchedule: false,
+    weeklyScheduleDay: "Monday",
+    weeklyScheduleTime: "08:00", 
   });
   const [testEmailAddress, setTestEmailAddress] = useState("");
   
@@ -149,6 +158,15 @@ export default function Settings() {
         smtpUser: settings.smtpUser || "",
         smtpPass: settings.smtpPass || "",
         smtpFrom: settings.smtpFrom || "",
+      });
+      
+      // Load scheduler settings
+      setSchedulerSettings({
+        enableDailySchedule: settings.enableDailySchedule || false,
+        dailyScheduleTime: settings.dailyScheduleTime || "08:00",
+        enableWeeklySchedule: settings.enableWeeklySchedule || false,
+        weeklyScheduleDay: settings.weeklyScheduleDay || "Monday",
+        weeklyScheduleTime: settings.weeklyScheduleTime || "08:00"
       });
     }
   }, [settings]);
@@ -270,6 +288,34 @@ export default function Settings() {
       });
     }
   });
+  
+  const updateSchedulerSettingsMutation = useMutation({
+    mutationFn: async (data: { 
+      enableDailySchedule: boolean,
+      dailyScheduleTime: string,
+      enableWeeklySchedule: boolean,
+      weeklyScheduleDay: string,
+      weeklyScheduleTime: string
+    }) => {
+      const response = await apiRequest('PUT', '/api/settings/scheduler', data);
+      return response.json();
+    },
+    onSuccess: async () => {
+      await refetchSettings();
+      
+      toast({
+        title: "Scheduler settings saved",
+        description: "Scheduled summary settings have been updated successfully.",
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Failed to save scheduler settings",
+        description: error.message || "An error occurred",
+        variant: "destructive",
+      });
+    }
+  });
 
   const handleSaveEmailSettings = () => {
     updateEmailSettingsMutation.mutate({
@@ -279,6 +325,16 @@ export default function Settings() {
       smtpUser: emailSettings.smtpUser || null,
       smtpPass: emailSettings.smtpPass || null,
       smtpFrom: emailSettings.smtpFrom || null
+    });
+  };
+  
+  const handleSaveSchedulerSettings = () => {
+    updateSchedulerSettingsMutation.mutate({
+      enableDailySchedule: schedulerSettings.enableDailySchedule,
+      dailyScheduleTime: schedulerSettings.dailyScheduleTime,
+      enableWeeklySchedule: schedulerSettings.enableWeeklySchedule,
+      weeklyScheduleDay: schedulerSettings.weeklyScheduleDay,
+      weeklyScheduleTime: schedulerSettings.weeklyScheduleTime
     });
   };
   
@@ -1176,6 +1232,144 @@ You should **never make up information**. You may summarize or synthesize detail
                   </div>
                   
                   {updateSettingsMutation.isPending && (
+                    <p className="text-xs text-amber-600 flex items-center mt-2">
+                      <Loader2 className="h-3 w-3 mr-1 animate-spin" />
+                      Updating settings...
+                    </p>
+                  )}
+                </>
+              )}
+            </CardContent>
+          </Card>
+          
+          {/* Scheduler Settings */}
+          <Card className="lg:col-span-2">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Calendar className="h-5 w-5 text-[#D2B48C]" />
+                Scheduled Summaries
+              </CardTitle>
+              <CardDescription>
+                Configure automated daily and weekly summary generation
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {isLoadingSettings ? (
+                <div className="flex items-center justify-center py-4">
+                  <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
+                </div>
+              ) : (
+                <>
+                  <div className="space-y-4">
+                    <div className="border rounded-md p-4">
+                      <div className="flex items-center space-x-2 mb-4">
+                        <Switch
+                          id="enable-daily-schedule"
+                          checked={schedulerSettings.enableDailySchedule}
+                          onCheckedChange={(checked) => setSchedulerSettings({
+                            ...schedulerSettings,
+                            enableDailySchedule: checked
+                          })}
+                        />
+                        <Label htmlFor="enable-daily-schedule" className="font-medium">Daily Summary</Label>
+                      </div>
+                      <div className="pl-8 space-y-4">
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                            <Label htmlFor="daily-time" className="text-sm">Send at time</Label>
+                            <Input
+                              id="daily-time"
+                              type="time"
+                              value={schedulerSettings.dailyScheduleTime}
+                              onChange={(e) => setSchedulerSettings({
+                                ...schedulerSettings,
+                                dailyScheduleTime: e.target.value
+                              })}
+                              disabled={!schedulerSettings.enableDailySchedule}
+                              className="focus-visible:ring-[#D2B48C]"
+                            />
+                            <p className="text-xs text-gray-500">Daily summaries will be sent every weekday at this time</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="border rounded-md p-4">
+                      <div className="flex items-center space-x-2 mb-4">
+                        <Switch
+                          id="enable-weekly-schedule"
+                          checked={schedulerSettings.enableWeeklySchedule}
+                          onCheckedChange={(checked) => setSchedulerSettings({
+                            ...schedulerSettings,
+                            enableWeeklySchedule: checked
+                          })}
+                        />
+                        <Label htmlFor="enable-weekly-schedule" className="font-medium">Weekly Summary</Label>
+                      </div>
+                      <div className="pl-8 space-y-4">
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                            <Label htmlFor="weekly-day" className="text-sm">Day of week</Label>
+                            <Select
+                              value={schedulerSettings.weeklyScheduleDay}
+                              onValueChange={(value) => setSchedulerSettings({
+                                ...schedulerSettings,
+                                weeklyScheduleDay: value
+                              })}
+                              disabled={!schedulerSettings.enableWeeklySchedule}
+                            >
+                              <SelectTrigger className="focus-visible:ring-[#D2B48C]">
+                                <SelectValue placeholder="Select day" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="Monday">Monday</SelectItem>
+                                <SelectItem value="Tuesday">Tuesday</SelectItem>
+                                <SelectItem value="Wednesday">Wednesday</SelectItem>
+                                <SelectItem value="Thursday">Thursday</SelectItem>
+                                <SelectItem value="Friday">Friday</SelectItem>
+                                <SelectItem value="Saturday">Saturday</SelectItem>
+                                <SelectItem value="Sunday">Sunday</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="weekly-time" className="text-sm">Time</Label>
+                            <Input
+                              id="weekly-time"
+                              type="time"
+                              value={schedulerSettings.weeklyScheduleTime}
+                              onChange={(e) => setSchedulerSettings({
+                                ...schedulerSettings,
+                                weeklyScheduleTime: e.target.value
+                              })}
+                              disabled={!schedulerSettings.enableWeeklySchedule}
+                              className="focus-visible:ring-[#D2B48C]"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex justify-end">
+                    <Button
+                      type="button"
+                      onClick={handleSaveSchedulerSettings}
+                      disabled={updateSchedulerSettingsMutation.isPending}
+                      className="bg-[#D2B48C] hover:bg-[#C2A47C] text-white"
+                    >
+                      {updateSchedulerSettingsMutation.isPending ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          Saving...
+                        </>
+                      ) : (
+                        'Save Scheduler Settings'
+                      )}
+                    </Button>
+                  </div>
+                  
+                  {updateSchedulerSettingsMutation.isPending && (
                     <p className="text-xs text-amber-600 flex items-center mt-2">
                       <Loader2 className="h-3 w-3 mr-1 animate-spin" />
                       Updating settings...
