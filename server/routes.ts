@@ -35,6 +35,11 @@ import {
   slack // Import the slack client directly for testing
 } from "./lib/slack";
 import {
+  getSchedulerStatus,
+  initSummaryScheduler
+} from "./lib/scheduler";
+
+import {
   testAsanaConnection,
   getAsanaProjects,
   getAsanaProjectTasks,
@@ -50,6 +55,11 @@ import { format } from "date-fns";
 import { setupAuth } from "./auth";
 import { hashPassword } from "./lib/password-utils";
 import { asyncHandler } from "./lib/api-utils";
+import { 
+  generateDailySummaryForProject, 
+  generateWeekToDateSummaryForProject,
+  generateWeeklyProjectSummary 
+} from "./lib/summaries";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Set up authentication
@@ -2543,6 +2553,229 @@ You should **never make up information**. You may summarize or synthesize detail
       res.status(500).json({ 
         status: "error", 
         message: "Error testing Slack integration" 
+      });
+    }
+  });
+  
+  // Scheduler API endpoints
+  apiRouter.post("/scheduler/run-daily-summaries", isAuthenticated, requireAdmin, async (req, res) => {
+    try {
+      // Get all projects
+      const projects = await storage.getAllProjects();
+      
+      let successCount = 0;
+      let errorCount = 0;
+      const results = [];
+      
+      for (const project of projects) {
+        try {
+          // Get Slack channel ID from the project's summary settings
+          const settings = await storage.getProjectSummarySettings(project.id);
+          const slackChannelId = settings?.slackChannelId || null;
+          
+          if (!slackChannelId) {
+            results.push({
+              projectId: project.id, 
+              projectName: project.name,
+              success: false,
+              message: "No Slack channel configured"
+            });
+            continue;
+          }
+          
+          // Generate and send daily summary
+          const result = await generateDailySummaryForProject(project.id, slackChannelId, storage);
+          
+          results.push({
+            projectId: project.id,
+            projectName: project.name,
+            success: result.success,
+            message: result.message
+          });
+          
+          if (result.success) {
+            successCount++;
+          } else {
+            errorCount++;
+          }
+        } catch (projectError) {
+          errorCount++;
+          results.push({
+            projectId: project.id,
+            projectName: project.name,
+            success: false,
+            message: `Error: ${projectError instanceof Error ? projectError.message : String(projectError)}`
+          });
+        }
+      }
+      
+      return res.json({
+        success: true,
+        message: `Daily summaries completed. Success: ${successCount}, Errors: ${errorCount}`,
+        results
+      });
+    } catch (error) {
+      console.error("Error running daily summaries:", error);
+      return res.status(500).json({
+        success: false,
+        message: `Error running daily summaries: ${error instanceof Error ? error.message : String(error)}`
+      });
+    }
+  });
+  
+  apiRouter.post("/scheduler/run-weekly-summaries", isAuthenticated, requireAdmin, async (req, res) => {
+    try {
+      // Get all projects
+      const projects = await storage.getAllProjects();
+      
+      let successCount = 0;
+      let errorCount = 0;
+      const results = [];
+      
+      for (const project of projects) {
+        try {
+          // Get Slack channel ID from the project's summary settings
+          const settings = await storage.getProjectSummarySettings(project.id);
+          const slackChannelId = settings?.slackChannelId || null;
+          
+          if (!slackChannelId) {
+            results.push({
+              projectId: project.id, 
+              projectName: project.name,
+              success: false,
+              message: "No Slack channel configured"
+            });
+            continue;
+          }
+          
+          // Generate and send weekly summary
+          const result = await generateWeeklyProjectSummary(project.id, slackChannelId, storage);
+          
+          results.push({
+            projectId: project.id,
+            projectName: project.name,
+            success: result.success,
+            message: result.message
+          });
+          
+          if (result.success) {
+            successCount++;
+          } else {
+            errorCount++;
+          }
+        } catch (projectError) {
+          errorCount++;
+          results.push({
+            projectId: project.id,
+            projectName: project.name,
+            success: false,
+            message: `Error: ${projectError instanceof Error ? projectError.message : String(projectError)}`
+          });
+        }
+      }
+      
+      return res.json({
+        success: true,
+        message: `Weekly summaries completed. Success: ${successCount}, Errors: ${errorCount}`,
+        results
+      });
+    } catch (error) {
+      console.error("Error running weekly summaries:", error);
+      return res.status(500).json({
+        success: false,
+        message: `Error running weekly summaries: ${error instanceof Error ? error.message : String(error)}`
+      });
+    }
+  });
+  
+  apiRouter.post("/scheduler/run-week-to-date-summaries", isAuthenticated, requireAdmin, async (req, res) => {
+    try {
+      // Get all projects
+      const projects = await storage.getAllProjects();
+      
+      let successCount = 0;
+      let errorCount = 0;
+      const results = [];
+      
+      for (const project of projects) {
+        try {
+          // Get Slack channel ID from the project's summary settings
+          const settings = await storage.getProjectSummarySettings(project.id);
+          const slackChannelId = settings?.slackChannelId || null;
+          
+          if (!slackChannelId) {
+            results.push({
+              projectId: project.id, 
+              projectName: project.name,
+              success: false,
+              message: "No Slack channel configured"
+            });
+            continue;
+          }
+          
+          // Generate and send week-to-date summary
+          const result = await generateWeekToDateSummaryForProject(project.id, slackChannelId, storage);
+          
+          results.push({
+            projectId: project.id,
+            projectName: project.name,
+            success: result.success,
+            message: result.message
+          });
+          
+          if (result.success) {
+            successCount++;
+          } else {
+            errorCount++;
+          }
+        } catch (projectError) {
+          errorCount++;
+          results.push({
+            projectId: project.id,
+            projectName: project.name,
+            success: false,
+            message: `Error: ${projectError instanceof Error ? projectError.message : String(projectError)}`
+          });
+        }
+      }
+      
+      return res.json({
+        success: true,
+        message: `Week-to-date summaries completed. Success: ${successCount}, Errors: ${errorCount}`,
+        results
+      });
+    } catch (error) {
+      console.error("Error running week-to-date summaries:", error);
+      return res.status(500).json({
+        success: false,
+        message: `Error running week-to-date summaries: ${error instanceof Error ? error.message : String(error)}`
+      });
+    }
+  });
+  
+  apiRouter.get("/scheduler/status", isAuthenticated, requireAdmin, async (req, res) => {
+    try {
+      const status = getSchedulerStatus();
+      
+      // Also get settings to show scheduler configuration
+      const settings = await storage.getSettings();
+      
+      return res.json({
+        success: true,
+        status,
+        settings: {
+          enableDailySchedule: settings?.enableDailySchedule || false,
+          dailyScheduleTime: settings?.dailyScheduleTime || "08:00",
+          enableWeeklySchedule: settings?.enableWeeklySchedule || false,
+          weeklyScheduleDay: settings?.weeklyScheduleDay || "Monday",
+          weeklyScheduleTime: settings?.weeklyScheduleTime || "08:00"
+        }
+      });
+    } catch (error) {
+      console.error("Error getting scheduler status:", error);
+      return res.status(500).json({
+        success: false,
+        message: `Error getting scheduler status: ${error instanceof Error ? error.message : String(error)}`
       });
     }
   });
