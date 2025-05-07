@@ -1,0 +1,33 @@
+<html>
+<head>
+ <style>
+   body {font-family: Arial, sans-serif; line-height: 1.5; color: #333;}
+   h2 {color: #004080; border-bottom: 2px solid #004080; padding-bottom: 4px;}
+   ul {margin-top: 0;}
+ </style>
+</head>
+<body>
+<h2>FBAS Tracker Project Master Weekly Summary (May 5 - May 7)</h2>
+<h3>1) Key Achievements</h3>
+<ul>
+ <li>Confirmed 5/8" drywall upgrade at 1293 Sylvian as paid by the client, with insulation change orders finalized and installed including spray foam, batt, and rockwool applications.</li>
+ <li>Interior paint colors finalized for 4846 Adams across multiple surfaces; painting in progress with scheduled completion by May 17.</li>
+ <li>AC and furnace installation completed at 4846 Adams; pool bonding and electrical inspections successfully passed.</li>
+ <li>Flooring preparation started at 4846 Adams and 6265 Ferry, including covering floors and prime point-ups.</li>
+ <li>Significant cabinetry progress across projects: Dmitry on schedule for early completion at 4846 Adams; Raul advancing cabinetry installation at 6265 Ferry; Christian progressing on secondary shelves and master closets especially at 16 Bonnie and 4846 Adams.</li>
+ <li>Fireplace slabs removed at 6265 Ferry to allow flooring finishes and shelving adjustments.</li>
+ <li>Material deliveries coordinated effectively, including back door and master tile deliveries at 6265 Ferry and window installation scheduled with latch material at 16 Bonnie.</li>
+ <li>Site organization and cleaning efforts by A&G teams across multiple projects to facilitate upcoming flooring and finishing work.</li>
+ <li>Project schedule reviewed and updated for 4846 Adams, outlining key upcoming milestones through July 13.</li>
+ <li>Exterior work ongoing at 4846 Adams including grading, French drain, swale planting, and pool construction phases.</li>
+ <li>Notice of Violation (NOV) lifted at 16 Bonnie after street sediment and materials cleared.</li>
+ <li>Walkthroughs and inspections conducted, including a scheduled walkthrough at 16 Bonnie by Dimitri and project management.</li>
+</ul>
+<h3>2) Issues or Blockers</h3>
+<ul>
+ <li>Materials labeling and logistics issues at 1293 Sylvian: A&G delivered clips to the garage without notification or labeling; only one shipping label available for returns requiring prompt coordination.</li>
+ <li>Cabinetry miscommunications at 4846 Adams where Christian missed initial scopes for secondary closets and pantry; handrail plan clarification pending.</li>
+ <li>Coordination challenge to ensure flooring installation precedes cabinetry installation at 4846 Adams and 6265 Ferry to avoid rework or damage.</li>
+ <li>At 6265 Ferry, incomplete living room shelf installation delayed fireplace slab work; powder room plumbing trim awaiting final faucet and P-trap deliveries causing potential schedule risks.</li>
+ <li>Electrical trim out staffing shortages at 6265 Ferry with Joel requiring additional help to complete work.</li>
+ <li>Appliance installation d

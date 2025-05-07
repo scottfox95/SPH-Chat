@@ -1,4 +1,5 @@
 import { WebClient, type ChatPostMessageArguments } from "@slack/web-api";
+import { convertHtmlToSlackFormat } from "./html-to-slack";
 
 // Initialize Slack client with the token and explicitly force a new connection
 // This helps ensure we're not using a cached version of the client with old permissions
@@ -500,7 +501,7 @@ export async function sendProjectSummaryToSlack(
           type: "section",
           text: {
             type: "mrkdwn",
-            text: summaryContent.substring(0, 3000) // Limit to 3000 chars to avoid Slack limits
+            text: convertHtmlToSlackFormat(summaryContent).substring(0, 3000) // Convert HTML to Slack format and limit to 3000 chars
           }
         },
         {
