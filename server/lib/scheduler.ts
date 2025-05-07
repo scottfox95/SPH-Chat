@@ -1,9 +1,34 @@
 import * as cron from 'node-cron';
-import { IStorage, Settings } from '../storage';
+import { IStorage } from '../storage';
 import { format } from 'date-fns';
 import { storage } from '../storage';
 import { generateDailySummaryForProject, generateWeekToDateSummaryForProject, generateWeeklyProjectSummary } from './summaries';
 import { logger } from './logger';
+
+// Settings type definition for scheduler
+type Settings = {
+  id: number;
+  openaiModel: string;
+  includeSourceDetails: boolean;
+  includeDateInSource: boolean;
+  includeUserInSource: boolean;
+  responseTemplate: string | null;
+  summaryPrompt: string | null;
+  // Scheduling settings
+  enableDailySchedule: boolean;
+  dailyScheduleTime: string; // Format: HH:MM in 24-hour format
+  enableWeeklySchedule: boolean;
+  weeklyScheduleDay: string; // Day of week for weekly summary
+  weeklyScheduleTime: string; // Format: HH:MM in 24-hour format
+  // Email settings
+  smtpEnabled: boolean;
+  smtpHost: string | null;
+  smtpPort: string;
+  smtpUser: string | null;
+  smtpPassword: string | null;
+  smtpFromEmail: string | null;
+  smtpFromName: string | null;
+};
 
 // Store active scheduled tasks
 type SchedulerTask = {
