@@ -660,6 +660,137 @@ export async function generateWeeklySummary(slackMessages: string[], projectName
   }
 }
 
+/**
+ * Function to generate a daily summary of activities from the previous day
+ * @param slackMessages Array of slack messages from the previous day
+ * @param projectName Name of the project/chatbot for context
+ * @returns HTML formatted summary content
+ */
+export async function generateDailySummary(slackMessages: string[], projectName: string) {
+  try {
+    // Get the settings
+    const settings = await getSettings();
+    
+    // Get the model from settings
+    let model = settings?.openaiModel || "gpt-4o";
+    
+    // Convert o4-mini to the correct format for the OpenAI API if needed
+    if (model === "o4-mini") {
+      model = "gpt-4o-mini";
+    }
+    
+    // Daily summary prompt
+    const dailySummaryPrompt = `You are an expert construction project manager. Create a concise daily summary of yesterday's activity for the ${projectName} homebuilding project based on Slack channel messages. Focus on key decisions, progress updates, issues, and upcoming milestones. Format the summary in HTML with sections for: 1) Key Achievements, 2) Issues or Blockers, 3) Upcoming Work, and 4) Action Items. Keep it professional and informative.`;
+    
+    // Use the OpenAI Responses API
+    console.log(`Making OpenAI Responses API request for daily summary for ${projectName}`);
+    
+    // Convert legacy model name format if needed
+    if (model.startsWith("gpt-")) {
+      if (model === "gpt-4o") model = "o4";
+      else if (model === "gpt-4o-mini") model = "o4-mini";
+      // Note: gpt-4.1-mini doesn't need conversion - keep as is
+      // Add other model conversions as needed
+    }
+    
+    // Create request parameters
+    const requestParams: any = {
+      model,
+      instructions: dailySummaryPrompt,
+      input: `Here are the Slack messages from yesterday for the ${projectName} project:\n\n${slackMessages.join("\n\n")}`,
+      max_output_tokens: 1500
+    };
+    
+    // Only add temperature if we're using a model that supports it
+    if (model !== "o1" && !model.includes("-preview") && !model.includes("o4-mini") && !model.includes("4.1-mini")) {
+      requestParams.temperature = 0.2; // Lower temperature for faster responses
+    }
+    
+    const response = await openai.responses.create(requestParams);
+    
+    // Extract text content from the response using our helper function
+    return extractTextFromResponseOutput(response.output) || "Unable to generate daily summary.";
+  } catch (error) {
+    console.error("OpenAI API error in daily summary:", error);
+    return `<p>Error generating daily summary for ${projectName}. Please try again later.</p>`;
+  }
+}
+
+/**
+ * Function to generate a week-to-date summary (from beginning of week to current day)
+ * @param slackMessages Array of slack messages from beginning of week to current day
+ * @param projectName Name of the project/chatbot for context
+ * @returns HTML formatted summary content
+ */
+export async function generateWeekToDateSummary(slackMessages: string[], projectName: string) {
+  try {
+    // Get the settings
+    const settings = await getSettings();
+    
+    // Get the model from settings
+    let model = settings?.openaiModel || "gpt-4o";
+    
+    // Convert o4-mini to the correct format for the OpenAI API if needed
+    if (model === "o4-mini") {
+      model = "gpt-4o-mini";
+    }
+    
+    // Calculate date range for the prompt
+    const today = new Date();
+    const currentDay = today.getDay(); // 0 is Sunday, 1 is Monday, etc.
+    const daysFromMonday = currentDay === 0 ? 6 : currentDay - 1; // Adjust for week starting on Monday
+    
+    const startOfWeek = new Date(today);
+    startOfWeek.setDate(today.getDate() - daysFromMonday);
+    
+    const startDateStr = startOfWeek.toLocaleDateString('en-US', { 
+      weekday: 'long', 
+      month: 'long', 
+      day: 'numeric' 
+    });
+    const endDateStr = today.toLocaleDateString('en-US', { 
+      weekday: 'long', 
+      month: 'long', 
+      day: 'numeric' 
+    });
+    
+    // Week-to-date summary prompt
+    const weekToDateSummaryPrompt = `You are an expert construction project manager. Create a concise week-to-date summary of activity for the ${projectName} homebuilding project based on Slack channel messages from ${startDateStr} through ${endDateStr}. Focus on key decisions, progress updates, issues, and upcoming milestones. Format the summary in HTML with sections for: 1) Key Achievements, 2) Issues or Blockers, 3) Upcoming Work, and 4) Action Items. Keep it professional and informative.`;
+    
+    // Use the OpenAI Responses API
+    console.log(`Making OpenAI Responses API request for week-to-date summary for ${projectName}`);
+    
+    // Convert legacy model name format if needed
+    if (model.startsWith("gpt-")) {
+      if (model === "gpt-4o") model = "o4";
+      else if (model === "gpt-4o-mini") model = "o4-mini";
+      // Note: gpt-4.1-mini doesn't need conversion - keep as is
+      // Add other model conversions as needed
+    }
+    
+    // Create request parameters
+    const requestParams: any = {
+      model,
+      instructions: weekToDateSummaryPrompt,
+      input: `Here are the Slack messages from ${startDateStr} to ${endDateStr} for the ${projectName} project:\n\n${slackMessages.join("\n\n")}`,
+      max_output_tokens: 1500
+    };
+    
+    // Only add temperature if we're using a model that supports it
+    if (model !== "o1" && !model.includes("-preview") && !model.includes("o4-mini") && !model.includes("4.1-mini")) {
+      requestParams.temperature = 0.2; // Lower temperature for faster responses
+    }
+    
+    const response = await openai.responses.create(requestParams);
+    
+    // Extract text content from the response using our helper function
+    return extractTextFromResponseOutput(response.output) || "Unable to generate week-to-date summary.";
+  } catch (error) {
+    console.error("OpenAI API error in week-to-date summary:", error);
+    return `<p>Error generating week-to-date summary for ${projectName}. Please try again later.</p>`;
+  }
+}
+
 // Function to generate a combined project summary from multiple chatbot summaries
 export async function generateProjectSummary(
   projectName: string, 

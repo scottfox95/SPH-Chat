@@ -14,10 +14,19 @@ import {
   emailSettingsSchema,
   OPENAI_MODELS
 } from "@shared/schema";
-import { getChatbotResponse, generateWeeklySummary, generateProjectSummary, testOpenAIConnection } from "./lib/openai";
+import { 
+  getChatbotResponse, 
+  generateWeeklySummary, 
+  generateDailySummary,
+  generateWeekToDateSummary,
+  generateProjectSummary, 
+  testOpenAIConnection 
+} from "./lib/openai";
 import { 
   getFormattedSlackMessages, 
-  getWeeklySlackMessages, 
+  getWeeklySlackMessages,
+  getDailySlackMessages,
+  getWeekToDateSlackMessages,
   testSlackConnection, 
   validateSlackChannel,
   listAccessibleChannels,

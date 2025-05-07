@@ -226,6 +226,73 @@ export async function getWeeklySlackMessages(channelId: string) {
 }
 
 /**
+ * Gets messages from the previous day for daily summary generation
+ * @param channelId The ID of the channel to fetch messages from
+ * @returns Array of messages from the previous day
+ */
+export async function getDailySlackMessages(channelId: string) {
+  // If no Slack token is configured, return an empty array
+  if (!process.env.SLACK_BOT_TOKEN) {
+    console.warn("Skipping daily Slack message fetching as no token is configured");
+    return [];
+  }
+  
+  try {
+    const allMessages = await getSlackMessages(channelId, 200);
+    
+    // Calculate date for yesterday (previous day)
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    yesterday.setHours(0, 0, 0, 0);
+    
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    return allMessages.filter((msg) => {
+      const messageDate = new Date(parseFloat(msg.timestamp) * 1000);
+      return messageDate >= yesterday && messageDate < today;
+    });
+  } catch (error) {
+    console.error("Error fetching daily Slack messages:", error);
+    return [];
+  }
+}
+
+/**
+ * Gets messages from the current week up to current day for week-to-date summary generation
+ * @param channelId The ID of the channel to fetch messages from
+ * @returns Array of messages from the beginning of the week to current day
+ */
+export async function getWeekToDateSlackMessages(channelId: string) {
+  // If no Slack token is configured, return an empty array
+  if (!process.env.SLACK_BOT_TOKEN) {
+    console.warn("Skipping week-to-date Slack message fetching as no token is configured");
+    return [];
+  }
+  
+  try {
+    const allMessages = await getSlackMessages(channelId, 200);
+    
+    // Get the current date and determine the start of the week (Monday)
+    const now = new Date();
+    const currentDay = now.getDay(); // 0 is Sunday, 1 is Monday, etc.
+    const daysFromMonday = currentDay === 0 ? 6 : currentDay - 1; // Adjust for week starting on Monday
+    
+    const startOfWeek = new Date(now);
+    startOfWeek.setDate(now.getDate() - daysFromMonday);
+    startOfWeek.setHours(0, 0, 0, 0);
+    
+    return allMessages.filter((msg) => {
+      const messageDate = new Date(parseFloat(msg.timestamp) * 1000);
+      return messageDate >= startOfWeek;
+    });
+  } catch (error) {
+    console.error("Error fetching week-to-date Slack messages:", error);
+    return [];
+  }
+}
+
+/**
  * Sends a message to a Slack channel
  * @param channelId The ID of the channel to send the message to
  * @param text The message text
