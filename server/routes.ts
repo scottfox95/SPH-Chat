@@ -1783,6 +1783,76 @@ You should **never make up information**. You may summarize or synthesize detail
       res.status(500).json({ message: "Failed to update email settings" });
     }
   });
+
+  // Add a dedicated endpoint for scheduler settings
+  apiRouter.put("/settings/scheduler", isAuthenticated, async (req, res) => {
+    try {
+      const { 
+        enableDailySchedule, 
+        dailyScheduleTime, 
+        enableWeeklySchedule, 
+        weeklyScheduleDay, 
+        weeklyScheduleTime,
+        projectSchedulerSettings 
+      } = req.body;
+      
+      // Get current settings first
+      const currentSettings = await storage.getSettings();
+      if (!currentSettings) {
+        return res.status(404).json({ message: "Settings not found" });
+      }
+      
+      // Parse the project scheduler settings from JSON string if it exists
+      let parsedProjectSettings = {};
+      if (projectSchedulerSettings) {
+        try {
+          // If it's already a string, parse it; if it's an object, stringify and parse it to remove circular refs
+          parsedProjectSettings = typeof projectSchedulerSettings === 'string' 
+            ? JSON.parse(projectSchedulerSettings)
+            : JSON.parse(JSON.stringify(projectSchedulerSettings));
+        } catch (parseError) {
+          console.error("Error parsing project scheduler settings:", parseError);
+          return res.status(400).json({ 
+            message: "Invalid project scheduler settings format", 
+            error: parseError instanceof Error ? parseError.message : String(parseError)
+          });
+        }
+      }
+      
+      // Update only scheduler settings
+      const updatedSettings = await storage.updateSettings({
+        ...currentSettings,
+        enableDailySchedule,
+        dailyScheduleTime,
+        enableWeeklySchedule,
+        weeklyScheduleDay,
+        weeklyScheduleTime,
+        projectSchedulerSettings: parsedProjectSettings
+      });
+      
+      // Reinitialize scheduler with new settings if available
+      if (typeof initSummaryScheduler === 'function') {
+        try {
+          await initSummaryScheduler();
+          console.log("Scheduler reinitialized with new settings");
+        } catch (schedulerError) {
+          console.error("Error reinitializing scheduler:", schedulerError);
+          // Continue anyway, as the settings are saved
+        }
+      }
+      
+      res.json({
+        success: true,
+        message: "Scheduler settings updated successfully"
+      });
+    } catch (error) {
+      console.error("Error updating scheduler settings:", error);
+      res.status(500).json({ 
+        message: "Failed to update scheduler settings",
+        error: error instanceof Error ? error.message : String(error)
+      });
+    }
+  });
   
   // Test email connection
   apiRouter.get("/system/test-email", isAuthenticated, async (req, res) => {
