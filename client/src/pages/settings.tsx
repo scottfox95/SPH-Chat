@@ -364,13 +364,16 @@ export default function Settings() {
   };
   
   const handleSaveSchedulerSettings = () => {
+    // Ensure proper serialization by using JSON.stringify
+    const projectSettingsString = JSON.stringify(projectSchedulerSettings);
+    
     updateSchedulerSettingsMutation.mutate({
       enableDailySchedule: schedulerSettings.enableDailySchedule,
       dailyScheduleTime: schedulerSettings.dailyScheduleTime,
       enableWeeklySchedule: schedulerSettings.enableWeeklySchedule,
       weeklyScheduleDay: schedulerSettings.weeklyScheduleDay,
       weeklyScheduleTime: schedulerSettings.weeklyScheduleTime,
-      projectSchedulerSettings: projectSchedulerSettings
+      projectSchedulerSettings: projectSettingsString
     });
   };
   
