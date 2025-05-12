@@ -63,8 +63,19 @@ export default function Settings() {
     dailyScheduleTime: "08:00",
     enableWeeklySchedule: false,
     weeklyScheduleDay: "Monday",
-    weeklyScheduleTime: "08:00", 
+    weeklyScheduleTime: "08:00",
   });
+  
+  // Project-specific scheduler settings
+  const [projectSchedulerSettings, setProjectSchedulerSettings] = useState<{
+    [projectId: number]: {
+      enabled: boolean;
+      scheduleType: 'daily' | 'weekly' | 'both';
+      slackChannelId: string;
+      emailRecipients: string;
+      includeInGlobalSummaries: boolean;
+    }
+  }>({});
   const [testEmailAddress, setTestEmailAddress] = useState("");
   
   // Connection testing states
@@ -168,6 +179,19 @@ export default function Settings() {
         weeklyScheduleDay: settings.weeklyScheduleDay || "Monday",
         weeklyScheduleTime: settings.weeklyScheduleTime || "08:00"
       });
+      
+      // Load project scheduler settings
+      if (settings.projectSchedulerSettings) {
+        try {
+          const projectSettings = typeof settings.projectSchedulerSettings === 'string' 
+            ? JSON.parse(settings.projectSchedulerSettings) 
+            : settings.projectSchedulerSettings;
+          
+          setProjectSchedulerSettings(projectSettings);
+        } catch (error) {
+          console.error("Error parsing project scheduler settings:", error);
+        }
+      }
     }
   }, [settings]);
 
@@ -178,6 +202,15 @@ export default function Settings() {
   } = useQuery({
     queryKey: ['/api/system/slack-channels'],
     queryFn: () => fetch('/api/system/slack-channels').then(res => res.json())
+  });
+  
+  // Fetch projects for scheduler settings
+  const { 
+    data: projects, 
+    isLoading: isLoadingProjects 
+  } = useQuery({
+    queryKey: ['/api/projects'],
+    queryFn: () => fetch('/api/projects').then(res => res.json())
   });
 
   // Update settings mutation
@@ -295,7 +328,8 @@ export default function Settings() {
       dailyScheduleTime: string,
       enableWeeklySchedule: boolean,
       weeklyScheduleDay: string,
-      weeklyScheduleTime: string
+      weeklyScheduleTime: string,
+      projectSchedulerSettings?: any
     }) => {
       const response = await apiRequest('PUT', '/api/settings/scheduler', data);
       return response.json();
@@ -334,7 +368,39 @@ export default function Settings() {
       dailyScheduleTime: schedulerSettings.dailyScheduleTime,
       enableWeeklySchedule: schedulerSettings.enableWeeklySchedule,
       weeklyScheduleDay: schedulerSettings.weeklyScheduleDay,
-      weeklyScheduleTime: schedulerSettings.weeklyScheduleTime
+      weeklyScheduleTime: schedulerSettings.weeklyScheduleTime,
+      projectSchedulerSettings: projectSchedulerSettings
+    });
+  };
+  
+  // Helper function to update project scheduler settings
+  const updateProjectSchedulerSetting = (
+    projectId: number, 
+    field: string, 
+    value: any
+  ) => {
+    setProjectSchedulerSettings(prev => {
+      // Create a copy of the current settings
+      const updated = { ...prev };
+      
+      // Initialize project settings if they don't exist
+      if (!updated[projectId]) {
+        updated[projectId] = {
+          enabled: false,
+          scheduleType: 'both',
+          slackChannelId: '',
+          emailRecipients: '',
+          includeInGlobalSummaries: true
+        };
+      }
+      
+      // Update the specific field
+      updated[projectId] = {
+        ...updated[projectId],
+        [field]: value
+      };
+      
+      return updated;
     });
   };
   
@@ -1254,99 +1320,270 @@ You should **never make up information**. You may summarize or synthesize detail
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              {isLoadingSettings ? (
+              {isLoadingSettings || isLoadingProjects ? (
                 <div className="flex items-center justify-center py-4">
                   <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
                 </div>
               ) : (
                 <>
-                  <div className="space-y-4">
+                  <div className="space-y-6">
                     <div className="border rounded-md p-4">
-                      <div className="flex items-center space-x-2 mb-4">
-                        <Switch
-                          id="enable-daily-schedule"
-                          checked={schedulerSettings.enableDailySchedule}
-                          onCheckedChange={(checked) => setSchedulerSettings({
-                            ...schedulerSettings,
-                            enableDailySchedule: checked
-                          })}
-                        />
-                        <Label htmlFor="enable-daily-schedule" className="font-medium">Daily Summary</Label>
-                      </div>
-                      <div className="pl-8 space-y-4">
-                        <div className="grid grid-cols-2 gap-4">
-                          <div className="space-y-2">
-                            <Label htmlFor="daily-time" className="text-sm">Send at time</Label>
-                            <Input
-                              id="daily-time"
-                              type="time"
-                              value={schedulerSettings.dailyScheduleTime}
-                              onChange={(e) => setSchedulerSettings({
-                                ...schedulerSettings,
-                                dailyScheduleTime: e.target.value
-                              })}
-                              disabled={!schedulerSettings.enableDailySchedule}
-                              className="focus-visible:ring-[#D2B48C]"
-                            />
-                            <p className="text-xs text-gray-500">Daily summaries will be sent every weekday at this time</p>
+                      <h3 className="text-base font-medium mb-4">Global Settings</h3>
+                      <p className="text-sm text-gray-500 mb-4">
+                        These settings apply as defaults for all projects unless overridden by project-specific settings.
+                      </p>
+                      
+                      <div className="border-t pt-4 mt-2 space-y-4">
+                        <div className="flex items-center space-x-2 mb-4">
+                          <Switch
+                            id="enable-daily-schedule"
+                            checked={schedulerSettings.enableDailySchedule}
+                            onCheckedChange={(checked) => setSchedulerSettings({
+                              ...schedulerSettings,
+                              enableDailySchedule: checked
+                            })}
+                          />
+                          <Label htmlFor="enable-daily-schedule" className="font-medium">Daily Summary</Label>
+                        </div>
+                        <div className="pl-8 space-y-4">
+                          <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                              <Label htmlFor="daily-time" className="text-sm">Send at time</Label>
+                              <Input
+                                id="daily-time"
+                                type="time"
+                                value={schedulerSettings.dailyScheduleTime}
+                                onChange={(e) => setSchedulerSettings({
+                                  ...schedulerSettings,
+                                  dailyScheduleTime: e.target.value
+                                })}
+                                disabled={!schedulerSettings.enableDailySchedule}
+                                className="focus-visible:ring-[#D2B48C]"
+                              />
+                              <p className="text-xs text-gray-500">Daily summaries will be sent every weekday at this time</p>
+                            </div>
+                          </div>
+                        </div>
+                      
+                        <div className="flex items-center space-x-2 mb-4 mt-4">
+                          <Switch
+                            id="enable-weekly-schedule"
+                            checked={schedulerSettings.enableWeeklySchedule}
+                            onCheckedChange={(checked) => setSchedulerSettings({
+                              ...schedulerSettings,
+                              enableWeeklySchedule: checked
+                            })}
+                          />
+                          <Label htmlFor="enable-weekly-schedule" className="font-medium">Weekly Summary</Label>
+                        </div>
+                        <div className="pl-8 space-y-4">
+                          <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                              <Label htmlFor="weekly-day" className="text-sm">Day of week</Label>
+                              <Select
+                                value={schedulerSettings.weeklyScheduleDay}
+                                onValueChange={(value) => setSchedulerSettings({
+                                  ...schedulerSettings,
+                                  weeklyScheduleDay: value
+                                })}
+                                disabled={!schedulerSettings.enableWeeklySchedule}
+                              >
+                                <SelectTrigger className="focus-visible:ring-[#D2B48C]">
+                                  <SelectValue placeholder="Select day" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="Monday">Monday</SelectItem>
+                                  <SelectItem value="Tuesday">Tuesday</SelectItem>
+                                  <SelectItem value="Wednesday">Wednesday</SelectItem>
+                                  <SelectItem value="Thursday">Thursday</SelectItem>
+                                  <SelectItem value="Friday">Friday</SelectItem>
+                                  <SelectItem value="Saturday">Saturday</SelectItem>
+                                  <SelectItem value="Sunday">Sunday</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
+                            <div className="space-y-2">
+                              <Label htmlFor="weekly-time" className="text-sm">Time</Label>
+                              <Input
+                                id="weekly-time"
+                                type="time"
+                                value={schedulerSettings.weeklyScheduleTime}
+                                onChange={(e) => setSchedulerSettings({
+                                  ...schedulerSettings,
+                                  weeklyScheduleTime: e.target.value
+                                })}
+                                disabled={!schedulerSettings.enableWeeklySchedule}
+                                className="focus-visible:ring-[#D2B48C]"
+                              />
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
                     
+                    {/* Project-specific settings */}
                     <div className="border rounded-md p-4">
-                      <div className="flex items-center space-x-2 mb-4">
-                        <Switch
-                          id="enable-weekly-schedule"
-                          checked={schedulerSettings.enableWeeklySchedule}
-                          onCheckedChange={(checked) => setSchedulerSettings({
-                            ...schedulerSettings,
-                            enableWeeklySchedule: checked
-                          })}
-                        />
-                        <Label htmlFor="enable-weekly-schedule" className="font-medium">Weekly Summary</Label>
-                      </div>
-                      <div className="pl-8 space-y-4">
-                        <div className="grid grid-cols-2 gap-4">
-                          <div className="space-y-2">
-                            <Label htmlFor="weekly-day" className="text-sm">Day of week</Label>
-                            <Select
-                              value={schedulerSettings.weeklyScheduleDay}
-                              onValueChange={(value) => setSchedulerSettings({
-                                ...schedulerSettings,
-                                weeklyScheduleDay: value
-                              })}
-                              disabled={!schedulerSettings.enableWeeklySchedule}
-                            >
-                              <SelectTrigger className="focus-visible:ring-[#D2B48C]">
-                                <SelectValue placeholder="Select day" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="Monday">Monday</SelectItem>
-                                <SelectItem value="Tuesday">Tuesday</SelectItem>
-                                <SelectItem value="Wednesday">Wednesday</SelectItem>
-                                <SelectItem value="Thursday">Thursday</SelectItem>
-                                <SelectItem value="Friday">Friday</SelectItem>
-                                <SelectItem value="Saturday">Saturday</SelectItem>
-                                <SelectItem value="Sunday">Sunday</SelectItem>
-                              </SelectContent>
-                            </Select>
+                      <h3 className="text-base font-medium mb-4">Project-Specific Settings</h3>
+                      <p className="text-sm text-gray-500 mb-4">
+                        Configure summary schedules for individual projects. These settings override the global settings.
+                      </p>
+                      
+                      <div className="border-t pt-4 mt-2">
+                        {projects && projects.length > 0 ? (
+                          <div className="space-y-6">
+                            {projects.map((project: any) => {
+                              const projectSettings = projectSchedulerSettings[project.id] || {
+                                enabled: false,
+                                scheduleType: 'both',
+                                slackChannelId: '',
+                                emailRecipients: '',
+                                includeInGlobalSummaries: true
+                              };
+                              
+                              return (
+                                <div key={project.id} className="p-4 border rounded-md">
+                                  <div className="flex items-center justify-between mb-4">
+                                    <div className="flex items-center space-x-2">
+                                      <Switch
+                                        id={`enable-project-${project.id}`}
+                                        checked={projectSettings.enabled}
+                                        onCheckedChange={(checked) => 
+                                          updateProjectSchedulerSetting(project.id, 'enabled', checked)
+                                        }
+                                      />
+                                      <Label htmlFor={`enable-project-${project.id}`} className="font-medium">
+                                        {project.name}
+                                      </Label>
+                                    </div>
+                                    <Badge 
+                                      variant={projectSettings.enabled ? "default" : "outline"}
+                                      className={projectSettings.enabled ? "bg-green-100 text-green-800 hover:bg-green-100" : ""}
+                                    >
+                                      {projectSettings.enabled ? "Enabled" : "Disabled"}
+                                    </Badge>
+                                  </div>
+                                  
+                                  {projectSettings.enabled && (
+                                    <div className="pl-8 space-y-4">
+                                      <div className="space-y-3">
+                                        <Label className="text-sm">Summary Type</Label>
+                                        <div className="flex items-center space-x-4">
+                                          <div className="flex items-center space-x-2">
+                                            <input 
+                                              type="radio" 
+                                              id={`schedule-type-daily-${project.id}`}
+                                              checked={projectSettings.scheduleType === 'daily'}
+                                              onChange={() => 
+                                                updateProjectSchedulerSetting(project.id, 'scheduleType', 'daily')
+                                              }
+                                              className="h-4 w-4 text-[#D2B48C] focus:ring-[#D2B48C]"
+                                            />
+                                            <Label htmlFor={`schedule-type-daily-${project.id}`} className="text-sm font-normal">
+                                              Daily Only
+                                            </Label>
+                                          </div>
+                                          <div className="flex items-center space-x-2">
+                                            <input 
+                                              type="radio" 
+                                              id={`schedule-type-weekly-${project.id}`}
+                                              checked={projectSettings.scheduleType === 'weekly'}
+                                              onChange={() => 
+                                                updateProjectSchedulerSetting(project.id, 'scheduleType', 'weekly')
+                                              }
+                                              className="h-4 w-4 text-[#D2B48C] focus:ring-[#D2B48C]"
+                                            />
+                                            <Label htmlFor={`schedule-type-weekly-${project.id}`} className="text-sm font-normal">
+                                              Weekly Only
+                                            </Label>
+                                          </div>
+                                          <div className="flex items-center space-x-2">
+                                            <input 
+                                              type="radio" 
+                                              id={`schedule-type-both-${project.id}`}
+                                              checked={projectSettings.scheduleType === 'both'}
+                                              onChange={() => 
+                                                updateProjectSchedulerSetting(project.id, 'scheduleType', 'both')
+                                              }
+                                              className="h-4 w-4 text-[#D2B48C] focus:ring-[#D2B48C]"
+                                            />
+                                            <Label htmlFor={`schedule-type-both-${project.id}`} className="text-sm font-normal">
+                                              Both
+                                            </Label>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      
+                                      <div className="space-y-2">
+                                        <Label htmlFor={`slack-channel-${project.id}`} className="text-sm">Slack Channel</Label>
+                                        <Select
+                                          value={projectSettings.slackChannelId}
+                                          onValueChange={(value) => 
+                                            updateProjectSchedulerSetting(project.id, 'slackChannelId', value)
+                                          }
+                                        >
+                                          <SelectTrigger className="focus-visible:ring-[#D2B48C]">
+                                            <SelectValue placeholder="Select a Slack channel" />
+                                          </SelectTrigger>
+                                          <SelectContent>
+                                            {slackChannels && slackChannels.map((channel: any) => (
+                                              <SelectItem key={channel.id} value={channel.id}>
+                                                # {channel.name}
+                                              </SelectItem>
+                                            ))}
+                                          </SelectContent>
+                                        </Select>
+                                        <p className="text-xs text-gray-500">
+                                          Select the Slack channel where summaries will be posted
+                                        </p>
+                                      </div>
+                                      
+                                      <div className="space-y-2">
+                                        <Label htmlFor={`email-recipients-${project.id}`} className="text-sm">Email Recipients</Label>
+                                        <Input
+                                          id={`email-recipients-${project.id}`}
+                                          value={projectSettings.emailRecipients}
+                                          onChange={(e) => 
+                                            updateProjectSchedulerSetting(project.id, 'emailRecipients', e.target.value)
+                                          }
+                                          placeholder="email@example.com, another@example.com"
+                                          className="focus-visible:ring-[#D2B48C]"
+                                        />
+                                        <p className="text-xs text-gray-500">
+                                          Comma-separated list of email addresses that will receive the summary
+                                        </p>
+                                      </div>
+                                      
+                                      <div className="flex items-center space-x-2">
+                                        <Checkbox
+                                          id={`include-global-${project.id}`}
+                                          checked={projectSettings.includeInGlobalSummaries}
+                                          onCheckedChange={(checked) => 
+                                            updateProjectSchedulerSetting(
+                                              project.id, 
+                                              'includeInGlobalSummaries', 
+                                              checked === true
+                                            )
+                                          }
+                                        />
+                                        <Label 
+                                          htmlFor={`include-global-${project.id}`}
+                                          className="text-sm"
+                                        >
+                                          Include in global summaries
+                                        </Label>
+                                      </div>
+                                    </div>
+                                  )}
+                                </div>
+                              );
+                            })}
                           </div>
-                          <div className="space-y-2">
-                            <Label htmlFor="weekly-time" className="text-sm">Time</Label>
-                            <Input
-                              id="weekly-time"
-                              type="time"
-                              value={schedulerSettings.weeklyScheduleTime}
-                              onChange={(e) => setSchedulerSettings({
-                                ...schedulerSettings,
-                                weeklyScheduleTime: e.target.value
-                              })}
-                              disabled={!schedulerSettings.enableWeeklySchedule}
-                              className="focus-visible:ring-[#D2B48C]"
-                            />
+                        ) : (
+                          <div className="text-center py-6 text-gray-500">
+                            <AlertCircle className="h-10 w-10 mx-auto mb-2 text-gray-400" />
+                            <p>No projects available. Add projects to configure project-specific schedules.</p>
                           </div>
-                        </div>
+                        )}
                       </div>
                     </div>
                   </div>

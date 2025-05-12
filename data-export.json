@@ -539,6 +539,20 @@
       ],
       "summaries": [
         {
+          "id": 68,
+          "chatbotId": 30,
+          "content": "<h2>1293 Sylvian – Weekly Summary • Week 2025-W18 – Week Ending April 29, 2025</h2>\n\n<ol>\n  <li><strong>Key Achievements</strong>\n    <ul>\n      <li>Second floor walls and ceiling spray foam insulation complete over bedrooms.</li>\n      <li>First floor spray foam insulation started and ongoing.</li>\n      <li>Terrace level closed cell foam insulation completed.</li>\n      <li>Open cell foam insulation started on the ceiling of the third level.</li>\n      <li>Batt insulation installed between levels 1 and 2 ceilings per change order #16.</li>\n      <li>Drywall upgraded to 5/8\" thickness as paid by client.</li>\n    </ul>\n  </li>\n  <li><strong>Issues or Blockers</strong>\n    <ul>\n      <li>Insulation subcontractors left windows open in bedrooms one and two and the back door slider, causing dryness issues.</li>\n      <li>Clip boxes were stored in the office garage without labeling or notifying staff.</li>\n      <li>Only one shipping label available for returning clip boxes causing coordination delays.</li>\n    </ul>\n  </li>\n  <li><strong>Upcoming Work</strong>\n    <ul>\n      <li>Insulation subcontractors to complete spray foam and batt insulation within the next two days.</li>\n      <li>Return of clips using received shipping label pending coordination.</li>\n    </ul>\n  </li>\n  <li><strong>Action Items</strong>\n    <ul>\n      <li>Omar and Edgar to ensure windows and doors are secured during insulation work.</li>\n      <li>Insulation team to label and communicate storage locations for materials delivered to site.</li>\n      <li>Team member to coordinate return shipment of clips using Nicole’s provided shipping label.</li>\n      <li>Ron and team to conduct inspection of insulation progress onsite as planned.</li>\n    </ul>\n  </li>\n</ol>",
+          "week": "2025-W20",
+          "sentAt": "2025-05-12T12:19:10.262Z"
+        },
+        {
+          "id": 64,
+          "chatbotId": 30,
+          "content": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <title>Daily Summary - 1293 Sylvian Project</title>\n</head>\n<body>\n    <h2>Daily Summary - 1293 Sylvian Homebuilding Project</h2>\n    <h3>1) Key Achievements</h3>\n    <ul>\n        <li>Terrace level fully completed with closed-cell foam insulation.</li>\n        <li>Work commenced on open-cell foam insulation for the third-level ceiling.</li>\n        <li>Obtained confirmation that three additional shipping labels are being arranged.</li>\n    </ul>\n\n    <h3>2) Issues or Blockers</h3>\n    <ul>\n        <li>Shipping label management for returning materials is unclear, with only one label available for four boxes containing clips.</li>\n        <li>Potential need to consolidate multiple boxes into a single shipment to comply with label constraints.</li>\n    </ul>\n\n    <h3>3) Upcoming Work</h3>\n    <ul>\n        <li>Continue applying open-cell foam insulation on the third-level ceiling.</li>\n        <li>Resolve shipping label issues to facilitate efficient return of clips and materials.</li>\n    </ul>\n\n    <h3>4) Action Items</h3>\n    <ul>\n        <li>Follow up with Nicolle on status of the three additional shipping labels.</li>\n        <li>Determine whether clips can be consolidated into one box for return shipment.</li>\n        <li>Coordinate with the office team to manage and track shipping labels and return logistics.</li>\n    </ul>\n</body>\n</html>\n",
+          "week": "D-2025-05-08",
+          "sentAt": "2025-05-09T15:05:08.329Z"
+        },
+        {
           "id": 60,
           "chatbotId": 30,
           "content": "<h2>1293 Sylvian Homebuilding Project</h2>\n<h3>Week-to-Date Summary: May 5 - May 7</h3>\n\n<h4>1) Key Achievements</h4>\n<ul>\n  <li>Client-approved upgrade to 5/8\" drywall has been confirmed and noted for installation.</li>\n  <li>Change orders related to insulation finalized:\n    <ul>\n      <li>CO #16: Installation of batt insulation in the ceiling between levels 1 and 2.</li>\n      <li>CO #06: Application of spray foam insulation on all exterior walls and ceilings; batt insulation within interior walls; rockwool installed at bedroom #4 bathroom wall and around sewer pipes.</li>\n    </ul>\n  </li>\n  <li>A&amp;G delivered clips to the site; however, proper labeling and communication protocols are being reinforced.</li>\n  <li>Return label received from Nicole Brazilian Lumber for clip materials being sent back, facilitating material returns.</li>\n</ul>\n\n<h4>2) Issues or Blockers</h4>\n<ul>\n  <li>Only one shipping label currently available for some incoming or outgoing materials, causing potential logistics delays.</li>\n  <li>Materials (clips) placed in garage upon delivery without notification or labeling, causing confusion in inventory management.</li>\n</ul>\n\n<h4>3) Upcoming Work</h4>\n<ul>\n  <li>Installation of upgraded 5/8\" drywall per client specification.</li>\n  <li>Completion of insulation work as per change orders #16 and #06 focusing on ceiling, exterior walls, interior walls and specific areas like bedroom #4 bathroom wall.</li>\n  <li>Processing of returned clip materials to Nicole Brazilian Lumber.</li>\n</ul>\n\n<h4>4) Action Items</h4>\n<ul>\n  <li>Ensure all incoming materials are clearly labeled and communicated to site personnel upon delivery to avoid confusion (responsible: Site Coordinator).</li>\n  <li>Procure additional shipping labels to facilitate smooth material handling and logistics coordination.</li>\n  <li>Supervise and confirm proper installation of upgraded drywall and insulation per change orders.</li>\n  <li>Track return shipment of clip materials utilizing the provided return label (responsible: Procurement Team).</li>\n</ul>\n",
@@ -678,6 +692,13 @@
         }
       ],
       "summaries": [
+        {
+          "id": 69,
+          "chatbotId": 35,
+          "content": "<h2>4846 Adams – Weekly Summary • Week 2025-W18 – Week Ending April 29, 2025</h2>\n\n<ol>\n  <li><strong>Key Achievements</strong>\n    <ul>\n      <li>Toilet for the master bathroom was delivered to the office.</li>\n      <li>Interior paint colors finalized with specific finishes and areas detailed.</li>\n      <li>Attic stairs for the garage are in progress by Joel’s crew.</li>\n      <li>House AC and furnace connections completed by Joel’s crew.</li>\n      <li>Pool bonding and electrical inspection passed.</li>\n      <li>Painting is ongoing and scheduled to continue through next week.</li>\n      <li>Cabinetry work underway; Dmitriy to complete main cabinets by mid next week, Christian to finish secondary closets by end of next week.</li>\n    </ul>\n  </li>\n  <li><strong>Issues or Blockers</strong>\n    <ul>\n      <li>Christian missed initial communications regarding secondary closets, causing delayed start on those units.</li>\n      <li>Need to confirm handrail plan for installation coordination.</li>\n    </ul>\n  </li>\n  <li><strong>Upcoming Work</strong>\n    <ul>\n      <li>Painting scheduled to continue through May 17th.</li>\n      <li>Floor installation to start immediately after painting completion, targeted May 19-24.</li>\n      <li>Cabinet installation planned for May 27 to June 6.</li>\n      <li>Countertop installation scheduled for June 9-16.</li>\n      <li>Plumbing and electrical trim work scheduled for June 17-24.</li>\n      <li>Second phase of painting and flooring installation planned for late June to early July.</li>\n      <li>Exterior work ongoing from May 12 to June 23.</li>\n    </ul>\n  </li>\n  <li><strong>Action Items</strong>\n    <ul>\n      <li><strong>Joel’s crew:</strong> Complete attic stairs and flooring preparation promptly.</li>\n      <li><strong>Dmitriy and Christian:</strong> Finish cabinetry work by scheduled deadlines.</li>\n      <li><strong>Project management:</strong> Confirm and communicate handrail installation plan.</li>\n      <li><strong>All teams:</strong> Coordinate flooring installation to occur before cabinet installation starts.</li>\n      <li><strong>Landscape team:</strong> Provide grading plans and wall numbers as required for front yard drainage and swale installation.</li>\n    </ul>\n  </li>\n</ol>",
+          "week": "2025-W20",
+          "sentAt": "2025-05-12T12:19:37.839Z"
+        },
         {
           "id": 61,
           "chatbotId": 35,
@@ -866,6 +887,20 @@
       ],
       "summaries": [
         {
+          "id": 70,
+          "chatbotId": 37,
+          "content": "<h2>6265 Ferry – Weekly Summary • Week 2025-W19 – Week Ending May 9, 2025</h2>\n\n<ol>\n  <li><strong>Key Achievements</strong>\n    <ul>\n      <li>Floors completed and dried by Monday afternoon, finishing May 7-9 as scheduled.</li>\n      <li>Fireplace slabs removed for re-fabrication before May 9 to fit shelving.</li>\n      <li>Fence installation started Thursday and expected to be completed by end of day.</li>\n      <li>Cabinet pulls installed and interior cabinet clean-up underway.</li>\n      <li>Vanity holes prepped and drywall work completed to protect wallpaper.</li>\n      <li>Electrical trim out in progress; Joel Yanes scheduled to complete May 7-8.</li>\n      <li>Raul’s cabinetry work ongoing with installation scheduled for May 12-13.</li>\n      <li>Plumbing trim finish delayed, awaiting powder room faucet and P-trap delivery.</li>\n      <li>Appliance install pending, originally scheduled for May 9 but not completed.</li>\n    </ul>\n  </li>\n  <li><strong>Issues or Blockers</strong>\n    <ul>\n      <li>Delay in plumbing materials for powder room impacting schedule for plumbing trim finish.</li>\n      <li>Missing powder room faucet and adjustable P-trap; last plumbing items pending.</li>\n      <li>Joel Yanes electrical trim-out incomplete; requires two-man crew to finish.</li>\n      <li>Living room shelves not installed yet, causing issues with fireplace slab installation.</li>\n      <li>Cabinet installation delays impacting finish of flooring and electrical work.</li>\n      <li>Garage motors still out, vendor schedule unclear.</li>\n      <li>Fireplace wall install scheduling pending vendor availability.</li>\n    </ul>\n  </li>\n  <li><strong>Upcoming Work</strong>\n    <ul>\n      <li>Raul to complete cabinetry including master closet, master vanity, and mudroom May 12-13.</li>\n      <li>Plumbing trim finish planned for May 12-13, pending materials arrival.</li>\n      <li>Joel to complete final electrical trim May 7-8.</li>\n      <li>Painting and appliance installation scheduled May 14-22.</li>\n      <li>Final paint touch-ups planned May 21-23 by Jorge.</li>\n      <li>Final punch list and Certificate of Occupancy preparations May 26-30.</li>\n      <li>Hopeful move-in scheduled for the first week of June.</li>\n      <li>Fence installation to be completed by end of current week.</li>\n    </ul>\n  </li>\n  <li><strong>Action Items</strong>\n    <ul>\n      <li><strong>Procurement:</strong> Expedite powder room faucet and P-trap delivery to avoid further delay.</li>\n      <li><strong>Joel Yanes:</strong> Mobilize two-man crew to complete electrical trim out as soon as possible.</li>\n      <li><strong>Raul:</strong> Complete cabinetry installation to facilitate finishing trades.</li>\n      <li><strong>Vilma’s team:</strong> Coordinate fireplace wall install and re-measure as shelving is installed.</li>\n      <li><strong>Jackson:</strong> Complete fence installation on right-side property line by end of week.</li>\n      <li><strong>Project Manager:</strong> Monitor garage motor replacement schedule with vendor.</li>\n      <li><strong>Field Team:</strong> Protect wallpaper during any wiring or drilling activities in powder room.</li>\n    </ul>\n  </li>\n</ol>",
+          "week": "2025-W20",
+          "sentAt": "2025-05-12T12:20:08.098Z"
+        },
+        {
+          "id": 65,
+          "chatbotId": 37,
+          "content": "<h2>6265 Ferry Homebuilding Project - Daily Summary</h2>\n\n<h3>1) Key Achievements</h3>\n<ul>\n  <li>Electrical team en route to site, arriving within 10 minutes as noted in the afternoon.</li>\n</ul>\n\n<h3>2) Issues or Blockers</h3>\n<ul>\n  <li>Concern raised regarding the absence of additional lighting in the powder room. Emphasis on avoiding pulling wires through wallpaper to prevent damage.</li>\n</ul>\n\n<h3>3) Upcoming Work</h3>\n<ul>\n  <li>Fence installation scheduled by Jackson on the right side property line, planned for Thursday.</li>\n</ul>\n\n<h3>4) Action Items</h3>\n<ul>\n  <li>Confirm exact lighting requirements for the powder room to ensure proper installations without damaging finishes.</li>\n  <li>Coordinate with the electrical team upon arrival to address lighting concerns immediately.</li>\n  <li>Prepare site for fence installation on Thursday and communicate any access requirements to Jackson’s crew.</li>\n</ul>\n",
+          "week": "D-2025-05-08",
+          "sentAt": "2025-05-09T15:05:13.459Z"
+        },
+        {
           "id": 62,
           "chatbotId": 37,
           "content": "<h2>6265 Ferry Homebuilding Project<br>Week-to-Date Summary (May 5 - May 7)</h2>\n\n<h3>1) Key Achievements</h3>\n<ul>\n  <li>Fireplace slabs were picked up and removed by Uran’s team to allow floor finishes to proceed and for re-fabrication to fit shelving.</li>\n  <li>Raul’s cabinetry work for critical areas (master closet, vanity, laundry, pantry shelving) is underway with installation planned soon; handles delivery coordinated.</li>\n  <li>Site cleaning and prep for flooring scheduled for May 7th, with A&amp;G executing interior cleaning and organizing materials.</li>\n  <li>Electrical trim out by Joel Yanes progressing; completion planned between May 7-8 as a two-person job.</li>\n  <li>Fence installation initiated by Jackson with expected same-day completion.</li>\n  <li>Powder room plumbing trim items (P-trap and faucet) ordered and expected imminently.</li>\n  <li>Lanterns and light fixtures installed and covered to protect finishes during ongoing work.</li>\n  <li>Coordination ongoing for precise outlet placement under kitchen island overhang (pop-ups not to be used there).</li>\n</ul>\n\n<h3>2) Issues or Blockers</h3>\n<ul>\n  <li>Delay in vanity installation due to cabinetry not fully installed; Raul working off-site on remaining cabinets for installation on May 8.</li>\n  <li>Living room shelving not yet installed, causing scheduling impact on re-measurement and re-cutting of fireplace slabs.</li>\n  <li>Electrical rough-ins for outlets are pre-existing; some unexpected cuts were made without prior discussion, causing concern over outlet placement interfering with vanity drawers.</li>\n  <li>Final plumbing trim installation awaiting arrival of remaining materials.</li>\n  <li>Joel unable to finish electrical trim alone; requires a second person to complete the task.</li>\n  <li>Appliance installation delayed; originally planned for Friday (May 2), now rescheduled.</li>\n</ul>\n\n<h3>3) Upcoming Work</h3>\n<ul>\n  <li>Finish cabinetry installation by Raul on May 7-8.</li>\n  <li>Complete electrical trim out by Joel Yanes on May 7-8.</li>\n  <li>Flooring installation by Ivan scheduled for May 9-11, including powder room floor finish.</li>\n  <li>Plumbing trim finish anticipated May 12-13 upon receipt of materials.</li>\n  <li>Final painting and appliance installation planned from May 14 through May 22 with Joel and Jorge wrapping final paint by May 23.</li>\n  <li>Final punch list and Certificate of Occupancy target May 26-30.</li>\n  <li>Hopeful move-in during first week of June.</li>\n  <li>Behrouz to be scheduled for wine cellar unit installation shortly.</li>\n</ul>\n\n<h3>4) Action Items</h3>\n<ul>\n  <li><strong>Alex and Gerardo:</strong> Clean house and move all items off the floor by May 7 to support flooring prep.</li>\n  <li><strong>Dmitry:</strong> Install kitchen cabinet pulls, clean interiors, and address touch-ups by May 8.</li>\n  <li><strong>Joel Yanes:</strong> Return with assistance to complete electrical trim out May 7-8 and check vanity installation requirements.</li>\n  <li><strong>Raul:</strong> Complete cabinetry installations May 7-8; coordinate remaining handle delivery with Rashad.</li>\n  <li><strong>Uran and Vilma:</strong> Re-measure fireplace and re-cut slabs after shelves installed; coordinate carefully to avoid wallpaper damage.</li>\n  <li><strong>A&amp;G Cleaning:</strong> Continue in-home cleaning and material organization to maintain job site readiness.</li>\n  <li><strong>Project Manager:</strong> Monitor field conditions closely for outlet cut locations to prevent interference with cabinetry and ensure final fixture placement matches design intent.</li>\n  <li><strong>Procurement Team:</strong> Follow up on powder room faucet and P-trap delivery status.</li>\n  <li><strong>Schedule coordination:</strong> Confirm appliance installation date and communicate to trades promptly.</li>\n</ul>\n",
@@ -939,6 +974,114 @@
           "projectName": "6265 Ferry",
           "projectType": "permit",
           "createdAt": "2025-04-29T18:17:27.080Z"
+        }
+      ]
+    },
+    {
+      "chatbot": {
+        "id": 24,
+        "name": "160 Black Ankle",
+        "slackChannelId": "C06KA1D1XMW",
+        "asanaProjectId": null,
+        "asanaConnectionId": null,
+        "createdById": 4,
+        "projectId": 2,
+        "publicToken": "794864bd-5c6f-4a60-a3e2-a42795d65132",
+        "isActive": true,
+        "requireAuth": false,
+        "systemPrompt": null,
+        "outputFormat": null,
+        "createdAt": "2025-04-29T17:11:20.606Z"
+      },
+      "documents": [],
+      "messages": [
+        {
+          "id": 85,
+          "chatbotId": 24,
+          "userId": null,
+          "content": "was there a delivery today?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-04-29T17:31:10.510Z"
+        },
+        {
+          "id": 86,
+          "chatbotId": 24,
+          "userId": null,
+          "content": "There was a delivery scheduled for today, April 29th, between 12:00 and 17:00. This was a rescheduled delivery from April 28th, as the original appointment could not be met. The delivery is from SAIA, INC, and requires a signature upon arrival, according to Adebaldo Goncalves on April 28, 2025.",
+          "isUserMessage": false,
+          "citation": "Adebaldo Goncalves on April 28, 2025",
+          "createdAt": "2025-04-29T17:31:12.291Z"
+        },
+        {
+          "id": 319,
+          "chatbotId": 24,
+          "userId": null,
+          "content": "was there a delivery today?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T16:01:08.255Z"
+        },
+        {
+          "id": 320,
+          "chatbotId": 24,
+          "userId": null,
+          "content": "There was a delivery scheduled for today, April 29th, between 12:00 and 17:00. This was a rescheduled delivery from April 28th, as the original appointment could not be met. The delivery is from SAIA, INC, and requires a signature upon arrival, according to Adebaldo Goncalves on April 28, 2025.",
+          "isUserMessage": false,
+          "citation": "Adebaldo Goncalves on April 28, 2025",
+          "createdAt": "2025-05-06T16:01:08.255Z"
+        },
+        {
+          "id": 500,
+          "chatbotId": 24,
+          "userId": null,
+          "content": "How much did we spend on interior paint?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-09T16:17:16.965Z"
+        },
+        {
+          "id": 501,
+          "chatbotId": 24,
+          "userId": null,
+          "content": "The actual spending on interior paint-related materials is recorded in these Slack entries:\n\n- Home Depot purchases for painting materials:\n  - $60.59 for painting material\n  - $60.24 for caulking painting\n  - $61.93 for paper/plastic painting\n- Home Depot Visa charge:\n  - $405.83 for material for door installation and painting\n- American Best Value:\n  - $108.44 for painters (likely labor cost related to painting)\n- Hotel expenses for painters:\n  - $108.44 twice ($216.88 total), which supports painters on site\n\nSumming the likely interior paint materials alone (from Home Depot) is $60.59 + $60.24 + $61.93 = $182.76.\n\nIf you include the $405.83 charge that includes painting material (but also door installation, so not fully paint-related) plus painter labor and hotel, the subtotal goes much higher, but only the $182.76 is clearly dedicated to paint materials.\n\nPlease specify if you want only paint materials or total painting-related costs including labor and related expenses.\n\n**Summary:**\n- Materials clearly for paint: $182.76 (Home Depot)\n- Additional related expenses (labor, hotel, other materials) exist but are mixed with other items.\n\n(Slack data from multiple messages around April 2025)",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-09T16:17:21.473Z"
+        }
+      ],
+      "summaries": [
+        {
+          "id": 67,
+          "chatbotId": 24,
+          "content": "<h2>160 Black Ankle – Weekly Summary • Week 2025-W18 – Week Ending April 29, 2025</h2>\n\n<ol>\n  <li><strong>Key Achievements</strong>\n    <ul>\n      <li>Approved order and delivery of attic access ladder and outside exhaust vent covers.</li>\n    </ul>\n  </li>\n  <li><strong>Issues or Blockers</strong>\n    <em>No items this week.</em>\n  </li>\n  <li><strong>Upcoming Work</strong>\n    <ul>\n      <li>Attic access ladder scheduled for delivery tomorrow.</li>\n      <li>Outside exhaust vent covers expected to arrive Monday.</li>\n    </ul>\n  </li>\n  <li><strong>Action Items</strong>\n    <ul>\n      <li>Driver to contact site prior to delivery of attic access ladder.</li>\n      <li>Confirm correctness of ordered exhaust vent covers before installation.</li>\n    </ul>\n  </li>\n</ol>",
+          "week": "2025-W19",
+          "sentAt": "2025-05-09T16:14:53.982Z"
+        },
+        {
+          "id": 29,
+          "chatbotId": 24,
+          "content": "<h2>160 Black Ankle – Weekly Summary • Week 2025-W18 – Week Ending April 29, 2025</h2>\n\n<ol>\n  <li><strong>Key Achievements</strong>\n    <ul>\n      <li>Ceiling wood installation is scheduled to finish by Friday.</li>\n      <li>Freddy began bathroom work this week.</li>\n      <li>Painting work is ongoing by Joel.</li>\n      <li>Final electrical inspection has been scheduled.</li>\n      <li>Lock box code for site access is set to 1160.</li>\n    </ul>\n  </li>\n  <li><strong>Issues or Blockers</strong>\n    <em>No items this week.</em>\n  </li>\n  <li><strong>Upcoming Work</strong>\n    <ul>\n      <li>Ceiling woodwork completion expected by end of week.</li>\n      <li>Continued bathroom construction and painting next week.</li>\n    </ul>\n  </li>\n  <li><strong>Action Items</strong>\n    <ul>\n      <li>Ceiling wood contractor to complete work by Friday.</li>\n      <li>Freddy to continue bathroom installations.</li>\n      <li>Joel to proceed with painting tasks.</li>\n      <li>Ensure final electrical inspection is completed as scheduled.</li>\n    </ul>\n  </li>\n</ol>",
+          "week": "2025-W19",
+          "sentAt": "2025-05-06T15:54:57.769Z"
+        },
+        {
+          "id": 14,
+          "chatbotId": 24,
+          "content": "<h2>160 Black Ankle – Weekly Summary • Week 2025-W18 – Week Ending April 29, 2025</h2>\n<ol>\n  <li><strong>Key Achievements</strong>\n    <ul>\n      <li>Ceiling wood installation scheduled to finish by Friday.</li>\n      <li>Freddy started work on the bathrooms.</li>\n      <li>Joel continued painting work.</li>\n    </ul>\n  </li>\n  <li><strong>Issues or Blockers</strong>\n    <ul>\n      <li>Delivery of materials rescheduled to April 29, 2025, due to missed appointment.</li>\n      <li>Deck handrail glass delivery requires a box truck for transfer due to access issues.</li>\n    </ul>\n  </li>\n  <li><strong>Upcoming Work</strong>\n    <ul>\n      <li>Transfer of deck handrail glass scheduled for Monday, April 28th.</li>\n    </ul>\n  </li>\n  <li><strong>Action Items</strong>\n    <ul>\n      <li>Confirm new delivery appointment for April 29, 2025.</li>\n      <li>Ensure Alex is available with the box truck for glass transfer.</li>\n      <li>Coordinate Geraldo and Alex to assist with tile transport in Blue Ridge.</li>\n    </ul>\n  </li>\n</ol>",
+          "week": "2025-W18",
+          "sentAt": "2025-04-30T18:25:31.114Z"
+        }
+      ],
+      "emailRecipients": [],
+      "asanaProjects": [
+        {
+          "id": 7,
+          "chatbotId": 24,
+          "asanaProjectId": "1207037289752410",
+          "projectName": "160 Black Ankle ",
+          "projectType": "permit",
+          "createdAt": "2025-04-29T17:16:08.369Z"
         }
       ]
     },
@@ -1304,6 +1447,15 @@
           "createdAt": "2025-05-06T15:53:26.535Z"
         },
         {
+          "id": 270,
+          "chatbotId": 22,
+          "userId": null,
+          "content": "The budgeted cost for rough electrical material is $22,000. \n\nSource: “Budget.xlsx, 1320 Mayfair tab”",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-06T16:01:08.255Z"
+        },
+        {
           "id": 269,
           "chatbotId": 22,
           "userId": null,
@@ -1511,21 +1663,21 @@
           "createdAt": "2025-05-06T16:01:08.255Z"
         },
         {
-          "id": 276,
-          "chatbotId": 22,
-          "userId": null,
-          "content": "I wasn’t able to find that information in the available project files or messages.",
-          "isUserMessage": false,
-          "citation": "No specific source available",
-          "createdAt": "2025-05-06T16:01:08.255Z"
-        },
-        {
           "id": 300,
           "chatbotId": 22,
           "userId": null,
           "content": "According to our Slack channel, here’s what’s known:\n\n• A Bosch chip-hammer (value ~$255) was reported stolen from the pool crew at the *adjacent* 1269 Mayfair site. (Slack, undated)  \n• At 1320 Mayfair itself, trades discovered someone had unhooked the back sliding-door latch and made unauthorized entries. A police report was filed on 5/5/2025 and they’re compiling an inventory of exactly what was taken. So far no specific stolen items have been confirmed in writing. (Slack, 2025-05-05 18:31 PM ET; 2025-05-05 18:41 PM ET)",
           "isUserMessage": false,
           "citation": "No specific source available",
+          "createdAt": "2025-05-06T16:01:08.255Z"
+        },
+        {
+          "id": 271,
+          "chatbotId": 22,
+          "userId": null,
+          "content": "what happened yesterday?",
+          "isUserMessage": true,
+          "citation": null,
           "createdAt": "2025-05-06T16:01:08.255Z"
         },
         {
@@ -1565,19 +1717,10 @@
           "createdAt": "2025-05-06T16:01:08.255Z"
         },
         {
-          "id": 271,
+          "id": 276,
           "chatbotId": 22,
           "userId": null,
-          "content": "what happened yesterday?",
-          "isUserMessage": true,
-          "citation": null,
-          "createdAt": "2025-05-06T16:01:08.255Z"
-        },
-        {
-          "id": 270,
-          "chatbotId": 22,
-          "userId": null,
-          "content": "The budgeted cost for rough electrical material is $22,000. \n\nSource: “Budget.xlsx, 1320 Mayfair tab”",
+          "content": "I wasn’t able to find that information in the available project files or messages.",
           "isUserMessage": false,
           "citation": "No specific source available",
           "createdAt": "2025-05-06T16:01:08.255Z"
@@ -1590,6 +1733,60 @@
           "isUserMessage": true,
           "citation": null,
           "createdAt": "2025-05-06T16:01:08.255Z"
+        },
+        {
+          "id": 494,
+          "chatbotId": 22,
+          "userId": null,
+          "content": "How much did we spend on TPO in the budget? ",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-09T14:26:27.532Z"
+        },
+        {
+          "id": 495,
+          "chatbotId": 22,
+          "userId": null,
+          "content": "The budgeted amount for TPO is included under the \"Roofing/House Wrap\" category in the 1320 Mayfair budget. The total budgeted cost for \"Roofing/House Wrap\" is $13,200.00.\n\nAdditionally, within transactions on the Input tab, there are several payments to TPO vendors such as Heely Brown TPO and Scapegoat Systems LLC for TPO-related work, but those are actual costs, not budgeted amounts.\n\nSo, the budgeted amount for TPO roofing material is $13,200.00 as part of the Roofing/House Wrap line item.\n\n**Source:** “1320 Mayfair Budget.xlsx, 1320 Mayfair sheet, row 14”",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-09T14:26:36.120Z"
+        },
+        {
+          "id": 496,
+          "chatbotId": 22,
+          "userId": null,
+          "content": "What was the actual spend amount? ",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-09T14:27:06.307Z"
+        },
+        {
+          "id": 497,
+          "chatbotId": 22,
+          "userId": null,
+          "content": "The actual spend amount to date for the 1320 Mayfair project is $801,185.52.\n\nThis figure is the total actual cost recorded in the budget spreadsheet under the \"1320 Mayfair\" sheet (cell Q4) and is confirmed in the \"Bank Balance Check\" sheet as the expenses from budget actual (cell C37).\n\nIf you need a breakdown by category or more details, please let me know!",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-09T14:27:09.979Z"
+        },
+        {
+          "id": 498,
+          "chatbotId": 22,
+          "userId": null,
+          "content": "What was the actual spend amount only related to TPO? ",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-09T14:27:27.690Z"
+        },
+        {
+          "id": 499,
+          "chatbotId": 22,
+          "userId": null,
+          "content": "The actual spend amount related to TPO (Thermoplastic Olefin roofing) can be found in the \"Input\" sheet under the category \"Roofing/House Wrap\" with notes referencing TPO or related payments.\n\nThe relevant TPO-related expenses recorded are:\n\n- Heely Brown TPO: $18,393.97 on 2024-11-13\n- Refund Heely Brown Roofing (negative): -$3,593.70 on 2024-11-18\n- Scapegoat Systems LLC TPO deposit: $2,500.00 on 2024-11-13\n- Scapegoat Systems LLC TPO: $6,300.00 on 2024-11-26\n- Heely Brown TPO: $344.89 on 2024-11-26\n- Division TPO: $104.69 on 2024-12-03\n- Heely Brown TPO: $2,424.66 on 2025-01-22\n- Correct House Wrap: $3,675.00 on 2024-11-21 (likely related to TPO correction)\n- Heely Brown Sealant: $157.37 on 2024-12-10 (likely related to TPO)\n- Scapegoat Systems LLC TPO related: $550.00 on 2025-02-07\n- Correct House Wrap: $350.00 on 2024-12-30\n- Various very small amounts related to roofing included above may also relate to TPO.\n\nCalculating the net sum of the major TPO amounts:\n\n18,393.97 (Heely Brown TPO)\n- 3,593.70 (Refund)\n+ 2,500.00 (Scapegoat deposit)\n+ 6,300.00 (Scapegoat TPO)\n+ 344.89 (Heely Brown TPO)\n+ 104.69 (Division TPO)\n+ 2,424.66 (Heely Brown TPO)\n+ 3,675.00 (Correct House Wrap)\n+ 157.37 (Heely Brown Sealant)\n+ 550.00 (Scapegoat TPO)\n+ 350.00 (Correct House Wrap)\n\nTotal = 31,706.88 USD approximately\n\nTherefore, the actual spend amount related to TPO is approximately $31,706.88.\n\nThis aligns with the \"Roofing/House Wrap\" actual cost line of $33,908.42 in the 1320 Mayfair sheet (some related roof costs may not be TPO).\n\nLet me know if you want a detailed transaction list or breakdown.\n\nSummary:\n**TPO actual spend ≈ $31,706.88** based on expense entries in the Input sheet related to \"Roofing/House Wrap\" and TPO notes.\n\n(Sources: \"1320 Mayfair Budget.xlsx\", Input sheet; \"1320 Mayfair Budget.xlsx\", 1320 Mayfair sheet)",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-09T14:27:43.127Z"
         }
       ],
       "summaries": [
@@ -2146,6 +2343,42 @@
           "isUserMessage": false,
           "citation": "Ron Heller and Dennis Trepanier on April 28 and 29, 2025",
           "createdAt": "2025-05-06T16:01:08.255Z"
+        },
+        {
+          "id": 502,
+          "chatbotId": 29,
+          "userId": null,
+          "content": "what is the current status here?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-12T14:18:01.298Z"
+        },
+        {
+          "id": 503,
+          "chatbotId": 29,
+          "userId": null,
+          "content": "The current status of the 1253 Mayfair project is as follows:\n\n- Footing inspection is still pending and must be approved before slab inspection can proceed. The footing inspection has not yet been completed.\n- Underslab plumbing is in progress and the underslab inspection was scheduled, but the underslab inspection was canceled because footing inspection approval is required first.\n- Plumbing prep is ongoing, including a change from 2x4 to 2x6 framing.\n- Survey and foundation-related approvals for footing and foundation survey are pending.\n- Exterior doors and sliders sizes are being finalized, and CAD drawings and window estimates from Home Depot are awaited.\n- T-pole inspection was initially scheduled but failed due to no grounding rod; a reinspection and temp power request to Georgia Power are needed.\n- Pre-construction inspections have passed, and grading, house corner staking, and loading of gravel are underway.\n- Many permit approvals are completed, but some trade permits and inspections such as footing, underslab plumbing, foundation survey, foundation wall, slab inspection, gas line, and others are still outstanding in the permitting project.\n- No overdue or upcoming tasks are noted in Asana projects for both the main build and permitting.\n\nIn summary, the site is currently waiting on footing inspection approval to proceed with slab-related work and further inspections. Plumbing prep and grading are active, and exterior window/door details and permits are being finalized.\n\n**Main pending actions:**\n- Schedule and pass footing inspection and foundation survey\n- Complete underslab plumbing and slab inspections\n- Address t-pole inspection issues and secure temporary power\n- Finalize door/window CAD drawings and estimates\n\nThis status is from the latest Slack messages and Asana permit task checklist.  \n\nLet me know if you need details on any specific item.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-12T14:18:05.898Z"
+        },
+        {
+          "id": 504,
+          "chatbotId": 29,
+          "userId": null,
+          "content": "when will the slab be poured?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-12T14:18:36.439Z"
+        },
+        {
+          "id": 505,
+          "chatbotId": 29,
+          "userId": null,
+          "content": "The slab pour at 1253 Mayfair is planned for the end of next week. The sequence includes completing the footing inspection and foundation survey approval before the slab inspection can take place. Plumbing prep and under-slab plumbing inspections are in progress, but the footing inspection still needs to happen first. Once the plumber completes the prep and the inspections are scheduled and passed, the slab concrete pour can proceed, targeted around the end of next week.\n\nReference details:\n- \"We have still not had a footing and will need to have foundation survey approved before the slab inspection.\"\n- \"Ron said he was gonna work on the kitchen cabinet plans... Should have slab by end of next week.\"\n- Plumbing prep and under slab inspections are scheduled and ongoing.\n- Footing inspection is pending and required before slab inspections.\n\nAll of the above indicate slab pouring is expected after footing approval and scheduled for the end of next week.  \n\n(Slack, 2025-05-12)",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-12T14:18:42.239Z"
         }
       ],
       "summaries": [
@@ -2272,89 +2505,6 @@
           "projectName": "195 Pebble Trail",
           "projectType": "permit",
           "createdAt": "2025-04-29T18:06:44.342Z"
-        }
-      ]
-    },
-    {
-      "chatbot": {
-        "id": 24,
-        "name": "160 Black Ankle",
-        "slackChannelId": "C06KA1D1XMW",
-        "asanaProjectId": null,
-        "asanaConnectionId": null,
-        "createdById": 4,
-        "projectId": 2,
-        "publicToken": "794864bd-5c6f-4a60-a3e2-a42795d65132",
-        "isActive": true,
-        "requireAuth": false,
-        "systemPrompt": null,
-        "outputFormat": null,
-        "createdAt": "2025-04-29T17:11:20.606Z"
-      },
-      "documents": [],
-      "messages": [
-        {
-          "id": 85,
-          "chatbotId": 24,
-          "userId": null,
-          "content": "was there a delivery today?",
-          "isUserMessage": true,
-          "citation": null,
-          "createdAt": "2025-04-29T17:31:10.510Z"
-        },
-        {
-          "id": 86,
-          "chatbotId": 24,
-          "userId": null,
-          "content": "There was a delivery scheduled for today, April 29th, between 12:00 and 17:00. This was a rescheduled delivery from April 28th, as the original appointment could not be met. The delivery is from SAIA, INC, and requires a signature upon arrival, according to Adebaldo Goncalves on April 28, 2025.",
-          "isUserMessage": false,
-          "citation": "Adebaldo Goncalves on April 28, 2025",
-          "createdAt": "2025-04-29T17:31:12.291Z"
-        },
-        {
-          "id": 319,
-          "chatbotId": 24,
-          "userId": null,
-          "content": "was there a delivery today?",
-          "isUserMessage": true,
-          "citation": null,
-          "createdAt": "2025-05-06T16:01:08.255Z"
-        },
-        {
-          "id": 320,
-          "chatbotId": 24,
-          "userId": null,
-          "content": "There was a delivery scheduled for today, April 29th, between 12:00 and 17:00. This was a rescheduled delivery from April 28th, as the original appointment could not be met. The delivery is from SAIA, INC, and requires a signature upon arrival, according to Adebaldo Goncalves on April 28, 2025.",
-          "isUserMessage": false,
-          "citation": "Adebaldo Goncalves on April 28, 2025",
-          "createdAt": "2025-05-06T16:01:08.255Z"
-        }
-      ],
-      "summaries": [
-        {
-          "id": 29,
-          "chatbotId": 24,
-          "content": "<h2>160 Black Ankle – Weekly Summary • Week 2025-W18 – Week Ending April 29, 2025</h2>\n\n<ol>\n  <li><strong>Key Achievements</strong>\n    <ul>\n      <li>Ceiling wood installation is scheduled to finish by Friday.</li>\n      <li>Freddy began bathroom work this week.</li>\n      <li>Painting work is ongoing by Joel.</li>\n      <li>Final electrical inspection has been scheduled.</li>\n      <li>Lock box code for site access is set to 1160.</li>\n    </ul>\n  </li>\n  <li><strong>Issues or Blockers</strong>\n    <em>No items this week.</em>\n  </li>\n  <li><strong>Upcoming Work</strong>\n    <ul>\n      <li>Ceiling woodwork completion expected by end of week.</li>\n      <li>Continued bathroom construction and painting next week.</li>\n    </ul>\n  </li>\n  <li><strong>Action Items</strong>\n    <ul>\n      <li>Ceiling wood contractor to complete work by Friday.</li>\n      <li>Freddy to continue bathroom installations.</li>\n      <li>Joel to proceed with painting tasks.</li>\n      <li>Ensure final electrical inspection is completed as scheduled.</li>\n    </ul>\n  </li>\n</ol>",
-          "week": "2025-W19",
-          "sentAt": "2025-05-06T15:54:57.769Z"
-        },
-        {
-          "id": 14,
-          "chatbotId": 24,
-          "content": "<h2>160 Black Ankle – Weekly Summary • Week 2025-W18 – Week Ending April 29, 2025</h2>\n<ol>\n  <li><strong>Key Achievements</strong>\n    <ul>\n      <li>Ceiling wood installation scheduled to finish by Friday.</li>\n      <li>Freddy started work on the bathrooms.</li>\n      <li>Joel continued painting work.</li>\n    </ul>\n  </li>\n  <li><strong>Issues or Blockers</strong>\n    <ul>\n      <li>Delivery of materials rescheduled to April 29, 2025, due to missed appointment.</li>\n      <li>Deck handrail glass delivery requires a box truck for transfer due to access issues.</li>\n    </ul>\n  </li>\n  <li><strong>Upcoming Work</strong>\n    <ul>\n      <li>Transfer of deck handrail glass scheduled for Monday, April 28th.</li>\n    </ul>\n  </li>\n  <li><strong>Action Items</strong>\n    <ul>\n      <li>Confirm new delivery appointment for April 29, 2025.</li>\n      <li>Ensure Alex is available with the box truck for glass transfer.</li>\n      <li>Coordinate Geraldo and Alex to assist with tile transport in Blue Ridge.</li>\n    </ul>\n  </li>\n</ol>",
-          "week": "2025-W18",
-          "sentAt": "2025-04-30T18:25:31.114Z"
-        }
-      ],
-      "emailRecipients": [],
-      "asanaProjects": [
-        {
-          "id": 7,
-          "chatbotId": 24,
-          "asanaProjectId": "1207037289752410",
-          "projectName": "160 Black Ankle ",
-          "projectType": "permit",
-          "createdAt": "2025-04-29T17:16:08.369Z"
         }
       ]
     },
@@ -3305,12 +3455,12 @@
           "createdAt": "2025-05-06T15:55:49.245Z"
         },
         {
-          "id": 351,
+          "id": 352,
           "chatbotId": 40,
           "userId": null,
-          "content": "No expense matching $359.79 (±$5) was found in the last 7 days.",
-          "isUserMessage": false,
-          "citation": "No specific source available",
+          "content": "$168.91",
+          "isUserMessage": true,
+          "citation": null,
           "createdAt": "2025-05-06T16:01:08.255Z"
         },
         {
@@ -3530,12 +3680,12 @@
           "createdAt": "2025-05-06T16:01:08.255Z"
         },
         {
-          "id": 352,
+          "id": 351,
           "chatbotId": 40,
           "userId": null,
-          "content": "$168.91",
-          "isUserMessage": true,
-          "citation": null,
+          "content": "No expense matching $359.79 (±$5) was found in the last 7 days.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
           "createdAt": "2025-05-06T16:01:08.255Z"
         },
         {
@@ -3726,6 +3876,168 @@
           "isUserMessage": false,
           "citation": "No specific source available",
           "createdAt": "2025-05-07T19:05:22.115Z"
+        },
+        {
+          "id": 506,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "$112.15",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-12T17:03:32.135Z"
+        },
+        {
+          "id": 507,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "Lowe’s  $142.06  16 Bonnie  Material",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-12T17:03:35.193Z"
+        },
+        {
+          "id": 508,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "Why didn't you use the $113 lowe's charge for 2393 poplar springs",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-12T17:05:00.587Z"
+        },
+        {
+          "id": 509,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "Home Depot  $161.46  Concrete for footing  for 4846 Adams\nHome Depot  $268.64  Concrete for footing  for 4846 Adams\nHome Depot  $650.98  Fence material right side  for 6265 Ferry\nHome Depot  $362.62  Concrete for footing  for 4846 Adams\nFloor and Decor  $1,769.37  Tile for sauna, front porch, and bathrooms  for 160 Black Ankle\nUnknown Vendor  $119.31  Trim and paint touch ups for new window install  for 630 Carriage\nHome Depot  $77.00  Drywall paint materials  for 4846 Adams\nUnknown Vendor  $300.00  Demo permit  for 3187 Saybrook\nStovall  $1,506.99  Pavers and 89 stone  for 1320 Mayfair\nHome Depot  $258.81  Wood forms, nails, blade for driveway apron pour  for 1320 Mayfair\nChevron  $4.03  Gas for saw  for 1320 Mayfair\nHome Depot  $113.19  Drainage for patio/pool  for 1320 Mayfair\nHome Depot  $324.41  Electrical conduit  for 4846 Adams\nHome Depot  $125.00  Paint prime materials  for 4846 Adams\nSherwin Williams  $1,079.20  50 gallons primer  for 4845 Adams\nSherwin Williams  $420.83  Paint  for 6265 Ferry\nPublix  $15.01  Office  for Six Points General\nLowe’s  $113.00  Framing wood material  for 2393 Poplar\nHome Depot  $363.00  Framing materials  for 195 Pebble\nHome Depot  $233.00  Painting Joel  for 4846 Adams\nSite One  $1,329.00  Irrigation material  for 1320 Mayfair\nLowe’s  $105.00  Electric materials and plastic wrap  for 6265 Ferry\nHome Depot  $134.75  Mortar for patio pavers  for 1320 Mayfair\nHome Depot  $593.11  Electrical conduit and ww mesh roll  for 4846 Adams\nLowes  $25.00  Cleanup materials  for 4845 Northway\nLowe’s  $493.00  Framing materials  for 2387 Poplar\nSunset Paint  $39.37  Deck paint  for 1500 Lavista\nSunset Paint  $39.37  Deck paint  for 1500 Lavista\nUnknown Vendor  $111.43  Landscape notes  for 1320 Mayfair\nStovall  $4,743.50  Driveway pervious pavers 960 sf  for 1320 Mayfair\nLowe’s  $142.06  Material  for 16 Bonnie\nHome Depot  $410.73  Mortar for patio pavers  for 1320 Mayfair\nUnknown Vendor  $51.79  Interior paint  for 207 Black Ankle\nHome Depot  $46.88  Framing materials  for Elmwood\nBrookhaven  $834.16  Trades for 1253 Mayfair\nBobcat  $87.82  Grease and parts  for Six Points General\nHome Depot  $163.26  Stone cutting blade for marble  for 1269 Mayfair\nHome Depot  $333.00  Concrete and pad materials  for 4846 Adams\nLowe’s  $100.00  Grout and caulk  for 4846 Adams\nBona Finish  $67.00  Sealer  for Six Points General\nLowe’s  $123.74  Fence material  for Bonnie Ln\nFirst Atlanta Flooring  $323.23  White oak materials  for 16 Bonnie and 1320 Mayfair\nUnknown Vendor  $112.88  Upfront permits fee  for 911 S Shore\nUnknown Vendor  $112.88  Upfront permit fees  for 9157 Dickens\nHome Depot  $108.37  Interior paint  for Black Ankle\nHome Depot  $115.00  Framing materials  for Sylvan\nLowe’s  $30.88  Lumber materials  for Sylvan\nLowe’s  $187.27  Lumber materials  for Elmwood\nHome Depot  $31.00  Hammer and nails garage materials  for 6265 Ferry\nStovall  $1,743.17  Paver cap edging and concrete for driveway  for 16 Bonnie\nLowe’s  $30.88  Landscape materials  for 16 Bonnie\nSherwin Williams  $133.00  Paint materials  for 160 Black Ankle\nHome Depot  $477.00  Fence materials  for 6265 Ferry\nLowe’s  $50.00  Door locks and screws  for 1320 Mayfair\nLowe’s  $462.38  Interior paint material  for 1320 Mayfair\nLowe’s  $209.50  Wood for wall support  for 1293 Sylvan\nLowe’s  $97.00  Framing materials  for Sylvan\nDoraville Transfer Station  $288.71  Landscape debris dump trailer  for 6265 Ferry\nSite One  $12.71  Plant  for 6265 Ferry\nWalmart  $22.70  Office  for Six Points General\nGA Wholesale Nursery  $676.06  Pine straw and mulch  for 6265 Ferry\nLowe’s  $136.73  Drywall/paint materials and screws  for 16 Bonnie\nSite One  $2,265.51  Arborvitae’s and landscape shrubs  for 6265 Ferry\nLowe’s  $60.86  Interior paint material  for 16 Bonnie\nBrookhaven  $16,858.84  Building permit  for 1253 Mayfair\nShell  $84.96  Diesel for bobcats grading house  for 6265 Ferry\nBP  $110.00  Diesel for pick up and landscape transport  for 6265 Ferry",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-12T17:05:29.507Z"
+        },
+        {
+          "id": 510,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "$166",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-12T17:06:39.933Z"
+        },
+        {
+          "id": 511,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "No expense matching $166.00 (±$5) was found in the last 7 days.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-12T17:06:41.322Z"
+        },
+        {
+          "id": 512,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "$258.81",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-12T17:09:33.212Z"
+        },
+        {
+          "id": 513,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "Home Depot  $258.81  wood forms, nails blade for driveway apron pour  for 1320 Mayfair",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-12T17:09:34.412Z"
+        },
+        {
+          "id": 514,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "$111.18",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-12T17:10:01.865Z"
+        },
+        {
+          "id": 515,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "H2O supply  $111.18  Sewer iron cap for install within driveway pavers  for 6265 Ferry / 1320 Mayfair",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-12T17:10:03.585Z"
+        },
+        {
+          "id": 516,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "$233.71",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-12T17:12:45.432Z"
+        },
+        {
+          "id": 517,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "No expense matching $233.71 (±$5) was found in the last 7 days.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-12T17:12:47.475Z"
+        },
+        {
+          "id": 518,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "$96.40",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-12T17:17:20.026Z"
+        },
+        {
+          "id": 519,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "Lowe’s  $96.40  Material  for  Six Points General",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-12T17:17:22.575Z"
+        },
+        {
+          "id": 520,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "$1506.99",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-12T17:19:19.925Z"
+        },
+        {
+          "id": 521,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "Stovall $1,506.99 pavers and 89 stone for 1320 Mayfair",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-12T17:19:21.341Z"
+        },
+        {
+          "id": 522,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "$50.60",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-12T17:19:49.756Z"
+        },
+        {
+          "id": 523,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "No expense matching $50.60 (±$5) was found in the last 7 days.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-12T17:19:51.233Z"
         }
       ],
       "summaries": [],
@@ -3749,7 +4061,152 @@
         "createdAt": "2025-05-01T20:12:03.438Z"
       },
       "documents": [],
-      "messages": [],
+      "messages": [
+        {
+          "id": 524,
+          "chatbotId": 42,
+          "userId": null,
+          "content": "$140.32",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-12T17:54:32.508Z"
+        },
+        {
+          "id": 525,
+          "chatbotId": 42,
+          "userId": null,
+          "content": "Home Depot  $140.32  2” conduit sleeving  for 1253 Mayfair Dr",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-12T17:54:34.726Z"
+        },
+        {
+          "id": 526,
+          "chatbotId": 42,
+          "userId": null,
+          "content": "$25.41",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-12T17:56:42.439Z"
+        },
+        {
+          "id": 527,
+          "chatbotId": 42,
+          "userId": null,
+          "content": "Wildwood $25.00 Material for 1857 Wildwood",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-12T17:56:44.980Z"
+        },
+        {
+          "id": 528,
+          "chatbotId": 42,
+          "userId": null,
+          "content": "$153.97",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-12T17:57:50.024Z"
+        },
+        {
+          "id": 529,
+          "chatbotId": 42,
+          "userId": null,
+          "content": "No expense matching $153.97 (±$5) was found in the last 7 days.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-12T17:57:52.193Z"
+        },
+        {
+          "id": 530,
+          "chatbotId": 42,
+          "userId": null,
+          "content": "$245.15",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-12T18:00:52.335Z"
+        },
+        {
+          "id": 531,
+          "chatbotId": 42,
+          "userId": null,
+          "content": "Floor and Decor  $245.15  Color grout  for 1269 Mayfair pool",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-12T18:00:53.641Z"
+        },
+        {
+          "id": 532,
+          "chatbotId": 42,
+          "userId": null,
+          "content": "$303.83",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-12T18:01:18.297Z"
+        },
+        {
+          "id": 533,
+          "chatbotId": 42,
+          "userId": null,
+          "content": "Home Depot  $303.83  mortar & plastic  for 1269 Mayfair pool",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-12T18:01:19.790Z"
+        },
+        {
+          "id": 534,
+          "chatbotId": 42,
+          "userId": null,
+          "content": "$404.87",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-12T18:02:05.969Z"
+        },
+        {
+          "id": 535,
+          "chatbotId": 42,
+          "userId": null,
+          "content": "Home Depot  $404.87  Replaced stolen chip hammer, hydraulic cement  for 1269 Mayfair pool",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-12T18:02:07.619Z"
+        },
+        {
+          "id": 536,
+          "chatbotId": 42,
+          "userId": null,
+          "content": "$87.65",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-12T18:06:27.865Z"
+        },
+        {
+          "id": 537,
+          "chatbotId": 42,
+          "userId": null,
+          "content": "Lowe’s  $87.65  Drywall/Insulation/Paint  for 4845 Northway",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-12T18:06:31.204Z"
+        },
+        {
+          "id": 538,
+          "chatbotId": 42,
+          "userId": null,
+          "content": "$765.11",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-12T18:06:57.223Z"
+        },
+        {
+          "id": 539,
+          "chatbotId": 42,
+          "userId": null,
+          "content": "No expense matching $765.11 (±$5) was found in the last 7 days.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-12T18:06:59.598Z"
+        }
+      ],
       "summaries": [],
       "emailRecipients": [],
       "asanaProjects": []
@@ -4753,6 +5210,20 @@
       ],
       "summaries": [
         {
+          "id": 71,
+          "chatbotId": 41,
+          "content": "<h2>16 Bonnie – Weekly Summary • Week 2025-W18 – Week Ending April 29, 2025</h2>\n\n<ol>\n  <li><strong>Key Achievements</strong>\n    <ul>\n      <li>Sliding door lock fixed and latch ordered for replacement due to loss.</li>\n      <li>Secondary shelves installed and master closet finishing underway by Christian.</li>\n      <li>Cooktop preparation and cut-in progress completed.</li>\n      <li>Materials including latch dropped off on site and scheduled for installation.</li>\n      <li>Notice of Violation lifted after materials and sediment removal from the street.</li>\n      <li>Final trim out and appliance installation scheduled to start Monday and Tuesday.</li>\n      <li>Home cleaning scheduled with A&G and stucco team coordination for cleanup.</li>\n      <li>Walkthrough of the house conducted by Dimitri and project lead.</li>\n      <li>Stationary door repaired successfully despite latch being lost and reordered.</li>\n    </ul>\n  </li>\n  <li><strong>Issues or Blockers</strong>\n    <ul>\n      <li>Discrepancy in opening size for wine bar fridge; measurement and fitting under review.</li>\n      <li>Sliding door latch material delivery status unclear; follow-up needed.</li>\n      <li>Challenges with low-voltage contractor on pricing and scheduling.</li>\n      <li>Touch-up work missed during late-week visits requiring photographic proof for correction.</li>\n    </ul>\n  </li>\n  <li><strong>Upcoming Work</strong>\n    <ul>\n      <li>Jim to install sliding door latch Friday morning.</li>\n      <li>Christian to continue installing secondary shelves and cabinet pulls with trim in master bedroom tomorrow.</li>\n      <li>Joel to start final trim out and appliance installation early next week.</li>\n      <li>Max scheduled to complete electrical trim out tomorrow.</li>\n      <li>Exterior touch-up work pending from Radim.</li>\n      <li>Gerardex to cover exposed flooring for protection.</li>\n      <li>Coordination to receive wine cooler expected between May 13th and May 15th.</li>\n    </ul>\n  </li>\n  <li><strong>Action Items</strong>\n    <ul>\n      <li><strong>Christian:</strong> Complete secondary shelves installation and cabinet pulls in master.</li>\n      <li><strong>Jim:</strong> Install sliding door latch on Friday.</li>\n      <li><strong>Dimitri and Project Lead:</strong> Continue house walkthroughs and oversee punch list items.</li>\n      <li><strong>Yakir:</strong> Schedule and negotiate final low-voltage work pricing.</li>\n      <li><strong>Site Team:</strong> Follow up with shipper on sliding door latch material delivery status.</li>\n      <li><strong>Aaron (UBKJU7ZTJ):</strong> Arrange for porta john removal.</li>\n      <li><strong>Gerardex Coordinator:</strong> Protect flooring with covers during ongoing work.</li>\n    </ul>\n  </li>\n</ol>",
+          "week": "2025-W20",
+          "sentAt": "2025-05-12T12:20:36.109Z"
+        },
+        {
+          "id": 66,
+          "chatbotId": 41,
+          "content": "<h2>16 Bonnie Homebuilding Project - Daily Summary</h2>\n\n<h3>1) Key Achievements</h3>\n<ul>\n  <li>Project remains on schedule.</li>\n  <li>Dimitri completed initial work; will return for adjustments and wine bar installation.</li>\n</ul>\n\n<h3>2) Issues or Blockers</h3>\n<ul>\n  <li>Drawer latch adjustments needed in master bedroom as identified by Christian.</li>\n</ul>\n\n<h3>3) Upcoming Work</h3>\n<ul>\n  <li>Dimitri to return for adjustments and wine bar work.</li>\n  <li>Jim installer scheduled for Friday morning to install sliding door latch.</li>\n  <li>Christian to perform drawer latch adjustments in master bedroom.</li>\n</ul>\n\n<h3>4) Action Items</h3>\n<ul>\n  <li>Coordinate with Dimitri to confirm schedule for adjustments and wine bar installation.</li>\n  <li>Ensure Christian completes drawer latch adjustments promptly.</li>\n  <li>Confirm Jim installer’s Friday appointment for sliding door latch installation.</li>\n</ul>\n",
+          "week": "D-2025-05-08",
+          "sentAt": "2025-05-09T15:05:25.030Z"
+        },
+        {
           "id": 63,
           "chatbotId": 41,
           "content": "<h2>16 Bonnie Homebuilding Project - Week-to-Date Summary (May 5 - May 7)</h2>\n\n<h3>1) Key Achievements</h3>\n<ul>\n  <li>Material delivery confirmed on site; cooktop prep is complete and cut-in is in progress.</li>\n  <li>Installation progress: Secondary shelves installed and master closet finishing underway by Christian.</li>\n  <li>Electrical trim-out progressing, with Max scheduled to complete tasks tomorrow.</li>\n  <li>Stationary door repaired; however, a replacement latch had to be ordered due to lost hardware.</li>\n  <li>Notice of Violation (NOV) lifted after removal of materials and sediment from the street.</li>\n  <li>Final trim out and appliance installation planned to start Tuesday with Joel.</li>\n  <li>Scheduled house walk-through by Dimitri and site lead completed on Wednesday at 1 PM.</li>\n</ul>\n\n<h3>2) Issues or Blockers</h3>\n<ul>\n  <li>Sliding door latch hardware missing; replacement order placed. No delivery received yet, causing minor delay in door closure.</li>\n  <li>Uncertainty around exact opening size for wine bar fridge (30\" opening questioned), requiring measurements to confirm fit or need for fillers.</li>\n  <li>Low-voltage contractor pricing disagreements causing scheduling difficulties; follow-up needed.</li>\n  <li>Exterior touchups incomplete; painter working off-site, awaiting coordination for site work.</li>\n  <li>Pending delivery and tracking of a premium item directly ordered through vendor Brennan (not tracked via main BFS system).</li>\n</ul>\n\n<h3>3) Upcoming Work</h3>\n<ul>\n  <li>Installation of cabinet pulls and secondary shelves in master bedroom scheduled for Thursday with trim addition.</li>\n  <li>Final cleaning of the home set for tomorrow by A&G, with stucco crew also tasked with cleaning exterior areas.</li>\n  <li>Testing of newly applied protective floor covering (Gerardex) planned today to safeguard flooring during ongoing work.</li>\n  <li>Coordination to remove porta john on site requested and awaiting execution.</li>\n  <li>Continued walk-throughs and issues review to ensure touchups and remaining finishes are addressed.</li>\n</ul>\n\n<h3>4) Action Items</h3>\n<ul>\n  <li>Confirm exact measurements of the wine bar fridge opening and evaluate if fillers are required for proper installation.</li>\n  <li>Follow up with low-voltage subcontractor to resolve pricing dispute and secure scheduling.</li>\n  <li>Track delivery status of sliding door latch hardware and premium window component ordered via Brennan; escalate if delayed.</li>\n  <li>Schedule and confirm exterior touchup date with Radim and painting crew to ensure completion.</li>\n  <li>Arrange for removal of porta john as requested.</li>\n  <li>Ensure protective flooring coverage is tested and applied before further work continues.</li>\n</ul>\n",
@@ -4806,6 +5277,6 @@
       "asanaProjects": []
     }
   ],
-  "exportedAt": "2025-05-07T21:08:42.201Z",
+  "exportedAt": "2025-05-12T20:41:46.584Z",
   "exportedBy": "SPH Chat Migration Utility"
 }
