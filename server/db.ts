@@ -12,30 +12,26 @@ if (!process.env.DATABASE_URL) {
 // Environment-specific database connection handling
 console.log(`Initializing database connection in ${process.env.NODE_ENV || 'development'} environment`);
 
-// Force PostgreSQL connection to use Replit's database
-// We're having issues with the external Neon database connection
+// UNIFIED DATABASE APPROACH: Always use DATABASE_URL for consistency between environments
+// This ensures development and production connect to the same database
 const dbUrl = process.env.DATABASE_URL;
 
-// If the DATABASE_URL is pointing to the Neon database, use a fallback
-// This is a temporary solution until we can properly migrate data
-let maskedDbUrl;
-if (dbUrl && dbUrl.includes('neon')) {
-  console.log('[DB] WARNING: Using fallback memory storage due to connection issues with external database');
-  maskedDbUrl = 'Using memory storage as fallback';
-} else {
-  maskedDbUrl = dbUrl ? 
-    `${dbUrl.split('://')[0]}://[username-hidden]@[host-hidden]` : 
-    'Not set';
-  console.log(`[DB] Using DATABASE_URL: ${maskedDbUrl}`);
-}
+// Log the database connection without exposing credentials
+const maskedDbUrl = dbUrl ? 
+  `${dbUrl.split('://')[0]}://${dbUrl.split('@')[1] || '[masked]'}` : 
+  'Not set';
+console.log(`[UNIFIED DB] Using DATABASE_URL: ${maskedDbUrl}`);
 
-// Connection pool settings for Replit PostgreSQL database
+// Connection pool settings for stability with Neon Serverless PostgreSQL
 const connectionConfig = {
-  connectionString: process.env.DATABASE_URL,
-  // Basic pool settings for better performance
-  max: 5,
+  connectionString: dbUrl,
+  ssl: {
+    rejectUnauthorized: false // For external databases like Neon that require SSL
+  },
+  // Basic pool settings for Neon Serverless
+  max: 3, // Low number of connections for Neon's connection limits
   idleTimeoutMillis: 30000, // Close idle connections after 30 seconds
-  connectionTimeoutMillis: 10000, // Timeout for initial connection (10 seconds)
+  connectionTimeoutMillis: 10000, // Longer timeout for initial connection (10 seconds)
   allowExitOnIdle: true, // Allow graceful shutdown
 };
 

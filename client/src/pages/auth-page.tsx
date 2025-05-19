@@ -51,60 +51,35 @@ export default function AuthPage() {
   const onLoginSubmit = async (values: LoginFormValues) => {
     setIsLoginPending(true);
     try {
-      // First try regular login
-      try {
-        const response = await fetch('/api/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            username: values.username,
-            password: values.password,
-          }),
-          credentials: 'include',
-        });
-        
-        if (response.ok) {
-          const userData = await response.json();
-          console.log("Login successful, redirecting to dashboard now");
-          
-          // Use the localStorage auth approach
-          const token = `auth_${Date.now()}_${Math.random().toString(36).substring(2, 15)}`;
-          localStorage.setItem("auth_token", token);
-          localStorage.setItem("auth_user", JSON.stringify(userData));
-          
-          // Force page reload and redirect to ensure session is recognized
-          window.location.href = "/dashboard";
-          return;
-        }
-      } catch (apiError) {
-        console.log("Regular login failed, trying alternative method");
-      }
+      // Send login request directly without using the hook
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: values.username,
+          password: values.password,
+        }),
+        credentials: 'include',
+      });
       
-      // For development only - bypass login if database is unavailable and credentials match
-      if (values.username === "admin" && values.password === "admin") {
-        console.log("Using development fallback login");
+      if (response.ok) {
+        const userData = await response.json();
+        console.log("Login successful, redirecting to dashboard now");
         
-        const fallbackUserData = {
-          id: 1,
-          username: "admin",
-          displayName: "Admin User",
-          role: "admin",
-          initial: "A",
-        };
-        
-        // Generate a token for the session
+        // Use the new localStorage auth approach
+        // Generate a simple token (in a real app, this would come from the server)
         const token = `auth_${Date.now()}_${Math.random().toString(36).substring(2, 15)}`;
         localStorage.setItem("auth_token", token);
-        localStorage.setItem("auth_user", JSON.stringify(fallbackUserData));
+        localStorage.setItem("auth_user", JSON.stringify(userData));
         
-        // Force page reload and redirect
+        // Force page reload and redirect to ensure session is recognized
         window.location.href = "/dashboard";
-        return;
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Login failed');
       }
-      
-      throw new Error("Login failed. Please check your credentials.");
     } catch (error) {
       console.error("Login error:", error);
       toast({
