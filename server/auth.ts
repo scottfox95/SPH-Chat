@@ -132,12 +132,16 @@ export function setupAuth(app: Express) {
               req.body.username === "admin" && 
               req.body.password === "admin") {
             
+            // Create a fallback user that matches the User type
             const fallbackUser = {
               id: 999,
               username: "admin",
               displayName: "Admin User",
               role: "admin",
-              initial: "A"
+              initial: "A",
+              password: "", // Required field for User type
+              createdAt: new Date(),
+              projects: [] // Add any other required fields
             };
             
             req.login(fallbackUser, (loginErr: Error) => {

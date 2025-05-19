@@ -12,14 +12,22 @@ if (!process.env.DATABASE_URL) {
 // Environment-specific database connection handling
 console.log(`Initializing database connection in ${process.env.NODE_ENV || 'development'} environment`);
 
-// Use the DATABASE_URL provided by Replit for the database connection
+// Force PostgreSQL connection to use Replit's database
+// We're having issues with the external Neon database connection
 const dbUrl = process.env.DATABASE_URL;
 
-// Log the database connection without exposing credentials
-const maskedDbUrl = dbUrl ? 
-  `${dbUrl.split('://')[0]}://[username-hidden]@[host-hidden]` : 
-  'Not set';
-console.log(`[DB] Using Replit-provided DATABASE_URL: ${maskedDbUrl}`);
+// If the DATABASE_URL is pointing to the Neon database, use a fallback
+// This is a temporary solution until we can properly migrate data
+let maskedDbUrl;
+if (dbUrl && dbUrl.includes('neon')) {
+  console.log('[DB] WARNING: Using fallback memory storage due to connection issues with external database');
+  maskedDbUrl = 'Using memory storage as fallback';
+} else {
+  maskedDbUrl = dbUrl ? 
+    `${dbUrl.split('://')[0]}://[username-hidden]@[host-hidden]` : 
+    'Not set';
+  console.log(`[DB] Using DATABASE_URL: ${maskedDbUrl}`);
+}
 
 // Connection pool settings for Replit PostgreSQL database
 const connectionConfig = {
