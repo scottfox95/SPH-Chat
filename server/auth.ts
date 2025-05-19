@@ -112,13 +112,54 @@ export function setupAuth(app: Express) {
   });
 
   app.post("/api/login", (req, res, next) => {
+    // Add debug logging for connection issues
+    console.log("Processing login request:", req.body.username);
+    
     passport.authenticate("local", (err: Error | null, user: Express.User | false, info: { message: string } | undefined) => {
-      if (err) return next(err);
+      if (err) {
+        console.error("Authentication error:", err.message);
+        
+        // If database connection issue occurs, use fallback admin user
+        if (err.message && (
+            err.message.includes("Connection terminated") || 
+            err.message.includes("Control plane request failed") ||
+            err.message.includes("connection timeout")
+        )) {
+          console.log("Using fallback admin login due to database connection issues");
+          
+          // Only allow fallback login in development
+          if (process.env.NODE_ENV === "development" && 
+              req.body.username === "admin" && 
+              req.body.password === "admin") {
+            
+            const fallbackUser = {
+              id: 999,
+              username: "admin",
+              displayName: "Admin User",
+              role: "admin",
+              initial: "A"
+            };
+            
+            req.login(fallbackUser, (loginErr: Error) => {
+              if (loginErr) return next(loginErr);
+              return res.status(200).json(fallbackUser);
+            });
+            return;
+          }
+        }
+        
+        return next(err);
+      }
+      
       if (!user) {
         return res.status(401).json({ message: "Invalid credentials" });
       }
+      
       req.login(user, (loginErr: Error) => {
-        if (loginErr) return next(loginErr);
+        if (loginErr) {
+          console.error("Login error:", loginErr.message);
+          return next(loginErr);
+        }
         res.status(200).json({
           id: user.id,
           username: user.username,
