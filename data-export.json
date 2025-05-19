@@ -3464,60 +3464,6 @@
           "createdAt": "2025-05-06T16:01:08.255Z"
         },
         {
-          "id": 366,
-          "chatbotId": 40,
-          "userId": null,
-          "content": "66.59",
-          "isUserMessage": true,
-          "citation": null,
-          "createdAt": "2025-05-06T16:01:08.255Z"
-        },
-        {
-          "id": 367,
-          "chatbotId": 40,
-          "userId": null,
-          "content": "No expense matching $66.59 (±$5) was found in the last 7 days.",
-          "isUserMessage": false,
-          "citation": "No specific source available",
-          "createdAt": "2025-05-06T16:01:08.255Z"
-        },
-        {
-          "id": 368,
-          "chatbotId": 40,
-          "userId": null,
-          "content": "26.92",
-          "isUserMessage": true,
-          "citation": null,
-          "createdAt": "2025-05-06T16:01:08.255Z"
-        },
-        {
-          "id": 369,
-          "chatbotId": 40,
-          "userId": null,
-          "content": "No expense matching $26.92 (±$5) was found in the last 7 days.",
-          "isUserMessage": false,
-          "citation": "No specific source available",
-          "createdAt": "2025-05-06T16:01:08.255Z"
-        },
-        {
-          "id": 370,
-          "chatbotId": 40,
-          "userId": null,
-          "content": "111.43",
-          "isUserMessage": true,
-          "citation": null,
-          "createdAt": "2025-05-06T16:01:08.255Z"
-        },
-        {
-          "id": 371,
-          "chatbotId": 40,
-          "userId": null,
-          "content": "Lowe’s $111.43 Landscape notes for 1320 Mayfair",
-          "isUserMessage": false,
-          "citation": "No specific source available",
-          "createdAt": "2025-05-06T16:01:08.255Z"
-        },
-        {
           "id": 372,
           "chatbotId": 40,
           "userId": null,
@@ -3806,6 +3752,60 @@
           "createdAt": "2025-05-06T16:01:08.255Z"
         },
         {
+          "id": 366,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "66.59",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T16:01:08.255Z"
+        },
+        {
+          "id": 367,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "No expense matching $66.59 (±$5) was found in the last 7 days.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-06T16:01:08.255Z"
+        },
+        {
+          "id": 368,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "26.92",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T16:01:08.255Z"
+        },
+        {
+          "id": 369,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "No expense matching $26.92 (±$5) was found in the last 7 days.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-06T16:01:08.255Z"
+        },
+        {
+          "id": 370,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "111.43",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T16:01:08.255Z"
+        },
+        {
+          "id": 371,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "Lowe’s $111.43 Landscape notes for 1320 Mayfair",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-06T16:01:08.255Z"
+        },
+        {
           "id": 486,
           "chatbotId": 40,
           "userId": null,
@@ -4038,6 +4038,60 @@
           "isUserMessage": false,
           "citation": "No specific source available",
           "createdAt": "2025-05-12T17:19:51.233Z"
+        },
+        {
+          "id": 540,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "$362.62",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-15T13:34:31.256Z"
+        },
+        {
+          "id": 541,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "Home Depot  $362.62  Concrete for footing  for 4846 Adams",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-15T13:34:35.737Z"
+        },
+        {
+          "id": 542,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "$268.64",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-15T13:34:55.706Z"
+        },
+        {
+          "id": 543,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "Home Depot  $268.64  Concrete for footing  for 4846 Adams",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-15T13:35:00.473Z"
+        },
+        {
+          "id": 544,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "$650.98",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-15T13:35:40.054Z"
+        },
+        {
+          "id": 545,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "Home Depot  $650.98  Fence material  for 6265 Ferry",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-15T13:35:42.419Z"
         }
       ],
       "summaries": [],
@@ -5277,6 +5331,6 @@
       "asanaProjects": []
     }
   ],
-  "exportedAt": "2025-05-12T21:19:03.160Z",
+  "exportedAt": "2025-05-19T16:21:08.609Z",
   "exportedBy": "SPH Chat Migration Utility"
 }
