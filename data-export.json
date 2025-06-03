@@ -535,6 +535,24 @@
           "isUserMessage": false,
           "citation": "PERMIT",
           "createdAt": "2025-05-06T17:45:13.523Z"
+        },
+        {
+          "id": 638,
+          "chatbotId": 30,
+          "userId": null,
+          "content": "when will drywall get finished?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-30T17:11:02.373Z"
+        },
+        {
+          "id": 639,
+          "chatbotId": 30,
+          "userId": null,
+          "content": "Drywall completion is expected to be approximately 3 weeks from this week, with drywall starting by Friday or Saturday of this week.  \n\nAdditionally, drywall cannot start until all insulation punch list items are completed and reviewed, and the insulation inspection passes. The insulation work is actively being finalized with punch lists targeted for completion Monday, and the insulation inspection has been scheduled accordingly.\n\n(Source: Slack messages between 2025-04-29 and 2025-05-01)",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-30T17:11:06.212Z"
         }
       ],
       "summaries": [
@@ -689,9 +707,41 @@
           "isUserMessage": false,
           "citation": "No specific source available",
           "createdAt": "2025-05-06T16:01:08.255Z"
+        },
+        {
+          "id": 552,
+          "chatbotId": 35,
+          "userId": null,
+          "content": "give me an update for any outstanding items over the last ten days",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-20T16:10:23.983Z"
+        },
+        {
+          "id": 553,
+          "chatbotId": 35,
+          "userId": null,
+          "content": "Based on activity over the last ten days, here are the outstanding or in-progress items:\n\n1. Drywall sanding and touch-ups are ongoing, with drywall guys working through today and sanding scheduled to finish this afternoon.\n2. Joel Yanes' team is still on-site completing punchlist items and finishing electrical trim; they will tidy the house for flooring to begin Wednesday (May 21).\n3. Flooring is scheduled to start May 19-24, directly after painting which is ongoing through May 17.\n4. Cabinetry by Dimitri and Christian is in progress, expected ready by mid to end of next week (around May 22-24).\n5. Countertops templating will follow cabinet install, scheduled for June 9-16.\n6. Plumbing trim and electrical trim are planned for June 17-24.\n7. Dumpster swap requested by end of day Monday.\n8. Drainage quote and order for materials requested but not yet confirmed.\n9. Attic door for garage still needed/ordered (laundry attic door delivered already).\n10. Retaining wall approach for pole barn pending final input.\n\nNo overdue or upcoming tasks are flagged in Asana for permitting or purchasing.\n\nSummary: Drywall finishing and electrical punchlist with Joel's crew, flooring preparation, cabinetry production, drainage quote/order, and remaining attic door are key outstanding/current focus areas.\n\nIf you want updates on any specific item, please let me know! \n\n(Slack messages, May 13-18, 2025)",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-20T16:10:32.827Z"
         }
       ],
       "summaries": [
+        {
+          "id": 78,
+          "chatbotId": 35,
+          "content": "<h2>4846 Adams – Weekly Summary • Week 2025-W18 – Week Ending April 29, 2025</h2>\n\n<ol>\n  <li><strong>Key Achievements</strong>\n    <ul>\n      <li>Cabinet installation progressed, with Dimitri’s team working on finishing up the install.</li>\n      <li>Register installation is in progress with Behrouz’s team.</li>\n      <li>Christian prepared to start installation and punch list work on-site tomorrow.</li>\n      <li>Electrical work scheduled to start Wednesday.</li>\n    </ul>\n  </li>\n  <li><strong>Issues or Blockers</strong>\n    <ul>\n      <li>Cabana and upstairs secondary bath vanities need height adjustments to 35\".</li>\n      <li>“Her” closet cabinets finished in grey instead of the intended Iron Ore color.</li>\n      <li>Gym accent wall requires repainting to Iron Ore.</li>\n      <li>Foyer ceiling primed incorrectly for Iron Ore instead of standard white.</li>\n      <li>Missing wall block, geo grid, block, and sand mortar for the pool area causing delays.</li>\n      <li>Waiting on countertop templates from fabricator to proceed with slab delivery coordination.</li>\n      <li>Retaining wall start date not yet determined.</li>\n    </ul>\n  </li>\n  <li><strong>Upcoming Work</strong>\n    <ul>\n      <li>Electrical work to commence on Wednesday.</li>\n      <li>Christian scheduled to install and address punch list items starting tomorrow.</li>\n      <li>Continued cabinet install completion likely Thursday or Friday.</li>\n      <li>Measurement and fabrication related to countertops pending completion of cabinet install.</li>\n    </ul>\n  </li>\n  <li><strong>Action Items</strong>\n    <ul>\n      <li>Dimitri’s team to complete cabinet installs and finalize countertop templates by tomorrow.</li>\n      <li>Project manager to provide updated project timeline to homeowner.</li>\n      <li>Confirm start date for retaining wall construction.</li>\n      <li>Correct painting discrepancies on gym accent wall and foyer ceiling as specified.</li>\n      <li>Follow up on missing materials for pool wall to avoid further delays.</li>\n    </ul>\n  </li>\n</ol>",
+          "week": "2025-W23",
+          "sentAt": "2025-06-03T15:10:31.833Z"
+        },
+        {
+          "id": 76,
+          "chatbotId": 35,
+          "content": "<h2>4846 Adams – Weekly Summary • Week 2025-W18 – Week Ending April 29, 2025</h2>\n\n<ol>\n  <li><strong>Key Achievements</strong>\n    <ul>\n      <li>First floor flooring completed and squeaky floorboard near the fireplace addressed.</li>\n      <li>Cabinet installation started by Christian; Dmitriy scheduled for cabinet work on Wednesday.</li>\n      <li>Glynn approved additional tile work by the tub wall and niche; Freddy scheduled for ordering and installation.</li>\n      <li>Mailbox delivered; garbage disposal button, faucets, and shower fixtures arrived on site and labeled.</li>\n      <li>Glynn approved retaining wall extension and height; Keystone block and gravel delivery scheduled for Thursday.</li>\n      <li>Downspout filters delivered and available on site.</li>\n      <li>Painting scheduled to complete by tomorrow morning; Emerson team wrapping up their work.</li>\n    </ul>\n  </li>\n  <li><strong>Issues or Blockers</strong>\n    <ul>\n      <li>Floor sanding and dirt concerns require beams to be installed after flooring completion to avoid damage.</li>\n    </ul>\n  </li>\n  <li><strong>Upcoming Work</strong>\n    <ul>\n      <li>Floor installation to be completed on Thursday.</li>\n      <li>Joel’s team to address ceiling beams installation after painting and flooring are completed.</li>\n      <li>Retaining wall installation to commence after material delivery on Thursday.</li>\n      <li>Countertop measurements scheduled following cabinet installation.</li>\n      <li>Carpet installation planned for two downstairs bedrooms and mezzanine/upstairs secondary bedroom.</li>\n    </ul>\n  </li>\n  <li><strong>Action Items</strong>\n    <ul>\n      <li><strong>@U024FAP41D4</strong> to proceed with ordering and scheduling Freddy for tile work.</li>\n      <li><strong>@U024FAP41D4</strong> to order the garbage disposal as requested.</li>\n      <li><strong>Team</strong> to verify completion of cabinet installations and ensure no floor squeaks remain.</li>\n      <li><strong>Joel’s team</strong> to plan beam installations post-paint and flooring.</li>\n      <li><strong>Project manager</strong> to confirm retaining wall prep details prior to start.</li>\n    </ul>\n  </li>\n</ol>",
+          "week": "2025-W22",
+          "sentAt": "2025-05-27T18:00:49.451Z"
+        },
         {
           "id": 69,
           "chatbotId": 35,
@@ -831,6 +881,15 @@
           "createdAt": "2025-05-01T20:19:56.545Z"
         },
         {
+          "id": 337,
+          "chatbotId": 37,
+          "userId": null,
+          "content": "What are the dimensions of the wine cooler unit?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T16:01:08.255Z"
+        },
+        {
           "id": 335,
           "chatbotId": 37,
           "userId": null,
@@ -846,15 +905,6 @@
           "content": "The tile work is currently in progress, specifically the master tile, according to a message from Aaron Wilson on April 29, 2025, at 3:39:56 PM.",
           "isUserMessage": false,
           "citation": "a message from Aaron Wilson on April 29, 2025, at 3:39:56 PM",
-          "createdAt": "2025-05-06T16:01:08.255Z"
-        },
-        {
-          "id": 337,
-          "chatbotId": 37,
-          "userId": null,
-          "content": "What are the dimensions of the wine cooler unit?",
-          "isUserMessage": true,
-          "citation": null,
           "createdAt": "2025-05-06T16:01:08.255Z"
         },
         {
@@ -883,9 +933,52 @@
           "isUserMessage": false,
           "citation": "No specific source available",
           "createdAt": "2025-05-06T16:03:37.520Z"
+        },
+        {
+          "id": 550,
+          "chatbotId": 37,
+          "userId": null,
+          "content": "give me an update for any outstanding items over the last ten days",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-20T16:09:31.966Z"
+        },
+        {
+          "id": 551,
+          "chatbotId": 37,
+          "userId": null,
+          "content": "Based on the last ten days of Slack messages and project data, here are the outstanding items and updates for 6265 Ferry Dr:\n\n- Raul and his team need to finish the master closet shelving, cabinet drawers, LED lights, and pulls. Raul was slammed but planned to be on site the following day to address these (Slack).\n\n- Low voltage install is scheduled for 5/26, meaning it is still outstanding as of the last messages (Slack).\n\n- Wine cellar unit installation is pending. Ron and others are in conversation about it; the sales order was requested, and installation help may be needed, but refrigeration start-up requires a specialist (Slack).\n\n- Plumbing trim is installed, but Brandon will continue with plumbing tomorrow (Slack).\n\n- Drywall team is scheduled to work tomorrow after the house is cleared for sanding the ceiling (Slack).\n\n- Front patio and back deck pressure washing is planned, with Jorge returning for final paint finish the day after (Slack).\n\n- Mirrors installation is scheduled for 5/20 (Slack).\n\n- Protective measures are requested under p traps to protect wood and blue tape on sinks to prevent water use due to potential leaks (Slack).\n\n- Zephyr beverage fridge is in the garage but should not be opened, installed, or unpacked since homeowners are returning or having it picked up (Slack).\n\n- Site fencing removal and tree preservation decisions are pending final CO (certificate of occupancy) (Slack).\n\n- Environmental inspection status is queried but no confirmation of completion (Slack).\n\n- Cabinetry issues: a drawer arrived wrong size and had to be redone (Slack).\n\n- Flooring protection is being applied to cover floors currently (Slack).\n\n- No overdue or upcoming tasks recorded in Asana for the main project or permits, indicating current tasks are in progress or awaiting completion (Asana).\n\n- Permit tasks related to inspections such as sewer line, irrigation system, building final, and site final are still open per permit project task list (Asana).\n\nIn summary, key outstanding items include completion of master closet cabinetry and shelving and LED installation, low voltage electrical work, wine cellar unit installation/start-up, final plumbing trim, drywall and ceiling sanding, pressure washing and paint finish, and resolution of cabinetry drawer issues. Environmental inspection and some final permits remain uncompleted.\n\nPlease let me know if you need status on any specific item or further details.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-20T16:09:53.109Z"
+        },
+        {
+          "id": 554,
+          "chatbotId": 37,
+          "userId": null,
+          "content": "give me an update for any outstanding items over the last ten days",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-20T16:22:47.850Z"
+        },
+        {
+          "id": 555,
+          "chatbotId": 37,
+          "userId": null,
+          "content": "Over the last ten days, the outstanding items for 6265 Ferry include:\n\n- Raul’s team needs to finish shelving and pulls in the loft area, complete the master closet (shelves, cabinet drawers, LED lights), and address a sizing issue with one drawer that required redoing.\n- Low voltage installation is scheduled for 5/26 and still needs to be done.\n- The wine cellar unit installation is in discussion, awaiting serial number info and sales order, with possible refrigeration expert help needed for startup.\n- Some plumbing protection tasks remain, such as putting protective plastic under the P-trap to avoid water damage and blue tape across sinks to prevent water use while wallpaper is drying.\n- The drywall team is scheduled to go in to sand ceilings once the house is cleared.\n- Pressure washing of the front patio and back deck was to be done, with the painter (Jorge) scheduled to return for final paint finish.\n- Flooring is being covered, and there is a caution not to open or install the Zephyr beverage fridge as the homeowners plan to have it returned.\n- The CO (Certificate of Occupancy) is pending, with the house needing to look fully complete for a final inspection, allowing for minor touchups.\n\nNo overdue or upcoming tasks appear in Asana for permitting or purchasing projects, indicating active tasks are ongoing with no major delays recorded.\n\n(Source: Slack messages from last 10 days)",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-20T16:22:53.880Z"
         }
       ],
       "summaries": [
+        {
+          "id": 77,
+          "chatbotId": 37,
+          "content": "<h2>6265 Ferry – Weekly Summary • Week 2025-W18 – Week Ending April 29, 2025</h2>\n\n<ol>\n  <li><strong>Key Achievements</strong>\n    <ul>\n      <li>Fridge unit and wine cellar installed; AC unit dented line repaired.</li>\n      <li>Electrical punch list completed and all appliances received onsite.</li>\n      <li>Final exterior paint completed.</li>\n      <li>Drywall patched and smoothed flush to fireplace; fireplace framing adjustments initiated.</li>\n      <li>Shoe molding delivered.</li>\n      <li>As Built survey approved.</li>\n    </ul>\n  </li>\n  <li><strong>Issues or Blockers</strong>\n    <ul>\n      <li>Wine cellar frame completion and unit install remain unfinished.</li>\n      <li>Raul’s punch list work pending, with some delays in response and return visits.</li>\n      <li>Clear stain bubbling and popping detected in master closet area.</li>\n      <li>Master shower tile and bar backsplash require weekend repairs.</li>\n      <li>There is drywall damage requiring repair before wine room eye ball light can be installed.</li>\n    </ul>\n  </li>\n  <li><strong>Upcoming Work</strong>\n    <ul>\n      <li>Raul’s team scheduled to complete frame for wine cellar and mantle around AC unit.</li>\n      <li>Drywall crew returning to repair fireplace wall and wine room drywall.</li>\n      <li>Freddy to replace master shower tile and install bar backsplash over the weekend.</li>\n      <li>Back deck to receive stain as confirmed with Ron Heller.</li>\n      <li>Joel’s painting team arriving tomorrow to work on final trim and appliances.</li>\n      <li>Gerardo to assist HVAC installer on site for wine cooler installation.</li>\n      <li>Yanes or Carlos to pick up new kitchen pendants from office tomorrow morning.</li>\n    </ul>\n  </li>\n  <li><strong>Action Items</strong>\n    <ul>\n      <li>Raul to complete punch list including wine cellar framing and mantle by end of day.</li>\n      <li>Freddy to be reminded to pick up tile from office for weekend master bath work.</li>\n      <li>Drywall crew to repair damaged areas before lighting installations.</li>\n      <li>Carlos to prepare outlets by loft area and return removed kitchen pendants and leftover wallpaper to office.</li>\n      <li>Joel’s team to continue electrical punch list and final trim work.</li>\n      <li>Gerardo to be onsite by 9am to assist HVAC installer.</li>\n      <li>Ensure correct clear stain is used for wood sealing, avoiding tinted Brazilian Wood sealer.</li>\n    </ul>\n  </li>\n</ol>",
+          "week": "2025-W22",
+          "sentAt": "2025-05-27T18:05:08.172Z"
+        },
         {
           "id": 70,
           "chatbotId": 37,
@@ -1990,6 +2083,13 @@
       ],
       "summaries": [
         {
+          "id": 74,
+          "chatbotId": 25,
+          "content": "<h2>2387 Poplar – Weekly Summary • Week 2025-W17 – Week Ending April 24, 2025</h2>\n\n<ol>\n  <li><strong>Key Achievements</strong>\n    <ul>\n      <li>Delivered over 41 loads of dirt for backfill and grading between Tuesday and Thursday.</li>\n      <li>Jamie performed backfill and grading activities at the site.</li>\n      <li>Bobcat equipment relocated to address work at a neighboring project.</li>\n    </ul>\n  </li>\n  <li><strong>Issues or Blockers</strong>\n    <ul>\n      <li>Under slab plumbing work delayed due to site flooding and ongoing drainage with pumps.</li>\n      <li>Grading could not proceed on one day because of flooding conditions.</li>\n    </ul>\n  </li>\n  <li><strong>Upcoming Work</strong>\n    <ul>\n      <li>Completion of backfill with an expected additional 30 loads of dirt scheduled for the following day.</li>\n      <li>Final set of dirt delivery planned for Thursday.</li>\n    </ul>\n  </li>\n  <li><strong>Action Items</strong>\n    <ul>\n      <li>Jamie to complete remaining backfill and grading work tomorrow.</li>\n      <li>Monitor site drainage to facilitate resumption of under slab plumbing and grading.</li>\n    </ul>\n  </li>\n</ol>",
+          "week": "2025-W22",
+          "sentAt": "2025-05-27T17:43:36.978Z"
+        },
+        {
           "id": 21,
           "chatbotId": 25,
           "content": "<h2>2387 Poplar – Weekly Summary • Week 2025-W18 – Week Ending April 29, 2025</h2>\n\n<ol>\n  <li><strong>Key Achievements</strong>\n    <ul>\n      <li>Walls were poured this week.</li>\n      <li>Wall plates are being removed as of today.</li>\n    </ul>\n  </li>\n  <li><strong>Issues or Blockers</strong>\n    <em>No items this week.</em>\n  </li>\n  <li><strong>Upcoming Work</strong>\n    <ul>\n      <li>Dumpster drop scheduled for Monday at the lot.</li>\n      <li>Delivery unit is booked for Monday and will drop on Tuesday.</li>\n      <li>Additional pour scheduled for tomorrow.</li>\n    </ul>\n  </li>\n  <li><strong>Action Items</strong>\n    <ul>\n      <li><@UBKJU7ZTJ> to confirm scheduling of dumpster drop.</li>\n    </ul>\n  </li>\n</ol>",
@@ -2471,8 +2571,34 @@
         "createdAt": "2025-04-29T18:06:13.742Z"
       },
       "documents": [],
-      "messages": [],
+      "messages": [
+        {
+          "id": 604,
+          "chatbotId": 32,
+          "userId": null,
+          "content": "Can you summarize any outstanding tasks and issues for me",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-27T17:22:30.090Z"
+        },
+        {
+          "id": 605,
+          "chatbotId": 32,
+          "userId": null,
+          "content": "Based on the latest Slack messages and Asana project data for 195 Pebble Trail, here is a summary of outstanding tasks and current issues:\n\n1. **Outstanding Tasks & Coordination Needs:**\n   - Fireplace delivery and installation scheduled; framing and materials need verification.\n   - Installation of wall mount toilets and free standing tub rough-ins requires coordination with plumber and framers (Pepe and Brandon).\n   - Stucco selection and pricing confirmed at $46,000, but installation quote and timing pending final coordination.\n   - TPO roofing and skylight installation mostly complete; final membrane completion and walkthroughs (including electrical with Yanes) need scheduling.\n   - Window delivery is expected; coordination for installation post Tyvec (house wrap) is ongoing.\n   - Cabinet plans need updates, especially for powder room and various vanity sizes.\n   - Balcony drainage issue resolved but requires follow-up on steel beam constraints affecting the master bath water closet design.\n   - Patio drains and slopes require review and finalizing.\n   - Tub protector ordered but needs to be confirmed and delivered.\n   - Dumpster swap scheduled for Wednesday.\n   - Scheduling meeting times onsite for soffit and rainscreen measurements, plumbing walkthroughs, and patio details.\n   - Coordination for Anderson window delivery and inventory needed.\n\n2. **Issues and Challenges:**\n   - Two missing windows causing delivery and installation delays; logistics with CDS being worked out.\n   - Master bath toilet plumbing obstructed by a steel beam with no option to cut through; redesign required per engineer.\n   - Sediment runoff from an adjacent lot (Harwell home) causing rainout issues.\n   - Need confirmation that all framing prep for wall mount toilets and niches is complete before proceeding.\n   - Need to ensure membrane and house is fully dried before next trades start rough-ins.\n   - Potential scheduling challenges with installation crews for windows, doors, and roofing components.\n\n3. **Permit Status:**\n   - No overdue or upcoming tasks in permitting Asana project; all foundation, slab, framing, and inspections appear complete or approved.\n\nNo overdue or upcoming tasks are listed in Asana, indicating current tasks are in progress and awaiting coordination or deliveries.\n\nIf you need details on any specific task or issue, please let me know. \n\n(Sources: Slack messages from recent logs; Asana project \" 195 Pebble Trail\" and \"[PERMIT] 195 Pebble Trail\")",
+          "isUserMessage": false,
+          "citation": "MAIN",
+          "createdAt": "2025-05-27T17:22:42.393Z"
+        }
+      ],
       "summaries": [
+        {
+          "id": 72,
+          "chatbotId": 32,
+          "content": "<h2>195 Pebble – Weekly Summary • Week 2025-W17 – Week Ending April 25, 2025</h2>\n\n<ol>\n  <li><strong>Key Achievements</strong>\n    <ul>\n      <li>Fireplace material was dropped off on the driveway and is scheduled for delivery this week.</li>\n      <li>Sheathing inspection was scheduled and planned for today.</li>\n      <li>Patric installed skylight windows this morning.</li>\n      <li>Exterior stucco color selection confirmed as SW 7633 Taupe Tone.</li>\n    </ul>\n  </li>\n  <li><strong>Issues or Blockers</strong>\n    <ul>\n      <li>Fireplace framing pending combo inspection clearance before installation.</li>\n      <li>Need to verify 2nd floor patio depths and slopes and apply Stoguard coating before TPO installation.</li>\n      <li>Electrical walkthrough with Yanes still needs scheduling.</li>\n    </ul>\n  </li>\n  <li><strong>Upcoming Work</strong>\n    <ul>\n      <li>Walkthrough with Behrouz planned for today or tomorrow to confirm drying status.</li>\n      <li>Schedule and conduct electrical walkthrough with Yanes.</li>\n      <li>Schedule and complete fireplace installation after inspections.</li>\n      <li>Apply Stoguard coating and install TPO on 2nd floor patio.</li>\n    </ul>\n  </li>\n  <li><strong>Action Items</strong>\n    <ul>\n      <li>Gerardo to ensure fireplace materials are moved into the garage.</li>\n      <li>Project manager to schedule electrical walkthrough with Yanes.</li>\n      <li>Team to verify patio measurements and arrange Stoguard application prior to TPO installation.</li>\n    </ul>\n  </li>\n</ol>",
+          "week": "2025-W22",
+          "sentAt": "2025-05-27T17:24:49.459Z"
+        },
         {
           "id": 28,
           "chatbotId": 32,
@@ -2660,8 +2786,106 @@
         "createdAt": "2025-04-29T18:09:16.169Z"
       },
       "documents": [],
-      "messages": [],
+      "messages": [
+        {
+          "id": 582,
+          "chatbotId": 34,
+          "userId": null,
+          "content": "Can you give me any updates relating to a fireplace ",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-23T17:01:26.520Z"
+        },
+        {
+          "id": 583,
+          "chatbotId": 34,
+          "userId": null,
+          "content": "The fireplace for the 2393 Poplar Springs project has been ordered and the unit is ready whenever the team is ready to install it. There was also a question in Slack about the fireplace order, with a note that installation was scheduled for Tuesday, but no additional updates confirming installation completion or further scheduling.\n\nTo summarize:\n- Fireplace ordered, unit ready.\n- Installation scheduled for Tuesday (no confirmation if completed).\n\nNo detailed status or issues about the fireplace were found beyond this. \n\n**Source:** Slack messages (4/11/2025 and general messages mentioning the fireplace)",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-23T17:01:29.918Z"
+        },
+        {
+          "id": 584,
+          "chatbotId": 34,
+          "userId": null,
+          "content": "Can you show me the source message ",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-23T17:02:59.234Z"
+        },
+        {
+          "id": 585,
+          "chatbotId": 34,
+          "userId": null,
+          "content": "The relevant source message about the fireplace ordered is:\n\n\"Fireplace ordered. Unit is ready when we are\"  \n— Slack message from Aaron Wilson (4/11/2025 @ 12:48:11 PM)  \n\nThis directly confirms that the fireplace was ordered and is ready for installation.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-23T17:03:01.441Z"
+        },
+        {
+          "id": 586,
+          "chatbotId": 34,
+          "userId": null,
+          "content": "Anything in asana? ",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-23T17:03:26.881Z"
+        },
+        {
+          "id": 587,
+          "chatbotId": 34,
+          "userId": null,
+          "content": "Yes, there is relevant information in Asana for the 2393 Poplar Springs project.\n\n1. The Permitting project \" 2393 Poplar Springs\" shows a list of completed and remaining tasks. Most early-stage permitting tasks and inspections are completed (e.g., Footings, Underslab Plumbing, Foundation Survey, Foundation Wall, Waterproofing, Slab Inspection). Remaining tasks include:  \n- Gas Line Inspection  \n- Sewer Line Inspection  \n- Moisture Barrier (Housewrap)  \n- Roof Felt Inspection  \n- Sheathing Inspection  \n- Combo Rough  \n- Insulation  \n- Permanent Power Release/Gas Line  \n- Irrigation System  \n- Building Final  \n- Site Final  \n- Demo Site  \n\n2. For the main construction \"[MAIN] 2393 Poplar Springs,\" task categories are mostly open but none are marked completed yet. These include Fireplaces (noted in your Slack about ordered fireplace), Appliances, Windows, Garage Doors, Roofing, Plumbing, Lighting, Cabinet Design, etc.\n\n3. No tasks in either project are currently overdue or upcoming as per the latest Asana data.\n\nLet me know if you want details on any specific task or stage from Asana.",
+          "isUserMessage": false,
+          "citation": "PERMIT",
+          "createdAt": "2025-05-23T17:03:44.431Z"
+        },
+        {
+          "id": 606,
+          "chatbotId": 34,
+          "userId": null,
+          "content": "what is being said about bio-ethanol?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-27T17:36:51.551Z"
+        },
+        {
+          "id": 607,
+          "chatbotId": 34,
+          "userId": null,
+          "content": "I wasn’t able to find any information or discussion about bio-ethanol in the available Slack messages, Asana projects, or other project files for 2393 Poplar Springs.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-27T17:36:53.449Z"
+        },
+        {
+          "id": 608,
+          "chatbotId": 34,
+          "userId": null,
+          "content": "anything about ethanol at all? ",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-27T17:37:13.789Z"
+        },
+        {
+          "id": 609,
+          "chatbotId": 34,
+          "userId": null,
+          "content": "I searched the available project Slack messages, Asana tasks, and other files, but I did not find any mention or information related to ethanol in any context for this project. \n\nIf you need help with anything else or more specific details, please let me know!",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-27T17:37:15.837Z"
+        }
+      ],
       "summaries": [
+        {
+          "id": 73,
+          "chatbotId": 34,
+          "content": "<h2>2393 Poplar – Weekly Summary • Week 2024-W21 – Week Ending May 21, 2024</h2>\n\n<ol>\n  <li><strong>Key Achievements</strong>\n    <ul>\n      <li>Framing completed and roof OSB sheathing finished.</li>\n      <li>Sheathing inspection scheduled and initially passed, then failed due to missing blocking at the front first level.</li>\n      <li>House roof installed and Tyvek house wrap applied.</li>\n      <li>Deck material delivery scheduled for May 21 between 10am-12pm.</li>\n    </ul>\n  </li>\n  <li><strong>Issues or Blockers</strong>\n    <ul>\n      <li>Sheathing inspection failed due to missing blocking at front of house first level.</li>\n      <li>Clarification needed on exterior application for front of house.</li>\n      <li>Unknown status of ordered fireplace.</li>\n    </ul>\n  </li>\n  <li><strong>Upcoming Work</strong>\n    <ul>\n      <li>Sheathing inspection re-scheduled for Tuesday and Thursday.</li>\n      <li>Plumbing, HVAC, electrical rough-ins, and combo rough inspections planned within next two weeks.</li>\n      <li>Roof felt and shingles installation pending coordination with Tate.</li>\n      <li>Dumpster swap requested for site cleanup.</li>\n    </ul>\n  </li>\n  <li><strong>Action Items</strong>\n    <ul>\n      <li><strong>Rashad [UBKJU7ZTJ]</strong>: Schedule and follow up on sheathing inspections.</li>\n      <li><strong>Project Team</strong>: Confirm exterior application for front of 2393 Poplar.</li>\n      <li><strong>Procurement/Management</strong>: Verify fireplace order status.</li>\n      <li><strong>Site Team</strong>: Arrange dumpster swap as requested.</li>\n      <li><strong>Coordination Team</strong>: Confirm roof felt installation with Tate.</li>\n    </ul>\n  </li>\n</ol>",
+          "week": "2025-W22",
+          "sentAt": "2025-05-27T17:36:18.382Z"
+        },
         {
           "id": 32,
           "chatbotId": 34,
@@ -2806,10 +3030,10 @@
           "createdAt": "2025-05-02T18:30:05.365Z"
         },
         {
-          "id": 334,
+          "id": 326,
           "chatbotId": 36,
           "userId": null,
-          "content": "I wasn't able to find information about the siding completion date in the available project files or messages.",
+          "content": "Yes, the brick for this project is paintable, as confirmed by Yakir Zaken on April 29, 2025, at 5:50:16 PM.",
           "isUserMessage": false,
           "citation": "No specific source available",
           "createdAt": "2025-05-06T16:01:08.255Z"
@@ -2821,15 +3045,6 @@
           "content": "is the brick paintable for this project?",
           "isUserMessage": true,
           "citation": null,
-          "createdAt": "2025-05-06T16:01:08.255Z"
-        },
-        {
-          "id": 326,
-          "chatbotId": 36,
-          "userId": null,
-          "content": "Yes, the brick for this project is paintable, as confirmed by Yakir Zaken on April 29, 2025, at 5:50:16 PM.",
-          "isUserMessage": false,
-          "citation": "No specific source available",
           "createdAt": "2025-05-06T16:01:08.255Z"
         },
         {
@@ -2894,9 +3109,43 @@
           "isUserMessage": true,
           "citation": null,
           "createdAt": "2025-05-06T16:01:08.255Z"
+        },
+        {
+          "id": 334,
+          "chatbotId": 36,
+          "userId": null,
+          "content": "I wasn't able to find information about the siding completion date in the available project files or messages.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-06T16:01:08.255Z"
+        },
+        {
+          "id": 610,
+          "chatbotId": 36,
+          "userId": null,
+          "content": "Show me any recent messages mentioning Interior doors",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-27T17:45:44.458Z"
+        },
+        {
+          "id": 611,
+          "chatbotId": 36,
+          "userId": null,
+          "content": "The most recent message mentioning Interior Doors states that Interior Doors are scheduled to arrive on June 9th. \n\nThis was in a Slack message:  \n“Interior Doors scheduled to arrive on June 9th <@U6QV72V24> <@U039FRNGHL4> <@U02L1M0MQ3C>” (Slack, 2025-05-27 12:30 PM)",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-27T17:45:47.636Z"
         }
       ],
       "summaries": [
+        {
+          "id": 75,
+          "chatbotId": 36,
+          "content": "<h2>580 Elmwood – Weekly Summary • Week 2025-W22 – Week Ending May 27, 2025</h2>\n\n<ol>\n  <li><strong>Key Achievements</strong>\n    <ul>\n      <li>Low voltage electrical permit BE202504054 was pulled for the project.</li>\n      <li>Underground invoice paid to Georgia Power, trenching conduit scheduled.</li>\n    </ul>\n  </li>\n  <li><strong>Issues or Blockers</strong>\n    <ul>\n      <li>Rough framing inspection failed due to OSB installed on front entry columns and missing hurricane straps.</li>\n      <li>Tyvek moisture wrap removal on front porch columns required for framing verification.</li>\n      <li>Low voltage electrical inspection must be scheduled and approved before framing rough inspection.</li>\n      <li>Camera onsite stopped working and needs to be checked.</li>\n    </ul>\n  </li>\n  <li><strong>Upcoming Work</strong>\n    <ul>\n      <li>Interior doors scheduled to arrive on June 9, 2025.</li>\n      <li>Drywall sanding and subsequent delivery scheduled, awaiting start date.</li>\n      <li>Gutter installation pending completion of exterior applications.</li>\n      <li>Rough framing inspection rescheduled for Tuesday.</li>\n    </ul>\n  </li>\n  <li><strong>Action Items</strong>\n    <ul>\n      <li>Consult building plans and remove Tyvek wrap from front porch columns prior to reframing inspection.</li>\n      <li>Schedule and obtain approval for low voltage electrical inspection before framing inspection.</li>\n      <li>Check the onsite camera functionality and secure if needed.</li>\n      <li>Provide updates on drywall start date and readiness for gutter installation.</li>\n    </ul>\n  </li>\n</ol>",
+          "week": "2025-W22",
+          "sentAt": "2025-05-27T17:44:44.989Z"
+        },
         {
           "id": 34,
           "chatbotId": 36,
@@ -3455,12 +3704,147 @@
           "createdAt": "2025-05-06T15:55:49.245Z"
         },
         {
-          "id": 352,
+          "id": 356,
           "chatbotId": 40,
           "userId": null,
-          "content": "$168.91",
+          "content": "$4,743.50",
           "isUserMessage": true,
           "citation": null,
+          "createdAt": "2025-05-06T16:01:08.255Z"
+        },
+        {
+          "id": 365,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "Home Depot $410.73 mortar for patio pavers for 1320 Mayfair",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-06T16:01:08.255Z"
+        },
+        {
+          "id": 364,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "410.73",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T16:01:08.255Z"
+        },
+        {
+          "id": 363,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "No expense matching $16.55 (±$5) was found in the last 7 days.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-06T16:01:08.255Z"
+        },
+        {
+          "id": 362,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "16.55",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T16:01:08.255Z"
+        },
+        {
+          "id": 361,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "No expense matching $119.96 (±$5) was found in the last 7 days.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-06T16:01:08.255Z"
+        },
+        {
+          "id": 360,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "$119.96",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T16:01:08.255Z"
+        },
+        {
+          "id": 359,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "No expense matching $94.33 (±$5) was found in the last 7 days.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-06T16:01:08.255Z"
+        },
+        {
+          "id": 358,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "$94.33",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T16:01:08.255Z"
+        },
+        {
+          "id": 357,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "Stovall $4,743.50 driveway pervious pavers 960 sf for 1320 Mayfair",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-06T16:01:08.255Z"
+        },
+        {
+          "id": 366,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "66.59",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T16:01:08.255Z"
+        },
+        {
+          "id": 367,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "No expense matching $66.59 (±$5) was found in the last 7 days.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-06T16:01:08.255Z"
+        },
+        {
+          "id": 368,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "26.92",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T16:01:08.255Z"
+        },
+        {
+          "id": 369,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "No expense matching $26.92 (±$5) was found in the last 7 days.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-06T16:01:08.255Z"
+        },
+        {
+          "id": 370,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "111.43",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T16:01:08.255Z"
+        },
+        {
+          "id": 371,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "Lowe’s $111.43 Landscape notes for 1320 Mayfair",
+          "isUserMessage": false,
+          "citation": "No specific source available",
           "createdAt": "2025-05-06T16:01:08.255Z"
         },
         {
@@ -3635,6 +4019,15 @@
           "createdAt": "2025-05-06T16:01:08.255Z"
         },
         {
+          "id": 352,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "$168.91",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T16:01:08.255Z"
+        },
+        {
           "id": 353,
           "chatbotId": 40,
           "userId": null,
@@ -3657,150 +4050,6 @@
           "chatbotId": 40,
           "userId": null,
           "content": "Amount-Query Mode\n-----------------\nClose match – Lowe’s $433.23 interior paint material for 16 Bonnie",
-          "isUserMessage": false,
-          "citation": "No specific source available",
-          "createdAt": "2025-05-06T16:01:08.255Z"
-        },
-        {
-          "id": 356,
-          "chatbotId": 40,
-          "userId": null,
-          "content": "$4,743.50",
-          "isUserMessage": true,
-          "citation": null,
-          "createdAt": "2025-05-06T16:01:08.255Z"
-        },
-        {
-          "id": 357,
-          "chatbotId": 40,
-          "userId": null,
-          "content": "Stovall $4,743.50 driveway pervious pavers 960 sf for 1320 Mayfair",
-          "isUserMessage": false,
-          "citation": "No specific source available",
-          "createdAt": "2025-05-06T16:01:08.255Z"
-        },
-        {
-          "id": 358,
-          "chatbotId": 40,
-          "userId": null,
-          "content": "$94.33",
-          "isUserMessage": true,
-          "citation": null,
-          "createdAt": "2025-05-06T16:01:08.255Z"
-        },
-        {
-          "id": 359,
-          "chatbotId": 40,
-          "userId": null,
-          "content": "No expense matching $94.33 (±$5) was found in the last 7 days.",
-          "isUserMessage": false,
-          "citation": "No specific source available",
-          "createdAt": "2025-05-06T16:01:08.255Z"
-        },
-        {
-          "id": 360,
-          "chatbotId": 40,
-          "userId": null,
-          "content": "$119.96",
-          "isUserMessage": true,
-          "citation": null,
-          "createdAt": "2025-05-06T16:01:08.255Z"
-        },
-        {
-          "id": 361,
-          "chatbotId": 40,
-          "userId": null,
-          "content": "No expense matching $119.96 (±$5) was found in the last 7 days.",
-          "isUserMessage": false,
-          "citation": "No specific source available",
-          "createdAt": "2025-05-06T16:01:08.255Z"
-        },
-        {
-          "id": 362,
-          "chatbotId": 40,
-          "userId": null,
-          "content": "16.55",
-          "isUserMessage": true,
-          "citation": null,
-          "createdAt": "2025-05-06T16:01:08.255Z"
-        },
-        {
-          "id": 363,
-          "chatbotId": 40,
-          "userId": null,
-          "content": "No expense matching $16.55 (±$5) was found in the last 7 days.",
-          "isUserMessage": false,
-          "citation": "No specific source available",
-          "createdAt": "2025-05-06T16:01:08.255Z"
-        },
-        {
-          "id": 364,
-          "chatbotId": 40,
-          "userId": null,
-          "content": "410.73",
-          "isUserMessage": true,
-          "citation": null,
-          "createdAt": "2025-05-06T16:01:08.255Z"
-        },
-        {
-          "id": 365,
-          "chatbotId": 40,
-          "userId": null,
-          "content": "Home Depot $410.73 mortar for patio pavers for 1320 Mayfair",
-          "isUserMessage": false,
-          "citation": "No specific source available",
-          "createdAt": "2025-05-06T16:01:08.255Z"
-        },
-        {
-          "id": 366,
-          "chatbotId": 40,
-          "userId": null,
-          "content": "66.59",
-          "isUserMessage": true,
-          "citation": null,
-          "createdAt": "2025-05-06T16:01:08.255Z"
-        },
-        {
-          "id": 367,
-          "chatbotId": 40,
-          "userId": null,
-          "content": "No expense matching $66.59 (±$5) was found in the last 7 days.",
-          "isUserMessage": false,
-          "citation": "No specific source available",
-          "createdAt": "2025-05-06T16:01:08.255Z"
-        },
-        {
-          "id": 368,
-          "chatbotId": 40,
-          "userId": null,
-          "content": "26.92",
-          "isUserMessage": true,
-          "citation": null,
-          "createdAt": "2025-05-06T16:01:08.255Z"
-        },
-        {
-          "id": 369,
-          "chatbotId": 40,
-          "userId": null,
-          "content": "No expense matching $26.92 (±$5) was found in the last 7 days.",
-          "isUserMessage": false,
-          "citation": "No specific source available",
-          "createdAt": "2025-05-06T16:01:08.255Z"
-        },
-        {
-          "id": 370,
-          "chatbotId": 40,
-          "userId": null,
-          "content": "111.43",
-          "isUserMessage": true,
-          "citation": null,
-          "createdAt": "2025-05-06T16:01:08.255Z"
-        },
-        {
-          "id": 371,
-          "chatbotId": 40,
-          "userId": null,
-          "content": "Lowe’s $111.43 Landscape notes for 1320 Mayfair",
           "isUserMessage": false,
           "citation": "No specific source available",
           "createdAt": "2025-05-06T16:01:08.255Z"
@@ -4092,6 +4341,636 @@
           "isUserMessage": false,
           "citation": "No specific source available",
           "createdAt": "2025-05-15T13:35:42.419Z"
+        },
+        {
+          "id": 556,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "$2,540.42",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-20T17:49:20.806Z"
+        },
+        {
+          "id": 557,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "No expense matching $2,540.42 (±$5) was found in the last 7 days.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-20T17:49:22.872Z"
+        },
+        {
+          "id": 558,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "$120.29",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-20T17:49:43.325Z"
+        },
+        {
+          "id": 559,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "Lowe’s  $142.06  Material  for  16 Bonnie",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-20T17:49:44.576Z"
+        },
+        {
+          "id": 560,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "$220.91",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-20T17:52:03.033Z"
+        },
+        {
+          "id": 561,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "Home Depot  $220.91  Landscape Materials  for 1320 Mayfair",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-20T17:52:04.575Z"
+        },
+        {
+          "id": 562,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "$30.89",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-22T16:34:07.648Z"
+        },
+        {
+          "id": 563,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "Close match – Lowes  $30.55  Material  for 160 Black Ankle\nClose match – Lowes  $30.62  Material  for 160 Black Ankle",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-22T16:34:12.766Z"
+        },
+        {
+          "id": 564,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "$34.82",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-22T16:35:05.147Z"
+        },
+        {
+          "id": 565,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "Lowes  $34.82  Paint/Compound materials  for 16 Bonnie Lane",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-22T16:35:06.509Z"
+        },
+        {
+          "id": 566,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "$29.29",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-22T16:35:21.488Z"
+        },
+        {
+          "id": 567,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "No expense matching $29.29 (±$5) was found in the last 7 days.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-22T16:35:23.177Z"
+        },
+        {
+          "id": 568,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "$79.25",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-22T16:39:33.394Z"
+        },
+        {
+          "id": 569,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "Sherwin Williams  $78.00  Paint  for  4846 Adams",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-22T16:39:34.806Z"
+        },
+        {
+          "id": 570,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "$325.51",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-23T14:53:43.583Z"
+        },
+        {
+          "id": 571,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "No expense matching $325.51 (±$5) was found in the last 7 days.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-23T14:53:46.123Z"
+        },
+        {
+          "id": 572,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "#132",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-23T14:53:55.030Z"
+        },
+        {
+          "id": 573,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "Lowes  $67.00  Electric materials lightbulbs  for 6265 Ferry  \nLowes  $144.21  Quickset/Drywall Material  for 6265 Ferry  \nHome Depot  $65.00  Fence material  for 6265 Ferry  \nImeca  $1,067.90  Cabinet Drawers  for 6265 Ferry  \nHome Depot  $650.98  Fence material right side  for 6265 Ferry  \nSherwin Williams  $420.83  Paint  for 6265 Ferry  \nLowes  $105.00  Electric Materials and Plastic wrap  for 6265 Ferry/16 Bonnie Lane  \nLowes  $120.00  Electric trim materials light bulbs, and caps  for 6265 Ferry  \nFloor and Decor  $65.75  Grout  for 6265 Ferry",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-23T14:53:59.463Z"
+        },
+        {
+          "id": 574,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "$321",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-23T14:54:07.921Z"
+        },
+        {
+          "id": 575,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "Close match – Lowes $321.00 16 Bonnie and 1320 Mayfair First Atlanta Flooring",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-23T14:54:10.113Z"
+        },
+        {
+          "id": 576,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "$132",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-23T14:54:14.354Z"
+        },
+        {
+          "id": 577,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "Lowes  $142.06  Material  for 16 Bonnie",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-23T14:54:15.544Z"
+        },
+        {
+          "id": 578,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "$63.13",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-23T15:00:57.288Z"
+        },
+        {
+          "id": 579,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "No expense matching $63.13 (±$5) was found in the last 7 days.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-23T15:00:58.581Z"
+        },
+        {
+          "id": 580,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "$617",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-23T15:01:12.555Z"
+        },
+        {
+          "id": 581,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "Lowes  $617.76  wood framing materials  for 2393 Poplar Springs",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-23T15:01:14.177Z"
+        },
+        {
+          "id": 588,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "$90.42",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-27T14:19:53.021Z"
+        },
+        {
+          "id": 589,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "No expense matching $90.42 (±$5) was found in the last 7 days.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-27T14:19:55.259Z"
+        },
+        {
+          "id": 590,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "$144.21",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-27T14:22:13.324Z"
+        },
+        {
+          "id": 591,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "Lowes  $144.21  Quickset/Drywall Material  for 6265 Ferry",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-27T14:22:15.189Z"
+        },
+        {
+          "id": 592,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "$413.33",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-27T14:22:52.244Z"
+        },
+        {
+          "id": 593,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "Close match – Sherwin Williams  $413.59  Paint  for 1293 Sylvan  \n2393 Poplar  $413.86  Framing materials  \n6265 Ferry  $420.83  SW Paint",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-27T14:22:54.717Z"
+        },
+        {
+          "id": 594,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "$72.62",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-27T14:30:35.635Z"
+        },
+        {
+          "id": 595,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "No expense matching $72.62 (±$5) was found in the last 7 days.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-27T14:30:39.840Z"
+        },
+        {
+          "id": 596,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "$53.36",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-27T14:30:47.028Z"
+        },
+        {
+          "id": 597,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "No expense matching $53.36 (±$5) was found in the last 7 days.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-27T14:30:48.599Z"
+        },
+        {
+          "id": 612,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "$444.95",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-29T15:05:10.434Z"
+        },
+        {
+          "id": 613,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "Ga wholesale nursery $444.95 Grown hardware mulch for 1320 Mayfair",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-29T15:05:15.928Z"
+        },
+        {
+          "id": 614,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "$169.51",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-29T15:07:14.062Z"
+        },
+        {
+          "id": 615,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "Doraville Transfer Station  $169.51  Dump trailer site clean up  for 1320 Mayfair",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-29T15:07:16.688Z"
+        },
+        {
+          "id": 616,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "$44.73",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-29T15:08:18.186Z"
+        },
+        {
+          "id": 617,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "Home Depot  $44.73  pool, string line and plumbing fittings  for 1320 Mayfair",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-29T15:08:19.650Z"
+        },
+        {
+          "id": 618,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "$115.07",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-29T15:08:48.418Z"
+        },
+        {
+          "id": 619,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "Floor and Decor  $115.07  Pool tile  “for” 1269 Mayfair\nFloor and Decor  $115.07  Pool tile and thin-set  “for” 1269 Mayfair",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-29T15:08:50.791Z"
+        },
+        {
+          "id": 620,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "$64.66",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-29T15:09:18.104Z"
+        },
+        {
+          "id": 621,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "Home Depot  $64.66  Bobcat grease and gun  for 1320 Mayfair\nHome Depot  $64.66  Mortar and silicone for pool equipment  for 1320 Mayfair",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-29T15:09:20.397Z"
+        },
+        {
+          "id": 622,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "$132.56",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-29T15:10:26.610Z"
+        },
+        {
+          "id": 623,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "Lowe’s  $142.06  Material  “for”  16 Bonnie",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-29T15:10:30.198Z"
+        },
+        {
+          "id": 624,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "$137.16",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-29T15:11:06.081Z"
+        },
+        {
+          "id": 625,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "Lowes  $142.06  Material  for  16 Bonnie",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-29T15:11:23.689Z"
+        },
+        {
+          "id": 626,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "$325.51",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-29T15:11:25.870Z"
+        },
+        {
+          "id": 627,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "No expense matching $325.51 (±$5) was found in the last 7 days.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-29T15:11:36.722Z"
+        },
+        {
+          "id": 628,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "$494.59",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-29T15:12:43.099Z"
+        },
+        {
+          "id": 629,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "Floor and Decor  $494.59  pool tile  for 4846 Adams",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-29T15:12:44.479Z"
+        },
+        {
+          "id": 630,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "$86.46",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-29T15:14:59.616Z"
+        },
+        {
+          "id": 631,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "16 Bonnie  $86.00  Paint and final punchlist materials  for 16 Bonnie",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-29T15:15:02.399Z"
+        },
+        {
+          "id": 632,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "$50.83",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-30T13:57:47.571Z"
+        },
+        {
+          "id": 633,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "HD $50.83 Stainless steel screws, drill bit for 1247 Hopkins",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-30T13:57:49.695Z"
+        },
+        {
+          "id": 634,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "$164",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-30T13:58:23.849Z"
+        },
+        {
+          "id": 635,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "Lowe’s  $142.06  16 Bonnie  Material",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-30T13:58:25.087Z"
+        },
+        {
+          "id": 636,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "$120.66",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-30T13:58:55.259Z"
+        },
+        {
+          "id": 637,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "Lowe’s  142.06  Material  for  16 Bonnie",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-30T13:58:56.815Z"
+        },
+        {
+          "id": 640,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "$53.69",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-06-02T15:19:40.974Z"
+        },
+        {
+          "id": 641,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "No expense matching $53.69 (±$5) was found in the last 7 days.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-06-02T15:19:43.564Z"
+        },
+        {
+          "id": 642,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "$160.54",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-06-02T15:21:37.968Z"
+        },
+        {
+          "id": 643,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "Lowe’s  $160.54  Material  16 Bonnie",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-06-02T15:21:39.584Z"
+        },
+        {
+          "id": 644,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "$82.19",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-06-02T15:29:20.689Z"
+        },
+        {
+          "id": 645,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "No expense matching $82.19 (±$5) was found in the last 7 days.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-06-02T15:29:24.158Z"
+        },
+        {
+          "id": 646,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "$432.48",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-06-03T13:29:46.972Z"
+        },
+        {
+          "id": 647,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "Close match – 1253 Mayfair  $432.58  Framing Materials Peppe HILTI LUMBER",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-06-03T13:29:48.969Z"
         }
       ],
       "summaries": [],
@@ -4259,6 +5138,78 @@
           "isUserMessage": false,
           "citation": "No specific source available",
           "createdAt": "2025-05-12T18:06:59.598Z"
+        },
+        {
+          "id": 546,
+          "chatbotId": 42,
+          "userId": null,
+          "content": "$52.67",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-19T17:17:22.987Z"
+        },
+        {
+          "id": 547,
+          "chatbotId": 42,
+          "userId": null,
+          "content": "Close match – Rustic flooring $52.68 Material for 1444 Grant",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-19T17:17:27.855Z"
+        },
+        {
+          "id": 598,
+          "chatbotId": 42,
+          "userId": null,
+          "content": "$53.18",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-27T15:01:08.463Z"
+        },
+        {
+          "id": 599,
+          "chatbotId": 42,
+          "userId": null,
+          "content": "Home Depot  $83.18  Material  for 164 Lanatchi",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-27T15:01:10.605Z"
+        },
+        {
+          "id": 600,
+          "chatbotId": 42,
+          "userId": null,
+          "content": "$87.48",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-27T15:03:59.153Z"
+        },
+        {
+          "id": 601,
+          "chatbotId": 42,
+          "userId": null,
+          "content": "Sunset Paint $87.48 Paint for 1028 Citadel",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-27T15:04:00.467Z"
+        },
+        {
+          "id": 602,
+          "chatbotId": 42,
+          "userId": null,
+          "content": "$108.30",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-27T15:04:36.452Z"
+        },
+        {
+          "id": 603,
+          "chatbotId": 42,
+          "userId": null,
+          "content": "Home Depot  $108.30  Paint supplies  for 2354 Poplar",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-27T15:04:37.796Z"
         }
       ],
       "summaries": [],
@@ -5064,6 +6015,24 @@
           "createdAt": "2025-05-06T15:51:48.548Z"
         },
         {
+          "id": 398,
+          "chatbotId": 41,
+          "userId": null,
+          "content": "what happened yesterday?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-06T16:01:08.255Z"
+        },
+        {
+          "id": 399,
+          "chatbotId": 41,
+          "userId": null,
+          "content": "Yesterday, May 5, 2025, the following occurred at 16 Bonnie (per Slack):\n\n• 13:00 – Walk-through of the house with Dimitri (Slack)  \n• 15:41 – Aaron Wilson confirmed a premium Pella package is en route directly from Brennan; team to watch for shipper updates (Slack, 2025-05-05 15:41:42 ET)  \n• Stationary exterior door was repaired but its latch was missing; a replacement latch has been ordered (Slack)  \n• Request placed to remove the porta-john from site (Slack)  \n• Brandon returned in the afternoon to install proper",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-06T16:01:08.255Z"
+        },
+        {
           "id": 380,
           "chatbotId": 41,
           "userId": null,
@@ -5226,24 +6195,6 @@
           "createdAt": "2025-05-06T16:01:08.255Z"
         },
         {
-          "id": 398,
-          "chatbotId": 41,
-          "userId": null,
-          "content": "what happened yesterday?",
-          "isUserMessage": true,
-          "citation": null,
-          "createdAt": "2025-05-06T16:01:08.255Z"
-        },
-        {
-          "id": 399,
-          "chatbotId": 41,
-          "userId": null,
-          "content": "Yesterday, May 5, 2025, the following occurred at 16 Bonnie (per Slack):\n\n• 13:00 – Walk-through of the house with Dimitri (Slack)  \n• 15:41 – Aaron Wilson confirmed a premium Pella package is en route directly from Brennan; team to watch for shipper updates (Slack, 2025-05-05 15:41:42 ET)  \n• Stationary exterior door was repaired but its latch was missing; a replacement latch has been ordered (Slack)  \n• Request placed to remove the porta-john from site (Slack)  \n• Brandon returned in the afternoon to install proper",
-          "isUserMessage": false,
-          "citation": "No specific source available",
-          "createdAt": "2025-05-06T16:01:08.255Z"
-        },
-        {
           "id": 480,
           "chatbotId": 41,
           "userId": null,
@@ -5260,6 +6211,24 @@
           "isUserMessage": false,
           "citation": "No specific source available",
           "createdAt": "2025-05-06T17:42:43.274Z"
+        },
+        {
+          "id": 548,
+          "chatbotId": 41,
+          "userId": null,
+          "content": "give me an update for any outstanding items over the last ten days",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-05-20T15:21:21.415Z"
+        },
+        {
+          "id": 549,
+          "chatbotId": 41,
+          "userId": null,
+          "content": "Here is an update on outstanding items from the last ten days at the 16 Bonnie project:\n\n1. **Painter (Christian) Issues**:  \n   - Christian has been unreliable, missed the last one-year walkthrough, and has not responded to calls or texts.  \n   - He is still needed to install registers at 1320 Mayfair and at Bonnie Lane. Christian promised to install the registers on the day of the latest update but had not gone over the weekend before that.  \n   - Christian fixed some cabinet issues but still needs to address drawer latch adjustments in the master.  \n   - There is a general decision not to rely on Christian anymore due to ongoing issues.\n\n2. **Cooktop Clips**:  \n   - Missing two support brackets (clips) for the cooktop; only two came with the unit but four are needed.  \n   - Joel's team and Vilma's install team have been involved in communication and action on this issue.\n\n3. **Site Mounds**:  \n   - Jaime needs to go ASAP to fix the mounds on the left side of the home towards the neighbor’s side to pass inspection.\n\n4. **Protection & Coverage**:  \n   - All fans and light fixtures need to be covered before painting continues. Joel's crew is responsible for covering light fixtures and countertops as they start painting.  \n   - Some shelves and the $7,000 stone tub are not adequately covered and must be protected immediately.\n\n5. **Electrical Work Remaining**:  \n   - Finish adjustments for dining room fixtures.  \n   - Finish bathroom fan plates install.  \n   - Fix disposal outlets.  \n   - Install outlet for wine bar fridge.  \n   - Install 3 exterior can trim lights.  \n   - Install outside outlet by front door.  \n   - Cover plates and final electrical inspection.\n\n6. **Other Installations & Fixes**:  \n   - Sliding door lock and latch have been fixed.  \n   - Jim installer is scheduled for latch installation on the sliding door.  \n   - Appliances are 95% in; Dimitri is scheduled for cabinet adjustments and fixes.\n\n7. **Inspection & Site Review Comments**:  \n   - A stone piece (retaining wall) on the north side needs more height per City inspectors; the note about the wall will be removed from the plan.  \n   - Dimension and details for this wall are required to meet setback and property line regulations.\n\n8. **Schedule Notes**:  \n   - Joel's team and drywall team are currently on site.  \n   - Joel is scheduled to start some work imminently after painters finish.  \n   - Rick expects the garage door delivery by May 26.\n\nIf you want details on any specific item or the responsible party for follow-up, let me know.\n\n**Source:** Slack messages from May 7 to May 19, 2025.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-05-20T15:21:34.202Z"
         }
       ],
       "summaries": [
@@ -5329,8 +6298,30 @@
       ],
       "emailRecipients": [],
       "asanaProjects": []
+    },
+    {
+      "chatbot": {
+        "id": 44,
+        "name": "Bookhaven Municipal Codes",
+        "slackChannelId": "C090JM73XA4",
+        "asanaProjectId": null,
+        "asanaConnectionId": null,
+        "createdById": 4,
+        "projectId": null,
+        "publicToken": "4587225c-0176-4145-95f8-c0740030a0a0",
+        "isActive": true,
+        "requireAuth": false,
+        "systemPrompt": "You are a compliance assistant trained specifically to help users understand and follow the City of Brookhaven, Georgia’s Code of Ordinances as it applies to residential home building. Your primary role is to provide accurate, thorough, and helpful answers based on the knowledge base of up-to-date code documents provided to you. Always prioritize information from the knowledge base over your general training or assumptions. Do not rely on your own knowledge if the knowledge base has relevant material.\n\nWhen responding to questions, always:\n\nRefer to specific language from the code whenever possible.\n\nCite exact sections using the format: Sec. 7-121. (a) or Sec. 14-205. (b)(2) whenever a specific ordinance applies.\n\nUse quotation marks when quoting or closely paraphrasing official ordinance text.\n\nBe clear and professional—avoid legal jargon when simpler phrasing will help the user take action.\n\nIf you find multiple relevant code sections, mention all of them clearly.\n\nIf no relevant information is found in the knowledge base, respond with:\n“I couldn’t find that in the current version of the Brookhaven Code available to me. Please consult the city’s official planning department or website for confirmation.”\n\nYour top priorities are:\n\nAccuracy\n\nCiting source sections\n\nClarity in plain language\n\nExamples of proper citation:\n\n“According to Sec. 27-733. (c), ‘Accessory structures must be located a minimum of five feet from the rear lot line.’”\n\n“Permit requirements are listed in Sec. 7-121. (a).”\n\nNever guess or generalize if specific guidance is available. Always rely on the provided ordinance text files as your source of truth.",
+        "outputFormat": null,
+        "createdAt": "2025-06-03T21:03:56.273Z"
+      },
+      "documents": [],
+      "messages": [],
+      "summaries": [],
+      "emailRecipients": [],
+      "asanaProjects": []
     }
   ],
-  "exportedAt": "2025-05-19T16:21:08.609Z",
+  "exportedAt": "2025-06-03T21:15:21.496Z",
   "exportedBy": "SPH Chat Migration Utility"
 }
