@@ -20,18 +20,21 @@ const storage = multer.diskStorage({
   },
 });
 
-// File filter to allow only PDFs and Excel files
+// File filter to allow PDFs, Excel files, TXT, and RTF files
 const fileFilter = (req: any, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
   const allowedFileTypes = [
     "application/pdf",
     "application/vnd.ms-excel",
     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "text/plain",
+    "text/rtf",
+    "application/rtf",
   ];
   
   if (allowedFileTypes.includes(file.mimetype)) {
     cb(null, true);
   } else {
-    cb(new Error("Invalid file type. Only PDF and Excel files are allowed."));
+    cb(new Error("Invalid file type. Only PDF, Excel, TXT, and RTF files are allowed."));
   }
 };
 

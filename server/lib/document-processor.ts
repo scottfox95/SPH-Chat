@@ -206,6 +206,74 @@ export async function extractTextFromTXT(filePath: string): Promise<string[]> {
 }
 
 /**
+ * Extracts text from an RTF file
+ * @param filePath Path to the RTF file
+ * @returns Extracted plain text content
+ */
+export async function extractTextFromRTF(filePath: string): Promise<string[]> {
+  try {
+    console.log(`Starting RTF extraction for: ${path.basename(filePath)}`);
+    
+    const readFile = promisify(fs.readFile);
+    const content = await readFile(filePath, 'utf8');
+    
+    // Basic RTF parser - removes RTF control sequences and extracts plain text
+    let plainText = content;
+    
+    // Remove RTF header
+    plainText = plainText.replace(/^\{\\rtf1[^}]*\}/, '');
+    
+    // Remove control words and groups
+    plainText = plainText.replace(/\{[^{}]*\}/g, '');
+    plainText = plainText.replace(/\\[a-z]+[0-9]*\s?/gi, '');
+    plainText = plainText.replace(/\\[^a-z]/gi, '');
+    
+    // Remove remaining braces
+    plainText = plainText.replace(/[{}]/g, '');
+    
+    // Clean up whitespace
+    plainText = plainText.replace(/\s+/g, ' ').trim();
+    
+    // Convert RTF line breaks to actual line breaks
+    plainText = plainText.replace(/\\par\s*/g, '\n');
+    plainText = plainText.replace(/\\line\s*/g, '\n');
+    
+    if (!plainText || plainText.length === 0) {
+      console.warn(`No text content extracted from RTF file: ${path.basename(filePath)}`);
+      return [`[RTF Document] No text content could be extracted from this RTF file.`];
+    }
+    
+    // Split into lines and process similar to TXT files
+    const lines = plainText.split(/\r?\n/).filter(line => line.trim().length > 0);
+    
+    console.log(`RTF extraction complete: ${lines.length} lines extracted from ${path.basename(filePath)}`);
+    
+    // For small RTF files, return the whole content as one chunk
+    if (lines.length <= 10) {
+      return [`[RTF Document] ${plainText}`];
+    }
+    
+    // For larger RTF files, break into sections
+    const result: string[] = [];
+    const sectionSize = 50; // Number of lines per section
+    
+    for (let i = 0; i < lines.length; i += sectionSize) {
+      const section = lines.slice(i, i + sectionSize);
+      const sectionText = section.map((line, idx) => 
+        `Line ${i + idx + 1}: ${line}`
+      ).join('\n');
+      
+      result.push(`[RTF Document Section ${Math.floor(i / sectionSize) + 1}]\n${sectionText}`);
+    }
+    
+    return result;
+  } catch (error) {
+    console.error(`Error extracting text from RTF file ${path.basename(filePath)}:`, error);
+    return [`Error processing RTF file: ${path.basename(filePath)}`];
+  }
+}
+
+/**
  * Processes uploaded documents based on file type
  * @param filePath Path to the document
  * @param fileType Type of the document (pdf, excel)
@@ -241,8 +309,12 @@ export async function processDocument(filePath: string, fileType: string): Promi
       fileExtension === '.txt' || 
       fileExtension === '.csv' ||
       fileExtension === '.md';
+    const isRtf = 
+      fileType === "text/rtf" || 
+      fileType === "application/rtf" || 
+      fileExtension === '.rtf';
     
-    console.log(`File type detection: isPdf=${isPdf}, isExcel=${isExcel}, isText=${isText}`);
+    console.log(`File type detection: isPdf=${isPdf}, isExcel=${isExcel}, isText=${isText}, isRtf=${isRtf}`);
     
     if (isPdf) {
       console.log(`Processing PDF document: ${fileName}`);
@@ -253,9 +325,12 @@ export async function processDocument(filePath: string, fileType: string): Promi
     } else if (isText) {
       console.log(`Processing text document: ${fileName}`);
       result = await extractTextFromTXT(filePath);
+    } else if (isRtf) {
+      console.log(`Processing RTF document: ${fileName}`);
+      result = await extractTextFromRTF(filePath);
     } else {
       console.error(`Unsupported file type: ${fileType} with extension ${fileExtension} for file: ${fileName}`);
-      return [`The file "${fileName}" has an unsupported format (${fileType}). Please upload PDF, Excel, or text files.`];
+      return [`The file "${fileName}" has an unsupported format (${fileType}). Please upload PDF, Excel, TXT, or RTF files.`];
     }
     
     if (result.length === 0) {

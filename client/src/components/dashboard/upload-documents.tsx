@@ -101,7 +101,7 @@ export default function UploadDocuments({ chatbotId }: UploadDocumentsProps) {
             Upload Project Document
           </Label>
           <p className="text-sm text-gray-500 mt-1">
-            Upload PDF, TXT, or Excel files to provide knowledge to the chatbot.
+            Upload PDF, TXT, RTF, or Excel files to provide knowledge to the chatbot.
           </p>
         </div>
         
@@ -130,7 +130,7 @@ export default function UploadDocuments({ chatbotId }: UploadDocumentsProps) {
               <input
                 id="document-upload"
                 type="file"
-                accept=".pdf,.xls,.xlsx,.txt"
+                accept=".pdf,.xls,.xlsx,.txt,.rtf"
                 onChange={handleFileChange}
                 className="hidden"
                 ref={fileInputRef}
@@ -144,7 +144,7 @@ export default function UploadDocuments({ chatbotId }: UploadDocumentsProps) {
                   Click to upload
                 </span>
                 <span className="text-xs text-gray-500 mt-1">
-                  PDF, TXT, or Excel files only (max 10MB)
+                  PDF, TXT, RTF, or Excel files only (max 10MB)
                 </span>
               </label>
             </div>
