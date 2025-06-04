@@ -792,7 +792,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "No file uploaded" });
       }
       
-      const { filename, originalname, mimetype } = req.file;
+      const { filename, originalname, mimetype, path: filePath } = req.file;
       
       const user = req.user as Express.User;
       const document = await storage.createDocument({
@@ -802,6 +802,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
         fileType: mimetype,
         uploadedById: user.id
       });
+      
+      // Upload to OpenAI vector store in the background
+      try {
+        const { uploadFileToVectorStore } = await import('./lib/openai-vector-storage');
+        await uploadFileToVectorStore(chatbotId, document.id, filePath, originalname);
+        console.log(`Successfully uploaded ${originalname} to OpenAI vector store for chatbot ${chatbotId}`);
+      } catch (vectorError) {
+        console.error(`Failed to upload ${originalname} to OpenAI vector store:`, vectorError);
+        // Don't fail the upload, just log the error
+      }
       
       // Clear document cache for this specific chatbot
       clearDocumentCache(chatbotId);

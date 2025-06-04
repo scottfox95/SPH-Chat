@@ -16,20 +16,44 @@ export async function getOrCreateVectorStore(chatbotId: number, chatbotName: str
   if (chatbot?.vectorStoreId) {
     try {
       // Verify the vector store still exists
-      await openai.beta.vectorStores.retrieve(chatbot.vectorStoreId);
-      return chatbot.vectorStoreId;
+      const response = await fetch(`https://api.openai.com/v1/vector_stores/${chatbot.vectorStoreId}`, {
+        headers: {
+          'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+          'Content-Type': 'application/json',
+          'OpenAI-Beta': 'assistants=v2'
+        }
+      });
+      
+      if (response.ok) {
+        return chatbot.vectorStoreId;
+      }
+      console.log(`Vector store ${chatbot.vectorStoreId} not found, creating new one`);
     } catch (error) {
       console.log(`Vector store ${chatbot.vectorStoreId} not found, creating new one`);
     }
   }
 
-  // Create new vector store
-  const vectorStore = await openai.beta.vectorStores.create({
-    name: `${chatbotName} Knowledge Base`
+  // Create new vector store using direct API call
+  const response = await fetch('https://api.openai.com/v1/vector_stores', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+      'Content-Type': 'application/json',
+      'OpenAI-Beta': 'assistants=v2'
+    },
+    body: JSON.stringify({
+      name: `${chatbotName} Knowledge Base`
+    })
   });
 
-  // Update chatbot with vector store ID
-  await storage.updateChatbot(chatbotId, { vectorStoreId: vectorStore.id });
+  if (!response.ok) {
+    throw new Error(`Failed to create vector store: ${response.statusText}`);
+  }
+
+  const vectorStore = await response.json();
+
+  // Update chatbot with vector store ID using SQL
+  await storage.updateChatbot(chatbotId, { vectorStoreId: vectorStore.id } as any);
 
   console.log(`Created vector store ${vectorStore.id} for chatbot ${chatbotName}`);
   return vectorStore.id;
@@ -66,10 +90,22 @@ export async function uploadFileToVectorStore(
 
   console.log(`Uploaded file ${originalName} to OpenAI with ID: ${file.id}`);
 
-  // Add file to vector store
-  await openai.beta.vectorStores.files.create(vectorStoreId, {
-    file_id: file.id
+  // Add file to vector store using direct API call
+  const addFileResponse = await fetch(`https://api.openai.com/v1/vector_stores/${vectorStoreId}/files`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+      'Content-Type': 'application/json',
+      'OpenAI-Beta': 'assistants=v2'
+    },
+    body: JSON.stringify({
+      file_id: file.id
+    })
   });
+
+  if (!addFileResponse.ok) {
+    throw new Error(`Failed to add file to vector store: ${addFileResponse.statusText}`);
+  }
 
   console.log(`Added file ${file.id} to vector store ${vectorStoreId}`);
 
@@ -93,9 +129,18 @@ export async function removeFileFromVectorStore(documentId: number): Promise<voi
   }
 
   try {
-    // Remove from vector store
-    await openai.beta.vectorStores.files.del(document.vectorStoreId, document.openaiFileId);
-    console.log(`Removed file ${document.openaiFileId} from vector store ${document.vectorStoreId}`);
+    // Remove from vector store using direct API call
+    const removeResponse = await fetch(`https://api.openai.com/v1/vector_stores/${document.vectorStoreId}/files/${document.openaiFileId}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+        'OpenAI-Beta': 'assistants=v2'
+      }
+    });
+
+    if (removeResponse.ok) {
+      console.log(`Removed file ${document.openaiFileId} from vector store ${document.vectorStoreId}`);
+    }
 
     // Delete the file from OpenAI
     await openai.files.del(document.openaiFileId);
