@@ -235,13 +235,11 @@ export async function getChatbotResponseWithVectorStore(
     };
 
     // Add file_search tool if chatbot has a vector store
-    // Note: The Responses API uses a different format than Assistants API
+    // Note: The Responses API format
     if (chatbot.vectorStoreId) {
       requestParams.tools = [{ 
         type: "file_search",
-        file_search: {
-          vector_store_ids: [chatbot.vectorStoreId]
-        }
+        vector_store_ids: [chatbot.vectorStoreId]
       }];
       console.log(`Using vector store ${chatbot.vectorStoreId} for file search`);
     }

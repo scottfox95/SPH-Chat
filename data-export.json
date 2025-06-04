@@ -6521,6 +6521,24 @@
           "isUserMessage": false,
           "citation": null,
           "createdAt": "2025-06-04T19:28:25.713Z"
+        },
+        {
+          "id": 666,
+          "chatbotId": 44,
+          "userId": null,
+          "content": "what is the impervious surface allowance?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-06-04T19:30:46.550Z"
+        },
+        {
+          "id": 667,
+          "chatbotId": 44,
+          "userId": null,
+          "content": "I apologize, but I encountered an error processing your request. Please try again.",
+          "isUserMessage": false,
+          "citation": null,
+          "createdAt": "2025-06-04T19:30:46.817Z"
         }
       ],
       "summaries": [],
@@ -6528,6 +6546,6 @@
       "asanaProjects": []
     }
   ],
-  "exportedAt": "2025-06-04T19:30:20.901Z",
+  "exportedAt": "2025-06-04T19:37:13.680Z",
   "exportedBy": "SPH Chat Migration Utility"
 }
