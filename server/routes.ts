@@ -1458,14 +1458,31 @@ You should **never make up information**. You may summarize or synthesize detail
         citation: null,
       });
       
-      // Get response from OpenAI
-      const aiResponse = await getChatbotResponse(
-        message,
-        documents,
-        [...slackMessages, ...asanaTasks],
-        systemPrompt,
-        chatbot.outputFormat
-      );
+      // Get response from OpenAI - use vector store if available
+      let aiResponse;
+      if (chatbot.vectorStoreId) {
+        console.log(`Using vector store ${chatbot.vectorStoreId} for chatbot ${chatbotId}`);
+        const { getChatbotResponseWithVectorStore } = await import('./lib/openai-vector-storage');
+        aiResponse = {
+          content: await getChatbotResponseWithVectorStore(
+            message,
+            chatbotId,
+            [...slackMessages, ...asanaTasks],
+            systemPrompt,
+            chatbot.outputFormat
+          ),
+          citation: null
+        };
+      } else {
+        console.log(`Using legacy document processing for chatbot ${chatbotId}`);
+        aiResponse = await getChatbotResponse(
+          message,
+          documents,
+          [...slackMessages, ...asanaTasks],
+          systemPrompt,
+          chatbot.outputFormat
+        );
+      }
       
       // Save AI response
       const botMessage = await storage.createMessage({
