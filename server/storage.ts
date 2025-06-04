@@ -108,6 +108,7 @@ export interface IStorage {
   getDocuments(chatbotId: number): Promise<Document[]>;
   getDocument(id: number): Promise<Document | undefined>;
   createDocument(document: InsertDocument): Promise<Document>;
+  updateDocument(id: number, data: Partial<Document>): Promise<Document | undefined>;
   deleteDocument(id: number): Promise<boolean>;
   
   // Summary methods
@@ -546,11 +547,26 @@ export class MemStorage implements IStorage {
     const newDocument: Document = {
       ...document,
       id,
-      createdAt: now
+      createdAt: now,
+      openaiFileId: null,
+      vectorStoreId: null
     };
     
     this.documents.set(id, newDocument);
     return newDocument;
+  }
+  
+  async updateDocument(id: number, data: Partial<Document>): Promise<Document | undefined> {
+    const document = this.documents.get(id);
+    if (!document) return undefined;
+    
+    const updatedDocument: Document = {
+      ...document,
+      ...data
+    };
+    
+    this.documents.set(id, updatedDocument);
+    return updatedDocument;
   }
   
   async deleteDocument(id: number): Promise<boolean> {
@@ -1427,6 +1443,15 @@ export class DatabaseStorage implements IStorage {
       .returning();
     
     return newDocument;
+  }
+  
+  async updateDocument(id: number, data: Partial<Document>): Promise<Document | undefined> {
+    const [updatedDocument] = await db.update(documents)
+      .set(data)
+      .where(eq(documents.id, id))
+      .returning();
+    
+    return updatedDocument;
   }
   
   async deleteDocument(id: number): Promise<boolean> {
