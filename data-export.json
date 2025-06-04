@@ -3704,12 +3704,12 @@
           "createdAt": "2025-05-06T15:55:49.245Z"
         },
         {
-          "id": 356,
+          "id": 359,
           "chatbotId": 40,
           "userId": null,
-          "content": "$4,743.50",
-          "isUserMessage": true,
-          "citation": null,
+          "content": "No expense matching $94.33 (±$5) was found in the last 7 days.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
           "createdAt": "2025-05-06T16:01:08.255Z"
         },
         {
@@ -3758,19 +3758,19 @@
           "createdAt": "2025-05-06T16:01:08.255Z"
         },
         {
-          "id": 360,
+          "id": 356,
           "chatbotId": 40,
           "userId": null,
-          "content": "$119.96",
+          "content": "$4,743.50",
           "isUserMessage": true,
           "citation": null,
           "createdAt": "2025-05-06T16:01:08.255Z"
         },
         {
-          "id": 359,
+          "id": 357,
           "chatbotId": 40,
           "userId": null,
-          "content": "No expense matching $94.33 (±$5) was found in the last 7 days.",
+          "content": "Stovall $4,743.50 driveway pervious pavers 960 sf for 1320 Mayfair",
           "isUserMessage": false,
           "citation": "No specific source available",
           "createdAt": "2025-05-06T16:01:08.255Z"
@@ -3785,12 +3785,12 @@
           "createdAt": "2025-05-06T16:01:08.255Z"
         },
         {
-          "id": 357,
+          "id": 360,
           "chatbotId": 40,
           "userId": null,
-          "content": "Stovall $4,743.50 driveway pervious pavers 960 sf for 1320 Mayfair",
-          "isUserMessage": false,
-          "citation": "No specific source available",
+          "content": "$119.96",
+          "isUserMessage": true,
+          "citation": null,
           "createdAt": "2025-05-06T16:01:08.255Z"
         },
         {
@@ -4971,6 +4971,60 @@
           "isUserMessage": false,
           "citation": "No specific source available",
           "createdAt": "2025-06-03T13:29:48.969Z"
+        },
+        {
+          "id": 654,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "$49.54",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-06-04T14:27:22.912Z"
+        },
+        {
+          "id": 655,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "Close match – 16 Bonnie Lane  $49.54  plumbing materials and electrical  for UNKNOWN",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-06-04T14:27:26.039Z"
+        },
+        {
+          "id": 656,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "why didn't you write that last message like \"UNKNOWN$49.54 plumbing materials and electrical for 16 Bonnie Lane \"",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-06-04T14:28:24.209Z"
+        },
+        {
+          "id": 657,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "$170.53",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-06-04T14:29:00.911Z"
+        },
+        {
+          "id": 658,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "Lowes  $170.00  Electric materials  for 2461 Thompson",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-06-04T14:29:03.113Z"
+        },
+        {
+          "id": 659,
+          "chatbotId": 40,
+          "userId": null,
+          "content": "6265 Ferry  $49.00  Lumber materials paint team  for 6265 Ferry  \n911 S Shore  $100.00  Demo permit fee  for 911 S Shore  \nStovall  $2,468.46  Missing wall block and geo grid, block and sand mortar for pool  for 4846 Adams  \n911 S Shore  $50.00  Temp fence permit  for 911 S Shore  \n2461 Thompson  $94.61  Siding materials  for 2461 Thompson  \nSherwin Williams  $74.63  Paint  for 1293 Sylvan  \n911 S Shore  $50.00  Demo permit  for 911 S Shore  \n2461 Thompson  $170.00  Electric materials  for 2461 Thompson  \n16 Bonnie Lane  $49.54  Plumbing materials and electrical  for UNKNOWN  \nLowe’s  $86.18  Wheat straw  for 4846 Adams  \n195 Pebble Trail  $99.88  Materials  for 195 Pebble Trail  \n6265 Ferry  $19.91  Interior paint material  for 6265 Ferry  \n1253 Mayfair  $755.54  Pool permit  for 1253 Mayfair  \nHome Depot  $56.11  Pool thinset  for 4846 Adams  \nClassic Pool Tile  $3,358.08  Pool deck pavers  for 1269 Mayfair  \nHome Depot  $295.82  Rock wool and spray foam cans  for 1293 Sylvan  \nHome Depot  $51.83  Stainless steel screws, drill bit  for 1247 Hopkins Terrace  \nHome Depot  $44.73  Fence string line springs  for 1320 Mayfair  \n1253 Mayfair  $432.58  Framing materials Peppe Hilti lumber  for 1253 Mayfair  \nYakir Zaken  $69.00  Continuing education  for Six Points General  \nHome Depot  $464.31  Fence material  for 1320 Mayfair  \nBonnie Lane  $135.00  Paint  for UNKNOWN  \nLowes  $111.98  Wood and trim materials  for Ferry Dr  \nHome Depot  $295.82  Rock wool insulation and spray foam  for 1293 Sylvan  \nHome Depot  $594.89  Flashing house material  for 2393 Poplar Springs  \nHome Depot  $64.66  Bobcat grease and gun  for 1320 Mayfair  \nFloor and Decor  $115.07  Pool tile  for 1269 Mayfair  \nHome Depot  $44.73  Pool string line for lights  for 1320 Mayfair  \nGa Wholesale Nursery  $444.95  Grown hardware mulch  for 1320 Mayfair  \nGa Wholesale Nursery  $42.09  Sod staples  for 1320 Mayfair  \nDoraville Transfer Station  $313.87  Dump trailer site clean up  for 1320 Mayfair  \nShell  $34.62  Diesel for bobcat  for 1320 Mayfair  \nHome Depot  $44.73  Pool string line and plumbing fittings  for 1320 Mayfair  \nFloor and Decor  $115.07  Pool tile and thinset  for 1269 Mayfair  \nHome Depot  $64.66  Mortar and silicone for pool equipment  for 1320 Mayfair  \nStovall  $3,662.50  Wall block material along driveway  for 4846 Adams  \nPhilema Turf  $2,845.00  Emerald zoysia  for 1320 Mayfair  \nLowe’s  $90.42  Materials  for Six Points General  \nHome Depot  $594.89  Flashing for siding  for 580 Elmwood  \nFloor and Decor  $494.59  Pool tile  for 4846 Adams  \nHome Depot  $50.83  Stainless steel screws, drill bit  for 1247 Hopkins Terrace  \nSherwin Williams  $413.59  Paint  for 1293 Sylvan  \nLowes  $86.00  Paint and final punchlist materials  for 16 Bonnie Lane  \nHome Depot  $224.00  Bolts for framing  for 1253 Mayfair  \nNorthway  $58.14  Fence materials  for Northway  \n6265 Ferry  $67.00  Electric materials lightbulbs  for 6265 Ferry  \n16 Bonnie Lane  $68.00  Paint/compound cleanup material  for 16 Bonnie Lane  \n2393 Poplar Springs  $688.85  Framing materials  for 2393 Poplar Springs  \nHome Depot  $57.00  Door locks and air filters  for Six Points General  \nBrookhaven  $250.00  Plan re-submittal fee  for 1293 Sylvan  \nSherwin Williams  $1,849.00  Joel painting  for 4846 Adams  \nSherwin Williams  $78.00  Joel painting  for 4846 Adams  \nFirst Atlanta Flooring  $623.00  Bona finish and sealant with wood putty  for Six Points General  \nREFUND Home Depot  $-243.40  Ladder  for 4846 Adams  \nHome Depot  $76.00  Materials Joel  for 16 Bonnie Lane  \nSherwin Williams  $33.00  Tube tile repair paint  for 4846 Adams  \nSherwin Williams  $180.01  Paint  for 4846 Adams  \nHome Depot  $220.91  Landscape materials  for 1320 Mayfair  \nHome Depot  $121.00  Materials Joel Matul  for 16 Bonnie Lane  \nHome Depot  $65.00  Fence material  for 6265 Ferry  \nLowes  $35.00  Paint/compound materials Joel's team  for 16 Bonnie Lane  \n2393 Poplar Springs  $216.86  Framing materials  for 2383 Poplar  \nLowes  $90.00  Door lock’s and compound materials  for 4846 Adams  \nHome Depot  $50.12  Pool and house drainage fittings  for 4846 Adams  \nHome Depot  $91.65  Pool and house drainage fittings  for 4846 Adams  \nHome Depot  $93.22  Lock screws and 2x4  for 580 Elmwood  \n2393 Poplar Springs  $216.86  Lumber materials  for 2383 Poplar  \n6265 Ferry  $248.38  Interior paint material  for 6265 Ferry  \n16 Bonnie Lane  $156.81  Appliance install material  for 16 Bonnie Lane  \n2393 Poplar Springs  $432.22  Wood framing materials  for 2393 Poplar Springs  \n195 Pebble Trail  $408.62  Wood framing materials  for 195 Pebble Trail  \n195 Pebble Trail  $278.12  Framing materials  for 195 Pebble Trail  \n16 Bonnie Lane  $138.83  Interior paint material  for 16 Bonnie Lane  \nREFUND Floor and Decor  $-582.36  Rough material  for 160 Black Ankle  \n160 Black Ankle  $185.73  Materials  for 160 Black Ankle  \n160 Black Ankle  $75.91  Gas  for 160 Black Ankle  \n160 Black Ankle  $30.55  Gas  for 160 Black Ankle  \n160 Black Ankle  $11.04  Gas  for 160 Black Ankle  \n160 Black Ankle  $30.62  Gas  for 160 Black Ankle  \n160 Black Ankle  $32.87  Gas  for 160 Black Ankle  \n160 Black Ankle  $28.75  Gas  for 160 Black Ankle  \n160 Black Ankle  $35.42  Gas  for 160 Black Ankle  \n160 Black Ankle  $32.65  Gas  for 160 Black Ankle  \n160 Black Ankle  $20.25  Gas  for 160 Black Ankle  \n160 Black Ankle  $75.70  Materials  for 160 Black Ankle  \nImeca  $1,067.90  Cabinet drawers  for 6265 Ferry  \nHome Depot  $161.46  Concrete for footing  for 4846 Adams  \nHome Depot  $268.64  Concrete for footing  for 4846 Adams  \nHome Depot  $650.98  Fence material right side  for 6265 Ferry  \nHome Depot  $362.62  Concrete for footing  for 4846 Adams  \nFloor and Decor  $1,769.37  Tile for sauna, front porch, and bathrooms  for 160 Black Ankle  \n630 Carriage  $119.31  Trim and paint touch ups for new window install  for 630 Carriage  \nHome Depot  $77.00  Drywall paint materials  for 4846 Adams  \nBrookhaven  $300.00  Demo permit  for 3187 Saybrook  \nStovall  $1,506.99  Pavers and 89 stone  for 1320 Mayfair  \nHome Depot  $258.81  Wood forms, nails blade for driveway apron pour  for 1320 Mayfair  \nChevron  $4.03  Gas for saw  for 1320 Mayfair  \nHome Depot  $113.19  Drainage for patio/pool  for 1320 Mayfair  \nHome Depot  $324.41  Electrical conduit  for 4846 Adams  \nHome Depot  $125.00  Paint prime materials  for 4846 Adams  \nSherwin Williams  $1,079.20  50 gallons primer  for 4845 Adams  \n6265 Ferry  $420.83  Paint  for 6265 Ferry  \nPublix  $15.01  Office  for Six Points General  \nH2O Supply  $111.18  Sewer iron cap for install within driveway pavers  for 6265 Ferry / 1320 Mayfair  \nLowes  $113.00  Framing wood material  for 2393 Poplar Springs  \nPebble Trail  $363.00  Framing materials  for Pebble Trail  \nHome Depot  $233.00  Road painting Joel  for 4846 Adams  \nSite One  $1,329.00  Irrigation material  for 1320 Mayfair  \nLowe’s  $105.00  Electric materials and plastic wrap  for 6265 Ferry / 16 Bonnie Lane  \nHome Depot  $134.75  Mortar for patio pavers  for 1320 Mayfair  \nHome Depot  $593.11  Electrical conduit and ww mesh roll  for 4846 Adams  \nNorthway  $25.00  Cleanup materials  for Northway  \n2393 Poplar Springs  $493.00  Framing materials  for 2387 Poplar Springs  \n1500 Lavista  $39.37  Deck paint  for 1500 Lavista  \n1320 Mayfair  $111.43  Landscape notes  for 1320 Mayfair  \nStovall  $4,743.50  Driveway pervious pavers 960 sf  for 1320 Mayfair",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-06-04T14:29:28.925Z"
         }
       ],
       "summaries": [],
@@ -6315,13 +6369,78 @@
         "outputFormat": null,
         "createdAt": "2025-06-03T21:03:56.273Z"
       },
-      "documents": [],
-      "messages": [],
+      "documents": [
+        {
+          "id": 19,
+          "chatbotId": 44,
+          "filename": "d25d1e68-82cd-4f2e-8e3a-fca5b62b64e3.txt",
+          "originalName": "Chapter_7___BUILDINGS_AND_CONSTRUCTION.txt",
+          "fileType": "text/plain",
+          "uploadedById": 4,
+          "createdAt": "2025-06-04T19:12:33.653Z"
+        }
+      ],
+      "messages": [
+        {
+          "id": 648,
+          "chatbotId": 44,
+          "userId": null,
+          "content": "Do crawl spaces need to be damp proofed?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-06-03T21:20:45.381Z"
+        },
+        {
+          "id": 649,
+          "chatbotId": 44,
+          "userId": null,
+          "content": "Yes, crawl spaces in residential construction within the City of Brookhaven must be damp proofed. According to Sec. 7-24 (b)(2)(g) of the city’s building and construction code, \"All residential basements and crawl spaces shall be damp proofed and positively drained regardless of water table and/or soil conditions.\"\n\nThis requirement means that, no matter the existing soil or water table conditions on the site, crawl spaces must have appropriate measures to prevent moisture intrusion and ensure proper drainage.\n\nIf you are planning or inspecting residential home construction, you must ensure that damp proofing and drainage for crawl spaces meet this ordinance.\n\nReference:  \n- Sec. 7-24 (b)(2)(g) states: “All residential basements and crawl spaces shall be damp proofed and positively drained regardless of water table and/or soil conditions.”",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-06-03T21:20:51.369Z"
+        },
+        {
+          "id": 650,
+          "chatbotId": 44,
+          "userId": null,
+          "content": "Can I turn on any water connection where the water connection has been disconnected for nonpayment of water bills?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-06-03T21:31:31.536Z"
+        },
+        {
+          "id": 651,
+          "chatbotId": 44,
+          "userId": null,
+          "content": "According to the City of Brookhaven Code of Ordinances, turning on water service that was disconnected is regulated under the water system provisions in Chapter 25, \"Water, Sewer and Sewage Disposal,\" and also related enforcement rules in Chapter 7 \"Buildings and Construction.\"\n\nSpecifically, Sec. 25-148 states:  \n\"No person shall reconnect or turn on any water connection where the water connection has been disconnected for nonpayment of water bills, or for other purposes.\"\n\nAdditionally, Sec. 25-496 clarifies:  \n\"New connections or reconnections shall not be made until all previous financial obligations to the system have been met or resolved. This subsection only applies to owner-occupied property.\"\n\nAnd per Sec. 25-176:  \n\"Where connection requires investment in transmission mains that would not be justified by likely revenues, the water service provider may refuse service or require substantial cost sharing by the customer.\"\n\nAlso, from Chapter 7, Sec. 7-197 (f):  \n\"No person shall make connections from any energy, fuel, or power supply or from any water distribution system or supply energy, fuel or water to any equipment regulated by this chapter that has been disconnected or ordered to be disconnected by the building official or the use of which has been ordered to be discontinued by the building official until the building official authorizes the reconnection and use of such equipment.\"\n\nSummary:  \n- You may not turn on or reconnect a water connection that has been disconnected for nonpayment of water bills.  \n- Reconnection is only authorized after all past due amounts have been paid or resolved, specifically for owner-occupied properties.  \n- Only an authorized person or the building official can approve reconnection after the disconnection order.  \n- Unauthorized reconnection is prohibited by ordinance (Sec. 25-148).  \n- There may also be applicable fees for reconnection as determined by the water service provider (Sec. 25-205, Sec. 25-356).\n\nTherefore, if your water was disconnected for nonpayment, you must first clear all owed bills and obtain authorization from the building official or water service provider before the water connection can be turned back on.\n\nReferences:  \n- Sec. 25-148: Unauthorized reconnection prohibited.  \n- Sec. 25-496: Refusal of service for unpaid water bills; applies to owner-occupied property.  \n- Sec. 7-197 (f): Reconnection after order to disconnect.  \n\nIf you attempt to reconnect without authorization, it is unlawful and subject to penalties.\n\nPlease let me know if you need details about how to apply for restoration or contact the appropriate city officials.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-06-03T21:31:45.061Z"
+        },
+        {
+          "id": 652,
+          "chatbotId": 44,
+          "userId": null,
+          "content": "what is the impervious surface allowance?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-06-04T00:55:22.620Z"
+        },
+        {
+          "id": 653,
+          "chatbotId": 44,
+          "userId": null,
+          "content": "I couldn’t find specific information about the \"impervious surface allowance\" in the provided sections of the Brookhaven Code of Ordinances, including Chapter 7 (Buildings and Construction) or other available documents.\n\nImpervious surface allowances are often detailed within land development, zoning, or stormwater management regulations, which might be found in a chapter such as \"Land Development and Subdivisions\" or similar. Since those documents were not available in the upload, the relevant details might be located there.\n\nFor precise information on impervious surface allowances, I recommend consulting the City of Brookhaven’s official planning or zoning department or reviewing the full text of the Land Development and Subdivisions chapter or the city's zoning ordinance which typically contain such regulations.\n\nIf you can provide those documents or more specific references, I would be glad to assist further.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-06-04T00:55:29.975Z"
+        }
+      ],
       "summaries": [],
       "emailRecipients": [],
       "asanaProjects": []
     }
   ],
-  "exportedAt": "2025-06-03T21:19:42.557Z",
+  "exportedAt": "2025-06-04T19:13:09.091Z",
   "exportedBy": "SPH Chat Migration Utility"
 }
