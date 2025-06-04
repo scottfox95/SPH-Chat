@@ -1,0 +1,37 @@
+OpenAI API error in vector store response: BadRequestError: 400 Unknown parameter: 'tool_resources'.
+    at Function.generate (/home/runner/workspace/node_modules/openai/src/error.ts:72:14)
+    at OpenAI.makeStatusError (/home/runner/workspace/node_modules/openai/src/core.ts:462:21)
+    at OpenAI.makeRequest (/home/runner/workspace/node_modules/openai/src/core.ts:526:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async getChatbotResponseWithVectorStore (/home/runner/workspace/server/lib/openai-vector-storage.ts:257:22)
+    at async <anonymous> (/home/runner/workspace/server/routes.ts:1467:20) {
+  status: 400,
+  headers: {
+    'alt-svc': 'h3=":443"; ma=86400',
+    'cf-cache-status': 'DYNAMIC',
+    'cf-ray': '94a9d54ffd23356f-ORD',
+    connection: 'keep-alive',
+    'content-length': '175',
+    'content-type': 'application/json',
+    date: 'Wed, 04 Jun 2025 19:28:25 GMT',
+    'openai-organization': 'user-lmwowkihbyfszyv53xneqeey',
+    'openai-processing-ms': '18',
+    'openai-version': '2020-10-01',
+    server: 'cloudflare',
+    'set-cookie': '__cf_bm=AaqQG4A3ikk213RjBvcdYAdzhNd0w03rSVPla_3Gevw-1749065305-1.0.1.1-JzKJMfYcvXsW.bBGzUg2gArwW9ZK__X7rmq_LwGelcGZ6WkX24CrvYSnzHtg4qRmKWyrFSF.xv40lsdrKPEAAJ1W4aZIVMynnAG4XzbnBcg; path=/; expires=Wed, 04-Jun-25 19:58:25 GMT; domain=.api.openai.com; HttpOnly; Secure; SameSite=None, _cfuvid=5p_jh3.R5s0SPw7NOFbUs02TWsetlXVHq2upUMwJaks-1749065305662-0.0.1.1-604800000; path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None',
+    'strict-transport-security': 'max-age=31536000; includeSubDomains; preload',
+    'x-content-type-options': 'nosniff',
+    'x-request-id': 'req_fe6d96e92be450eff781b69c8314e000'
+  },
+  request_id: 'req_fe6d96e92be450eff781b69c8314e000',
+  error: {
+    message: "Unknown parameter: 'tool_resources'.",
+    type: 'invalid_request_error',
+    param: 'tool_resources',
+    code: 'unknown_parameter'
+  },
+  code: 'unknown_parameter',
+  param: 'tool_resources',
+  type: 'invalid_request_error'
+}
+7:28:25 PM [express] POST /api/chatbots/44/chat 200 in 1065ms
