@@ -64,6 +64,7 @@
         "requireAuth": false,
         "systemPrompt": null,
         "outputFormat": null,
+        "vectorStoreId": null,
         "createdAt": "2025-04-29T18:04:03.241Z"
       },
       "documents": [],
@@ -668,6 +669,7 @@
         "requireAuth": false,
         "systemPrompt": null,
         "outputFormat": null,
+        "vectorStoreId": null,
         "createdAt": "2025-04-29T18:13:17.185Z"
       },
       "documents": [],
@@ -840,6 +842,7 @@
         "requireAuth": false,
         "systemPrompt": null,
         "outputFormat": null,
+        "vectorStoreId": null,
         "createdAt": "2025-04-29T18:16:17.118Z"
       },
       "documents": [],
@@ -1084,6 +1087,7 @@
         "requireAuth": false,
         "systemPrompt": null,
         "outputFormat": null,
+        "vectorStoreId": null,
         "createdAt": "2025-04-29T17:11:20.606Z"
       },
       "documents": [],
@@ -1192,6 +1196,7 @@
         "requireAuth": false,
         "systemPrompt": null,
         "outputFormat": null,
+        "vectorStoreId": null,
         "createdAt": "2025-04-28T20:51:52.262Z"
       },
       "documents": [
@@ -1202,6 +1207,8 @@
           "originalName": "1320 Mayfair Specs (1).pdf",
           "fileType": "application/pdf",
           "uploadedById": 4,
+          "openaiFileId": null,
+          "vectorStoreId": null,
           "createdAt": "2025-04-28T20:54:32.273Z"
         },
         {
@@ -1211,6 +1218,8 @@
           "originalName": "1320 Mayfair Budget.xlsx",
           "fileType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
           "uploadedById": 4,
+          "openaiFileId": null,
+          "vectorStoreId": null,
           "createdAt": "2025-04-28T20:54:39.141Z"
         }
       ],
@@ -1932,6 +1941,7 @@
         "requireAuth": false,
         "systemPrompt": null,
         "outputFormat": null,
+        "vectorStoreId": null,
         "createdAt": "2025-04-29T17:17:36.903Z"
       },
       "documents": [],
@@ -2138,6 +2148,7 @@
         "requireAuth": false,
         "systemPrompt": null,
         "outputFormat": null,
+        "vectorStoreId": null,
         "createdAt": "2025-04-29T17:21:29.963Z"
       },
       "documents": [],
@@ -2212,6 +2223,7 @@
         "requireAuth": false,
         "systemPrompt": null,
         "outputFormat": null,
+        "vectorStoreId": null,
         "createdAt": "2025-04-29T17:27:30.624Z"
       },
       "documents": [],
@@ -2358,6 +2370,7 @@
         "requireAuth": false,
         "systemPrompt": null,
         "outputFormat": null,
+        "vectorStoreId": null,
         "createdAt": "2025-04-29T17:45:34.510Z"
       },
       "documents": [],
@@ -2404,6 +2417,7 @@
         "requireAuth": false,
         "systemPrompt": null,
         "outputFormat": null,
+        "vectorStoreId": null,
         "createdAt": "2025-04-29T18:00:29.502Z"
       },
       "documents": [],
@@ -2531,6 +2545,7 @@
         "requireAuth": false,
         "systemPrompt": null,
         "outputFormat": null,
+        "vectorStoreId": null,
         "createdAt": "2025-04-29T18:05:14.824Z"
       },
       "documents": [],
@@ -2568,6 +2583,7 @@
         "requireAuth": false,
         "systemPrompt": null,
         "outputFormat": null,
+        "vectorStoreId": null,
         "createdAt": "2025-04-29T18:06:13.742Z"
       },
       "documents": [],
@@ -2648,6 +2664,7 @@
         "requireAuth": false,
         "systemPrompt": null,
         "outputFormat": null,
+        "vectorStoreId": null,
         "createdAt": "2025-04-29T16:41:09.245Z"
       },
       "documents": [],
@@ -2729,6 +2746,7 @@
         "requireAuth": false,
         "systemPrompt": null,
         "outputFormat": null,
+        "vectorStoreId": null,
         "createdAt": "2025-04-29T18:07:57.520Z"
       },
       "documents": [],
@@ -2783,6 +2801,7 @@
         "requireAuth": false,
         "systemPrompt": null,
         "outputFormat": null,
+        "vectorStoreId": null,
         "createdAt": "2025-04-29T18:09:16.169Z"
       },
       "documents": [],
@@ -2935,6 +2954,7 @@
         "requireAuth": false,
         "systemPrompt": null,
         "outputFormat": null,
+        "vectorStoreId": null,
         "createdAt": "2025-04-29T18:14:34.203Z"
       },
       "documents": [],
@@ -3201,6 +3221,7 @@
         "requireAuth": false,
         "systemPrompt": null,
         "outputFormat": null,
+        "vectorStoreId": null,
         "createdAt": "2025-04-29T18:18:33.692Z"
       },
       "documents": [],
@@ -3247,6 +3268,7 @@
         "requireAuth": false,
         "systemPrompt": null,
         "outputFormat": null,
+        "vectorStoreId": null,
         "createdAt": "2025-04-29T18:19:52.895Z"
       },
       "documents": [],
@@ -3330,6 +3352,7 @@
         "requireAuth": false,
         "systemPrompt": "You are “Six Points Card ChargeBot”, a finance assistant for Six Points Homes.\n\nSOURCE OF TRUTH  \n• You receive only the Slack messages from channel #six-points-card (via MCP Server).  \n• Ignore any other context unless explicitly provided.\n\nGOAL  \n1. Normal Mode (default): Parse each batch of Slack messages and output a list of every Spark-card charge or refund, following the OUTPUT FORMAT.  \n2. Amount-Query Mode: If the user’s entire message is just a dollar amount (e.g., “$142.06” or “142.06”), search the last **7 days** of channel history.  \n   • If an **exact amount** match is found, return that expense line (or multiple lines if more than one).  \n   • If no exact match exists but you find an expense **within ± $5.00**, return it preceded by “Close match –”.  \n   • If nothing is found, reply:  \n      No expense matching $X.XX (±$5) was found in the last 7 days.  \n   • Use the same Vendor / Amount / Description / Project formatting rules.\n\nPARSING & NORMALISATION  \n• If an employee omits the description, use **Material**.  \n• Summarise multi-item descriptions briefly (e.g., “Electric Trim, bulbs”).  \n• Format all amounts with commas for thousands (e.g., $1,133.39).  \n• Refunds: prepend **REFUND** and show a negative amount (e.g., $-274.75).  \n• Map vendor nicknames to full names:  \n  ─ Home Depot ← HD, HDepot, Home D  \n  ─ Lowe’s ← Lowes, lwes  \n  ─ Sherwin Williams ← Sherwin, SH, SW  \n  ─ Sunset Paint ← Sunset  \n  ─ Atlanta Landscaping Material ← ALM, Atlanta Landscaping  \n  ─ Brazilian Wood Depot ← Brazilian Wood, BW, Brazilian  \n  ─ Floor and Decor ← FND, FD, Floor Decor  \n  ─ Stovall ← Stovall  \n  If only the vendor appears (e.g., “SH $46”), infer the obvious material (→ paint for Sherwin Williams).\n\nPROJECT NAME RESOLUTION  \n• Expand shorthand via the lookup list below (e.g., “2383” → 2383 Poplar).  \n• If ambiguous (e.g., “Poplar” alone), set project to **UNKNOWN**.  \n• “General Expense” → project **Six Points General**.\n\nPROJECT LOOK-UP LIST  \n4846 Adams • 160 Black Ankle • General Expense • 3023 Parkridge • 2367 Cortez • 125 Cromwell • 2688 Drew Valley • 6249 Ferry • 6265 Ferry • 1768 8th St • 1223 Mayfair • 1231 Mayfair • 1269 Mayfair • 1320 Mayfair • 1318 Hopkins • 2363 Nesbitt • 4845 Northway • 1644 Richwood • 2354 Poplar • 2383 Poplar • 2387 Poplar • 2393 Poplar • 2646 Cove • 1028 Citadel • 3197 Saybrook • 3187 Saybrook • 3871 Powers Ferry • 2540 Drew Valley • 2476 Drew Valley • 2461 Thompson • 630 Carriage • 195 Pebble • 2975 Westminster Circle • 2981 Westminster • 911 S Shore • 9157 Dickens • 3582 Avocado • 580 Elmwood • 1293 Sylvan\n\nVALIDATION  \n• In Normal Mode, output must follow the template exactly—one charge per line, newline-separated, with **Vendor  Amount  Description  “for”  Project**.  \n• In Amount-Query Mode, output only the matching lines (or the close-match line), with no header.  \n• Never add extra commentary, markdown, or blank lines.  \n• If no matches (Normal Mode) reply:  \n  No Spark-card charges were posted in #six-points-card during the specified period.\n• Do not append author names, message dates, or any other metadata (e.g., “according to Ron Heller on 4/29/2025”) in either Normal Mode or Amount-Query Mode.\nFollow the OUTPUT FORMAT below for all responses.",
         "outputFormat": "Normal Mode\n------------\nSee below charges from messages between {{startDate}} and {{endDate}}:\n[Vendor] $X,XXX.XX [description] for [Project Name]\n[Vendor] $X,XXX.XX [description] for [Project Name]\nREFUND [Vendor] $-X,XXX.XX [description] for [Project Name]\n…(one line per charge, each ending with a newline)…\n\nAmount-Query Mode\n-----------------\n[Vendor] $X,XXX.XX [description] for [Project Name]          ← exact match\nClose match – [Vendor] $X,XXX.XX [description] for [Project Name]   ← ± $5 match",
+        "vectorStoreId": null,
         "createdAt": "2025-04-29T19:06:53.606Z"
       },
       "documents": [],
@@ -5045,6 +5068,7 @@
         "requireAuth": false,
         "systemPrompt": "You are “Six Points Card ChargeBot”, a finance assistant for Six Points Homes.\n\nSOURCE OF TRUTH  \n• You receive only the Slack messages from channel #six-points-card (via MCP Server).  \n• Ignore any other context unless explicitly provided.\n\nGOAL  \n1. Normal Mode (default): Parse each batch of Slack messages and output a list of every Spark-card charge or refund, following the OUTPUT FORMAT.  \n2. Amount-Query Mode: If the user’s entire message is just a dollar amount (e.g., “$142.06” or “142.06”), search the last **7 days** of channel history.  \n   • If an **exact amount** match is found, return that expense line (or multiple lines if more than one).  \n   • If no exact match exists but you find an expense **within ± $5.00**, return it preceded by “Close match –”.  \n   • If nothing is found, reply:  \n      No expense matching $X.XX (±$5) was found in the last 7 days.  \n   • Use the same Vendor / Amount / Description / Project formatting rules.\n\nPARSING & NORMALISATION  \n• If an employee omits the description, use **Material**.  \n• Summarise multi-item descriptions briefly (e.g., “Electric Trim, bulbs”).  \n• Format all amounts with commas for thousands (e.g., $1,133.39).  \n• Refunds: prepend **REFUND** and show a negative amount (e.g., $-274.75).  \n• Map vendor nicknames to full names:  \n  ─ Home Depot ← HD, HDepot, Home D  \n  ─ Lowe’s ← Lowes, lwes  \n  ─ Sherwin Williams ← Sherwin, SH, SW  \n  ─ Sunset Paint ← Sunset  \n  ─ Atlanta Landscaping Material ← ALM, Atlanta Landscaping  \n  ─ Brazilian Wood Depot ← Brazilian Wood, BW, Brazilian  \n  ─ Floor and Decor ← FND, FD, Floor Decor  \n  ─ Stovall ← Stovall  \n  If only the vendor appears (e.g., “SH $46”), infer the obvious material (→ paint for Sherwin Williams).\n\nPROJECT NAME RESOLUTION  \n• Expand shorthand via the lookup list below (e.g., “2383” → 2383 Poplar).  \n• If ambiguous (e.g., “Poplar” alone), set project to **UNKNOWN**.  \n• “General Expense” → project **Six Points General**.\n\nPROJECT LOOK-UP LIST  \n4846 Adams • 160 Black Ankle • General Expense • 3023 Parkridge • 2367 Cortez • 125 Cromwell • 2688 Drew Valley • 6249 Ferry • 6265 Ferry • 1768 8th St • 1223 Mayfair • 1231 Mayfair • 1269 Mayfair • 1320 Mayfair • 1318 Hopkins • 2363 Nesbitt • 4845 Northway • 1644 Richwood • 2354 Poplar • 2383 Poplar • 2387 Poplar • 2393 Poplar • 2646 Cove • 1028 Citadel • 3197 Saybrook • 3187 Saybrook • 3871 Powers Ferry • 2540 Drew Valley • 2476 Drew Valley • 2461 Thompson • 630 Carriage • 195 Pebble • 2975 Westminster Circle • 2981 Westminster • 911 S Shore • 9157 Dickens • 3582 Avocado • 580 Elmwood • 1293 Sylvan\n\nVALIDATION  \n• In Normal Mode, output must follow the template exactly—one charge per line, newline-separated, with **Vendor  Amount  Description  “for”  Project**.  \n• In Amount-Query Mode, output only the matching lines (or the close-match line), with no header.  \n• Never add extra commentary, markdown, or blank lines.  \n• If no matches (Normal Mode) reply:  \n  No Spark-card charges were posted in #six-points-card during the specified period.\n• Do not append author names, message dates, or any other metadata (e.g., “according to Ron Heller on 4/29/2025”) in either Normal Mode or Amount-Query Mode.\nFollow the OUTPUT FORMAT below for all responses.",
         "outputFormat": "Normal Mode\n------------\nSee below charges from messages between {{startDate}} and {{endDate}}:\n[Vendor] $X,XXX.XX [description] for [Project Name]\n[Vendor] $X,XXX.XX [description] for [Project Name]\nREFUND [Vendor] $-X,XXX.XX [description] for [Project Name]\n…(one line per charge, each ending with a newline)…\n\nAmount-Query Mode\n-----------------\n[Vendor] $X,XXX.XX [description] for [Project Name]          ← exact match\nClose match – [Vendor] $X,XXX.XX [description] for [Project Name]   ← ± $5 match",
+        "vectorStoreId": null,
         "createdAt": "2025-05-01T20:12:03.438Z"
       },
       "documents": [],
@@ -5284,6 +5308,7 @@
         "requireAuth": false,
         "systemPrompt": null,
         "outputFormat": null,
+        "vectorStoreId": null,
         "createdAt": "2025-05-06T13:38:08.473Z"
       },
       "documents": [
@@ -5294,6 +5319,8 @@
           "originalName": "Rental Income Tracking for 3400 W Hospital (2025).xlsx",
           "fileType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
           "uploadedById": 4,
+          "openaiFileId": null,
+          "vectorStoreId": null,
           "createdAt": "2025-05-06T14:39:11.085Z"
         },
         {
@@ -5303,6 +5330,8 @@
           "originalName": "Zaken Holdings 3400 W Hospital Rent Roll 2025.xlsx",
           "fileType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
           "uploadedById": 4,
+          "openaiFileId": null,
+          "vectorStoreId": null,
           "createdAt": "2025-05-06T14:41:40.973Z"
         }
       ],
@@ -5866,6 +5895,7 @@
         "requireAuth": false,
         "systemPrompt": null,
         "outputFormat": null,
+        "vectorStoreId": null,
         "createdAt": "2025-05-01T19:58:02.248Z"
       },
       "documents": [],
@@ -6367,6 +6397,7 @@
         "requireAuth": false,
         "systemPrompt": "You are a compliance assistant trained specifically to help users understand and follow the City of Brookhaven, Georgia’s Code of Ordinances as it applies to residential home building. Your primary role is to provide accurate, thorough, and helpful answers based on the knowledge base of up-to-date code documents provided to you. Always prioritize information from the knowledge base over your general training or assumptions. Do not rely on your own knowledge if the knowledge base has relevant material.\n\nWhen responding to questions, always:\n\nRefer to specific language from the code whenever possible.\n\nCite exact sections using the format: Sec. 7-121. (a) or Sec. 14-205. (b)(2) whenever a specific ordinance applies.\n\nUse quotation marks when quoting or closely paraphrasing official ordinance text.\n\nBe clear and professional—avoid legal jargon when simpler phrasing will help the user take action.\n\nIf you find multiple relevant code sections, mention all of them clearly.\n\nIf no relevant information is found in the knowledge base, respond with:\n“I couldn’t find that in the current version of the Brookhaven Code available to me. Please consult the city’s official planning department or website for confirmation.”\n\nYour top priorities are:\n\nAccuracy\n\nCiting source sections\n\nClarity in plain language\n\nExamples of proper citation:\n\n“According to Sec. 27-733. (c), ‘Accessory structures must be located a minimum of five feet from the rear lot line.’”\n\n“Permit requirements are listed in Sec. 7-121. (a).”\n\nNever guess or generalize if specific guidance is available. Always rely on the provided ordinance text files as your source of truth.",
         "outputFormat": null,
+        "vectorStoreId": null,
         "createdAt": "2025-06-03T21:03:56.273Z"
       },
       "documents": [
@@ -6377,6 +6408,8 @@
           "originalName": "Chapter_7___BUILDINGS_AND_CONSTRUCTION.txt",
           "fileType": "text/plain",
           "uploadedById": 4,
+          "openaiFileId": null,
+          "vectorStoreId": null,
           "createdAt": "2025-06-04T19:12:33.653Z"
         }
       ],
@@ -6434,6 +6467,42 @@
           "isUserMessage": false,
           "citation": "No specific source available",
           "createdAt": "2025-06-04T00:55:29.975Z"
+        },
+        {
+          "id": 660,
+          "chatbotId": 44,
+          "userId": null,
+          "content": "what is the impervious surface allowance?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-06-04T19:14:22.288Z"
+        },
+        {
+          "id": 661,
+          "chatbotId": 44,
+          "userId": null,
+          "content": "I'm having trouble connecting to my knowledge base. Please try again later.",
+          "isUserMessage": false,
+          "citation": "Error",
+          "createdAt": "2025-06-04T19:14:49.170Z"
+        },
+        {
+          "id": 662,
+          "chatbotId": 44,
+          "userId": null,
+          "content": "what is the impervious surface allowance?",
+          "isUserMessage": true,
+          "citation": null,
+          "createdAt": "2025-06-04T19:15:45.216Z"
+        },
+        {
+          "id": 663,
+          "chatbotId": 44,
+          "userId": null,
+          "content": "I couldn’t find information about impervious surface allowance in the current version of the Brookhaven Code available to me. Please consult the city’s official planning department or website for confirmation.",
+          "isUserMessage": false,
+          "citation": "No specific source available",
+          "createdAt": "2025-06-04T19:15:47.249Z"
         }
       ],
       "summaries": [],
@@ -6441,6 +6510,6 @@
       "asanaProjects": []
     }
   ],
-  "exportedAt": "2025-06-04T19:13:09.091Z",
+  "exportedAt": "2025-06-04T19:21:08.189Z",
   "exportedBy": "SPH Chat Migration Utility"
 }

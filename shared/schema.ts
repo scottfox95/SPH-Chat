@@ -52,6 +52,7 @@ export const chatbots = pgTable("chatbots", {
   requireAuth: boolean("require_auth").notNull().default(false),
   systemPrompt: text("system_prompt"), // Custom system prompt for this chatbot (null = use app-wide prompt)
   outputFormat: text("output_format"), // Output format template (null = no specific format required)
+  vectorStoreId: text("vector_store_id"), // OpenAI vector store ID for this chatbot
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
@@ -73,6 +74,8 @@ export const documents = pgTable("documents", {
   originalName: text("original_name").notNull(),
   fileType: text("file_type").notNull(),
   uploadedById: integer("uploaded_by_id").notNull().references(() => users.id),
+  openaiFileId: text("openai_file_id"), // OpenAI file ID for vector storage
+  vectorStoreId: text("vector_store_id"), // OpenAI vector store ID
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
